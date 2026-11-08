@@ -12,9 +12,12 @@ namespace KKBP.Exporter
     /// </summary>
     internal sealed class Window
     {
+        private const float Width = 300f;
         private readonly Plugin plugin;
         private Rect rect;
         private bool placed;
+        private bool fit;  // shrink the window to its contents in the next Layout event
+        private bool wasBatching;
         private bool visible;
         private FolderBrowser browser;  // while picking the batch export's folder
         private Vector2 scroll;
@@ -42,8 +45,23 @@ namespace KKBP.Exporter
                 if (!placed)
                 {
                     // Where the legacy KK exporter drew its options: just right of the middle, at the top.
-                    rect = new Rect(Screen.width / 2f + 60f, 0f, 300f, 0f);
+                    rect = new Rect(Screen.width / 2f + 60f, 0f, Width, 0f);
                     placed = true;
+                }
+                // GUILayout.Window grows a window to fit its contents but never shrinks it. When something leaves
+                // the window (the folder browser, or the Stop button once a batch export ends), it goes back to
+                // its original size and grows to fit from there. Only once, and only in a Layout event: resizing
+                // it every frame, or in the click's own event, makes it flash.
+                if (wasBatching && plugin.Batch == null)
+                {
+                    fit = true;
+                }
+                wasBatching = plugin.Batch != null;
+                if (fit && Event.current.type == EventType.Layout)
+                {
+                    rect.width = Width;
+                    rect.height = 0f;
+                    fit = false;
                 }
                 rect = GUILayout.Window(0x4B4B4250, rect, (GUI.WindowFunction)Contents, "KKBP Exporter " + ExporterVersion.Value, new GUILayoutOption[0]);
             }
@@ -114,6 +132,7 @@ namespace KKBP.Exporter
             if (GUILayout.Button("Cancel", None))
             {
                 browser = null;
+                fit = true;
             }
             GUI.enabled = browser != null && browser.CardCount > 0;
             if (GUILayout.Button("Export them", None))
@@ -121,6 +140,7 @@ namespace KKBP.Exporter
                 plugin.CardFolder.Value = browser.Current;
                 plugin.Runner.StartCoroutine(plugin.ExportFolder(browser.Current, plugin.CurrentOptions(), plugin.Folder(), batch => { }).WrapToIl2Cpp());
                 browser = null;
+                fit = true;
             }
             GUI.enabled = true;
             GUILayout.EndHorizontal();
