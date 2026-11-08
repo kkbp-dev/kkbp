@@ -4,7 +4,7 @@ colours, so they can be changed and baked again (D37-D46, ADR 0025).
 
     edit(ch, material)     # the edit material, made once and reused
     cancel(edit_material)  # back to the original; the edit copy goes
-    reset(ch, edit_material)
+    reset(ch, edit_material)  # saturated or not as before, unless `saturate` says
     save(ch, edit_material)  # bakes light and dark into the original, then cancels
 
 What fills each slot and parameter is the Game Profile's EDIT tables; which node is which is the
@@ -25,6 +25,7 @@ from ..character import ID
 EDIT_OF = "kkbp_edit_of"  # on an edit material: the name of the material it edits
 EDIT_KEY = "kkbp_edit_key"  # on an edit material: its Character's Key (not KEY: it isn't a bundle material)
 FILLED = "kkbp_edit_filled"  # on an edit material: the slots edit() filled
+SATURATED = "kkbp_edit_saturated"  # on an edit material: whether it was saturated, which reset() keeps
 NAME = "Edit {}"
 CACHE = "edit"
 # D42, ADR 0026: edit materials saturate their main textures and colours through the game's colour
@@ -109,6 +110,7 @@ def edit(ch, material, *, saturate: bool | None = None, log=print):
     mat[templates.TEMPLATE] = name
     mat[EDIT_OF] = material.name
     mat[EDIT_KEY] = ch.key
+    mat[SATURATED] = saturate
     mat.surface_render_method = material.surface_render_method
     mat.use_transparent_shadow = material.use_transparent_shadow
     templates.copy_groups(mat)
@@ -138,9 +140,12 @@ def cancel(edit_material):
     return source
 
 
-def reset(ch, edit_material, **kwargs):
-    """A fresh edit material in place of `edit_material`, from the bundle again."""
-    return edit(ch, cancel(edit_material), **kwargs)
+def reset(ch, edit_material, *, saturate: bool | None = None, log=print):
+    """A fresh edit material in place of `edit_material`, from the bundle again, saturated as
+    before unless `saturate` says otherwise."""
+    if saturate is None and SATURATED in edit_material:
+        saturate = bool(edit_material[SATURATED])
+    return edit(ch, cancel(edit_material), saturate=saturate, log=log)
 
 
 def save(ch, edit_material, *, log=print):

@@ -12,10 +12,12 @@ _classes = (preferences.classes + operators.classes + tools.operator_classes + p
 def register():
     for cls in _classes:
         bpy.utils.register_class(cls)
+    tools.register_properties()
     options.rebuild()
 
 
 def unregister():
     options.unregister()
+    tools.unregister_properties()
     for cls in reversed(_classes):
         bpy.utils.unregister_class(cls)

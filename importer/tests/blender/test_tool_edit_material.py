@@ -163,6 +163,40 @@ def test_edits_keep_the_bundle_colours_unless_saturated(ch):
     assert any(p.name.endswith(".saturated.png") for p in ch.bundle().cache_dir("edit").iterdir())
 
 
+def _green(edit):
+    return tuple(templates.param(edit, "color_mask_green.light").default_value)
+
+
+def test_reset_keeps_the_saturation_the_edit_was_made_with(ch):
+    """Issue #13: Reset used to fall back to the default and drop an On or Off choice."""
+    edit = edit_material.edit(ch, ch.material("cf_m_top_inner01"), saturate=True, log=lambda *_: None)
+    saturated = _green(edit)
+    assert edit[edit_material.SATURATED]
+    edit = edit_material.reset(ch, edit, log=lambda *_: None)
+    assert edit[edit_material.SATURATED] and _green(edit) == pytest.approx(saturated, abs=1e-4)
+    edit = edit_material.reset(ch, edit, saturate=False, log=lambda *_: None)
+    assert not edit[edit_material.SATURATED] and _green(edit) != pytest.approx(saturated, abs=1e-3)
+
+
+def _edit_from_the_operator(ch, id, **props):
+    mat = ch.material(id)
+    obj = next(o for o in bpy.data.objects if any(s.material == mat for s in o.material_slots))
+    obj.active_material_index = next(i for i, s in enumerate(obj.material_slots) if s.material == mat)
+    with bpy.context.temp_override(active_object=obj, object=obj):
+        assert bpy.ops.kkbp.edit_material(**props) == {"FINISHED"}
+    return obj.active_material
+
+
+def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(ch):
+    """Issue #13: the panel passes the scene's Saturate choice; the operator keeps no value of its own."""
+    assert bpy.context.scene.kkbp_edit_saturate == "DEFAULT"
+    edit = _edit_from_the_operator(ch, "cf_m_top_inner01", saturate="ON")
+    assert edit[edit_material.SATURATED]
+    edit_material.cancel(edit)
+    edit = _edit_from_the_operator(ch, "cf_m_top_inner01")  # Default: clothes don't saturate
+    assert not edit[edit_material.SATURATED]
+
+
 def test_tears_and_gag_eyes_and_svs_are_not_editable(ch, build):
     assert "has no edit template" in edit_material.editable(ch, ch.materials("tears")[0])
     with pytest.raises(edit_material.EditError):
