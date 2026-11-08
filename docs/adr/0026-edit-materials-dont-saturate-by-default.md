@@ -10,6 +10,6 @@ The legacy importer ran every edit material's main textures and colours through 
 
 ## Consequences
 
-- `tools/edit_material.saturates` is true only for the profile's `saturated_roles` (KK and KKS: hair, eyebrow); the operator's Saturate option is Default, On or Off.
+- `tools/edit_material.saturates` is true only for the profile's `saturated_roles` (KK and KKS: hair, eyebrow); the operator's Saturate option is Default, On or Off. The material panel shows it as a Saturate dropdown beside the Edit Material button (`scene.kkbp_edit_saturate`), and Reset keeps the choice the edit was made with (issue #13).
 - The saturated hair's dark bake is redder than the game's, which is a darker brown.
 - Even without saturation an unedited edit material isn't an exact copy of the game's bake (differences of 0.03 to 0.17 remain), since the legacy templates approximate the game's shaders; editing a material means accepting that approximation, as in legacy.

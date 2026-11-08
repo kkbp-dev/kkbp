@@ -216,6 +216,23 @@ def _active_material(context):
     return obj.active_material if obj is not None and context.mode == "OBJECT" else None
 
 
+# Edit Material's Saturate option (ADR 0026), on the operator and, for the material panel to show
+# beside the button, on the scene (`scene.kkbp_edit_saturate`).
+_SATURATE = dict(
+    name="Saturate",
+    description="Whether the textures and colours go through the game's colour grade, as the legacy importer did",
+    items=[("DEFAULT", "Default", "Hair and eyebrows saturate, everything else doesn't"),
+           ("ON", "On", "Saturate"), ("OFF", "Off", "Don't saturate")])
+
+
+def register_properties():
+    bpy.types.Scene.kkbp_edit_saturate = bpy.props.EnumProperty(**_SATURATE, default="DEFAULT")
+
+
+def unregister_properties():
+    del bpy.types.Scene.kkbp_edit_saturate
+
+
 class _MaterialOperator:
     """Works on the active object's active material."""
 
@@ -250,11 +267,8 @@ class KKBP_OT_edit_material(_MaterialOperator, bpy.types.Operator):
                       "colours can be changed and saved")
     wants_edit = False
 
-    saturate: bpy.props.EnumProperty(
-        name="Saturate", default="DEFAULT",
-        description="Whether the textures and colours go through the game's colour grade, as the legacy importer did",
-        items=[("DEFAULT", "Default", "Hair and eyebrows saturate, everything else doesn't"),
-               ("ON", "On", "Saturate"), ("OFF", "Off", "Don't saturate")])
+    # SKIP_SAVE: the panel passes the scene's choice, so a value from an earlier run never sticks.
+    saturate: bpy.props.EnumProperty(**_SATURATE, default="DEFAULT", options={"SKIP_SAVE"})
 
     def run(self, ch, mat):
         saturate = {"DEFAULT": None, "ON": True, "OFF": False}[self.saturate]
@@ -342,7 +356,9 @@ class KKBP_PT_material(bpy.types.Panel):
             if link_hair.can_link(context.material):
                 layout.operator("kkbp.link_hair", icon="LINKED")
         else:
-            layout.operator("kkbp.edit_material", icon="MATERIAL")
+            row = layout.row(align=True)
+            row.operator("kkbp.edit_material", icon="MATERIAL").saturate = context.scene.kkbp_edit_saturate
+            row.prop(context.scene, "kkbp_edit_saturate")
 
 
 operator_classes = (KKBP_OT_merge_weights, KKBP_OT_export_prep, KKBP_OT_run_hook, KKBP_OT_bulk_import,
