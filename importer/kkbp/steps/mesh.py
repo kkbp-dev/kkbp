@@ -264,13 +264,13 @@ def arrange_collections(ctx):
     first = outfits[0] if outfits else None
     for index in outfits:
         name = f"Outfit {index:02d} {ch.name}"
-        _move(ch.parts(("outfit", "hair"), outfit=index), _child(root, name), hide=index != first)
+        move_to_collection(ch.parts(("outfit", "hair"), outfit=index), child_collection(root, name), hide=index != first)
         alts = ch.parts("alt_outfit", outfit=index)
         if alts:
-            _move(alts, _child(root, f"Alts {index:02d} {ch.name}"), hide=True)
+            move_to_collection(alts, child_collection(root, f"Alts {index:02d} {ch.name}"), hide=True)
     face = ch.parts(("tears", "gag_eyes"))
     if face:
-        _move(face, _child(root, f"Tears and gag eyes {ch.name}"), hide=False)
+        move_to_collection(face, child_collection(root, f"Tears and gag eyes {ch.name}"), hide=False)
 
 
 # --- helpers ------------------------------------------------------------------------------
@@ -425,7 +425,7 @@ def _sort_slots(obj, key):
     mesh.update()
 
 
-def _child(parent, name):
+def child_collection(parent, name):
     """The Character's sub-Collection `name` under `parent`, made on first use."""
     for c in parent.children:
         if c.get(COLLECTION) == name:
@@ -437,7 +437,7 @@ def _child(parent, name):
     return c
 
 
-def _move(objs, collection, hide):
+def move_to_collection(objs, collection, hide):
     for obj in objs:
         for c in list(obj.users_collection):
             c.objects.unlink(obj)

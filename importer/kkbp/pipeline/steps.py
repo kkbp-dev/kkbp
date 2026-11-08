@@ -34,7 +34,8 @@ STEPS: list[Step] = [
 
 # The built-in Hooks (builtin/) by name, in the fixed order they run after the Core Import.
 # Fixing seams comes first because it changes the body mesh later Hooks work on; SFW comes before
-# Rigify so the rig is built without the bones it deletes. Delete default scene runs last, once
+# Rigify so the rig is built without the bones it deletes. Separate Eyes comes after Rigify so the
+# new Parts are made on the finished rig. Delete default scene runs last, once
 # every object the other Hooks add is in the file.
 BUILTIN_HOOKS: list[str] = [
     "Fix body seams",
@@ -44,5 +45,6 @@ BUILTIN_HOOKS: list[str] = [
     "Face cards",
     "SFW",
     "Rigify",
+    "Separate Eyes",
     "Delete default scene",
 ]

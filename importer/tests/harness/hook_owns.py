@@ -45,6 +45,7 @@ RUNS: list[Run] = [
     Run("Face cards", {"use_face_cards": True}),
     Run("SFW", {"sfw_mode": True}),
     Run("Rigify", {"use_rigify": True}),
+    Run("Separate Eyes", {"separate_eyes": True}),
 ]
 
 # Hook name -> the parts of the summary it may change.
@@ -77,6 +78,9 @@ OWNS: dict[str, tuple] = {
     # groups (DEF- names, the eye and palm groups) and the emotion grid's shape keys. Not materials.
     "Rigify": (("objects", "**"), ("collections", "**"), ("counts", "objects"), ("counts", "meshes"),
                ("counts", "armatures"), ("counts", "actions")),
+    # Body loses the eye and eyebrow faces, their slots and its UV-warp modifiers; the new Parts and their
+    # Collection come, with keys driven from Body's.
+    "Separate Eyes": (("objects", "**"), ("collections", "**"), ("counts", "objects"), ("counts", "meshes")),
 }
 FACE_CARDS = ("Face card", "Facecard-bone")
 CARD_MATERIALS = ("Eyeline card", "Eyewhite card", "Pupil L card", "Pupil R card", "Gag Mouth")

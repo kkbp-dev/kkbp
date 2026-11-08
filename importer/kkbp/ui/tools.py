@@ -9,7 +9,7 @@ from ..character import Character, CharacterError
 from ..editing import switch
 from ..bundle import BundleError
 from ..pipeline import hooks as hook_registry
-from ..tools import (animation, bulk_import, edit_material, export_prep, link_hair, link_shape_keys,
+from ..tools import (animation, bulk_import, edit_material, export_prep, link_hair,
                      merge_weights, run_hook)
 
 
@@ -134,30 +134,6 @@ class KKBP_OT_bulk_import(bpy.types.Operator):
                                log=lambda m: self.report({"INFO"}, m))
         failed = [f for f, saved in done if saved is None or saved.name.startswith("Error - ")]
         self.report({"WARNING"} if failed else {"INFO"}, f"Imported {len(done) - len(failed)} of {len(done)} bundles")
-        return {"FINISHED"}
-
-
-class KKBP_OT_link_shape_keys(bpy.types.Operator):
-    bl_idname = "kkbp.link_shape_keys"
-    bl_label = "Separate Eyes and Eyebrows"
-    bl_description = ("Moves the eyes and eyebrows out of Body into their own objects, with their shape keys "
-                      "following Body's, so they can show through the hair with the compositor")
-    bl_options = {"REGISTER", "UNDO"}
-
-    @classmethod
-    def poll(cls, context):
-        return context.mode == "OBJECT"
-
-    def execute(self, context):
-        ch = _character(self, context)
-        if ch is None:
-            return {"CANCELLED"}
-        try:
-            made = link_shape_keys.link_shape_keys(ch)
-        except ValueError as ex:
-            self.report({"ERROR"}, str(ex))
-            return {"CANCELLED"}
-        self.report({"INFO"}, f"Made {', '.join(o.name for o in made) or 'nothing'}")
         return {"FINISHED"}
 
 
@@ -325,7 +301,6 @@ class KKBP_PT_tools(bpy.types.Panel):
         layout.operator("kkbp.bulk_import", icon="FILE_FOLDER")
         layout.operator("kkbp.run_hook", icon="SCRIPT")
         layout.operator("kkbp.export_prep", icon="EXPORT")
-        layout.operator("kkbp.link_shape_keys", icon="HIDE_OFF")
         layout.operator("kkbp.import_animation", icon="ARMATURE_DATA")
         layout.operator("kkbp.ik_snap", icon="LINKED")
 
@@ -362,6 +337,6 @@ class KKBP_PT_material(bpy.types.Panel):
 
 
 operator_classes = (KKBP_OT_merge_weights, KKBP_OT_export_prep, KKBP_OT_run_hook, KKBP_OT_bulk_import,
-                    KKBP_OT_link_shape_keys, KKBP_OT_import_animation, KKBP_OT_ik_snap, KKBP_OT_edit_material,
+                    KKBP_OT_import_animation, KKBP_OT_ik_snap, KKBP_OT_edit_material,
                     KKBP_OT_cancel_material, KKBP_OT_reset_material, KKBP_OT_save_material, KKBP_OT_link_hair)
 panel_classes = (KKBP_PT_tools, KKBP_PT_material)
