@@ -1,5 +1,7 @@
 """The panel's operators, the scene's Import Options and Preferences."""
 
+import fnmatch
+
 import bpy
 import pytest
 
@@ -64,6 +66,16 @@ def test_import_with_no_file_chosen_imports_the_folder(build):
     path = build()
     assert bpy.ops.kkbp.import_bundle(filepath=str(path) + "/", directory=str(path) + "/") == {"FINISHED"}
     assert settings.last_result.ok
+
+
+def test_the_browser_shows_the_manifest(build):
+    """Blender 5.2 matches filter_glob against full paths, later versions against names (README, "Blender quirks")."""
+    path = build()
+    glob = bpy.ops.kkbp.import_bundle.get_rna_type().properties["filter_glob"].default
+    assert len(glob) <= 15  # BLI_path_extension_check_glob cuts each pattern there
+    for name in (str(path / "manifest.json"), "manifest.json"):
+        assert fnmatch.fnmatchcase(name, glob)
+    assert not fnmatch.fnmatchcase(str(path / "body.glb"), glob)
 
 
 def test_choosing_another_file_is_reported(build):

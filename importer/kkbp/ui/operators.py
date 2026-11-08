@@ -14,6 +14,9 @@ from ..pipeline.options import OptionError
 from . import options
 
 MANIFEST = "manifest.json"
+# Blender 5.2 matches the browser's filter_glob against each file's full path, later versions
+# against its name alone; the leading * matches both. Other files it lets through are refused.
+MANIFEST_GLOB = "*" + MANIFEST
 
 
 class KKBP_OT_import_bundle(bpy.types.Operator):
@@ -26,7 +29,7 @@ class KKBP_OT_import_bundle(bpy.types.Operator):
     # The browser fills both. A script may pass either; with no file chosen, the folder is imported.
     filepath: bpy.props.StringProperty(subtype="FILE_PATH")
     directory: bpy.props.StringProperty(subtype="DIR_PATH")
-    filter_glob: bpy.props.StringProperty(default=MANIFEST, options={"HIDDEN"})
+    filter_glob: bpy.props.StringProperty(default=MANIFEST_GLOB, options={"HIDDEN"})
     filter_folder: bpy.props.BoolProperty(default=True, options={"HIDDEN"})
 
     @classmethod
