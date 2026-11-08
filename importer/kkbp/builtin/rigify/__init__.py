@@ -22,6 +22,8 @@ SWITCH = Option("use_rigify", bool, True, "Use Rigify armature",
 # The rig's control that a bone-parented object follows, by the bone it was parented to.
 FOLLOW = {"Head": "head"}
 NSFW_COLLECTION, SFW_NAME = "NSFW", "Chest"
+# An empty collection beside NSFW in the Rig Layers panel, for bones the user adds (issue #7).
+CUSTOM_COLLECTION = "Custom"
 JUNK = "Junk {name}"  # what the Bone Widgets collection becomes: widgets and the metarig, hidden
 
 
@@ -37,6 +39,7 @@ def rigify(ctx):
     legacy.begin(ctx, kk)
     prepare.run(ctx, kk)
     before.main()
+    _add_custom_collection(metarig)
 
     generated_from = metarig.name  # Rigify names its widgets after it
     rig = compat.generate_rigify(metarig)
@@ -55,6 +58,13 @@ def rigify(ctx):
     tools = bpy.context.scene.tool_settings
     tools.transform_pivot_point = "INDIVIDUAL_ORIGINS"
     tools.mesh_select_mode = (False, False, True)  # face select in Edit Mode, as legacy left it
+
+
+def _add_custom_collection(metarig):
+    """Made after NSFW so the panel draws it to NSFW's right; after.py hides it with the rest."""
+    collections = metarig.data.collections_all
+    custom = collections.get(CUSTOM_COLLECTION) or metarig.data.collections.new(CUSTOM_COLLECTION)
+    custom.rigify_ui_row = collections[NSFW_COLLECTION].rigify_ui_row
 
 
 def _into(obj, collection):
