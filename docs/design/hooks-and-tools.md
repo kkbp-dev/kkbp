@@ -15,7 +15,8 @@ Status: implemented in Phase 5 (decisions D14 to D47 in the [roadmap](README.md#
 | 5 | Face cards | `use_face_cards` (bool) | on | `face_cards.blend` |
 | 6 | SFW | `sfw_mode` (bool) | off | none |
 | 7 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
-| 8 | Delete default scene | `delete_default_scene` (bool) | on | none |
+| 8 | Separate Eyes | `separate_eyes` (bool) | off | none |
+| 9 | Delete default scene | `delete_default_scene` (bool) | on | none |
 
 The defaults are the legacy panel's. The legacy importer always added face cards, so their switch defaults to on.
 
@@ -109,7 +110,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | `importanimation.py`, Mixamo FBX | Dropped | D34 |
 | `createanimationlibrary.py` | Dropped | D34 |
 | `extras/animationlibrary/*.json` (Rokoko and ARP retargeting lists) | Replaced | The mapping comes from Bone Roles (D34) |
-| `linkshapekeys.py` | Ported | Link shape keys: new Parts with Part Roles `eyes` and `eyebrows` (D35) |
+| `linkshapekeys.py` | Ported | Separate Eyes Hook: new Parts with Part Roles `eyes` and `eyebrows`, in an `Eyes and Eyebrows` Collection (D35, D60) |
 | `linkhair.py` | Ported | `tools/link_hair.py`, on the edit templates' params; it puts every hair material into edit first (D45) |
 | `bulklaunch.py`, `auto_import.py` | Ported | Bulk import: one background Blender per bundle folder through `kkbp.import_bundle` (D36) |
 | `toggle_console` (animation tools) | Dropped | Windows-only console window |

@@ -12,7 +12,7 @@ See [docs/design/import-pipeline.md](../docs/design/import-pipeline.md) and [tes
 | `kkbp/profiles/` | The Game Profiles (`kk`, `kks`, `svs`); never imports `bpy` |
 | `kkbp/library/` | The Material Template library (`library.blend`), its Template Descriptions and Template Sets, and the built-in Hooks' asset files with their descriptions (`hook_assets.py`); never imports `bpy` |
 | `kkbp/builtin/` | The built-in Hooks, one module each |
-| `kkbp/tools/` | The tools used after an import (Tools panel): export prep, Merge Weights, Run Hook, Bulk Import, Separate Eyes and Eyebrows, Import Animation, and Edit Material with its bake (`edit_material.py`, `bake.py`) and Link Hair |
+| `kkbp/tools/` | The tools used after an import (Tools panel): export prep, Merge Weights, Run Hook, Bulk Import, Import Animation, and Edit Material with its bake (`edit_material.py`, `bake.py`) and Link Hair |
 | `kkbp/atlas/` | The export atlas's layout and compositing; Pillow, never `bpy` |
 | `kkbp/shading/` | The edit materials' colour maths (LUT saturation, light and dark colours); numpy, never `bpy` |
 | `kkbp/appending.py` | Appending from the library and the asset files, with shared node groups and images |

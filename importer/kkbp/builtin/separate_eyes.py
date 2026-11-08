@@ -1,24 +1,39 @@
-"""Link shape keys: moves the eyes and the eyebrows out of Body into their own objects, whose
+"""Separate Eyes: moves the eyes and the eyebrows out of Body into their own objects, whose
 expression keys Body's drive, so they can be drawn through the hair with the compositor (legacy
-linkshapekeys, D35). On the data API: each new object is a copy of Body keeping only its faces."""
+linkshapekeys, D35; a Hook since issue 16). On the data API: each new object is a copy of Body
+keeping only its faces. The new Parts go in an `Eyes and Eyebrows` Collection."""
 
 from __future__ import annotations
 
 import bmesh
 from mathutils import Matrix
 
-from ..builtin.separate import remove_unused_slots
 from ..character import ROLE
+from ..pipeline.hooks import hook
+from ..pipeline.options import Option
+from ..steps.mesh import child_collection, move_to_collection
+from .separate import remove_unused_slots
+
+SWITCH = Option("separate_eyes", bool, False, "Separate eyes",
+                description="Moves the eyes and eyebrows out of Body into their own objects, with their shape keys "
+                            "following Body's, so they can show through the hair with the compositor")
 
 PARTS = {
-    "eyes": (("eye_l", "eye_r", "eye_white", "eyeline_upper", "eyeline_lower"), "Eyes {name}"),
+    "eyes": (("eye_l", "eye_r", "eye_white", "eyeline_upper", "eyeline_lower", "eyeline_shadow"), "Eyes {name}"),
     "eyebrows": (("eyebrow",), "Eyebrows {name}"),
 }
 OUTLINE = "Outline Modifier"
 UV_WARP = "UV_WARP"
 
 
-def link_shape_keys(ch) -> list:
+@hook(name="Separate Eyes", switch=SWITCH)
+def separate_eyes(ctx):
+    made = separate(ctx.character)
+    ctx.log.info(f"Separated {', '.join(o.name for o in made) or 'nothing'}")
+
+
+def separate(ch) -> list:
+    """Makes the eyes and eyebrows Parts of their own; returns them."""
     body = ch.body
     if body is None:
         raise ValueError(f"{ch.name} has no body")
@@ -52,6 +67,8 @@ def link_shape_keys(ch) -> list:
             body.modifiers.remove(modifier)
     for part in made:
         _drive_keys(body, part)
+    if made:
+        move_to_collection(made, child_collection(ch.collection, f"Eyes and Eyebrows {ch.name}"), hide=False)
     return made
 
 
