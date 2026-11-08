@@ -17,3 +17,7 @@ def test_outline_face_masks_are_keyed_by_template():
 def test_each_file_is_next_to_the_template_library():
     for asset in hook_assets.FILES:
         assert asset.path.parent == library.LIBRARY.parent
+
+
+def test_outline_thinning_masks_are_face_masks():
+    assert hook_assets.OUTLINES.thinning_masks <= set(hook_assets.OUTLINES.face_masks.values())

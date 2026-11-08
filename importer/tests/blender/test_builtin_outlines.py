@@ -1,6 +1,7 @@
 """Outlines on the builder's Character (golden samples: run.py hooks --each)."""
 
 import bpy
+import pytest
 
 from bundle_builder import BundleBuilder
 from conftest import kkbp, submodule
@@ -105,3 +106,12 @@ def test_thinning_follows_the_mask_on_face_vertices_only():
     weights = [group.weight(i) for i in range(6)]
     assert weights == [0.0, 1.0, 1.0, 0.0, 1.0, 1.0]
     assert modifier.vertex_group == group.name and modifier.thickness_vertex_group == 0.0
+
+
+@pytest.mark.parametrize("game, expected", [("KK", []), ("SVS", ["SVS OutlineMask.png"])])
+def test_only_a_thinning_mask_thins_the_outline(build, monkeypatch, game, expected):
+    # KK's eyelines sit on the face, so its outline keeps the whole thickness around the eyes.
+    thinned = []
+    monkeypatch.setattr(outlines, "_thin_where_masked", lambda body, face, mask, modifier: thinned.append(mask.name))
+    _import(build, game)
+    assert thinned == expected

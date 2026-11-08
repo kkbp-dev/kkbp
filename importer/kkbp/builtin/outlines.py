@@ -6,7 +6,7 @@ black, so it keeps the material's alpha. It is tagged with the Character Key, an
 material it was copied from as `kkbp_outline`, not as a bundle Id, so `ch.material(id)` still finds
 one material per Id.
 
-Where the face's outline mask hides the outline around the eyes, Body's modifier also has no
+Where SVS's face outline mask hides the outline around the eyes, Body's modifier also has no
 thickness, through the `Outline thickness` vertex group (ADR 0033).
 """
 
@@ -69,7 +69,8 @@ def _body(ctx, ch, body):
     mask = templates.texture_node(face_outline, "alpha_mask")
     if face_outline_mask and mask is not None:
         mask.image = _image(face_outline_mask)  # no outline around the eyes
-        _thin_where_masked(body, face, mask.image, modifier)
+        if face_outline_mask in hook_assets.OUTLINES.thinning_masks:
+            _thin_where_masked(body, face, mask.image, modifier)
     templates.param(face_outline, "force_visibility").default_value = FACE_FORCE_VISIBILITY
     body.data.materials.append(face_outline)
     body.data.materials.append(_outline(ch, skin, f"Outline {skin.get(ID)}"))
@@ -80,7 +81,10 @@ def _thin_where_masked(body, face, mask, modifier):
     outline invisible; the modifier would still push the face out along its normals there, and in
     SVS that opens the seam between each eye socket's disc and rim, which gag expressions close
     (ADR 0033). A face vertex's weight is one minus the mask at its brightest corner; every other
-    vertex keeps the whole thickness."""
+    vertex keeps the whole thickness. Only the masks in `thinning_masks` get this: the mask must be
+    white where it hides the outline, and the eye parts in front of the face must stand clear of
+    the push, as SVS's do (`move_eyelids_forward`). KK's eyelines sit on the face and would go
+    behind it."""
     mesh = body.data
     width, height = mask.size
     uv_layer = mesh.uv_layers.get(UV_MAP)
