@@ -38,3 +38,4 @@ node_modules/
 # Local material the user keeps beside the repository: animation samples, and test cards.
 /sample animations/
 /batch_exporter_testing/
+/games
