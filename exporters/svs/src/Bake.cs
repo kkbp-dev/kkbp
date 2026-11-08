@@ -184,6 +184,12 @@ namespace KKBP.Exporter
                         LightBake.Overlay(dark, meshDark);
                     }
                 }
+                if (DrawsEyeWhite(material, data.Role))
+                {
+                    bool white = data.Role == MaterialRole.EyeWhite;
+                    lit = EyeLayer(FrontLight, lit, material, renderer, block, size, white);
+                    dark = EyeLayer(BackLight, dark, material, renderer, block, size, white);
+                }
                 data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Light, Png = Png(lit, size) });
                 data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Dark, Png = Png(dark, size) });
             }
@@ -194,6 +200,76 @@ namespace KKBP.Exporter
                 {
                     UnityEngine.Object.Destroy(flattened);
                 }
+            }
+        }
+
+        /// <summary>
+        /// The textures SVS's eye shader draws the iris, pupil and highlights from. The eye white copies
+        /// leave them out (ADR 0034).
+        /// </summary>
+        internal static readonly string[] IrisTextures =
+        {
+            "_Eye_mask", "_Pipil_texture", "_Grade_texture", "_Highlight_texture_01", "_Highlight_texture_02", "_Highlight_texture_03",
+        };
+
+        /// <summary>The eye white's two colours, which its shadow mask blends between.</summary>
+        private static readonly string[] EyeWhiteColors = { "_Eye_white_color_01", "_Eye_white_color_02" };
+
+        /// <summary>An eye or eye white material whose shader draws the eye white and the pupil together (ADR 0034).</summary>
+        private static bool DrawsEyeWhite(Material material, MaterialRole? role)
+        {
+            return (role == MaterialRole.EyeWhite || role == MaterialRole.EyeL || role == MaterialRole.EyeR)
+                && material.HasProperty(EyeWhiteColors[0]) && material.HasProperty(IrisTextures[0]);
+        }
+
+        /// <summary>
+        /// One layer of such an eye, with one light: the eye white alone, drawn with the iris textures
+        /// cleared, or the pupil over a transparent background, worked out from <paramref name="full"/>,
+        /// the eye as the game draws it, and two more renders with the eye white black and white
+        /// (<see cref="LightBake.Pupil"/>).
+        /// </summary>
+        private byte[] EyeLayer(Quaternion light, byte[] full, Material material, Renderer renderer, MaterialPropertyBlock block, int size, bool eyeWhite)
+        {
+            Aim(new Vector3(0.5f, 0.5f, 1f), 0.5f, 1f);
+            var white = RenderWith(light, material, renderer, block, size, m =>
+            {
+                foreach (string t in IrisTextures)
+                {
+                    if (m.HasProperty(t))
+                    {
+                        m.SetTexture(t, Texture2D.blackTexture);
+                    }
+                }
+            });
+            if (eyeWhite)
+            {
+                return white;
+            }
+            var onBlack = RenderWith(light, material, renderer, block, size, m => SetEyeWhite(m, UnityEngine.Color.black));
+            var onWhite = RenderWith(light, material, renderer, block, size, m => SetEyeWhite(m, UnityEngine.Color.white));
+            return LightBake.Pupil(full, white, onBlack, onWhite);
+        }
+
+        private static void SetEyeWhite(Material material, UnityEngine.Color color)
+        {
+            foreach (string c in EyeWhiteColors)
+            {
+                material.SetColor(c, color);
+            }
+        }
+
+        /// <summary>Renders a copy of the material on the UV quad, changed by <paramref name="change"/>.</summary>
+        private byte[] RenderWith(Quaternion light, Material material, Renderer renderer, MaterialPropertyBlock block, int size, Action<Material> change)
+        {
+            var copy = new Material(material);
+            try
+            {
+                change(copy);
+                return Render(light, quad, 0, copy, renderer, block, size, size);
+            }
+            finally
+            {
+                UnityEngine.Object.Destroy(copy);
             }
         }
 
