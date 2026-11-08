@@ -99,6 +99,22 @@ def test_expressions_drive_the_face(tmp_path):
     assert ch.tears.data.shape_keys.key_blocks["Eye Crying"].value == pytest.approx(0.7)
 
 
+@pytest.mark.parametrize("sample, material, pattern", [
+    ("kk", "cf_m_gageye_02", "cf_t_gageye_08"),
+    ("kks", "cf_m_gageye_02", "cf_t_gageye_08"),
+    ("svs", "cf_m_gageye_00", "cf_t_gageye_10"),
+])
+def test_fiery_eyes_step_through_their_sheet(sample, material, pattern, tmp_path):
+    """The fiery eyes' texture is a 1 x 6 sheet of flames the game flips through (issue #15)."""
+    copy = tmp_path / sample
+    shutil.copytree(golden(sample), copy)
+    _, ch = _import(copy)
+    gag = ch.material(material)
+    index = templates.patterns(gag).index(pattern)
+    assert templates.pattern_param(gag, index, "tile_x").default_value == 1
+    assert templates.pattern_param(gag, index, "tile_y").default_value == 6
+
+
 def test_outfit_owned_bones_carry_their_outfit(build):
     b = BundleBuilder()
     b.add_bone("cf_J_hairB_top_2", "cf_j_head", group="hair", translation=(0.0, 0.15, -0.02), outfit=1)
