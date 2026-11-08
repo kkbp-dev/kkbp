@@ -53,6 +53,7 @@ ADRs:
 - [0032 The legacy baseline is retired](../adr/0032-the-legacy-baseline-is-retired.md)
 - [0033 SVS gag keys close the eye seam the game leaves open](../adr/0033-svs-gag-keys-close-the-eye-seam.md)
 - [0034 SVS eye whites are copies of the eyes, resting 1 mm behind them](../adr/0034-svs-eye-whites-are-copies-of-the-eyes.md)
+- [0035 The SVS tongue keeps the game's mouth shapes, even where it doesn't follow the mouth](../adr/0035-svs-tongue-keeps-the-games-mouth-shapes.md)
 
 Folded or dropped from the original review: candidate 6 (Exporter Naming) is replaced by Ids; candidate 9 (import options declared once) is part of the import pipeline.
 
@@ -200,3 +201,4 @@ Decisions agreed at the start of Phase 6:
 - **D56** The legacy baseline and its comparison are deleted ([ADR 0032](../adr/0032-the-legacy-baseline-is-retired.md)).
 - **D57** The SVS adapter closes the half-millimetre seam the game's gag shape leaves between each eye socket's disc and rim, and the Outlines Hook gives Body's modifier no thickness where the face mask hides the outline ([ADR 0033](../adr/0033-svs-gag-keys-close-the-eye-seam.md)).
 - **D58** The SVS adapter gives each eye a separate eye white, as KK's: a copy of the eye mesh 1 mm behind it with an `eye_white` material, hidden with the eye. The bakes draw the eye white alone on the copy and only the pupil, over a transparent background, on the eye, so moving the pupils in Blender leaves the eye whites in place (issue 19, [ADR 0034](../adr/0034-svs-eye-whites-are-copies-of-the-eyes.md)).
+- **D59** SVS's tongue keeps the game's mouth shapes: most SVS mouth patterns leave the tongue still while the teeth move, as in the game, and the exporter and importer don't add movement of their own (issue 2, [ADR 0035](../adr/0035-svs-tongue-keeps-the-games-mouth-shapes.md)).
