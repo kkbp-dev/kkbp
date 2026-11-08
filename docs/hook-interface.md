@@ -84,7 +84,7 @@ A Hook doesn't get the Game Profile; what a Hook needs to know about the Charact
 ## What a Hook can rely on
 
 - The Core Import has finished: every Part is built, tagged and in the Character's Collection.
-- The built-in Hooks that are switched on have run, in their fixed order: Delete default scene, Fix body seams, Convert shaders, Separate meshes, Outlines, Face cards, SFW, Rigify. User Hooks run after them, in the order set in Preferences.
+- The built-in Hooks that are switched on have run, in their fixed order: Fix body seams, Convert shaders, Separate meshes, Outlines, Face cards, SFW, Rigify, Delete default scene. User Hooks run after them, in the order set in Preferences.
 - Each Hook starts in Object Mode with nothing selected. Afterwards KKBP puts Blender back into Object Mode, whatever the Hook left.
 - If a Hook raises, the error goes to the KKBP log as a warning, the remaining Hooks still run, and the import still succeeds.
 - A Hook changes the scene and reports through `ctx.log`. It returns nothing, and it can't switch other Hooks on or off.

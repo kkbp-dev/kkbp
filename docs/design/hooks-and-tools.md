@@ -8,14 +8,14 @@ Status: implemented in Phase 5 (decisions D14 to D47 in the [roadmap](README.md#
 
 | Order | Hook (name in `BUILTIN_HOOKS`) | Switch option | Default | Asset file |
 |---|---|---|---|---|
-| 1 | Delete default scene | `delete_default_scene` (bool) | on | none |
-| 2 | Fix body seams | `fix_seams` (bool) | on | none |
-| 3 | Convert shaders | `convert_shaders` (choice): `off` "Eevee (no change)", `eevee_mod`, `cycles`, `cycles_classic`, `principled` | `off` | none: the variants are in `library.blend` |
-| 4 | Separate meshes | `separation_type` (choice): `off` "One object per outfit", `by_material` "Separate all clothing" | `off` | none |
-| 5 | Outlines | `use_outlines` (bool) | on | `outlines.blend` |
-| 6 | Face cards | `use_face_cards` (bool) | on | `face_cards.blend` |
-| 7 | SFW | `sfw_mode` (bool) | off | none |
-| 8 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
+| 1 | Fix body seams | `fix_seams` (bool) | on | none |
+| 2 | Convert shaders | `convert_shaders` (choice): `off` "Eevee (no change)", `eevee_mod`, `cycles`, `cycles_classic`, `principled` | `off` | none: the variants are in `library.blend` |
+| 3 | Separate meshes | `separation_type` (choice): `off` "One object per outfit", `by_material` "Separate all clothing" | `off` | none |
+| 4 | Outlines | `use_outlines` (bool) | on | `outlines.blend` |
+| 5 | Face cards | `use_face_cards` (bool) | on | `face_cards.blend` |
+| 6 | SFW | `sfw_mode` (bool) | off | none |
+| 7 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
+| 8 | Delete default scene | `delete_default_scene` (bool) | on | none |
 
 The defaults are the legacy panel's. The legacy importer always added face cards, so their switch defaults to on.
 
