@@ -21,7 +21,7 @@ The defaults are the legacy panel's. The legacy importer always added face cards
 
 ## Legacy pieces
 
-Ported means the behaviour comes over, rewritten onto `ctx`, the data API and the bundle's tags. Replaced means something else in the new importer does the job. Dropped means nothing does, for the reason given.
+Ported means the behaviour comes over, rewritten onto `ctx`, the data API and the bundle's tags. Replaced means something else in the new importer does the job. Dropped means nothing does, for the reason given. Added means legacy had no such piece.
 
 ### `importing/postoperations.py`
 
@@ -80,6 +80,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | `finalizeRiggedTongueSideBones` and the tongue rig | Ported | Rigs the single tongue Part (ADR 0020) |
 | skirt rig (`getSkirtBoneName` indexes) | Ported | Chains found from Bone Group `skirt` and the bone tree |
 | layer setup (`RigifyLayer`, `BoneManagerLayer`, Charamaker, Toes, Face MCH) | Ported, changed | Rig collections built from the Core's (D7); the name-based splits D7 dropped stay dropped |
+| a `Custom` collection for the user's own bones | Added | Rigify Hook: empty and hidden, to the right of NSFW in the Rig Layers panel (issue #7) |
 | `rigify_after.main`: rename Metarig/Rig, move meshes and UV-warp modifiers to the rig | Ported | Rigify Hook, through Character (the rig gets Part Role `rig`) |
 | `rigify_after`: copy bone `id`s to generated bones | Ported | Bones keep their Id in their `id` property |
 | `rigify_after`: SVS-only hand IK widget rotation | Ported | Gated (D24) |
