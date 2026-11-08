@@ -7,7 +7,7 @@ KKBP has three parts: exporters (BepInEx plugins for KK, KKS and SVS) write an *
 ## Read before changing anything
 
 - [CONTEXT.md](CONTEXT.md): the glossary. Use its terms, not the ones it lists under "Avoid".
-- [docs/design/README.md](docs/design/README.md): the design docs, the roadmap and every agreed decision (D1 to D56).
+- [docs/design/README.md](docs/design/README.md): the design docs, the roadmap and every agreed decision (D1 to D57).
 - [docs/adr/](docs/adr/): decisions that look wrong without context. Check them before "fixing" something that seems odd (for example SVS's eye bones, ADR 0028; edit materials not saturating, ADR 0026; Expression Names as display strings, ADR 0004).
 - [docs/hook-interface.md](docs/hook-interface.md): the public Hook API, version 1.0.
 - The README in [exporters/](exporters/README.md) (with "Working with the games"), [importer/](importer/README.md) (with "Blender quirks") and [the test harness](importer/tests/harness/README.md).

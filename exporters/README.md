@@ -6,7 +6,7 @@ The Exporter Core and the Game Adapters (KK/KKS, SVS). The design is [docs/desig
 |---|---|
 | `core/KKBP.Exporter.Core.shproj`, `.projitems` | The Exporter Core as a shared source project. Exporters import the `.projitems` to compile it in. |
 | `core/src/` | The Core's source: .NET 3.5 APIs only, no UnityEngine |
-| `core/src/AdapterKit/` | Unity-free helpers both adapters use: normal-map unpacking, shape-key deltas, the hidden tear and gag basis, Bone Role and Group rules, Blend Mode choice, Texture Roles, and the pixel steps of the light and dark bake |
+| `core/src/AdapterKit/` | Unity-free helpers both adapters use: normal-map unpacking, shape-key deltas, the hidden tear and gag basis, closing the SVS eye seam (ADR 0033), Bone Role and Group rules, Blend Mode choice, Texture Roles, and the pixel steps of the light and dark bake |
 | `core/build/` | Builds the Core alone for `net35`, so newer APIs fail the build. Nothing ships from it. |
 | `core/tests/` | `dotnet test` project with a fake Game Adapter. Its bundle is checked against the JSON Schemas and the Khronos glTF Validator. |
 

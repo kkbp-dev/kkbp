@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\HiddenBasis.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\LightBake.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\NormalMaps.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\SeamClosing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\TextureRoles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\BundleExport.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\BundleFiles.cs" />
