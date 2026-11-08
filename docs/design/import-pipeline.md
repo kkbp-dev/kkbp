@@ -63,7 +63,7 @@ def find_kkbp():
 
 ### Order and switching
 
-- Built-in Hooks run first, in a fixed order: fix body seams → shader conversion → separate meshes → outlines → face cards → SFW → Rigify. Fixing seams runs first because it changes the body mesh that later Hooks work on.
+- Built-in Hooks run first, in a fixed order: fix body seams → shader conversion → separate meshes → outlines → face cards → SFW → Rigify → delete default scene. Fixing seams runs first because it changes the body mesh that later Hooks work on.
 - User Hooks run after them, in a list in Preferences that the user can reorder and switch on or off.
 - Each built-in Hook gets one automatic on/off Import Option (`fix_seams`, `use_rigify`, `use_outlines`, `sfw_mode`). The pipeline checks the switch, so Hooks don't return early themselves.
 - The shader variants (today's B/C/D/E dropdown) are one "convert shaders" Hook with a choice option.

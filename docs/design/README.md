@@ -142,7 +142,7 @@ Status: implemented. With every built-in Hook, `run.py compare --profile default
 
 Decisions agreed at the start of Phase 5. [hooks-and-tools.md](hooks-and-tools.md) lists every legacy piece and every legacy name lookup they replace.
 
-- **D14** `BUILTIN_HOOKS`: (Delete default scene →) Fix body seams → Convert shaders → Separate meshes → Outlines → Face cards → SFW → Rigify. Switches, with the legacy panel's defaults: `fix_seams` on; `convert_shaders` (`off`, `eevee_mod`, `cycles`, `cycles_classic`, `principled`) off; `separation_type` (`off` "One object per outfit", `by_material` "Separate all clothing") off; `use_outlines` on; `use_face_cards` on; `sfw_mode` off; `use_rigify` on. Built-ins pass their switch to `kkbp.hook`. Outlines skips itself for the Cycles and Principled variants, as legacy did.
+- **D14** `BUILTIN_HOOKS`: Fix body seams → Convert shaders → Separate meshes → Outlines → Face cards → SFW → Rigify (→ Delete default scene). Switches, with the legacy panel's defaults: `fix_seams` on; `convert_shaders` (`off`, `eevee_mod`, `cycles`, `cycles_classic`, `principled`) off; `separation_type` (`off` "One object per outfit", `by_material` "Separate all clothing") off; `use_outlines` on; `use_face_cards` on; `sfw_mode` off; `use_rigify` on. Built-ins pass their switch to `kkbp.hook`. Outlines skips itself for the Cycles and Principled variants, as legacy did.
 - **D15** The Hooks live in `importer/kkbp/builtin/`. Each asset file has a description with no `bpy`, checked against the file by a harness test, and is built from the unchanged V9 source by `scripts/build-hook-assets.sh`: `rigify.blend` (widgets), `face_cards.blend` (its mouth atlas stored as WebP at quality 95), `outlines.blend`.
 - **D16** Fix body seams merges by distance with bmesh on Body faces of Material Roles `face` and `body`: as Merge by Distance at 0.00001 (legacy's distance) with Centroid Merge, keeping each face corner's custom normal.
 - **D17** Separate meshes splits each `outfit` Part into one Part per material, named by material Id, through a Compat helper.
@@ -175,7 +175,7 @@ Decisions agreed at the start of Phase 5. [hooks-and-tools.md](hooks-and-tools.m
 - **D44** Edit material, Cancel, Reset and Save. Save bakes light and dark with Eevee through an orthographic camera onto the mesh flattened into UV space, at the size of the largest texture, into the original Light Dark material; the edit copy goes; the bake is never smaller than the light texture it replaces, and the alpha mask stays the Light Dark material's. No Backup material and no normal bake. Generated images go into the Cache (`kkbp_cache/edit/`, `kkbp_cache/baked/`).
 - **D45** Link hair puts every hair material of the object into edit and copies the active one's light and dark settings to them.
 - **D46** Edit material isn't available for SVS yet; KKS uses the KK templates.
-- **D47** A built-in Hook, Delete default scene (`delete_default_scene`, on), runs first and deletes Blender's startup cube, camera and light when every other object in the file belongs to an imported Character, as legacy's import button deleted them from a file holding only them.
+- **D47** A built-in Hook, Delete default scene (`delete_default_scene`, on), runs last of the built-in Hooks and deletes Blender's startup cube, camera and light when every other object in the file belongs to an imported Character, as legacy's import button deleted them from a file holding only them.
 
 ### Phase 6: match and release
 
