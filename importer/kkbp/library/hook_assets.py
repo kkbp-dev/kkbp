@@ -54,6 +54,9 @@ class OutlineAssets:
     black: str  # replaces the main texture: the outline is black and keeps the material's alpha
     placeholder: str  # an empty alpha mask
     face_masks: Mapping[str, str]  # face material's template -> the mask that hides the outline around the eyes
+    # The face masks around which Body's outline also gets no thickness (ADR 0033). Each is white where
+    # it hides the outline. Only SVS's: KK's eyelines sit on the face and need the outline's push.
+    thinning_masks: frozenset[str]
 
 
 RIGIFY = RigifyAssets(
@@ -89,6 +92,7 @@ OUTLINES = OutlineAssets(
     black="Template: BlackWithAlpha",
     placeholder="Template: Placeholder",
     face_masks=MappingProxyType({"KK Light Dark": "KK OutlineMask.png", "SVS Light Dark": "SVS OutlineMask.png"}),
+    thinning_masks=frozenset({"SVS OutlineMask.png"}),
 )
 
 FILES = (RIGIFY, FACE_CARDS, OUTLINES)
