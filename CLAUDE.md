@@ -84,6 +84,7 @@ The user plays these games. Details are in "Working with the games" in [exporter
 | Make the Golden Samples (first time, and after an exporter change), or one of them | `scripts/export-sample.sh` / `scripts/export-sample.sh <game>` |
 | Check any bundle | `scripts/check-bundle.sh <bundle>` |
 | Package the importer zip | `scripts/package-importer.sh` |
+| Package the exporter release zip (all three Games) | `scripts/package-exporters.sh` |
 | Rebuild the template library or Hook assets | `scripts/rework-templates.sh`, `scripts/build-hook-assets.sh` |
 | Regenerate the importer's copy of the contract sets | `scripts/gen-importer-contract.sh` |
 
@@ -110,7 +111,7 @@ Run the importer's host tests and pytest only on `importer/.venv/bin/python` (Bl
   1. Stage the package with the pinned wheel from `importer/tests/.work/wheels/` in `kkbp/wheels/`.
   2. Replace the manifest's `#wheel_placeholder` line with `wheels = ["./wheels/<file>.whl"]`.
   3. Run `blender --command extension install-file --repo user_default --enable <zip>`, then restart Blender. The profile copy is in `~/.config/blender/5.2/extensions/user_default/kkbp`.
-- **A release:** drop `-dev` in `importer/kkbp/blender_manifest.toml` and `exporters/Exporter.props`, re-record the snapshots, package, deploy, and tag locally.
+- **A release:** drop `-dev` in `importer/kkbp/blender_manifest.toml` and `exporters/Exporter.props`, re-record the snapshots, package both (`scripts/package-importer.sh`, `scripts/package-exporters.sh`), deploy, and tag locally.
 
 ## The machine
 

@@ -35,6 +35,9 @@ node_modules/
 # Built extension zips (scripts/package-importer.sh).
 /importer/dist/
 
+# Built exporter release zips (scripts/package-exporters.sh).
+/exporters/dist/
+
 # Local material the user keeps beside the repository: animation samples, and test cards.
 /sample animations/
 /batch_exporter_testing/

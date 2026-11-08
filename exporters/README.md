@@ -36,6 +36,14 @@ scripts/deploy-exporter.sh kk
 
 The adapters compile against the game, Unity and BepInEx assemblies of a local install ([ADR 0007](../docs/adr/0007-game-assemblies-from-local-install.md)): the `games/` folder in the working copy, or the folder in `KKBP_GAMES_DIR`, holding `Koikatsu`, `Koikatsu Sunshine` and `Summer Vacation Scramble`. SVS needs BepInEx to have run once, so that its interop assemblies exist. [Exporter.props](Exporter.props) holds the shared settings and the Exporter Version. The deploy script copies a build into `<game>/BepInEx/plugins/KKBP/`.
 
+## Packaging a release
+
+```bash
+scripts/package-exporters.sh
+```
+
+It builds all three adapters and writes `exporters/dist/kkbp-exporters-<version>.zip`, named after the Exporter Version in [Exporter.props](Exporter.props). LICENSE and NOTICE sit at the zip's root beside a folder per Game: `Koikatsu`, `Koikatsu Sunshine` and `Summer Vacation Scramble`. Each holds `BepInEx/plugins/KKBP/` with that Game's DLL, so a user installs the exporter by copying that folder's `BepInEx` into the game's root folder, the one with the game's `.exe`. It needs all three installs, since each adapter builds against its own.
+
 ## Exporting in the game
 
 In the character maker, KK and KKS show the exporter window from the sidebar toggle "Show KKBP Exporter", and SVS shows and hides it with Ctrl+Tab. The window opens where the legacy KK exporter drew its options, and its option names are the legacy KK exporter's: Export All Outfits, Export Variations, Freeze Current Pose, Freeze Shape Keys and Disable Physics. Disable Physics is the inverse of the manifest's `physics` option.
