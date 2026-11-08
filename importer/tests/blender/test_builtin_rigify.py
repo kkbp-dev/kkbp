@@ -96,3 +96,20 @@ def test_hair_chains_keep_their_unweighted_root(ch):
     bones = ch.rig.data.bones
     assert "DEF-cf_J_hairF_s" in bones and "cf_J_hairF_s_master" in bones
     assert bones["DEF-cf_J_hairF_00"].parent.name == "DEF-cf_J_hairF_s"
+
+
+def _panel_order(collections):
+    """The order Rigify's Rig Layers panel draws the collections in."""
+    for c in collections:
+        yield c
+        yield from _panel_order(c.children)
+
+
+def test_an_empty_hidden_custom_collection_sits_right_of_nsfw(ch):
+    """Issue #7: somewhere for the user's own bones, drawn beside NSFW in the Rig Layers panel."""
+    collections = ch.rig.data.collections_all
+    custom, nsfw = collections[rigify.CUSTOM_COLLECTION], collections[rigify.NSFW_COLLECTION]
+    assert len(custom.bones) == 0 and not custom.is_visible
+    assert custom.rigify_ui_row == nsfw.rigify_ui_row > 0
+    row = [c.name for c in _panel_order(ch.rig.data.collections) if c.rigify_ui_row == nsfw.rigify_ui_row]
+    assert row[row.index(nsfw.name) + 1] == custom.name
