@@ -278,6 +278,17 @@ namespace KKBP.Exporter
             morph.ShowsMeshKeys.Add(gagMesh.Data.Key);
             var gagChange = Pattern(gagRenderer, "_MainTex", info.GetInfo(ChaListDefine.KeyType.MainTexAB), info.GetInfo(ChaListDefine.KeyType.MainTex))
                 ?? new MaterialChange { MaterialKey = Meshes.MaterialKey(gagMesh.Data.Key, 0) };
+            // Columns/rows/speed of a flipbook sheet, such as the fiery eyes' "1/6/1". The right eye's
+            // TileAnimationR isn't recorded: one value covers both eyes (ADR 0019).
+            var tile = Vector4.zero;
+            var parts = info.GetInfo(ChaListDefine.KeyType.TileAnimation).Split('/');
+            if (parts.Length >= 3)
+            {
+                float.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out tile.x);
+                float.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out tile.y);
+                float.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out tile.z);
+            }
+            gagChange.Vectors["_TileAnimation"] = Seam.V4(tile);
             gagChange.Floats["_SizeSpeed"] = info.GetInfoFloat(ChaListDefine.KeyType.SizeSpeed);
             gagChange.Floats["_SizeWidth"] = info.GetInfoFloat(ChaListDefine.KeyType.SizeWidth);
             gagChange.Floats["_AngleSpeed"] = info.GetInfoFloat(ChaListDefine.KeyType.AngleSpeed);
