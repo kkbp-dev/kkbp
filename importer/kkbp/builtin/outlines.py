@@ -5,9 +5,13 @@ Each outline material is a copy of a Part's material with its light and dark tex
 black, so it keeps the material's alpha. It is tagged with the Character Key, and with the Id of the
 material it was copied from as `kkbp_outline`, not as a bundle Id, so `ch.material(id)` still finds
 one material per Id.
+
+Where the face's outline mask hides the outline around the eyes, Body's modifier also has no
+thickness, through the `Outline thickness` vertex group (ADR 0033).
 """
 
 import bpy
+import numpy as np
 
 from .. import appending, templates
 from ..character import ID, KEY, ROLE
@@ -21,6 +25,8 @@ SWITCH = Option("use_outlines", bool, True, "Use outlines",
 OUTLINE = "kkbp_outline"  # on an outline material: the bundle Id of the material it outlines
 MODIFIER = "Outline Modifier"
 THICKNESS = 0.0005  # metres, the legacy importer's
+THICKNESS_GROUP = "Outline thickness"  # Body's vertex group: no outline where the face mask hides it
+UV_MAP = "uv_main"  # the UV map the face outline mask is read through
 # The shaders that draw outlines badly, so the Hook leaves them out, as the legacy importer did.
 NO_OUTLINES_WITH = ("cycles", "cycles_classic", "principled")
 BLACK = (0.0, 0.0, 0.0, 1.0)
@@ -57,15 +63,53 @@ def _body(ctx, ch, body):
         return
     if body.material_slots[0].material != face:
         ctx.log.warning("The face isn't Body's first material, so Body's outline may use the wrong material")
-    _modifier(body, offset=0.0, material_offset=slots)
+    modifier = _modifier(body, offset=0.0, material_offset=slots)
     face_outline = _outline(ch, face, f"Outline {face.get(ID)}")
     face_outline_mask = hook_assets.OUTLINES.face_masks.get(templates.template_of(face).name)
     mask = templates.texture_node(face_outline, "alpha_mask")
     if face_outline_mask and mask is not None:
         mask.image = _image(face_outline_mask)  # no outline around the eyes
+        _thin_where_masked(body, face, mask.image, modifier)
     templates.param(face_outline, "force_visibility").default_value = FACE_FORCE_VISIBILITY
     body.data.materials.append(face_outline)
     body.data.materials.append(_outline(ch, skin, f"Outline {skin.get(ID)}"))
+
+
+def _thin_where_masked(body, face, mask, modifier):
+    """Gives the modifier no thickness where the face mask hides the outline. The mask only makes the
+    outline invisible; the modifier would still push the face out along its normals there, and in
+    SVS that opens the seam between each eye socket's disc and rim, which gag expressions close
+    (ADR 0033). A face vertex's weight is one minus the mask at its brightest corner; every other
+    vertex keeps the whole thickness."""
+    mesh = body.data
+    width, height = mask.size
+    uv_layer = mesh.uv_layers.get(UV_MAP)
+    face_slot = next((i for i, s in enumerate(body.material_slots) if s.material == face), None)
+    if not width or not height or uv_layer is None or face_slot is None:
+        return
+    pixels = np.empty(width * height * 4, dtype=np.float32)
+    mask.pixels.foreach_get(pixels)
+    red = pixels.reshape(height, width, 4)[..., 0]
+    uv = np.empty(len(mesh.loops) * 2, dtype=np.float32)
+    uv_layer.data.foreach_get("uv", uv)
+    uv = uv.reshape(-1, 2)
+    loop_vertex = np.empty(len(mesh.loops), dtype=np.int64)
+    mesh.loops.foreach_get("vertex_index", loop_vertex)
+    material = np.empty(len(mesh.polygons), dtype=np.int64)
+    mesh.polygons.foreach_get("material_index", material)
+    loop_total = np.empty(len(mesh.polygons), dtype=np.int64)
+    mesh.polygons.foreach_get("loop_total", loop_total)
+    on_face = np.repeat(material == face_slot, loop_total)
+    x = np.clip((uv[:, 0] % 1.0 * width).astype(np.int64), 0, width - 1)
+    y = np.clip((uv[:, 1] % 1.0 * height).astype(np.int64), 0, height - 1)
+    hidden = np.zeros(len(mesh.vertices), dtype=np.float32)
+    np.maximum.at(hidden, loop_vertex[on_face], red[y[on_face], x[on_face]])
+    group = body.vertex_groups.new(name=THICKNESS_GROUP)
+    weights = 1.0 - hidden
+    for value in np.unique(weights):
+        group.add(np.flatnonzero(weights == value).tolist(), float(value), "REPLACE")
+    modifier.vertex_group = group.name
+    modifier.thickness_vertex_group = 0.0
 
 
 def _textured(ctx, ch, obj, outlines_of):

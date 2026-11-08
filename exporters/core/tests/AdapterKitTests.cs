@@ -87,6 +87,96 @@ namespace KKBP.Exporter.Core.Tests
         }
     }
 
+    public class SeamClosingTests
+    {
+        // A rim triangle at z 0 and a disc triangle 3 mm behind it, its corners 0.4 mm off the rim's
+        // sideways, as in SVS's eye sockets. Every edge of each is open.
+        private static MeshData Socket(Vec3 discDelta, ExpressionCategory category = ExpressionCategory.Gag)
+        {
+            var mesh = new MeshData
+            {
+                Positions = new[]
+                {
+                    new Vec3(0, 0, 0), new Vec3(0.01f, 0, 0), new Vec3(0, 0.01f, 0),
+                    new Vec3(0.0004f, 0, -0.003f), new Vec3(0.0104f, 0, -0.003f), new Vec3(0.0004f, 0.01f, -0.003f),
+                },
+            };
+            mesh.SubMeshes.Add(new SubMesh { Indices = new[] { 0, 1, 2, 3, 4, 5 } });
+            var deltas = new Vec3[6];
+            for (int v = 3; v < 6; v++)
+            {
+                deltas[v] = discDelta;
+            }
+            mesh.Morphs.Add(new MorphData { Category = category, ExpressionName = "Gag Heart Eyes", PositionDeltas = deltas });
+            return mesh;
+        }
+
+        [Fact]
+        public void A_key_that_nearly_closes_the_seam_closes_it()
+        {
+            var mesh = Socket(new Vec3(0, 0, 0.003f));
+            var closed = SeamClosing.Close(mesh, ExpressionCategory.Gag);
+
+            Assert.Single(closed);
+            for (int v = 0; v < 3; v++)
+            {
+                var end = mesh.Positions[v + 3] + mesh.Morphs[0].PositionDeltas[v + 3];
+                Assert.Equal(0, (end - mesh.Positions[v]).Length, 6);
+            }
+            Assert.Equal(0, mesh.Morphs[0].PositionDeltas[0].Length, 6);
+        }
+
+        [Fact]
+        public void A_key_that_stops_too_far_off_is_left_as_it_is()
+        {
+            var mesh = Socket(new Vec3(0, 0, 0.0015f));
+            Assert.Empty(SeamClosing.Close(mesh, ExpressionCategory.Gag));
+            Assert.Equal(0.0015f, mesh.Morphs[0].PositionDeltas[3].Z, 6);
+        }
+
+        [Fact]
+        public void Keys_of_other_categories_are_left_as_they_are()
+        {
+            var mesh = Socket(new Vec3(0, 0, 0.003f), ExpressionCategory.Eye);
+            Assert.Empty(SeamClosing.Close(mesh, ExpressionCategory.Gag));
+            Assert.Equal(0.003f, mesh.Morphs[0].PositionDeltas[3].Z, 6);
+        }
+
+        [Fact]
+        public void A_uv_seam_is_not_an_open_edge()
+        {
+            // A quad of two triangles whose shared edge has its own vertices on each side (a UV seam).
+            var mesh = new MeshData
+            {
+                Positions = new[]
+                {
+                    new Vec3(0, 0, 0), new Vec3(1, 0, 0), new Vec3(1, 1, 0),
+                    new Vec3(0, 0, 0), new Vec3(1, 1, 0), new Vec3(0, 1, 0),
+                },
+            };
+            mesh.SubMeshes.Add(new SubMesh { Indices = new[] { 0, 1, 2, 3, 4, 5 } });
+            // Every corner is on the quad's outline, so all six are open-edge vertices; welding is what
+            // keeps the diagonal from counting twice as open.
+            Assert.Equal(6, SeamClosing.OpenEdgeVertices(mesh).Count);
+
+            var inner = new MeshData { Positions = new Vec3[9] };
+            for (int i = 0; i < 9; i++)
+            {
+                inner.Positions[i] = new Vec3(i % 3, i / 3, 0);
+            }
+            // A 2x2 grid with the centre vertex duplicated (index 4 and a copy at 9) on one triangle.
+            inner.Positions = inner.Positions.Concat(new[] { new Vec3(1, 1, 0) }).ToArray();
+            inner.SubMeshes.Add(new SubMesh
+            {
+                Indices = new[] { 0, 1, 4, 0, 4, 3, 1, 2, 5, 1, 5, 9, 3, 4, 7, 3, 7, 6, 4, 5, 8, 4, 8, 7 },
+            });
+            var open = SeamClosing.OpenEdgeVertices(inner);
+            Assert.DoesNotContain(4, open);
+            Assert.DoesNotContain(9, open);
+            Assert.Equal(8, open.Count);
+        }
+    }
+
     public class BoneRuleTests
     {
         [Theory]

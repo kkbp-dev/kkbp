@@ -61,8 +61,10 @@ OWNS: dict[str, tuple] = {
     # Collections list them.
     "Separate meshes": (lambda d: d.path[0] == "objects" and len(d.path) == 2 and _role(d) == ["outfit"],
                         ("collections", "**"), ("counts", "objects"), ("counts", "meshes")),
-    # The Solidify modifiers, the outline materials and their slots (textured materials move first).
+    # The Solidify modifiers, the outline materials and their slots (textured materials move first),
+    # and Body's vertex group that thins the outline where the face mask hides it.
     "Outlines": (("objects", "*", "modifiers", "**"), ("objects", "*", "mesh", "material_slots", "**"),
+                 ("objects", BODY, "mesh", "vertex_groups"),
                  lambda d: d.path[0] == "materials" and d.path[1].startswith("Outline "),
                  ("images", "**"), ("counts", "materials"), ("counts", "images")),
     # The cards, their rig and bone shapes, their materials and images, and their Collection.

@@ -51,6 +51,7 @@ ADRs:
 - [0030 The Cache folder is visible, kkbp_cache](../adr/0030-the-cache-folder-is-visible.md)
 - [0031 Golden Samples are made locally, from tracked Sample Cards](../adr/0031-golden-samples-are-made-locally.md)
 - [0032 The legacy baseline is retired](../adr/0032-the-legacy-baseline-is-retired.md)
+- [0033 SVS gag keys close the eye seam the game leaves open](../adr/0033-svs-gag-keys-close-the-eye-seam.md)
 
 Folded or dropped from the original review: candidate 6 (Exporter Naming) is replaced by Ids; candidate 9 (import options declared once) is part of the import pipeline.
 
@@ -196,3 +197,4 @@ Decisions agreed at the start of Phase 6:
 
 - **D55** The Golden Samples are made locally ([ADR 0031](../adr/0031-golden-samples-are-made-locally.md)). `contract/samples/` is ignored by git; `scripts/export-sample.sh` exports the tracked Sample Cards in `contract/sample-cards/` and stamps each sample with the exporter and contract it came from. The importer snapshots stay committed, with a 3.5 cm tolerance on the bones physics moves. Tests of a Game with no Golden Sample are skipped with a notice. The animation test writes a synthetic walk FBX.
 - **D56** The legacy baseline and its comparison are deleted ([ADR 0032](../adr/0032-the-legacy-baseline-is-retired.md)).
+- **D57** The SVS adapter closes the half-millimetre seam the game's gag shape leaves between each eye socket's disc and rim, and the Outlines Hook gives Body's modifier no thickness where the face mask hides the outline ([ADR 0033](../adr/0033-svs-gag-keys-close-the-eye-seam.md)).

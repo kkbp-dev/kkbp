@@ -228,6 +228,7 @@ namespace KKBP.Exporter
                 Keep(captured, AddRenderer(sink, riggedTongue));
             }
             new Expressions(cha, table, materials, captured, Warnings).Bake(sink);
+            CloseGagSeams(sink);
             HideUntilShown(sink);
             BakeLightAndDark(sink, captured.FindAll(m => !Same(m.Renderer, riggedTongue)));
             physics.Capture(cha.objTop.transform, sink, t => rig.OwnerOf(t) == Owner.Body);
@@ -280,6 +281,21 @@ namespace KKBP.Exporter
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Closes the half-millimetre crack the game's gag shape leaves between each eye socket's disc
+        /// and its rim on the face (ADR 0033).
+        /// </summary>
+        private void CloseGagSeams(PassSink sink)
+        {
+            var face = cha.face.rendFace != null ? sink.Meshes.Find(m => m.Name == cha.face.rendFace.name) : null;
+            if (face == null)
+            {
+                return;
+            }
+            var closed = SeamClosing.Close(face, ExpressionCategory.Gag);
+            Plugin.Logger.LogInfo("Closed the eye seam in " + closed.Count + " gag shape keys");
         }
 
         /// <summary>Pushes the tear and gag-eye meshes inside the head and gives each its showing key (ADR 0010).</summary>

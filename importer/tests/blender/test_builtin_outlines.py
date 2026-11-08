@@ -67,3 +67,41 @@ def test_no_outlines_with_cycles(build):
     result = kkbp.api.import_bundle(build(_baked()), options={"convert_shaders": "cycles"}, hooks=["Outlines"])
     assert result.hooks[0].status == "ran"
     assert "Outline Modifier" not in character.Character.for_tool(bpy.context).body.modifiers
+
+
+def test_a_body_without_uvs_keeps_the_whole_thickness(build):
+    # The builder's meshes have no UV maps, so there is nothing to read the face mask through.
+    ch = _import(build, "SVS")
+    assert ch.body.modifiers["Outline Modifier"].vertex_group == ""
+    assert outlines.THICKNESS_GROUP not in ch.body.vertex_groups
+
+
+def test_thinning_follows_the_mask_on_face_vertices_only():
+    # Two quads side by side: the left uses the face material, the right another. The mask is white
+    # (no outline) on its left half, black on its right half.
+    mesh = bpy.data.meshes.new("thin")
+    mesh.from_pydata([(0, 0, 0), (1, 0, 0), (1, 1, 0), (0, 1, 0), (2, 0, 0), (2, 1, 0)], [],
+                     [(0, 1, 2, 3), (1, 4, 5, 2)])
+    face, other = bpy.data.materials.new("thin face"), bpy.data.materials.new("thin other")
+    mesh.materials.append(face)
+    mesh.materials.append(other)
+    mesh.polygons[1].material_index = 1
+    uv = mesh.uv_layers.new(name=outlines.UV_MAP)
+    # Face quad: corners 0 and 3 in the white half, 1 and 2 in the black half. The other quad's UVs
+    # are all in the white half, which must not matter.
+    for loop, at in zip(mesh.polygons[0].loop_indices, [(0.1, 0.1), (0.9, 0.1), (0.9, 0.9), (0.1, 0.9)]):
+        uv.data[loop].uv = at
+    for loop in mesh.polygons[1].loop_indices:
+        uv.data[loop].uv = (0.1, 0.5)
+    obj = bpy.data.objects.new("thin", mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    mask = bpy.data.images.new("thin mask", 2, 1)
+    mask.pixels[:] = [1, 1, 1, 1, 0, 0, 0, 1]
+    modifier = obj.modifiers.new("Outline Modifier", "SOLIDIFY")
+
+    outlines._thin_where_masked(obj, face, mask, modifier)
+
+    group = obj.vertex_groups[outlines.THICKNESS_GROUP]
+    weights = [group.weight(i) for i in range(6)]
+    assert weights == [0.0, 1.0, 1.0, 0.0, 1.0, 1.0]
+    assert modifier.vertex_group == group.name and modifier.thickness_vertex_group == 0.0
