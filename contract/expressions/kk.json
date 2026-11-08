@@ -1,0 +1,663 @@
+{
+  "$schema": "../schema/expression-table.schema.json",
+  "game": "KK",
+  "patterns": [
+    {
+      "list": "eye",
+      "index": 0,
+      "game_name": "Default",
+      "name": "Eye Default"
+    },
+    {
+      "list": "eye",
+      "index": 1,
+      "game_name": "Closed",
+      "name": "Eye Closed"
+    },
+    {
+      "list": "eye",
+      "index": 2,
+      "game_name": "Smiling",
+      "name": "Eye Smiling"
+    },
+    {
+      "list": "eye",
+      "index": 3,
+      "game_name": "Happy, Closed",
+      "name": "Eye Happy, Closed"
+    },
+    {
+      "list": "eye",
+      "index": 4,
+      "game_name": "Happy",
+      "name": "Eye Happy"
+    },
+    {
+      "list": "eye",
+      "index": 5,
+      "game_name": "Winking L",
+      "name": "Eye Winking L"
+    },
+    {
+      "list": "eye",
+      "index": 6,
+      "game_name": "Winking R",
+      "name": "Eye Winking R"
+    },
+    {
+      "list": "eye",
+      "index": 7,
+      "game_name": "Pained",
+      "name": "Eye Pained"
+    },
+    {
+      "list": "eye",
+      "index": 8,
+      "game_name": "Bashful",
+      "name": "Eye Bashful"
+    },
+    {
+      "list": "eye",
+      "index": 9,
+      "game_name": "Angry",
+      "name": "Eye Angry"
+    },
+    {
+      "list": "eye",
+      "index": 10,
+      "game_name": "Serious",
+      "name": "Eye Serious"
+    },
+    {
+      "list": "eye",
+      "index": 11,
+      "game_name": "Bored",
+      "name": "Eye Bored"
+    },
+    {
+      "list": "eye",
+      "index": 12,
+      "game_name": "Awkward",
+      "name": "Eye Awkward"
+    },
+    {
+      "list": "eye",
+      "index": 13,
+      "game_name": "Hate",
+      "name": "Eye Hate"
+    },
+    {
+      "list": "eye",
+      "index": 14,
+      "game_name": "Thinking",
+      "name": "Eye Thinking"
+    },
+    {
+      "list": "eye",
+      "index": 15,
+      "game_name": "Sad",
+      "name": "Eye Sad"
+    },
+    {
+      "list": "eye",
+      "index": 16,
+      "game_name": "Crying",
+      "name": "Eye Crying"
+    },
+    {
+      "list": "eye",
+      "index": 17,
+      "game_name": "Impatient",
+      "name": "Eye Impatient"
+    },
+    {
+      "list": "eye",
+      "index": 18,
+      "game_name": "Disappointed",
+      "name": "Eye Disappointed"
+    },
+    {
+      "list": "eye",
+      "index": 19,
+      "game_name": "Worried",
+      "name": "Eye Worried"
+    },
+    {
+      "list": "eye",
+      "index": 20,
+      "game_name": "Smug",
+      "name": "Eye Smug"
+    },
+    {
+      "list": "eye",
+      "index": 21,
+      "game_name": "Circle Eyes 1",
+      "name": "Gag Circle Eyes 1"
+    },
+    {
+      "list": "eye",
+      "index": 22,
+      "game_name": "Circle Eyes 2",
+      "name": "Gag Circle Eyes 2"
+    },
+    {
+      "list": "eye",
+      "index": 23,
+      "game_name": "Spiral Eyes",
+      "name": "Gag Spiral Eyes"
+    },
+    {
+      "list": "eye",
+      "index": 24,
+      "game_name": "Star Pupils",
+      "name": "Eye Star Pupils"
+    },
+    {
+      "list": "eye",
+      "index": 25,
+      "game_name": "Heart Pupils",
+      "name": "Eye Heart Pupils"
+    },
+    {
+      "list": "eye",
+      "index": 26,
+      "game_name": "Heart Eyes",
+      "name": "Gag Heart Eyes"
+    },
+    {
+      "list": "eye",
+      "index": 27,
+      "game_name": "Fiery Eyes",
+      "name": "Gag Fiery Eyes"
+    },
+    {
+      "list": "eye",
+      "index": 28,
+      "game_name": "Cartoony Wink",
+      "name": "Gag Cartoony Wink"
+    },
+    {
+      "list": "eye",
+      "index": 29,
+      "game_name": "Vertical Line",
+      "name": "Gag Vertical Line"
+    },
+    {
+      "list": "eye",
+      "index": 30,
+      "game_name": "Deformed Tsumuri",
+      "name": "Gag Deformed Tsumuri"
+    },
+    {
+      "list": "eye",
+      "index": 31,
+      "game_name": "Horizontal Line",
+      "name": "Gag Horizontal Line"
+    },
+    {
+      "list": "eye",
+      "index": 32,
+      "game_name": "Cartoony Crying",
+      "name": "Gag Cartoony Crying"
+    },
+    {
+      "list": "eye",
+      "index": 33,
+      "game_name": "Left Eye Shut Tight",
+      "name": "Eye Left Eye Shut Tight"
+    },
+    {
+      "list": "eye",
+      "index": 34,
+      "game_name": "Right Eye Shut Tight",
+      "name": "Eye Right Eye Shut Tight"
+    },
+    {
+      "list": "eye",
+      "index": 35,
+      "game_name": "Both Eyes Shut Tight",
+      "name": "Eye Both Eyes Shut Tight"
+    },
+    {
+      "list": "eye",
+      "index": 36,
+      "game_name": "Left Eye Shut Tight 2",
+      "name": "Eye Left Eye Shut Tight 2"
+    },
+    {
+      "list": "eye",
+      "index": 37,
+      "game_name": "Right Eye Shut Tight 2",
+      "name": "Eye Right Eye Shut Tight 2"
+    },
+    {
+      "list": "eye",
+      "index": 38,
+      "game_name": "Both Eyes Shut Tight 2",
+      "name": "Eye Both Eyes Shut Tight 2"
+    },
+    {
+      "list": "eyebrow",
+      "index": 0,
+      "game_name": "デフォルト",
+      "name": "Eyebrow Default"
+    },
+    {
+      "list": "eyebrow",
+      "index": 1,
+      "game_name": "Angry",
+      "name": "Eyebrow Angry"
+    },
+    {
+      "list": "eyebrow",
+      "index": 2,
+      "game_name": "Worried",
+      "name": "Eyebrow Worried"
+    },
+    {
+      "list": "eyebrow",
+      "index": 3,
+      "game_name": "Bored",
+      "name": "Eyebrow Bored"
+    },
+    {
+      "list": "eyebrow",
+      "index": 4,
+      "game_name": "Doubt L",
+      "name": "Eyebrow Doubt L"
+    },
+    {
+      "list": "eyebrow",
+      "index": 5,
+      "game_name": "Doubt R",
+      "name": "Eyebrow Doubt R"
+    },
+    {
+      "list": "eyebrow",
+      "index": 6,
+      "game_name": "Thinking L",
+      "name": "Eyebrow Thinking L"
+    },
+    {
+      "list": "eyebrow",
+      "index": 7,
+      "game_name": "Thinking R",
+      "name": "Eyebrow Thinking R"
+    },
+    {
+      "list": "eyebrow",
+      "index": 8,
+      "game_name": "Furious L",
+      "name": "Eyebrow Furious L"
+    },
+    {
+      "list": "eyebrow",
+      "index": 9,
+      "game_name": "Furious R",
+      "name": "Eyebrow Furious R"
+    },
+    {
+      "list": "eyebrow",
+      "index": 10,
+      "game_name": "Serious",
+      "name": "Eyebrow Serious"
+    },
+    {
+      "list": "eyebrow",
+      "index": 11,
+      "game_name": "Anxious",
+      "name": "Eyebrow Anxious"
+    },
+    {
+      "list": "eyebrow",
+      "index": 12,
+      "game_name": "Surprised",
+      "name": "Eyebrow Surprised"
+    },
+    {
+      "list": "eyebrow",
+      "index": 13,
+      "game_name": "Disappointed",
+      "name": "Eyebrow Disappointed"
+    },
+    {
+      "list": "eyebrow",
+      "index": 14,
+      "game_name": "Smug",
+      "name": "Eyebrow Smug"
+    },
+    {
+      "list": "eyebrow",
+      "index": 15,
+      "game_name": "Winking L",
+      "name": "Eyebrow Winking L"
+    },
+    {
+      "list": "eyebrow",
+      "index": 16,
+      "game_name": "Winking R",
+      "name": "Eyebrow Winking R"
+    },
+    {
+      "list": "mouth",
+      "index": 0,
+      "game_name": "デフォルト",
+      "name": "Mouth Default",
+      "closed_name": "Mouth Default, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 1,
+      "game_name": "Smiling",
+      "name": "Mouth Smiling",
+      "closed_name": "Mouth Smiling, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 2,
+      "game_name": "Happy (Broad)",
+      "name": "Mouth Happy (Broad)",
+      "closed_name": "Mouth Happy (Broad), Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 3,
+      "game_name": "Happy (Moderate)",
+      "name": "Mouth Happy (Moderate)",
+      "closed_name": "Mouth Happy (Moderate), Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 4,
+      "game_name": "Happy (Slight)",
+      "name": "Mouth Happy (Slight)",
+      "closed_name": "Mouth Happy (Slight), Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 5,
+      "game_name": "Excited (Broad)",
+      "name": "Mouth Excited (Broad)",
+      "closed_name": "Mouth Excited (Broad), Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 6,
+      "game_name": "Excited (Moderate)",
+      "name": "Mouth Excited (Moderate)",
+      "closed_name": "Mouth Excited (Moderate), Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 7,
+      "game_name": "Excited (Slight)",
+      "name": "Mouth Excited (Slight)",
+      "closed_name": "Mouth Excited (Slight), Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 8,
+      "game_name": "Angry",
+      "name": "Mouth Angry",
+      "closed_name": "Mouth Angry, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 9,
+      "game_name": "Angry 2",
+      "name": "Mouth Angry 2",
+      "closed_name": "Mouth Angry 2, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 10,
+      "game_name": "Serious 1",
+      "name": "Mouth Serious 1",
+      "closed_name": "Mouth Serious 1, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 11,
+      "game_name": "Serious 2",
+      "name": "Mouth Serious 2",
+      "closed_name": "Mouth Serious 2, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 12,
+      "game_name": "Hate",
+      "name": "Mouth Hate",
+      "closed_name": "Mouth Hate, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 13,
+      "game_name": "Lonely",
+      "name": "Mouth Lonely",
+      "closed_name": "Mouth Lonely, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 14,
+      "game_name": "Impatient",
+      "name": "Mouth Impatient",
+      "closed_name": "Mouth Impatient, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 15,
+      "game_name": "Dissatisfied",
+      "name": "Mouth Dissatisfied",
+      "closed_name": "Mouth Dissatisfied, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 16,
+      "game_name": "Amazed",
+      "name": "Mouth Amazed",
+      "closed_name": "Mouth Amazed, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 17,
+      "game_name": "Surprised",
+      "name": "Mouth Surprised",
+      "closed_name": "Mouth Surprised, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 18,
+      "game_name": "Surprised (Moderate)",
+      "name": "Mouth Surprised (Moderate)",
+      "closed_name": "Mouth Surprised (Moderate), Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 19,
+      "game_name": "Smug",
+      "name": "Mouth Smug",
+      "closed_name": "Mouth Smug, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 20,
+      "game_name": "Playful",
+      "name": "Mouth Playful",
+      "closed_name": "Mouth Playful, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 21,
+      "game_name": "Eating",
+      "name": "Mouth Eating",
+      "closed_name": "Mouth Eating, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 22,
+      "game_name": "Hold In Mouth",
+      "name": "Mouth Hold In Mouth",
+      "closed_name": "Mouth Hold In Mouth, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 23,
+      "game_name": "Kiss",
+      "name": "Mouth Kiss",
+      "closed_name": "Mouth Kiss, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 24,
+      "game_name": "Tongue Out",
+      "name": "Mouth Tongue Out",
+      "closed_name": "Mouth Tongue Out, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 25,
+      "game_name": "Small A",
+      "name": "Mouth Small A",
+      "closed_name": "Mouth Small A, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 26,
+      "game_name": "Big A",
+      "name": "Mouth Big A",
+      "closed_name": "Mouth Big A, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 27,
+      "game_name": "Small I",
+      "name": "Mouth Small I",
+      "closed_name": "Mouth Small I, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 28,
+      "game_name": "Big I",
+      "name": "Mouth Big I",
+      "closed_name": "Mouth Big I, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 29,
+      "game_name": "Small U",
+      "name": "Mouth Small U",
+      "closed_name": "Mouth Small U, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 30,
+      "game_name": "Big U",
+      "name": "Mouth Big U",
+      "closed_name": "Mouth Big U, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 31,
+      "game_name": "Small E",
+      "name": "Mouth Small E",
+      "closed_name": "Mouth Small E, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 32,
+      "game_name": "Big E",
+      "name": "Mouth Big E",
+      "closed_name": "Mouth Big E, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 33,
+      "game_name": "Small O",
+      "name": "Mouth Small O",
+      "closed_name": "Mouth Small O, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 34,
+      "game_name": "Big O",
+      "name": "Mouth Big O",
+      "closed_name": "Mouth Big O, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 35,
+      "game_name": "Small N",
+      "name": "Mouth Small N",
+      "closed_name": "Mouth Small N, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 36,
+      "game_name": "Big N",
+      "name": "Mouth Big N",
+      "closed_name": "Mouth Big N, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 37,
+      "game_name": "Catlike",
+      "name": "Mouth Catlike",
+      "closed_name": "Mouth Catlike, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 38,
+      "game_name": "Triangle",
+      "name": "Mouth Triangle",
+      "closed_name": "Mouth Triangle, Closed"
+    },
+    {
+      "list": "mouth",
+      "index": 39,
+      "game_name": "Cartoony Smile",
+      "name": "Mouth Cartoony Smile",
+      "closed_name": "Mouth Cartoony Smile, Closed"
+    }
+  ],
+  "recipes": [
+    {
+      "name": "Mouth Chewing",
+      "shapes": [
+        {
+          "shape": "kuti_face.f00_mogu_op",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "name": "Mouth Chewing, Closed",
+      "shapes": [
+        {
+          "shape": "kuti_face.f00_mogu_cl",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "name": "Mouth Eating 2",
+      "shapes": [
+        {
+          "shape": "kuti_face.f00_tabe_op",
+          "weight": 1
+        },
+        {
+          "shape": "kuti_ha.ha00_def_op",
+          "weight": 1
+        },
+        {
+          "shape": "kuti_yaeba.y00_def_op",
+          "weight": 1
+        },
+        {
+          "shape": "kuti_sita.t00_def_op",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

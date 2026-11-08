@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Builds the Core on its own for .NET 3.5 (KK's runtime), so any API newer than 3.5 fails the build.
+       Nothing ships from this project; exporters compile the Core's source in through the .projitems. -->
+  <PropertyGroup>
+    <TargetFramework>net35</TargetFramework>
+    <AssemblyName>KKBP.Exporter.Core</AssemblyName>
+    <RootNamespace>KKBP.Exporter.Core</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net35" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+  <Import Project="..\KKBP.Exporter.Core.projitems" Label="Shared" />
+</Project>

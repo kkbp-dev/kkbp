@@ -1,0 +1,48 @@
+<Project>
+  <!-- Shared by the Game Adapter projects. Game, Unity and BepInEx assemblies come from a local game
+       install (ADR 0007): set KKBP_GAMES_DIR, or keep the installs in the working copy's games/ folder.
+       Nothing from an install is copied into the build output. -->
+  <PropertyGroup>
+    <!-- BepInEx needs a plain major.minor.patch; the Manifest records the full Exporter Version. -->
+    <KKBPPluginVersion>6.0.0</KKBPPluginVersion>
+    <KKBPExporterVersion>$(KKBPPluginVersion)</KKBPExporterVersion>
+    <KKBPGamesDir Condition="'$(KKBPGamesDir)' == '' And '$(KKBP_GAMES_DIR)' != ''">$(KKBP_GAMES_DIR)</KKBPGamesDir>
+    <KKBPGamesDir Condition="'$(KKBPGamesDir)' == ''">$(MSBuildThisFileDirectory)..\games</KKBPGamesDir>
+    <KKBPGamesDir>$([MSBuild]::EnsureTrailingSlash('$(KKBPGamesDir)'))</KKBPGamesDir>
+    <KKBPContractDir>$(MSBuildThisFileDirectory)..\contract\</KKBPContractDir>
+
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+  <!-- Each adapter adds its game's assemblies to GameAssembly, with paths relative to KKBPGamesDir. -->
+  <Target Name="KKBPReferenceGameAssemblies" BeforeTargets="ResolveAssemblyReferences;CoreCompile">
+    <Error Condition="!Exists('$(KKBPGamesDir)%(GameAssembly.Identity)')"
+           Text="Missing game assembly $(KKBPGamesDir)%(GameAssembly.Identity). Install the game there, or set KKBP_GAMES_DIR to the folder holding the installs (ADR 0007)." />
+    <ItemGroup>
+      <Reference Include="@(GameAssembly->'%(Filename)')">
+        <HintPath>$(KKBPGamesDir)%(GameAssembly.Identity)</HintPath>
+        <Private>false</Private>
+      </Reference>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="KKBPWriteVersion" BeforeTargets="CoreCompile">
+    <PropertyGroup>
+      <KKBPVersionFile>$(IntermediateOutputPath)ExporterVersion.g.cs</KKBPVersionFile>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(KKBPVersionFile)" Overwrite="true" WriteOnlyWhenDifferent="true"
+                      Lines="namespace KKBP.Exporter { internal static class ExporterVersion { public const string Value = &quot;$(KKBPExporterVersion)&quot;%3B public const string Plugin = &quot;$(KKBPPluginVersion)&quot;%3B } }" />
+    <ItemGroup>
+      <Compile Include="$(KKBPVersionFile)" />
+      <FileWrites Include="$(KKBPVersionFile)" />
+    </ItemGroup>
+  </Target>
+</Project>

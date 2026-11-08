@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/pass.schema.json",
+  "title": "body.json and outfits/NN/outfit.json",
+  "description": "A Pass's data file: the meshes in its .glb.",
+  "type": "object",
+  "properties": {
+    "kind": { "enum": ["body", "outfit"] },
+    "outfit": {
+      "oneOf": [
+        { "$ref": "common.schema.json#/$defs/outfit_index" },
+        { "type": "null" }
+      ]
+    },
+    "meshes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "name": { "type": "string" },
+          "materials": {
+            "description": "Material Ids, in the order of the glTF mesh's primitives.",
+            "type": "array",
+            "minItems": 1,
+            "items": { "$ref": "common.schema.json#/$defs/id" }
+          },
+          "alternate": {
+            "description": "True if the mesh only shows in the game's alternate clothing state.",
+            "type": "boolean"
+          }
+        },
+        "required": ["id", "name", "materials", "alternate"],
+        "additionalProperties": false
+      }
+    },
+    "body_textures": {
+      "description": "Outfit Passes only: textures this Outfit puts on body materials, such as the alpha mask that hides skin under its clothes. The Body Pass leaves these slots out of materials.json.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "material": { "$ref": "common.schema.json#/$defs/id" },
+          "texture": { "$ref": "materials.schema.json#/$defs/texture" }
+        },
+        "required": ["material", "texture"],
+        "additionalProperties": false
+      }
+    },
+    "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+  },
+  "required": ["kind", "outfit", "meshes"],
+  "additionalProperties": false,
+  "if": { "properties": { "kind": { "const": "body" } } },
+  "then": { "properties": { "outfit": { "type": "null" } }, "not": { "required": ["body_textures"] } },
+  "else": { "properties": { "outfit": { "type": "integer" } } }
+}

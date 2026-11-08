@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/sets/blend-mode.schema.json",
+  "title": "Blend Mode",
+  "description": "How a material lets the background show through.",
+  "type": "string",
+  "enum": [
+    "opaque",
+    "cutout",
+    "alpha",
+    "glasses"
+  ],
+  "x-unique": []
+}

@@ -1,0 +1,62 @@
+KKBP
+
+KKBP is licensed under the MIT License (LICENSE). It continues the legacy KKBP importer and
+exporters; the credits below are for the work it ports or reproduces.
+
+The legacy KKBP importer
+  Copyright (c) 2024 KKBP developers. MIT License.
+  The Rigify Hook's scripts (importer/kkbp/builtin/rigify/before.py, after.py and commons.py) are
+  its Rigify scripts, ported with as few changes as possible. The Material Template library and the
+  built-in Hooks' asset files (importer/kkbp/library/) are built from its KK Shader V9.blend
+  (importer/templates-src/), which holds the shader templates, the edit templates, the Rigify
+  widgets, the face-card rig and its mouth atlas, and the outline materials.
+
+The legacy exporters
+  The KKBP Exporter for Koikatsu (originally by Sonogami-Rinne and MediaMoots) and the Summer 
+  Vacation Scramble Character Exporter (Sonogami-Rinne under LGPL-3.0) were the reference 
+  for the new exporters, such as where the light is placed for the light and dark bakes. 
+  The new exporters are new code and bundle nothing from them.
+
+The importer also rewrites, as its own code, features that the legacy importer took from these
+projects. No code from them is bundled; their work was the reference.
+
+Material Combiner
+  https://github.com/Grim-es/material-combiner-addon
+  Copyright (c) 2018 shotariya. MIT License.
+  The export atlas (importer/kkbp/atlas/ and importer/kkbp/tools/export_prep/atlas.py) reproduces
+  its layout, image tiling and UV remapping.
+
+  It used Jake Gordon's binary-tree bin packer:
+  Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 Jake Gordon and contributors. MIT License.
+  importer/kkbp/atlas/layout.py follows the same algorithm.
+
+Cats Blender Plugin
+  https://github.com/michaeldegroot/cats-blender-plugin
+  Copyright (c) 2017 GiveMeAllYourCats. MIT License.
+  The Merge Weights tool (importer/kkbp/tools/merge_weights.py) reproduces its Merge Weights.
+
+KKShadersRecreated and KKShadersPlus
+  https://github.com/xukmi/KKShadersPlus
+  Copyright (c) 2021 xukmi. MIT License (as KKShadersRecreated's LICENSE states).
+  The edit materials' shadow colours (importer/kkbp/shading/) follow their recreation of the
+  game's ShadeAdjustItem and MapValuesMain, which the legacy importer had translated.
+
+The joint-correction drivers in the Rigify Hook (importer/kkbp/builtin/rigify/prepare.py) come
+mostly from a .blend file by johnbbob_la_petite on the Koikatsu Discord, as in the legacy importer.
+
+The MIT License, as it applies to each MIT-licensed project above:
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+  associated documentation files (the "Software"), to deal in the Software without restriction,
+  including without limitation the rights to use, copy, modify, merge, publish, distribute,
+  sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all copies or
+  substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+  BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+  OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

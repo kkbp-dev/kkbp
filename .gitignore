@@ -1,0 +1,40 @@
+# Local material that is not part of the repository.
+/games/
+/Blender addons/
+/kkbp_exporter/
+/svs_exporter/
+/Sample exporter output files/
+/.claude/
+
+# The importer's Cache inside an Export Bundle; an exporter never writes it.
+.kkbp_cache/
+kkbp_cache/
+
+# Test harness working state (isolated Blender profiles, copied samples, run output).
+/importer/tests/.work/
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+._*
+__MACOSX/
+
+# .NET build output and npm installs.
+bin/
+obj/
+node_modules/
+
+# Golden Samples: each developer exports their own from contract/sample-cards/ (scripts/export-sample.sh).
+/contract/samples/
+
+# Importer development venv (built from Blender's own Python) and downloaded Pillow wheels.
+/importer/.venv/
+/importer/kkbp/wheels/
+
+# Built extension zips (scripts/package-importer.sh).
+/importer/dist/
+
+# Local material the user keeps beside the repository: animation samples, and test cards.
+/sample animations/
+/batch_exporter_testing/

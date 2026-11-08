@@ -1,0 +1,16 @@
+# Development tools for the importer, installed into importer/.venv by scripts/setup-importer-dev.sh.
+# Pinned on purpose; raise a pin only to test what users get.
+attrs==26.1.0
+iniconfig==2.3.1
+jsonschema==4.26.0
+# The edit colours' host tests (kkbp/shading/); the version Blender 5.2 ships.
+numpy==2.3.4
+jsonschema-specifications==2025.9.1
+packaging==26.3
+# The atlas's host tests (kkbp/atlas/); the same version kkbp/pillow.py installs into Blender.
+pillow==12.3.0
+pluggy==1.7.0
+Pygments==2.21.0
+pytest==9.2.0
+referencing==0.37.0
+rpds-py==2026.9.1

@@ -1,0 +1,17 @@
+# Headless Blender test harness configuration. Paths are relative to the repository root
+# unless absolute; a leading ~ is expanded.
+
+# Blender builds every check runs on. Override a path with KKBP_BLENDER_<NAME>,
+# for example KKBP_BLENDER_LATEST=/opt/blender-5.3.0/blender.
+# `version` is the major.minor the binary must report; "" accepts any.
+[blender.min]
+description = "Minimum supported release: 5.2 LTS"
+path = "/snap/bin/blender"
+version = "5.2"
+
+[blender.latest]
+# Blender 5.3 is in beta as of 2026-10-31, so the latest stable release is still 5.2.
+# Point this at the newest stable build once one is released.
+description = "Latest stable release"
+path = "/snap/bin/blender"
+version = ""

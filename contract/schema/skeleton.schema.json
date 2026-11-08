@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/skeleton.schema.json",
+  "title": "skeleton.json",
+  "description": "Every bone of every Pass, with its rest pose relative to its parent, in glTF space.",
+  "type": "object",
+  "properties": {
+    "bones": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "name": { "type": "string" },
+          "parent": {
+            "oneOf": [
+              { "$ref": "common.schema.json#/$defs/id" },
+              { "type": "null" }
+            ]
+          },
+          "role": { "$ref": "sets/bone-role.schema.json" },
+          "group": { "$ref": "sets/bone-group.schema.json" },
+          "translation": { "$ref": "common.schema.json#/$defs/vec3" },
+          "rotation": { "$ref": "common.schema.json#/$defs/quat" },
+          "scale": { "$ref": "common.schema.json#/$defs/vec3" }
+        },
+        "required": ["id", "name", "parent", "group", "translation", "rotation", "scale"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["bones"],
+  "additionalProperties": false
+}

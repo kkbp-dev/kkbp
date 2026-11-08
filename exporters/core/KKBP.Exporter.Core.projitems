@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>3f6d2b1e-8c4a-4e57-9b1d-6a2f0c5e7d91</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>KKBP.Exporter.Core</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\BlendModes.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\BoneRules.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\CardBatch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\Deltas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\HiddenBasis.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\LightBake.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\NormalMaps.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\TextureRoles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\BundleExport.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\BundleFiles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\BundleWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\ExpressionTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\GlbWriter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\IGameAdapter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\Ids.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\Json.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\Math.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\MeshVectors.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\Model.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\Sets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\UnitySpace.cs" />
+  </ItemGroup>
+</Project>

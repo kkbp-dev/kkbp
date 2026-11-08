@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/common.schema.json",
+  "title": "Shared definitions",
+  "$defs": {
+    "id": {
+      "description": "A mesh, material or bone Id (ADR 0005): ASCII, at most 63 bytes, no leading, trailing or doubled underscore.",
+      "type": "string",
+      "pattern": "^(?!.*__)[A-Za-z0-9.-](?:[A-Za-z0-9_.-]{0,61}[A-Za-z0-9.-])?$"
+    },
+    "game": {
+      "type": "string",
+      "enum": [
+        "KK",
+        "KKS",
+        "SVS"
+      ]
+    },
+    "outfit_index": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 99
+    },
+    "vec2": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "vec3": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "vec4": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "quat": {
+      "description": "A rotation as [x, y, z, w].",
+      "$ref": "#/$defs/vec4"
+    },
+    "color": {
+      "description": "[r, g, b, a] exactly as set on the game material, sRGB-encoded.",
+      "$ref": "#/$defs/vec4"
+    },
+    "extensions": {
+      "description": "Game Extensions. KK and KKS write 'kk'; 'kks' holds anything only KKS has. A Game-only field is added only when a Step or Hook reads it.",
+      "type": "object",
+      "properties": {
+        "kk": {
+          "description": "No Game-only data is defined for this section, so this must be empty.",
+          "type": "object",
+          "additionalProperties": false
+        },
+        "kks": {
+          "description": "No Game-only data is defined for this section, so this must be empty.",
+          "type": "object",
+          "additionalProperties": false
+        },
+        "svs": {
+          "description": "No Game-only data is defined for this section, so this must be empty.",
+          "type": "object",
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/sets/bone-group.schema.json",
+  "title": "Bone Group",
+  "description": "The broad kind of a bone. Every bone carries exactly one. A helper bone is safe to delete.",
+  "type": "string",
+  "enum": [
+    "deform",
+    "helper",
+    "skirt",
+    "breast",
+    "hair",
+    "accessory",
+    "face",
+    "eye",
+    "eyebrow",
+    "mouth",
+    "nsfw"
+  ],
+  "x-unique": []
+}

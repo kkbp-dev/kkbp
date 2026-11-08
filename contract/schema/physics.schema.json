@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/physics.schema.json",
+  "title": "physics.json",
+  "description": "The game's dynamic bone chains and their colliders, in glTF space.",
+  "type": "object",
+  "properties": {
+    "chains": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "root": { "$ref": "common.schema.json#/$defs/id" },
+          "outfit": {
+            "description": "The Outfit the chain belongs to, or null for the body.",
+            "oneOf": [
+              { "$ref": "common.schema.json#/$defs/outfit_index" },
+              { "type": "null" }
+            ]
+          },
+          "gravity": { "$ref": "common.schema.json#/$defs/vec3" },
+          "force": { "$ref": "common.schema.json#/$defs/vec3" },
+          "end_length": { "type": "number" },
+          "end_offset": { "$ref": "common.schema.json#/$defs/vec3" },
+          "weight": { "type": "number" },
+          "colliders": {
+            "description": "Names of colliders in this file.",
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "exclusions": {
+            "type": "array",
+            "items": { "$ref": "common.schema.json#/$defs/id" }
+          },
+          "particles": {
+            "description": "Per-bone values, with the game's distribution curves already applied.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "bone": { "$ref": "common.schema.json#/$defs/id" },
+                "damping": { "type": "number" },
+                "elasticity": { "type": "number" },
+                "stiffness": { "type": "number" },
+                "inert": { "type": "number" },
+                "radius": { "type": "number" }
+              },
+              "required": ["bone", "damping", "elasticity", "stiffness", "inert", "radius"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["root", "outfit", "gravity", "force", "end_length", "end_offset", "weight", "colliders", "exclusions", "particles"],
+        "additionalProperties": false
+      }
+    },
+    "colliders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The game name of the collider, unique within this file.",
+            "type": "string",
+            "minLength": 1
+          },
+          "outfit": {
+            "oneOf": [
+              { "$ref": "common.schema.json#/$defs/outfit_index" },
+              { "type": "null" }
+            ]
+          },
+          "bone": {
+            "description": "The exported bone the collider is attached to. Hit-box transforms are never exported, so a collider on one is moved onto its nearest exported ancestor.",
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "center": { "$ref": "common.schema.json#/$defs/vec3" },
+          "rotation": { "$ref": "common.schema.json#/$defs/quat" },
+          "radius": { "type": "number" },
+          "height": { "type": "number" },
+          "direction": { "enum": ["x", "y", "z"] },
+          "bound": { "enum": ["outside", "inside"] }
+        },
+        "required": ["name", "outfit", "bone", "center", "rotation", "radius", "height", "direction", "bound"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["chains", "colliders"],
+  "additionalProperties": false
+}

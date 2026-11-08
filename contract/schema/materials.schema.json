@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/materials.schema.json",
+  "title": "materials.json",
+  "description": "The materials of every Pass: shader values keyed by Raw Property, and textures.",
+  "type": "object",
+  "properties": {
+    "materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "$ref": "common.schema.json#/$defs/id" },
+          "name": { "type": "string" },
+          "shader": {
+            "description": "The game shader's name.",
+            "type": "string"
+          },
+          "role": { "$ref": "sets/material-role.schema.json" },
+          "blend_mode": { "$ref": "sets/blend-mode.schema.json" },
+          "colors": {
+            "type": "object",
+            "additionalProperties": { "$ref": "common.schema.json#/$defs/color" }
+          },
+          "floats": {
+            "type": "object",
+            "additionalProperties": { "type": "number" }
+          },
+          "vectors": {
+            "type": "object",
+            "additionalProperties": { "$ref": "common.schema.json#/$defs/vec4" }
+          },
+          "textures": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/texture" }
+          },
+          "extensions": { "$ref": "#/$defs/material_extensions" }
+        },
+        "required": ["id", "name", "shader", "blend_mode", "colors", "floats", "vectors", "textures"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["materials"],
+  "additionalProperties": false,
+  "$defs": {
+    "material_extensions": {
+      "description": "A material's Game Extensions. KK and KKS may give a material its create material; every other Game Extension stays empty.",
+      "type": "object",
+      "properties": {
+        "kk": {
+          "type": "object",
+          "properties": {
+            "create": { "$ref": "#/$defs/create" }
+          },
+          "additionalProperties": false
+        },
+        "kks": { "$ref": "common.schema.json#/$defs/extensions/properties/kks" },
+        "svs": { "$ref": "common.schema.json#/$defs/extensions/properties/svs" }
+      },
+      "additionalProperties": false
+    },
+    "create": {
+      "description": "The Create Material that composites this material's main texture from a base texture, masks and the Character's colours. It has the shape of a material's shader data; the material it sits on gives the Id, name, Material Role and Blend Mode. Its _MainTex is the uncoloured base the game colours.",
+      "type": "object",
+      "properties": {
+        "shader": {
+          "description": "The create material's game shader name.",
+          "type": "string"
+        },
+        "colors": {
+          "type": "object",
+          "additionalProperties": { "$ref": "common.schema.json#/$defs/color" }
+        },
+        "floats": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        },
+        "vectors": {
+          "type": "object",
+          "additionalProperties": { "$ref": "common.schema.json#/$defs/vec4" }
+        },
+        "textures": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/texture" }
+        }
+      },
+      "required": ["shader", "colors", "floats", "vectors", "textures"],
+      "additionalProperties": false
+    },
+    "texture": {
+      "type": "object",
+      "properties": {
+        "role": { "$ref": "sets/texture-role.schema.json" },
+        "raw": {
+          "description": "The Raw Property: the game shader's own name for the slot.",
+          "type": "string",
+          "minLength": 1
+        },
+        "variant": { "$ref": "sets/texture-variant.schema.json" },
+        "pattern": {
+          "description": "For slots holding several textures the game swaps at runtime: the game's texture name.",
+          "type": "string",
+          "minLength": 1
+        },
+        "file": {
+          "type": "string",
+          "pattern": "^textures/[0-9]{4,}\\.png$"
+        },
+        "offset": { "$ref": "common.schema.json#/$defs/vec2" },
+        "scale": { "$ref": "common.schema.json#/$defs/vec2" }
+      },
+      "required": ["raw", "file", "offset", "scale"],
+      "additionalProperties": false
+    }
+  }
+}

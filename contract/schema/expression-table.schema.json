@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/expression-table.schema.json",
+  "title": "contract/expressions/<game>.json",
+  "description": "A Game's translation table, embedded into its exporter (ADR 0004). Not part of a bundle.",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "game": { "$ref": "common.schema.json#/$defs/game" },
+    "patterns": {
+      "description": "Game patterns, found by list and position in the game's list.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "list": { "enum": ["eye", "eyebrow", "mouth"] },
+          "index": { "type": "integer", "minimum": 0 },
+          "game_name": {
+            "description": "The name the game showed when the table was written. Reference only, never used for matching.",
+            "type": ["string", "null"]
+          },
+          "name": { "$ref": "sets/expression-name.schema.json" },
+          "closed_name": {
+            "description": "Name for the pattern baked closed, where the game blends between open and closed. The exporter skips it when it equals the open one.",
+            "$ref": "sets/expression-name.schema.json"
+          }
+        },
+        "required": ["list", "index", "game_name", "name"],
+        "additionalProperties": false
+      }
+    },
+    "recipes": {
+      "description": "Expressions that aren't game patterns, baked from game shape keys at the given weights.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "$ref": "sets/expression-name.schema.json" },
+          "shapes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "shape": {
+                  "description": "The game's shape key name. Meshes that don't have it are skipped.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "weight": { "type": "number", "minimum": 0, "maximum": 1 }
+              },
+              "required": ["shape", "weight"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["name", "shapes"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["game", "patterns", "recipes"],
+  "additionalProperties": false
+}

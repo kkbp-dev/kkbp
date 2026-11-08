@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/expressions.schema.json",
+  "title": "expressions.json",
+  "description": "Every expression shape key the exporter baked (ADR 0003), one record per morph target, and what each expression does besides moving vertices.",
+  "type": "object",
+  "properties": {
+    "expressions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "mesh": { "$ref": "common.schema.json#/$defs/id" },
+          "target": {
+            "description": "The morph target name in that mesh's glTF targetNames: the Expression Name if there is one, otherwise the game name.",
+            "type": "string",
+            "minLength": 1
+          },
+          "category": { "$ref": "sets/expression-category.schema.json" },
+          "name": {
+            "oneOf": [
+              { "$ref": "sets/expression-name.schema.json" },
+              { "type": "null" }
+            ]
+          },
+          "game_name": {
+            "description": "The game's own name, for reference. Null for shape keys the exporter makes itself, such as the tear keys.",
+            "type": ["string", "null"]
+          },
+          "extensions": { "$ref": "common.schema.json#/$defs/extensions" }
+        },
+        "required": ["mesh", "target", "category", "name", "game_name"],
+        "additionalProperties": false
+      }
+    },
+    "effects": {
+      "description": "One entry per expression that shows or hides meshes, or changes materials, while it is on. The expression is every record with this target name; the entry applies to all of them.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "description": "The expression's target name, as in its records.",
+            "type": "string",
+            "minLength": 1
+          },
+          "shows": {
+            "description": "Meshes in the Pass of the expression's shape keys that the game shows while it is on. Each has a showing key: a tears or gag shape key with no game name (ADR 0010).",
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "$ref": "common.schema.json#/$defs/id" }
+          },
+          "hides": {
+            "description": "Meshes in the Pass of the expression's shape keys that the game hides while it is on, such as the pupils behind gag eyes.",
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "$ref": "common.schema.json#/$defs/id" }
+          },
+          "material_changes": {
+            "description": "Material values the game sets while this expression is on, keyed by Raw Property as in materials.json.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "material": { "$ref": "common.schema.json#/$defs/id" },
+                "textures": {
+                  "description": "Slots switched to one of the material's own texture patterns.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "raw": { "type": "string", "minLength": 1 },
+                      "pattern": { "type": "string", "minLength": 1 }
+                    },
+                    "required": ["raw", "pattern"],
+                    "additionalProperties": false
+                  }
+                },
+                "floats": {
+                  "type": "object",
+                  "additionalProperties": { "type": "number" }
+                },
+                "vectors": {
+                  "type": "object",
+                  "additionalProperties": { "$ref": "common.schema.json#/$defs/vec4" }
+                }
+              },
+              "required": ["material", "textures", "floats", "vectors"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["target"],
+        "minProperties": 2,
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["expressions", "effects"],
+  "additionalProperties": false
+}

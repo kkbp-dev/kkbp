@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/sets/texture-role.schema.json",
+  "title": "Texture Role",
+  "description": "The meaning of a texture slot. Unique per material and Texture Variant and pattern, except overlay.",
+  "type": "string",
+  "enum": [
+    "main",
+    "color_mask",
+    "normal",
+    "detail_normal",
+    "alpha_mask",
+    "line_mask",
+    "detail_mask",
+    "overlay"
+  ],
+  "x-unique": [
+    "main",
+    "color_mask",
+    "normal",
+    "detail_normal",
+    "alpha_mask",
+    "line_mask",
+    "detail_mask"
+  ]
+}

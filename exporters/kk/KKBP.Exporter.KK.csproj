@@ -1,0 +1,70 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The KK and KKS Game Adapter. Configuration NET35 builds it for KK (Unity 5.6, BepInEx 5);
+       NET46 builds it for KKS (Unity 2019.4) with KKS defined. Every KKS difference is in src/Kks.cs. -->
+  <Import Project="..\Exporter.props" />
+
+  <PropertyGroup>
+    <Configurations>NET35;NET46</Configurations>
+    <Configuration Condition="'$(Configuration)' == ''">NET35</Configuration>
+    <RootNamespace>KKBP.Exporter</RootNamespace>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'NET35'">
+    <TargetFramework>net35</TargetFramework>
+    <AssemblyName>KKBP.Exporter.KK</AssemblyName>
+    <DefineConstants>$(DefineConstants);KK</DefineConstants>
+    <KKBPGame>Koikatsu</KKBPGame>
+    <KKBPManaged>Koikatsu/Koikatu_Data/Managed</KKBPManaged>
+    <KKBPTable>kk</KKBPTable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'NET46'">
+    <TargetFramework>net46</TargetFramework>
+    <AssemblyName>KKBP.Exporter.KKS</AssemblyName>
+    <DefineConstants>$(DefineConstants);KKS</DefineConstants>
+    <KKBPGame>Koikatsu Sunshine</KKBPGame>
+    <KKBPManaged>Koikatsu Sunshine/KoikatsuSunshine_Data/Managed</KKBPManaged>
+    <KKBPTable>kks</KKBPTable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <!-- HF Patch names the mod loader folder BepinEx in both games. -->
+  <ItemGroup>
+    <GameAssembly Include="$(KKBPGame)/BepinEx/core/BepInEx.dll" />
+    <GameAssembly Include="$(KKBPGame)/BepinEx/core/0Harmony.dll" />
+    <GameAssembly Include="$(KKBPManaged)/Assembly-CSharp.dll" />
+    <GameAssembly Include="$(KKBPManaged)/Assembly-CSharp-firstpass.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.UI.dll" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'NET35'">
+    <GameAssembly Include="Koikatsu/BepinEx/plugins/KKAPI.dll" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'NET46'">
+    <GameAssembly Include="$(KKBPGame)/BepinEx/plugins/KKSAPI.dll" />
+    <GameAssembly Include="$(KKBPManaged)/netstandard.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.CoreModule.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.AnimationModule.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.ImageConversionModule.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.IMGUIModule.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.InputLegacyModule.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.PhysicsModule.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.AssetBundleModule.dll" />
+    <GameAssembly Include="$(KKBPManaged)/UnityEngine.TextRenderingModule.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="$(KKBPContractDir)expressions\$(KKBPTable).json" LogicalName="KKBP.Expressions.json" />
+  </ItemGroup>
+  <!-- KK's Unity 5.6 can't list a shader's properties, so KK reads this table, dumped from KKS's shaders
+       (which include KK's) by an auto-export with "dump_shaders". -->
+  <ItemGroup Condition="'$(Configuration)' == 'NET35'">
+    <EmbeddedResource Include="shader-properties.json" LogicalName="KKBP.ShaderProperties.json" />
+  </ItemGroup>
+
+  <Import Project="..\core\KKBP.Exporter.Core.projitems" Label="Shared" />
+</Project>

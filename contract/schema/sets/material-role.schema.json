@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kkbp.invalid/1.0/sets/material-role.schema.json",
+  "title": "Material Role",
+  "description": "What a material is for. Outfit and accessory materials have none.",
+  "type": "string",
+  "enum": [
+    "body",
+    "face",
+    "eyebrow",
+    "eyelash",
+    "eyelid",
+    "eyeline_upper",
+    "eyeline_lower",
+    "eyeline_shadow",
+    "nose_line",
+    "eye_white",
+    "eye_l",
+    "eye_r",
+    "gag_eyes",
+    "tongue",
+    "teeth",
+    "tears",
+    "hair"
+  ],
+  "x-unique": [
+    "body",
+    "face",
+    "eyebrow",
+    "eyelash",
+    "eyelid",
+    "eyeline_upper",
+    "eyeline_lower",
+    "eyeline_shadow",
+    "nose_line",
+    "eye_l",
+    "eye_r"
+  ]
+}

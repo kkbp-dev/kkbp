@@ -1,0 +1,9 @@
+{
+  "name": "kkbp-contract-tools",
+  "private": true,
+  "description": "Tools the contract tests call: the Khronos glTF Validator.",
+  "type": "module",
+  "dependencies": {
+    "gltf-validator": "2.0.0-dev.3.10"
+  }
+}

@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- The SVS Game Adapter: .NET 6 for BepInEx 6 on IL2CPP (Unity 2021.3). IL2CPP wrapper types stay
+       inside this project; the Core only ever sees its own plain types. -->
+  <Import Project="..\Exporter.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>KKBP.Exporter.SVS</AssemblyName>
+    <RootNamespace>KKBP.Exporter</RootNamespace>
+    <DefineConstants>$(DefineConstants);SVS</DefineConstants>
+    <Optimize>true</Optimize>
+    <KKBPGame>Summer Vacation Scramble</KKBPGame>
+    <KKBPInterop>$(KKBPGame)/BepInEx/SamabakeScramble/interop</KKBPInterop>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <GameAssembly Include="$(KKBPGame)/BepInEx/core/BepInEx.Core.dll" />
+    <GameAssembly Include="$(KKBPGame)/BepInEx/core/BepInEx.Unity.IL2CPP.dll" />
+    <GameAssembly Include="$(KKBPGame)/BepInEx/core/Il2CppInterop.Runtime.dll" />
+    <GameAssembly Include="$(KKBPGame)/BepInEx/core/Il2CppInterop.Common.dll" />
+    <GameAssembly Include="$(KKBPGame)/BepInEx/core/0Harmony.dll" />
+    <GameAssembly Include="$(KKBPInterop)/Assembly-CSharp.dll" />
+    <GameAssembly Include="$(KKBPInterop)/Assembly-CSharp-firstpass.dll" />
+    <GameAssembly Include="$(KKBPInterop)/IL.dll" />
+    <GameAssembly Include="$(KKBPInterop)/Il2Cppmscorlib.dll" />
+    <GameAssembly Include="$(KKBPInterop)/Il2CppSystem.dll" />
+    <GameAssembly Include="$(KKBPInterop)/Il2CppSystem.Core.dll" />
+    <GameAssembly Include="$(KKBPInterop)/UnityEngine.CoreModule.dll" />
+    <GameAssembly Include="$(KKBPInterop)/UnityEngine.AnimationModule.dll" />
+    <GameAssembly Include="$(KKBPInterop)/UnityEngine.AssetBundleModule.dll" />
+    <GameAssembly Include="$(KKBPInterop)/UnityEngine.ImageConversionModule.dll" />
+    <GameAssembly Include="$(KKBPInterop)/UnityEngine.IMGUIModule.dll" />
+    <GameAssembly Include="$(KKBPInterop)/UnityEngine.InputLegacyModule.dll" />
+    <GameAssembly Include="$(KKBPInterop)/UnityEngine.PhysicsModule.dll" />
+    <GameAssembly Include="$(KKBPInterop)/UnityEngine.TextRenderingModule.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="$(KKBPContractDir)expressions\svs.json" LogicalName="KKBP.Expressions.json" />
+  </ItemGroup>
+
+  <Import Project="..\core\KKBP.Exporter.Core.projitems" Label="Shared" />
+</Project>
