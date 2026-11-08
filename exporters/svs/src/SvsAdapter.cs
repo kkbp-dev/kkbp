@@ -230,7 +230,10 @@ namespace KKBP.Exporter
             new Expressions(cha, table, materials, captured, Warnings).Bake(sink);
             CloseGagSeams(sink);
             HideUntilShown(sink);
-            BakeLightAndDark(sink, captured.FindAll(m => !Same(m.Renderer, riggedTongue)));
+            // After the expressions: they find captured meshes by renderer, and each copy shares its eye's.
+            var baked = captured.FindAll(m => !Same(m.Renderer, riggedTongue));
+            baked.AddRange(AddEyeWhites(sink, captured));
+            BakeLightAndDark(sink, baked);
             physics.Capture(cha.objTop.transform, sink, t => rig.OwnerOf(t) == Owner.Body);
         }
 
@@ -281,6 +284,45 @@ namespace KKBP.Exporter
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// SVS draws each eye's white and pupil with one material. Each eye gets a copy as its eye white,
+        /// resting just behind it, as KK's eye whites do (ADR 0034); the bake then draws the white on the
+        /// copy and only the pupil on the eye. The copy hides whenever the game hides its eye.
+        /// </summary>
+        private List<CapturedMesh> AddEyeWhites(PassSink sink, List<CapturedMesh> captured)
+        {
+            var whites = new List<CapturedMesh>();
+            if (cha.face.rendEye == null)
+            {
+                return whites;
+            }
+            foreach (var eye in cha.face.rendEye)
+            {
+                var m = captured.Find(c => Same(c.Renderer, eye));
+                if (m == null)
+                {
+                    continue;
+                }
+                string eyeKey = m.Data.Key;
+                var copy = EyeWhites.Copy(m.Data, k => eyeKey + EyeWhites.Suffix + k.Substring(eyeKey.Length));
+                for (int slot = 0; slot < m.Slots.Length; slot++)
+                {
+                    if (m.Slots[slot] == null)
+                    {
+                        continue;
+                    }
+                    var white = materials.Capture(m.Slots[slot], Meshes.MaterialKey(copy.Key, slot), MaterialRole.EyeWhite, Bake.IrisTextures);
+                    white.Name += EyeWhites.Suffix;
+                    white.BlendMode = BlendMode.Opaque;
+                    sink.Materials.Add(white);
+                }
+                sink.Meshes.Insert(sink.Meshes.IndexOf(m.Data), copy);
+                EyeWhites.HideWith(sink.Meshes, eyeKey, copy.Key);
+                whites.Add(new CapturedMesh { Renderer = m.Renderer, Data = copy, Source = m.Source, Slots = m.Slots, Skin = m.Skin, Weights = m.Weights });
+            }
+            return whites;
         }
 
         /// <summary>

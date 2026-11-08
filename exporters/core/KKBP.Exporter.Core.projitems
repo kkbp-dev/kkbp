@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\BoneRules.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\CardBatch.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\Deltas.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\EyeWhites.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\HiddenBasis.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\LightBake.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\AdapterKit\NormalMaps.cs" />

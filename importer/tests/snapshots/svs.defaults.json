@@ -412,9 +412,9 @@
  "counts": {
   "actions": 0,
   "armatures": 4,
-  "images": 66,
-  "materials": 41,
-  "meshes": 328,
+  "images": 70,
+  "materials": 43,
+  "meshes": 330,
   "node_groups": 15,
   "objects": 367
  },
@@ -453,8 +453,12 @@
   "cf_m_head_00 main.light",
   "cf_m_hitomi_00_L main.dark",
   "cf_m_hitomi_00_L main.light",
+  "cf_m_hitomi_00_L_white main.dark",
+  "cf_m_hitomi_00_L_white main.light",
   "cf_m_hitomi_00_R main.dark",
   "cf_m_hitomi_00_R main.light",
+  "cf_m_hitomi_00_R_white main.dark",
+  "cf_m_hitomi_00_R_white main.light",
   "cf_m_mayuge_00 main.dark",
   "cf_m_mayuge_00 main.light",
   "cf_m_nail_def_00 main.dark",
@@ -499,7 +503,8 @@
   "Eyewhite card": {
    "id": null,
    "images": [
-    "Eye_White_Alpha.png"
+    "Eye_White_Alpha.png",
+    "cf_m_hitomi_00_L_white main.light"
    ],
    "node_groups": [
     ".eyewhite sticker"
@@ -965,6 +970,29 @@
    "surface_render_method": "DITHERED",
    "template": "SVS Light Dark"
   },
+  "cf_m_hitomi_00_L_white": {
+   "id": "cf_m_hitomi_00_L_white",
+   "images": [
+    "Template: BlackWithAlpha",
+    "Template: Normal detail placeholder",
+    "cf_m_hitomi_00_L_white main.dark",
+    "cf_m_hitomi_00_L_white main.light"
+   ],
+   "node_groups": [
+    ".Normal Map Optimized",
+    ".Normal detail map blending",
+    ".Normal map parsing (Unity tech demo)",
+    ".Normal parsing (whiteout method)",
+    ".SVS",
+    ".SVS alphamask parser",
+    ".Toon shading"
+   ],
+   "roles": [
+    "eye_white"
+   ],
+   "surface_render_method": "DITHERED",
+   "template": "SVS Light Dark"
+  },
   "cf_m_hitomi_00_R": {
    "id": "cf_m_hitomi_00_R",
    "images": [
@@ -984,6 +1012,29 @@
    ],
    "roles": [
     "eye_r"
+   ],
+   "surface_render_method": "DITHERED",
+   "template": "SVS Light Dark"
+  },
+  "cf_m_hitomi_00_R_white": {
+   "id": "cf_m_hitomi_00_R_white",
+   "images": [
+    "Template: BlackWithAlpha",
+    "Template: Normal detail placeholder",
+    "cf_m_hitomi_00_R_white main.dark",
+    "cf_m_hitomi_00_R_white main.light"
+   ],
+   "node_groups": [
+    ".Normal Map Optimized",
+    ".Normal detail map blending",
+    ".Normal map parsing (Unity tech demo)",
+    ".Normal parsing (whiteout method)",
+    ".SVS",
+    ".SVS alphamask parser",
+    ".Toon shading"
+   ],
+   "roles": [
+    "eye_white"
    ],
    "surface_render_method": "DITHERED",
    "template": "SVS Light Dark"
@@ -1271,14 +1322,16 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 45605,
-    "faces": 30162,
+    "edges": 46805,
+    "faces": 30942,
     "material_slots": [
      "cf_m_head_00",
      "cf_m_mayuge_00",
      "cf_m_eyelash_up_00",
      "cf_m_eyelid_00",
+     "cf_m_hitomi_00_L_white",
      "cf_m_hitomi_00_L",
+     "cf_m_hitomi_00_R_white",
      "cf_m_hitomi_00_R",
      "cf_m_tooth",
      "cf_m_body_00",
@@ -1388,7 +1441,7 @@
      "uv_eyeshadow"
     ],
     "vertex_groups": 764,
-    "vertices": 15480
+    "vertices": 15902
    },
    "modifiers": [
     {

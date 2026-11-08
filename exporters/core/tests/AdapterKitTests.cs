@@ -87,6 +87,87 @@ namespace KKBP.Exporter.Core.Tests
         }
     }
 
+    public class EyeWhiteTests
+    {
+        private static MeshData Eye()
+        {
+            var eye = new MeshData
+            {
+                Key = "body:cf_O_hitomi_L",
+                Name = "cf_O_hitomi_L",
+                Positions = new[] { new Vec3(0, 1.4f, 0.02f), new Vec3(0.01f, 1.4f, 0.02f), new Vec3(0, 1.41f, 0.02f) },
+                Normals = new[] { new Vec3(0, 0, 1), new Vec3(0, 0, 2), new Vec3(0, 0.6f, 0.8f) },
+                BoneKeys = new[] { "body:cf_J_Eye_tx_L" },
+                InfluencesPerVertex = 1,
+                Joints = new[] { 0, 0, 0 },
+                Weights = new[] { 1f, 1f, 1f },
+            };
+            eye.UvSets.Add(new[] { new Vec2(0, 0), new Vec2(1, 0), new Vec2(0, 1) });
+            eye.SubMeshes.Add(new SubMesh { Indices = new[] { 0, 1, 2 }, MaterialKey = "body:cf_O_hitomi_L#0" });
+            return eye;
+        }
+
+        [Fact]
+        public void The_copy_rests_behind_the_eye_along_its_normals()
+        {
+            var eye = Eye();
+            var copy = EyeWhites.Copy(eye, k => k + "_white");
+
+            Assert.Equal("body:cf_O_hitomi_L_white", copy.Key);
+            Assert.Equal("cf_O_hitomi_L_white", copy.Name);
+            Assert.Equal(0.019f, copy.Positions[0].Z, 6);
+            Assert.Equal(0.019f, copy.Positions[1].Z, 6); // the normal's length doesn't matter
+            Assert.Equal(1.4094f, copy.Positions[2].Y, 6);
+            Assert.Equal(0.0192f, copy.Positions[2].Z, 6);
+            Assert.Equal(0.02f, eye.Positions[0].Z, 6); // the eye stays where the game has it
+            Assert.Equal("body:cf_O_hitomi_L#0_white", copy.SubMeshes[0].MaterialKey);
+            Assert.Equal(new[] { 0, 1, 2 }, copy.SubMeshes[0].Indices);
+            Assert.Equal(eye.BoneKeys, copy.BoneKeys);
+            Assert.Equal(eye.Weights, copy.Weights);
+            Assert.Equal(eye.UvSets[0], copy.UvSets[0]);
+            Assert.NotSame(eye.UvSets[0], copy.UvSets[0]);
+        }
+
+        [Fact]
+        public void Shape_keys_are_copied_without_their_effects()
+        {
+            var eye = Eye();
+            var morph = new MorphData { Category = ExpressionCategory.Eye, ExpressionName = "Eye Wink", GameName = "eye_wink", PositionDeltas = new[] { Vec3.Zero, Vec3.Zero, new Vec3(0, -0.001f, 0) } };
+            morph.HidesMeshKeys.Add("body:something");
+            eye.Morphs.Add(morph);
+            var copy = EyeWhites.Copy(eye, k => k);
+
+            Assert.Equal("Eye Wink", copy.Morphs[0].ExpressionName);
+            Assert.Equal(-0.001f, copy.Morphs[0].PositionDeltas[2].Y, 6);
+            Assert.Empty(copy.Morphs[0].HidesMeshKeys);
+        }
+
+        [Fact]
+        public void Whatever_hides_the_eye_hides_the_copy()
+        {
+            var face = new MeshData { Key = "body:cf_O_face" };
+            var hides = new MorphData { ExpressionName = "Eye Closed" };
+            hides.HidesMeshKeys.Add("body:cf_O_hitomi_L");
+            var other = new MorphData { ExpressionName = "Eye Default" };
+            face.Morphs.Add(hides);
+            face.Morphs.Add(other);
+
+            EyeWhites.HideWith(new[] { face }, "body:cf_O_hitomi_L", "body:cf_O_hitomi_L_white");
+            EyeWhites.HideWith(new[] { face }, "body:cf_O_hitomi_L", "body:cf_O_hitomi_L_white");
+
+            Assert.Equal(new[] { "body:cf_O_hitomi_L", "body:cf_O_hitomi_L_white" }, hides.HidesMeshKeys);
+            Assert.Empty(other.HidesMeshKeys);
+        }
+
+        [Fact]
+        public void An_eye_without_normals_is_refused()
+        {
+            var eye = Eye();
+            eye.Normals = null;
+            Assert.Throws<System.ArgumentException>(() => EyeWhites.Copy(eye, k => k));
+        }
+    }
+
     public class SeamClosingTests
     {
         // A rim triangle at z 0 and a disc triangle 3 mm behind it, its corners 0.4 mm off the rim's
@@ -327,6 +408,56 @@ namespace KKBP.Exporter.Core.Tests
             // Two 1x1 tiles side by side: the second is opaque.
             var pixels = new byte[] { 10, 10, 10, 100, 20, 20, 20, 255 };
             Assert.Equal(new byte[] { 20, 20, 20, 255 }, KKBP.Exporter.Core.AdapterKit.LightBake.Fold(pixels, 1, 2, 1));
+        }
+
+        private static double Lin(byte b) { double c = b / 255.0; return c <= 0.04045 ? c / 12.92 : System.Math.Pow((c + 0.055) / 1.055, 2.4); }
+        private static byte Srgb(double l) { double c = l <= 0.0031308 ? l * 12.92 : 1.055 * System.Math.Pow(l, 1 / 2.4) - 0.055; return (byte)System.Math.Round(c * 255); }
+
+        [Fact]
+        public void Pupil_coverage_and_colour_give_back_the_whole_eye()
+        {
+            // In linear light: the lit white, the eye white's own colour, the iris, and the iris's coverage of
+            // three pixels: none, half, all.
+            double[] lit = { 0.9, 0.92, 0.98 };
+            double[] eyeWhite = { 0.8, 0.85, 0.95 };
+            double[] iris = { 0.3, 0.05, 0.2 };
+            double[] coverage = { 0, 0.5, 1 };
+            byte[] full = new byte[12], white = new byte[12], onBlack = new byte[12], onWhite = new byte[12];
+            for (int p = 0; p < 3; p++)
+            {
+                double a = coverage[p];
+                for (int c = 0; c < 3; c++)
+                {
+                    full[p * 4 + c] = Srgb(a * iris[c] + (1 - a) * eyeWhite[c]);
+                    white[p * 4 + c] = Srgb(eyeWhite[c]);
+                    onBlack[p * 4 + c] = Srgb(a * iris[c]);
+                    onWhite[p * 4 + c] = Srgb(a * iris[c] + (1 - a) * lit[c]);
+                }
+                full[p * 4 + 3] = white[p * 4 + 3] = onBlack[p * 4 + 3] = onWhite[p * 4 + 3] = 255;
+            }
+
+            var pupil = KKBP.Exporter.Core.AdapterKit.LightBake.Pupil(full, white, onBlack, onWhite);
+
+            Assert.Equal(0, pupil[3]);
+            Assert.InRange(pupil[7], 126, 129);
+            Assert.Equal(255, pupil[11]);
+            Assert.Equal(white[0], pupil[0]); // uncovered: the eye white's colour, so filtering adds no fringe
+            for (int p = 1; p < 3; p++)
+            {
+                double a = pupil[p * 4 + 3] / 255.0;
+                for (int c = 0; c < 3; c++)
+                {
+                    byte back = Srgb(a * Lin(pupil[p * 4 + c]) + (1 - a) * Lin(white[p * 4 + c]));
+                    Assert.InRange(back, full[p * 4 + c] - 1, full[p * 4 + c] + 1);
+                }
+            }
+        }
+
+        [Fact]
+        public void Pupil_needs_some_uncovered_eye_white()
+        {
+            var covered = new byte[] { 10, 10, 10, 255 };
+            Assert.Throws<System.ArgumentException>(() => KKBP.Exporter.Core.AdapterKit.LightBake.Pupil(covered, covered, covered, new byte[] { 200, 200, 200, 255 }));
         }
 
         [Fact]

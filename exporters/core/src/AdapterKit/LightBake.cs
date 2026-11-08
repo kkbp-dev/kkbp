@@ -149,6 +149,90 @@ namespace KKBP.Exporter.Core.AdapterKit
         }
 
         /// <summary>
+        /// The pupil layer of an eye whose shader draws the eye white and the pupil together (SVS,
+        /// ADR 0034), from four opaque renders with the same light: <paramref name="full"/>, the eye as the
+        /// game draws it; <paramref name="white"/>, the eye white alone (the iris textures cleared); and
+        /// <paramref name="onBlack"/> and <paramref name="onWhite"/>, the eye with the eye white's colours
+        /// set to black and to white. The two last give the pupil's coverage: where the eye white is
+        /// uncovered they differ by the lit white, found where <paramref name="onBlack"/> is black. The
+        /// colour is then the one that, laid over <paramref name="white"/> with that coverage in linear
+        /// light as Blender blends, gives back <paramref name="full"/>. Pixels are sRGB, RGBA32.
+        /// </summary>
+        public static byte[] Pupil(byte[] full, byte[] white, byte[] onBlack, byte[] onWhite)
+        {
+            int length = full.Length;
+            if (white.Length != length || onBlack.Length != length || onWhite.Length != length)
+            {
+                throw new ArgumentException("All four renders must be the same size.");
+            }
+            var lit = new float[3];
+            bool found = false;
+            for (int i = 0; i < length; i += 4)
+            {
+                if (onBlack[i] == 0 && onBlack[i + 1] == 0 && onBlack[i + 2] == 0)
+                {
+                    found = true;
+                    for (int c = 0; c < 3; c++)
+                    {
+                        lit[c] = Math.Max(lit[c], ToLinear[onWhite[i + c]]);
+                    }
+                }
+            }
+            if (!found)
+            {
+                throw new ArgumentException("The eye white is covered everywhere, so the pupil can't be told from it.");
+            }
+            var result = new byte[length];
+            for (int i = 0; i < length; i += 4)
+            {
+                float uncovered = 0;
+                int channels = 0;
+                for (int c = 0; c < 3; c++)
+                {
+                    if (lit[c] > 0)
+                    {
+                        uncovered += (ToLinear[onWhite[i + c]] - ToLinear[onBlack[i + c]]) / lit[c];
+                        channels++;
+                    }
+                }
+                float alpha = channels > 0 ? 1 - Clamp(uncovered / channels) : 1;
+                byte a = (byte)Math.Round(alpha * 255);
+                result[i + 3] = a;
+                for (int c = 0; c < 3; c++)
+                {
+                    result[i + c] = a == 0
+                        ? white[i + c]
+                        : FromLinear(Clamp((ToLinear[full[i + c]] - (1 - alpha) * ToLinear[white[i + c]]) / alpha));
+                }
+            }
+            return result;
+        }
+
+        private static readonly float[] ToLinear = LinearTable();
+
+        private static float[] LinearTable()
+        {
+            var table = new float[256];
+            for (int i = 0; i < 256; i++)
+            {
+                double c = i / 255.0;
+                table[i] = (float)(c <= 0.04045 ? c / 12.92 : Math.Pow((c + 0.055) / 1.055, 2.4));
+            }
+            return table;
+        }
+
+        private static byte FromLinear(float linear)
+        {
+            double c = linear <= 0.0031308 ? linear * 12.92 : 1.055 * Math.Pow(linear, 1 / 2.4) - 0.055;
+            return (byte)Math.Round(Math.Max(0, Math.Min(1, c)) * 255);
+        }
+
+        private static float Clamp(float v)
+        {
+            return v < 0 ? 0 : v > 1 ? 1 : v;
+        }
+
+        /// <summary>
         /// Grows a mesh render's islands outwards by <paramref name="offset"/> pixels in eight directions,
         /// so texture filtering at island edges doesn't pick up the empty background. Nearly opaque pixels
         /// keep their own colour.
