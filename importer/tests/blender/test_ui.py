@@ -54,6 +54,25 @@ def test_import_from_the_operator(build):
     assert character.Character(result.character_key).collection is not None
 
 
+def test_import_from_the_chosen_manifest(build):
+    path = build()
+    assert bpy.ops.kkbp.import_bundle(filepath=str(path / "manifest.json")) == {"FINISHED"}
+    assert settings.last_result.ok and settings.last_result.character_name == "Test Chara"
+
+
+def test_import_with_no_file_chosen_imports_the_folder(build):
+    path = build()
+    assert bpy.ops.kkbp.import_bundle(filepath=str(path) + "/", directory=str(path) + "/") == {"FINISHED"}
+    assert settings.last_result.ok
+
+
+def test_choosing_another_file_is_reported(build):
+    path = build()
+    with pytest.raises(RuntimeError, match="Choose the Export Bundle's manifest.json"):
+        bpy.ops.kkbp.import_bundle(filepath=str(path / "body.glb"), directory=str(path))
+    assert settings.last_result is None
+
+
 def test_the_log_opens_when_the_import_warns(build):
     path = build()
     bpy.ops.kkbp.import_bundle(directory=str(path))

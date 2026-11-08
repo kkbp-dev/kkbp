@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 import bpy
 
 from .. import pillow, settings
@@ -11,14 +13,20 @@ from ..pipeline import import_bundle
 from ..pipeline.options import OptionError
 from . import options
 
+MANIFEST = "manifest.json"
+
 
 class KKBP_OT_import_bundle(bpy.types.Operator):
     bl_idname = "kkbp.import_bundle"
     bl_label = "Import Export Bundle"
-    bl_description = "Import a Character from the Export Bundle folder an exporter wrote"
+    bl_description = ("Import a Character from an Export Bundle: choose its manifest.json, "
+                      "or open its folder and import with no file chosen")
     bl_options = {"REGISTER", "UNDO"}  # the whole import is one undo step
 
+    # The browser fills both. A script may pass either; with no file chosen, the folder is imported.
+    filepath: bpy.props.StringProperty(subtype="FILE_PATH")
     directory: bpy.props.StringProperty(subtype="DIR_PATH")
+    filter_glob: bpy.props.StringProperty(default=MANIFEST, options={"HIDDEN"})
     filter_folder: bpy.props.BoolProperty(default=True, options={"HIDDEN"})
 
     @classmethod
@@ -33,8 +41,12 @@ class KKBP_OT_import_bundle(bpy.types.Operator):
         return {"RUNNING_MODAL"}
 
     def execute(self, context):
+        path = self.bundle_path()
+        if path is None:
+            self.report({"ERROR"}, f"Choose the Export Bundle's {MANIFEST}, or its folder with no file chosen")
+            return {"CANCELLED"}
         try:
-            result = import_bundle(bpy.path.abspath(self.directory), options.scene_values(context.scene))
+            result = import_bundle(path, options.scene_values(context.scene))
         except (BundleError, OptionError, MeshLoaderError, pillow.PillowMissing, ValueError) as ex:
             self.report({"ERROR"}, str(ex))
             return {"CANCELLED"}
@@ -45,6 +57,15 @@ class KKBP_OT_import_bundle(bpy.types.Operator):
             self.report({"WARNING"}, line)
         # Finished either way, so a failed import's partly built scene is one undo step too.
         return {"FINISHED"}
+
+    def bundle_path(self) -> str | None:
+        """The chosen manifest.json or bundle folder, or None if some other file was chosen."""
+        filepath = bpy.path.abspath(self.filepath) if self.filepath else ""
+        if not filepath:  # a script that passed only the folder
+            return bpy.path.abspath(self.directory)
+        if os.path.isdir(filepath):  # no file chosen: the folder the browser is in
+            return filepath
+        return filepath if os.path.basename(filepath) == MANIFEST else None
 
 
 class KKBP_OT_install_pillow(bpy.types.Operator):
