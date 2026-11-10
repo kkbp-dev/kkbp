@@ -781,9 +781,9 @@ def main():
     """
     
     compat.add_rigify_color_sets(metarig)
-    metarig.data.collections.active_index = 2
-    metarig.data.collections_all[2].rigify_ui_row = 1
-        
+    # Ported: legacy put collection index 2 on panel row 1 here. The collections are now made in bone
+    # order, so index 2 was whichever came third (Junk on KK, issue #25); Torso gets row 1 by name below.
+
     for index, rigifyLayer in enumerate(koikatsuCommons.rigifyLayers):
         koikatsuCommons.setRigifyLayer(metarig, index, rigifyLayer)
     koikatsuCommons.setRootRigifyLayer(metarig, koikatsuCommons.rootBoneGroupIndex)
@@ -1837,6 +1837,7 @@ def main():
             metarig.data.collections.move(get_rigify_index(collection), 0)
 
     metarig.data.collections_all[get_rigify_index(koikatsuCommons.koikatsuDeformBonesLayerName)].rigify_ui_row = 0 #remove charamaker bones from UI
+    metarig.data.collections_all[get_rigify_index(koikatsuCommons.junkLayerName)].rigify_ui_row = 0 #remove junk from UI (issue #25)
 
     metarig.data.collections_all[get_rigify_index(koikatsuCommons.torsoLayerName)].rigify_ui_row = 1 #move torso
     metarig.data.collections_all[get_rigify_index(koikatsuCommons.torsoLayerName + koikatsuCommons.fkLayerSuffix)].rigify_ui_row = 1 #move torso fk
