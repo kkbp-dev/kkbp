@@ -81,6 +81,9 @@ namespace KKBP.Exporter
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = UnityEngine.Color.clear;
             camera.allowMSAA = false;
+            // CopyFrom also copies the maker camera's viewport rect; a narrowed one would resample the
+            // bake sideways and blur it (ADR 0036).
+            camera.rect = new Rect(0, 0, 1, 1);
 
             foreach (var r in cha.objTop.GetComponentsInChildren<Renderer>(false))
             {

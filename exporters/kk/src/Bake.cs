@@ -40,6 +40,7 @@ namespace KKBP.Exporter
         private readonly CameraClearFlags clearFlags;
         private readonly UnityEngine.Color background;
         private readonly bool msaa;
+        private readonly Rect rect;
         private readonly RenderTexture target;
         private readonly List<Renderer> disabled = new List<Renderer>();
         private readonly List<GameObject> hidden = new List<GameObject>();
@@ -59,6 +60,7 @@ namespace KKBP.Exporter
             clearFlags = camera.clearFlags;
             background = camera.backgroundColor;
             msaa = camera.allowMSAA;
+            rect = camera.rect;
             target = camera.targetTexture;
             effects = Kks.QuietCameraEffects(camera);
 
@@ -66,6 +68,9 @@ namespace KKBP.Exporter
             camera.clearFlags = CameraClearFlags.SolidColor;
             camera.backgroundColor = UnityEngine.Color.clear;
             camera.allowMSAA = false;
+            // The maker narrows the camera's viewport to leave room for its menus (x 0.33). Rendering
+            // into a texture keeps that rect, which resampled every bake sideways and blurred it (ADR 0036).
+            camera.rect = new Rect(0, 0, 1, 1);
 
             foreach (var r in cha.objTop.GetComponentsInChildren<Renderer>())
             {
@@ -328,6 +333,7 @@ namespace KKBP.Exporter
             camera.clearFlags = clearFlags;
             camera.backgroundColor = background;
             camera.allowMSAA = msaa;
+            camera.rect = rect;
             camera.targetTexture = target;
             effects.Restore();
             foreach (var r in disabled)

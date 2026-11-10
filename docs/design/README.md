@@ -54,6 +54,7 @@ ADRs:
 - [0033 SVS gag keys close the eye seam the game leaves open](../adr/0033-svs-gag-keys-close-the-eye-seam.md)
 - [0034 SVS eye whites are copies of the eyes, resting 1 mm behind them](../adr/0034-svs-eye-whites-are-copies-of-the-eyes.md)
 - [0035 The SVS tongue keeps the game's mouth shapes, even where it doesn't follow the mouth](../adr/0035-svs-tongue-keeps-the-games-mouth-shapes.md)
+- [0036 Light and dark bakes render through a full viewport, without supersampling](../adr/0036-bakes-render-through-a-full-viewport.md)
 
 Folded or dropped from the original review: candidate 6 (Exporter Naming) is replaced by Ids; candidate 9 (import options declared once) is part of the import pipeline.
 
@@ -204,3 +205,4 @@ Decisions agreed at the start of Phase 6:
 - **D59** SVS's tongue keeps the game's mouth shapes: most SVS mouth patterns leave the tongue still while the teeth move, as in the game, and the exporter and importer don't add movement of their own (issue 2, [ADR 0035](../adr/0035-svs-tongue-keeps-the-games-mouth-shapes.md)).
 - **D60** Link shape keys is now the built-in Hook Separate Eyes (`separate_eyes`, off), which runs after Rigify and puts the new `eyes` and `eyebrows` Parts in an `Eyes and Eyebrows <name>` Collection; its panel button is gone, and Run Hook runs it on an imported Character (issue 16).
 - **D61** The Import Export Bundle button's file browser shows only `manifest.json`: choose a bundle's `manifest.json`, or open its folder and import with no file chosen. Any other file is refused with a message; scripts may still pass `directory` alone. The browser's button reads "Import manifest.json"; the panel's button keeps "Import Export Bundle" (issue 21).
+- **D62** The light and dark bakes render through the full viewport: the maker camera's rect (`x 0.33`, room for the maker's menus) resampled every bake sideways and blurred it. KK and KKS reset the maker camera's rect while baking; SVS sets it on its own copy. No supersampling: baking at 2× and downscaling blurs texture detail (issue 17, [ADR 0036](../adr/0036-bakes-render-through-a-full-viewport.md)).
