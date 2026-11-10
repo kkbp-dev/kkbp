@@ -48,6 +48,110 @@ BONES = {
     "chains": {"skirt": 0.05},
 }
 
+def _corrections():
+    """Studio's `ExpressionBone.LateUpdate` (profiles/corrections.py says how to read this, and
+    docs/design/joint-corrections.md where it comes from). `m` is 1 on the left and -1 on the right,
+    for the signs the game mirrors. Bones are named exactly: no Bone Role or Group marks them."""
+    inputs = {
+        "height": ("rest_scale", "cf_n_height", "y"),
+        **{f"spine_{a}": ("euler", "cf_j_spine03", "zyx", a) for a in "xyz"},
+        "head_x": ("euler", "cf_j_head", "zyx", "x"),
+        "head_z": ("euler", "cf_j_head", "zyx", "z"),
+    }
+    values, outputs = {}, []
+    for s, m in (("L", "1"), ("R", "(-1)")):
+        sign = 1.0 if s == "L" else -1.0
+        elbow_frame = ("under", f"cf_j_shoulder_{s}", (0.0, 0.3, 0.0))
+        knee_frame = ("under", "cf_j_waist02", (-0.083 * sign, 0.4, -0.008))
+        inputs.update({
+            f"arm_x_{s}": ("euler", f"cf_j_arm00_{s}", "zyx", "x"),
+            f"elbow_{s}": ("euler", f"cf_j_forearm01_{s}", "zxy", "y"),
+            f"hand_x_{s}": ("euler", f"cf_j_hand_{s}", "zyx", "x"),
+            f"thigh_y_{s}": ("euler", f"cf_j_thigh00_{s}", "zyx", "y"),
+            f"knee_{s}": ("euler", f"cf_j_leg01_{s}", "zyx", "x"),
+            f"ankle_y_{s}": ("euler", f"cf_j_leg03_{s}", "zyx", "y"),
+            # the elbow, seen from a point above the shoulder
+            f"elbow_py_{s}": ("point", f"cf_j_forearm01_{s}", None, elbow_frame, "y"),
+            f"elbow_pz_{s}": ("point", f"cf_j_forearm01_{s}", None, elbow_frame, "z"),
+            f"arm_px_{s}": ("rest_position", f"cf_j_arm00_{s}", "x"),
+            # the middle finger, seen from the wrist with the forearm's rotation
+            f"finger_y_{s}": ("point", f"cf_j_middle01_{s}", None, ("at", f"cf_j_hand_{s}", f"cf_j_forearm01_{s}"), "y"),
+            # a point on the back of the hand, seen from the forearm
+            **{f"back_{a}_{s}": ("point", f"cf_j_hand_{s}", (-0.01 * sign, 0.01, 0.0), ("bone", f"cf_j_forearm01_{s}"), a)
+               for a in "yz"},
+            # the knee, seen from the hip with the waist's rotation, and from a point above the hip
+            f"knee_up_{s}": ("point", f"cf_j_leg01_{s}", None, ("at", f"cf_j_thigh00_{s}", "cf_j_waist02"), "y"),
+            **{f"knee_p{a}_{s}": ("point", f"cf_j_leg01_{s}", None, knee_frame, a) for a in "xyz"},
+        })
+        values.update({
+            f"sd_{s}": f"max(0, 0.3 - abs(elbow_py_{s}))",
+            f"wf_{s}": f"radians(max(0, finger_y_{s}) * 100)",
+            f"vx_{s}": f"knee_px_{s} * -10",
+            f"vz_{s}": f"knee_pz_{s} * -10",
+            f"k_{s}": f"8.849 + knee_py_{s} * 10",
+            f"n_{s}": f"max(0, knee_up_{s} / height * 10)",
+        })
+        outputs += [
+            ("position", f"cf_d_shoulder02_{s}", {
+                "x": f"arm_px_{s} - {m} * (sd_{s} + abs(elbow_pz_{s})) * 0.03",
+                "y": f"sd_{s} * 0.2",
+                "z": f"elbow_pz_{s} * -0.06"}),
+            ("rotation", f"cf_d_shoulder02_{s}", "yzx", {"y": f"{m} * elbow_pz_{s} * 50", "z": f"{m} * sd_{s} * -250"}),
+            ("rotation", f"cf_d_arm01_{s}", "zyx", {"x": f"arm_x_{s} * -0.6"}),
+            ("rotation", f"cf_d_arm02_{s}", "zyx", {"x": f"arm_x_{s} * -0.5"}),
+            ("rotation", f"cf_d_arm03_{s}", "zyx", {"x": f"arm_x_{s} * -0.125"}),
+            ("rotation", f"cf_s_elbo_{s}", "zxy", {"y": f"elbow_{s} * -0.5"}),
+            ("position", f"cf_s_elbo_{s}", {
+                "x": f"sin(elbow_{s} * 0.015) * 0.022",
+                "z": f"-0.025 + {m} * sin((elbow_{s} - 1) * 0.006) * 0.018"}),
+            ("rotation", f"cf_s_elboback_{s}", "zxy", {"y": f"elbow_{s} * -0.5"}),
+            ("position", f"cf_s_elboback_{s}", {
+                "x": f"tan(elbow_{s} * 0.0039) * -1.2",
+                "z": f"0.03 + {m} * (sin(elbow_{s} * 0.009) * 0.76 - tan(elbow_{s} * 0.0022) * 1.6)"}),
+            ("position", f"cf_d_hand_{s}", {"x": f"{m} * (sin(wf_{s}) * 1.5 - 0.025)", "y": f"sin(wf_{s}) * 1.5"}),
+            ("rotation", f"cf_d_wrist_{s}", "yxz", {"x": f"degrees(atan2(back_z_{s}, back_y_{s}))"}),
+            ("rotation", f"cf_d_forearm02_{s}", "zyx", {"x": f"hand_x_{s} * 0.45"}),
+            ("position", f"cf_s_leg_{s}", {
+                "x": f"({m} + vx_{s} * 0.2 + {m} * (abs(vz_{s} * 1.1) - k_{s}) * 0.06) * -0.1",
+                "y": f"(1 + k_{s} * 0.4 + {m} * vx_{s} * 0.2 + n_{s} * 0.6) * 0.1",
+                "z": f"(vz_{s} * -0.2 + {m} * vx_{s} * 0.05 - n_{s} * 0.4) * 0.1"}),
+            ("rotation", f"cf_s_leg_{s}", "zyx", {
+                "x": f"vz_{s} * 6 - {m} * vx_{s} * 2 - n_{s} * 5",
+                "y": f"vx_{s} * -12 - {m} * vz_{s} * 3",
+                "z": f"-vx_{s}"}),
+            ("scale", f"cf_s_leg_{s}", {
+                "x": f"1 + abs(vz_{s}) * 0.2",
+                "y": f"1 + n_{s} * 0.4",
+                "z": f"1 + abs(vz_{s}) * 0.3 + n_{s} * 0.3"}),
+            ("position", f"cf_d_siri_{s}", {
+                "x": f"({m} * -0.7 + vx_{s} * 0.01 - {m} * (abs(vx_{s}) * 0.02 + abs(vz_{s}) * 0.005)) * 0.1",
+                "y": f"(k_{s} * 0.01 + abs(vz_{s}) * 0.02 + {m} * vx_{s} * 0.04) * 0.1",
+                "z": f"(k_{s} * -0.03 - (vz_{s} - n_{s} * 3) * 0.03 - abs(vx_{s}) * 0.02) * 0.1"}),
+            ("scale", f"cf_d_siri_{s}", {"x": f"1 + abs(vz_{s}) * 0.02", "y": f"1 + n_{s} * 0.01"}),
+            ("rotation", f"cf_d_thigh01_{s}", "zyx", {"y": f"thigh_y_{s} * -0.75"}),
+            ("rotation", f"cf_d_thigh02_{s}", "zyx", {"y": f"thigh_y_{s} * -0.5"}),
+            ("rotation", f"cf_d_thigh03_{s}", "zyx", {"y": f"thigh_y_{s} * -0.25"}),
+            ("rotation", f"cf_s_kneeB_{s}", "zyx", {"x": f"knee_{s} * -0.5", "z": f"{m} * knee_{s} * 0.1"}),
+            ("position", f"cf_s_kneeB_{s}", {
+                "y": f"(knee_{s} * -0.048 + sin(knee_{s} * 0.01) * 1.1) * 0.1",
+                "z": f"(-0.6 - sin(knee_{s} * 0.0115) * 4 + tan(knee_{s} * 0.0032) * 5) * 0.1"}),
+            ("rotation", f"cf_d_kneeF_{s}", "zyx", {"x": f"knee_{s} * -0.5"}),
+            ("position", f"cf_d_kneeF_{s}", {
+                "y": f"(sin(knee_{s} * 0.012) * 1.8 - tan(knee_{s} * 0.00335) * 4.5) * 0.1",
+                "z": f"(0.4 + knee_{s} * 0.0125 - tan(knee_{s} * 0.0032) * 4.5) * 0.1"}),
+            ("rotation", f"cf_d_leg02_{s}", "zyx", {"y": f"ankle_y_{s} * 0.5"}),
+        ]
+    outputs += [
+        ("rotation", "cf_d_bust00", "zyx", {a: f"spine_{a} * -0.35" for a in "xyz"}),
+        ("position", "cf_d_bust00", {"y": "(spine_x * 0.003 - 0.081) * 0.1", "z": "spine_x * 0.0004"}),
+        ("position", "a_n_neck", {"x": "head_z * 0.0002", "z": "(-0.08 - head_x * 0.002) * 0.1"}),
+    ]
+    return {"inputs": inputs, "values": values, "outputs": outputs}
+
+
+# The joint corrections (docs/design/joint-corrections.md).
+CORRECTIONS = _corrections()
+
 # The eyes' highlights, from the colours the game draws them with (D41).
 _EYE_COLORS = [
     ["highlight_up_color", ["own:_overcolor1"], "plain"],
