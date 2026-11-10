@@ -116,6 +116,7 @@ class _Layout:
     def __init__(self, lines=None):
         self.lines = [] if lines is None else lines
         self.texts = []
+        self.operators = []
 
     def split(self, factor):
         line = _Layout(self.lines)
@@ -131,8 +132,16 @@ class _Layout:
     def prop(self, group, name, text=None):
         self.texts.append((name, text))
 
-    def operator(self, *args, **kwargs):
-        pass
+    def operator(self, idname, text=None, **kwargs):
+        self.operators.append((idname, text))
+
+
+def test_the_file_browser_button_names_the_manifest():
+    """The browser's button shows the operator's label; the panel's button keeps its own text."""
+    assert bpy.ops.kkbp.import_bundle.get_rna_type().name == "Import manifest.json"
+    layout = _Layout()
+    submodule("ui.panel").KKBP_PT_import.draw(type("Panel", (), {"layout": layout})(), bpy.context)
+    assert ("kkbp.import_bundle", "Import Export Bundle") in layout.operators
 
 
 def test_each_option_is_one_line_beside_its_owner():

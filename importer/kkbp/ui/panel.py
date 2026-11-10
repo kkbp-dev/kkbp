@@ -24,7 +24,7 @@ class KKBP_PT_import(bpy.types.Panel):
             return
         for message in mesh_loader.problems():
             layout.label(text=message, icon="ERROR")
-        layout.operator("kkbp.import_bundle", icon="IMPORT")
+        layout.operator("kkbp.import_bundle", text="Import Export Bundle", icon="IMPORT")
 
         result = settings.last_result
         if result is not None:

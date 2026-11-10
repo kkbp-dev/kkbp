@@ -21,7 +21,9 @@ MANIFEST_GLOB = "*" + MANIFEST
 
 class KKBP_OT_import_bundle(bpy.types.Operator):
     bl_idname = "kkbp.import_bundle"
-    bl_label = "Import Export Bundle"
+    # The file browser's button shows bl_label (a Python operator can't name itself per call);
+    # the panel's button has its own text, "Import Export Bundle".
+    bl_label = "Import manifest.json"
     bl_description = ("Import a Character from an Export Bundle: choose its manifest.json, "
                       "or open its folder and import with no file chosen")
     bl_options = {"REGISTER", "UNDO"}  # the whole import is one undo step
