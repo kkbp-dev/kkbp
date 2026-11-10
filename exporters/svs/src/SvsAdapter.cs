@@ -47,6 +47,7 @@ namespace KKBP.Exporter
         private Physics physics;
         private readonly Dictionary<int, MaterialRole> roles = new Dictionary<int, MaterialRole>();
         private float animationSpeed = 1;
+        private FaceState startFace;
 
         public SvsAdapter(Human cha, ExportOptions options)
         {
@@ -137,7 +138,10 @@ namespace KKBP.Exporter
                 animator.enabled = true;
                 animator.speed = animationSpeed;
             }
-            cha.face.ChangeEyesBlinkFlag(true);
+            if (startFace != null)
+            {
+                startFace.Apply(cha);
+            }
             if (cha.fileStatus.coordinateType != startOutfit)
             {
                 Svs.ChangeOutfit(cha, startOutfit);
@@ -149,6 +153,7 @@ namespace KKBP.Exporter
         private IEnumerator Prepare()
         {
             var face = cha.face;
+            startFace = new FaceState(cha);
             face.ChangeEyesBlinkFlag(false);
             face.ChangeLookEyesTarget(1, null, 0f);
             face.ChangeEyesPtn(0, false);
@@ -185,6 +190,72 @@ namespace KKBP.Exporter
                 cha.ResetClothAll();
                 yield return null;
                 yield return null;
+            }
+        }
+
+        /// <summary>
+        /// The face settings Prepare changes, as the maker had them. Without putting them back, the next
+        /// export starts from the exported face (issue 22): on a fixed mouth, ChangeMouthOpenMax also sets
+        /// the mouth's FixedRate, so the maker's closed mouth stays open, and the next card.png saves it so.
+        /// The eye-look target is rebuilt from the saved status (given a transform, ChangeLookEyesTarget
+        /// doesn't save the rate, angle or range), then the maker's own target transform goes back.
+        /// </summary>
+        private sealed class FaceState
+        {
+            private readonly int eyesPtn, eyebrowPtn, mouthPtn, lookEyesPtn;
+            private readonly float eyesOpenMax, eyebrowOpenMax, mouthOpenMin, mouthOpenMax;
+            private readonly float eyesFixedRate, eyebrowFixedRate, mouthFixedRate;
+            private readonly bool blink, mouthFixed;
+            private readonly int lookType;
+            private readonly float lookRate, lookAngle, lookRange;
+            private readonly Transform lookTarget;
+
+            public FaceState(Human cha)
+            {
+                var face = cha.face;
+                eyesPtn = face.GetEyesPtn();
+                eyebrowPtn = face.GetEyebrowPtn();
+                mouthPtn = face.GetMouthPtn();
+                lookEyesPtn = face.GetLookEyesPtn();
+                eyesOpenMax = face.GetEyesOpenMax();
+                eyebrowOpenMax = face.GetEyebrowOpenMax();
+                mouthOpenMin = face.GetMouthOpenMin();
+                mouthOpenMax = face.GetMouthOpenMax();
+                mouthFixed = face.GetMouthFixed();
+                blink = face.GetEyesBlinkFlag();
+                eyesFixedRate = face.eyesCtrl.FixedRate;
+                eyebrowFixedRate = face.eyebrowCtrl.FixedRate;
+                mouthFixedRate = face.mouthCtrl.FixedRate;
+                var status = cha.fileStatus;
+                lookType = status.eyesTargetType;
+                lookRate = status.eyesTargetRate;
+                lookAngle = status.eyesTargetAngle;
+                lookRange = status.eyesTargetRange;
+                lookTarget = face.eyeLookCtrl != null ? face.eyeLookCtrl.Target : null;
+            }
+
+            public void Apply(Human cha)
+            {
+                var face = cha.face;
+                face.ChangeEyesPtn(eyesPtn, false);
+                face.ChangeEyebrowPtn(eyebrowPtn, false);
+                face.ChangeMouthPtn(mouthPtn, false);
+                face.ChangeLookEyesPtn(lookEyesPtn);
+                face.ChangeLookEyesTarget(lookType, null, lookRate, lookAngle, lookRange);
+                if (face.eyeLookCtrl != null && lookTarget != null)
+                {
+                    face.eyeLookCtrl.Target = lookTarget;
+                }
+                face.ChangeEyesOpenMax(eyesOpenMax);
+                face.ChangeEyebrowOpenMax(eyebrowOpenMax);
+                face.ChangeMouthOpenMin(mouthOpenMin);
+                face.ChangeMouthOpenMax(mouthOpenMax);
+                face.ChangeMouthFixed(mouthFixed);
+                face.ChangeEyesBlinkFlag(blink);
+                // Last: the calls above can set these themselves.
+                face.eyesCtrl.SetFixedRate(eyesFixedRate);
+                face.eyebrowCtrl.SetFixedRate(eyebrowFixedRate);
+                face.mouthCtrl.SetFixedRate(mouthFixedRate);
             }
         }
 
