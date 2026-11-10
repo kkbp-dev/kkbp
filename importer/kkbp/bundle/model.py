@@ -89,6 +89,8 @@ class Bone:
     translation: tuple[float, float, float]
     rotation: tuple[float, float, float, float]
     scale: tuple[float, float, float]
+    # The game's accumulated scale on the bone at capture; (1, 1, 1) when the bundle has none.
+    game_scale: tuple[float, float, float] = (1.0, 1.0, 1.0)
 
 
 @dataclass(frozen=True)

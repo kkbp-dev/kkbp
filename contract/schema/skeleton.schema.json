@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.0/skeleton.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.1/skeleton.schema.json",
   "title": "skeleton.json",
   "description": "Every bone of every Pass, with its rest pose relative to its parent, in glTF space.",
   "type": "object",
@@ -23,7 +23,14 @@
           "group": { "$ref": "sets/bone-group.schema.json" },
           "translation": { "$ref": "common.schema.json#/$defs/vec3" },
           "rotation": { "$ref": "common.schema.json#/$defs/quat" },
-          "scale": { "$ref": "common.schema.json#/$defs/vec3" }
+          "scale": { "$ref": "common.schema.json#/$defs/vec3" },
+          "game_scale": {
+            "description": "The bone's accumulated scale in the game when it was captured, along its own axes. Left out when it is 1 on every axis. The rest pose itself has no scale (ADR 0008).",
+            "type": "array",
+            "items": { "type": "number", "exclusiveMinimum": 0 },
+            "minItems": 3,
+            "maxItems": 3
+          }
         },
         "required": ["id", "name", "parent", "group", "translation", "rotation", "scale"],
         "additionalProperties": false

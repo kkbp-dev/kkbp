@@ -83,6 +83,12 @@ namespace KKBP.Exporter.Core
         public Quat Rotation = Quat.Identity;
         public Vec3 Scale = Vec3.One;
 
+        /// <summary>
+        /// The scale the game has on the bone, parents included (Unity's lossyScale). It isn't part of
+        /// the rest pose (ADR 0008); the importer's joint corrections need it to work in the game's units.
+        /// </summary>
+        public Vec3 GameScale = Vec3.One;
+
         public BoneRole? Role;
         public BoneGroup Group;
     }

@@ -22,7 +22,7 @@ The Export Bundle contract shared by the exporters and the importer. The design 
 
 The schemas are strict (`additionalProperties: false`) so that exporter mistakes fail the contract tests. The importer still ignores unknown fields at runtime, as the Schema Version rules require. A Game-only field is added only when a Step or Hook reads it. The only one so far is a material's `extensions.kk.create`, its Create Material, which the edit material tool reads; every other Game Extension must be empty.
 
-Every schema has an `$id` under `https://schemas.kkbp.invalid/1.0/`. The host doesn't exist; validators load the files from this folder and resolve the relative `$ref`s.
+Every schema has an `$id` under `https://schemas.kkbp.invalid/1.1/`. The host doesn't exist; validators load the files from this folder and resolve the relative `$ref`s.
 
 ## Rules the schemas can't express
 
@@ -38,6 +38,7 @@ The contract tests check these in code.
 - **Body textures.** A Pass's `body_textures` name materials that Body Pass meshes use, in slots that material doesn't fill itself, each slot once per Pass. Every texture `file` exists. Every Pass in the Manifest has its `.glb` and data file.
 - **Create materials.** A material's `extensions.kk.create` follows the rules for a material's own textures: `(raw, variant, pattern)` is unique within the `create`, and so is `(role, variant, pattern)`, except `overlay`. Every `create` texture `file` exists. A material with a `create` is used by meshes of exactly one Pass, the Pass whose objects it colours: the Body Pass if the material has a Material Role (body, face, eyes), an Outfit Pass if it has none (clothes).
 - **Expression categories.** A named expression's category is its name's prefix: `Eye` → `eye`, `Mouth` → `mouth`, `Eyebrow` → `eyebrow`, `Gag` → `gag`, `Tears` → `tears`.
+- **Game scale.** A bone's `game_scale` (Schema Version 1.1) is the scale the game had on it at capture, parents included, which the rest pose leaves out ([ADR 0008](../docs/adr/0008-bone-rest-poses-carry-no-scale.md)). Each component is above 0, and a bone at scale 1 has no `game_scale`. The `.glb` nodes don't carry it.
 - **glTF.** Every `.glb` passes the Khronos glTF Validator with no errors and no warnings (`contract/tools/validate-gltf.mjs` fails on either). Every node, mesh and material has `extras.id` equal to its `name`. A bone that appears in several `.glb` files has the same rest pose in each.
 
 ## Expression tables

@@ -58,6 +58,7 @@ namespace KKBP.Exporter.Core.Tests
         public static IEnumerable<object[]> BadPasses()
         {
             yield return new object[] { "a bone whose rest pose changes between Passes", (Action<PassSink>)(s => s.Bones[0].Position = new Vec3(1, 0, 0)), 1 };
+            yield return new object[] { "a bone with no game scale on one axis", (Action<PassSink>)(s => s.Bones[1].GameScale = new Vec3(1, 0, 1)), 0 };
             yield return new object[] { "a mesh using a material nobody captured", (Action<PassSink>)(s => s.Meshes[0].SubMeshes[0].MaterialKey = "mat:missing"), 0 };
             yield return new object[] { "two bones with the same unique role", (Action<PassSink>)(s => s.Bones[2].Role = BoneRole.Hips), 0 };
             yield return new object[] { "two textures in one slot", (Action<PassSink>)(s => s.Materials[0].Textures.Add(new TextureData { Raw = "_NormalMap", Png = FakeAdapter.Png })), 0 };

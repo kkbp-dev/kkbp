@@ -326,9 +326,15 @@ def _bone(r, v, where):
         "id": ident, "name": string, "parent": nullable_ident,
         "role": (one_of("Bone Role", contract.BONE_ROLES), True),
         "group": one_of("Bone Group", contract.BONE_GROUPS),
-        "translation": VEC3, "rotation": VEC4, "scale": VEC3,
+        "translation": VEC3, "rotation": VEC4, "scale": VEC3, "game_scale": (VEC3, True),
     })
-    return _BAD if f is _BAD else model.Bone(**f)
+    if f is _BAD:
+        return _BAD
+    if f["game_scale"] is None:
+        del f["game_scale"]
+    elif not all(c > 0 for c in f["game_scale"]):
+        return r.error(f"{where}.game_scale", "should be above 0 on every axis")
+    return model.Bone(**f)
 
 
 def texture(r, v, where):

@@ -27,7 +27,7 @@ class BundleBuilder:
         """The default Character, or with `empty=True` only a body root bone and nothing else."""
         self.game = game
         self.name = name
-        self.schema_version = "1.0"
+        self.schema_version = "1.1"
         self.card = True
         self.exported_at = "2026-11-01T12:00:00Z"
         self.bones: list[dict] = []
@@ -47,12 +47,14 @@ class BundleBuilder:
     # --- building blocks ----------------------------------------------------------------
 
     def add_bone(self, id, parent, *, group="deform", role=None, name=None, translation=(0.0, 0.0, 0.0),
-                 rotation=(0.0, 0.0, 0.0, 1.0), outfit=None):
+                 rotation=(0.0, 0.0, 0.0, 1.0), outfit=None, game_scale=None):
         """A bone. Outfit-owned bones (`outfit=N`) are only in that Outfit's .glb (ADR 0009)."""
         bone = {"id": id, "name": name or id, "parent": parent, "group": group,
                 "translation": list(translation), "rotation": list(rotation), "scale": [1.0, 1.0, 1.0]}
         if role:
             bone["role"] = role
+        if game_scale is not None:
+            bone["game_scale"] = list(game_scale)
         self.bones.append(bone)
         self._owner[id] = "body" if outfit is None else outfit
         return bone

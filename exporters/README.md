@@ -82,6 +82,7 @@ An adapter implements `IGameAdapter` and runs `new BundleExport(adapter, outputD
 
 - the first Pass isn't the Body Pass, or two Passes have the same Outfit;
 - a Pass's bones don't form one tree, or a bone seen in two Passes has a different parent or rest pose;
+- a bone's game scale isn't above 0 on every axis;
 - a mesh isn't skinned, has a vertex with no weight, or uses a material or bone that wasn't captured;
 - a unique Bone Role or Material Role appears twice, or a material has two textures in one slot;
 - a material section repeats a texture slot or field, or its material is unused in, or used outside, the Pass that captured it;
