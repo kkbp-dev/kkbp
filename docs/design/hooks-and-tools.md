@@ -130,7 +130,7 @@ Every legacy lookup by a bone, material, object, node, socket or image name, and
 | `'KK cf_m_hitomi_00_cf_Ohitomi_L02'` / `_R02`, `'KK cf_m_sirome_00'` | Roles `eye_l`, `eye_r`, `eye_white` |
 | `'KK cf_m_face_00'` / `'SVS cf_m_head_00'`, `'KK cf_m_body'` / `'SVS cf_m_body_00'` | Roles `face`, `body` |
 | `material.get('glasses')` | Blend Mode `glasses` from the bundle |
-| `cf_O_eyeline` `up` / `kage` / `down` (face cards) | Roles `eyeline_upper`, `eyeline_shadow`, `eyeline_lower` |
+| `cf_O_eyeline` `up` / `kage` / `down` (face cards) | Roles `eyeline_upper` (else `eyelash`, SVS), `eyeline_shadow`, `eyeline_lower` |
 | `cf_Ohitomi_L02`, `_R02`, `cf_Ohitomi_L`/`_R` + `sirome` (face cards) | Roles `eye_l`, `eye_r`, `eye_white` |
 | `material.name.endswith('cf_m_body')`, `('cf_m_face_00')` (Eevee Mod) | Roles `body`, `face` |
 | `body.active_material_index = 1` (Eevee Mod normal reset) | faces of Role `face` and `body` |
@@ -152,6 +152,7 @@ Every legacy lookup by a bone, material, object, node, socket or image name, and
 | `images['Template: BlackWithAlpha']`, `['Template: Placeholder']`, `['KK OutlineMask.png']`, `['SVS OutlineMask.png']` | `outlines.blend`, through the Outlines Hook's asset description |
 | `image.name != 'Template: Placeholder'` (has an image?) | the slot holds an image tagged with the Character Key |
 | face card nodes `up`, `kage`, `down`, `_light.png` | role-named nodes in `face_cards.blend`, through its asset description |
+| face card `Eye_White_Alpha` | `tex.eye_white_mask`, with KK's or SVS's mask by the eye white's template ([ADR 0037](../adr/0037-svs-face-cards-use-the-eyelash-and-their-own-eye-white-mask.md)) |
 | `.Combine colors` `mix`, `.Tex*` `shade` (bake) | the edit templates' params `toon_shading` (the combine node's own input, so the shared group isn't changed) and `use_normals` |
 | `Lut_TimeDay.png` | `library.blend`, with the edit templates (extra `lut`) |
 | edit image nodes `_ST_CT.png`, `_CM.png`, `_PM1.png`, … in `.Tex *` groups | edit slots `main`, `color_mask`, `pattern_mask1`, … by path (`textures/_CM.png`) in the edit templates' descriptions |

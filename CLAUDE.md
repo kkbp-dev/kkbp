@@ -86,6 +86,7 @@ The user plays these games. Details are in "Working with the games" in [exporter
 | Package the importer zip | `scripts/package-importer.sh` |
 | Package the exporter release zip (all three Games) | `scripts/package-exporters.sh` |
 | Rebuild the template library or Hook assets | `scripts/rework-templates.sh`, `scripts/build-hook-assets.sh` |
+| Redraw the face cards' SVS eye white mask (then rebuild the Hook assets) | `importer/.venv/bin/python importer/tools/make_svs_eye_white_mask.py contract/samples/svs` |
 | Regenerate the importer's copy of the contract sets | `scripts/gen-importer-contract.sh` |
 
 Run the importer's host tests and pytest only on `importer/.venv/bin/python` (Blender's own Python, ADR 0015), never the system `python3`. `run.py` and `launch.py` run on the system `python3` (3.11 or later).

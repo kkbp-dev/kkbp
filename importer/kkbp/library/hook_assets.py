@@ -33,8 +33,12 @@ class RigifyAssets:
 class FaceCardAssets:
     """The face cards: two card meshes and the armature that poses them, in one collection.
 
-    `textures` maps each card image node, as (material, node), to the Material Role whose light
-    texture goes into it.
+    `textures` maps each card image node, as (material, node), to the Material Roles whose light
+    texture goes into it, tried in order: SVS has no eyelines, so its eyelash takes the upper
+    eyeline's place. A node none of them fills draws nothing.
+
+    `eye_white_masks` maps the eye white material's template to the mask image that cuts the eye
+    white out of its texture, which is laid out by the Game's eye UVs (ADR 0037).
     """
 
     path: Path
@@ -42,7 +46,9 @@ class FaceCardAssets:
     bone_shapes: str  # the child collection with the card rig's bone shapes, kept out of the view layer
     rig: str
     meshes: tuple[str, ...]
-    textures: Mapping[tuple[str, str], str]
+    textures: Mapping[tuple[str, str], tuple[str, ...]]
+    eye_white_mask: tuple[str, str]  # the mask's image node, as (material, node)
+    eye_white_masks: Mapping[str, str]
     atlas: str  # the mouth atlas image, stored as WebP
 
 
@@ -76,13 +82,15 @@ FACE_CARDS = FaceCardAssets(
     rig="Face card rig",
     meshes=("Face card eyes", "Face card mouth"),
     textures=MappingProxyType({
-        ("Eyeline card", "tex.eyeline_upper"): "eyeline_upper",
-        ("Eyeline card", "tex.eyeline_shadow"): "eyeline_shadow",
-        ("Eyeline card", "tex.eyeline_lower"): "eyeline_lower",
-        ("Eyewhite card", "tex.eye_white"): "eye_white",
-        ("Pupil L card", "tex.eye_l"): "eye_l",
-        ("Pupil R card", "tex.eye_r"): "eye_r",
+        ("Eyeline card", "tex.eyeline_upper"): ("eyeline_upper", "eyelash"),
+        ("Eyeline card", "tex.eyeline_shadow"): ("eyeline_shadow",),
+        ("Eyeline card", "tex.eyeline_lower"): ("eyeline_lower",),
+        ("Eyewhite card", "tex.eye_white"): ("eye_white",),
+        ("Pupil L card", "tex.eye_l"): ("eye_l",),
+        ("Pupil R card", "tex.eye_r"): ("eye_r",),
     }),
+    eye_white_mask=("Eyewhite card", "tex.eye_white_mask"),
+    eye_white_masks=MappingProxyType({"KK Light Dark": "Eye_White_Alpha", "SVS Light Dark": "SVS Eye_White_Alpha"}),
     atlas="MouthAtlas.webp",
 )
 

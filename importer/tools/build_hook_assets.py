@@ -9,7 +9,8 @@ uses; every difference from the legacy assets is made here:
 - rigify.blend: the "Bone Widgets" collection;
 - face_cards.blend: the "Face cards" collection, with the card image nodes named for the Material
   Role whose texture goes into them, and the 8192 x 4480 mouth atlas stored as WebP at quality 95
-  instead of PNG (12.4 MB -> 3.3 MB; the difference is invisible, D15);
+  instead of PNG (12.4 MB -> 3.3 MB; the difference is invisible, D15); plus SVS's eye white mask,
+  `SVS Eye_White_Alpha.png` beside SOURCE, which isn't in the legacy file (ADR 0037);
 - outlines.blend: the black, placeholder and face-mask images.
 
 Every datablock gets `kkbp_asset_version`.
@@ -32,9 +33,14 @@ FACE_CARD_NODES = {
     ("Eyeline card", "kage"): "tex.eyeline_shadow",
     ("Eyeline card", "down"): "tex.eyeline_lower",
     ("Eyewhite card", "_light.png"): "tex.eye_white",
+    ("Eyewhite card", "Image Texture.001"): "tex.eye_white_mask",
     ("Pupil L card", "_light.png"): "tex.eye_l",
     ("Pupil R card", "_light.png"): "tex.eye_r",
 }
+# The legacy file's KK eye white mask, and the file beside SOURCE that SVS's is packed from
+# (importer/tools/make_svs_eye_white_mask.py, ADR 0037).
+LEGACY_EYE_WHITE_MASK = "Eye_White_Alpha"
+SVS_EYE_WHITE_MASK_FILE = "SVS Eye_White_Alpha.png"
 LEGACY_ATLAS = "MouthAtlas.png"
 ATLAS_QUALITY = 95
 
@@ -43,7 +49,7 @@ def main():
     source = sys.argv[sys.argv.index("--") + 1]
     build(source, hook_assets.RIGIFY, keep_collections=[hook_assets.RIGIFY.collection])
     build(source, hook_assets.FACE_CARDS, keep_collections=[hook_assets.FACE_CARDS.collection],
-          finish=finish_face_cards)
+          finish=lambda asset: finish_face_cards(asset, Path(source).parent))
     outlines = hook_assets.OUTLINES
     build(source, outlines, keep_images=[outlines.black, outlines.placeholder, *outlines.face_masks.values()])
 
@@ -83,10 +89,11 @@ def build(source, asset, keep_collections=(), keep_images=(), finish=None):
           f"{len(bpy.data.images)} images")
 
 
-def finish_face_cards(asset):
+def finish_face_cards(asset, source_folder):
     for (material, legacy), name in FACE_CARD_NODES.items():
         node = bpy.data.materials[material].node_tree.nodes[legacy]
         node.name = node.label = name
+    eye_white_masks(asset, source_folder)
     atlas = bpy.data.images[LEGACY_ATLAS]
     with tempfile.TemporaryDirectory() as folder:
         path = os.path.join(folder, asset.atlas)
@@ -99,6 +106,24 @@ def finish_face_cards(asset):
     webp.alpha_mode = atlas.alpha_mode
     atlas.user_remap(webp)
     bpy.data.images.remove(atlas)
+
+
+def eye_white_masks(asset, source_folder):
+    """Checks that the legacy mask is the one the card uses, and packs SVS's beside it with the same
+    settings. Nothing in the file uses SVS's, so a fake user keeps it; the Hook appends it by name."""
+    material, node = asset.eye_white_mask
+    legacy = bpy.data.materials[material].node_tree.nodes[node].image
+    if legacy is None or legacy.name != LEGACY_EYE_WHITE_MASK:
+        raise RuntimeError(f"{material}'s {node} doesn't hold {LEGACY_EYE_WHITE_MASK}")
+    if set(asset.eye_white_masks.values()) != {LEGACY_EYE_WHITE_MASK, Path(SVS_EYE_WHITE_MASK_FILE).stem}:
+        raise RuntimeError("hook_assets.FACE_CARDS.eye_white_masks names masks this script doesn't make")
+    svs = bpy.data.images.load(str(source_folder / SVS_EYE_WHITE_MASK_FILE), check_existing=False)
+    svs.pack()
+    svs.name = Path(SVS_EYE_WHITE_MASK_FILE).stem
+    svs.filepath = "//" + SVS_EYE_WHITE_MASK_FILE
+    svs.colorspace_settings.name = legacy.colorspace_settings.name
+    svs.alpha_mode = legacy.alpha_mode
+    svs.use_fake_user = True
 
 
 def save_webp(image, path):
