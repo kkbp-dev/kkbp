@@ -55,6 +55,7 @@ ADRs:
 - [0034 SVS eye whites are copies of the eyes, resting 1 mm behind them](../adr/0034-svs-eye-whites-are-copies-of-the-eyes.md)
 - [0035 The SVS tongue keeps the game's mouth shapes, even where it doesn't follow the mouth](../adr/0035-svs-tongue-keeps-the-games-mouth-shapes.md)
 - [0036 Light and dark bakes render through a full viewport, without supersampling](../adr/0036-bakes-render-through-a-full-viewport.md)
+- [0037 SVS face cards use the eyelash and an eye white mask of their own](../adr/0037-svs-face-cards-use-the-eyelash-and-their-own-eye-white-mask.md)
 
 Folded or dropped from the original review: candidate 6 (Exporter Naming) is replaced by Ids; candidate 9 (import options declared once) is part of the import pipeline.
 
@@ -206,3 +207,4 @@ Decisions agreed at the start of Phase 6:
 - **D60** Link shape keys is now the built-in Hook Separate Eyes (`separate_eyes`, off), which runs after Rigify and puts the new `eyes` and `eyebrows` Parts in an `Eyes and Eyebrows <name>` Collection; its panel button is gone, and Run Hook runs it on an imported Character (issue 16).
 - **D61** The Import Export Bundle button's file browser shows only `manifest.json`: choose a bundle's `manifest.json`, or open its folder and import with no file chosen. Any other file is refused with a message; scripts may still pass `directory` alone. The browser's button reads "Import manifest.json"; the panel's button keeps "Import Export Bundle" (issue 21).
 - **D62** The light and dark bakes render through the full viewport: the maker camera's rect (`x 0.33`, room for the maker's menus) resampled every bake sideways and blurred it. KK and KKS reset the maker camera's rect while baking; SVS sets it on its own copy. No supersampling: baking at 2× and downscaling blurs texture detail (issue 17, [ADR 0036](../adr/0036-bakes-render-through-a-full-viewport.md)).
+- **D63** The face cards try each image node's Material Roles in order: SVS's `eyelash` takes the upper eyeline's place, and a node none of them fills is unlinked, so it draws nothing instead of black. The Eyewhite card's mask follows the eye white's template: SVS's, `SVS Eye_White_Alpha`, is drawn from an SVS bundle's eye white UVs by `importer/tools/make_svs_eye_white_mask.py`, committed beside V9 and packed by `build_hook_assets.py` (issue 23, [ADR 0037](../adr/0037-svs-face-cards-use-the-eyelash-and-their-own-eye-white-mask.md)).

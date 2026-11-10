@@ -412,15 +412,15 @@
  "counts": {
   "actions": 0,
   "armatures": 4,
-  "images": 70,
+  "images": 68,
   "materials": 43,
   "meshes": 330,
   "node_groups": 15,
   "objects": 367
  },
  "images": [
-  "Eye_White_Alpha.png",
   "MouthAtlas.webp",
+  "SVS Eye_White_Alpha.png",
   "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   "cf_hair_b_m_o_12_00 main.dark",
@@ -436,8 +436,6 @@
   "cf_m_eyelash_up_00 main.light",
   "cf_m_eyelid_00 main.dark",
   "cf_m_eyelid_00 main.light",
-  "cf_m_eyeline_00_up_light.png",
-  "cf_m_eyeline_down_light.png",
   "cf_m_gageye_00 main cf_t_gageye_00",
   "cf_m_gageye_00 main cf_t_gageye_01",
   "cf_m_gageye_00 main cf_t_gageye_02",
@@ -491,8 +489,7 @@
   "Eyeline card": {
    "id": null,
    "images": [
-    "cf_m_eyeline_00_up_light.png",
-    "cf_m_eyeline_down_light.png"
+    "cf_m_eyelash_up_00 main.light"
    ],
    "node_groups": [
     ".eyeline sticker"
@@ -503,7 +500,7 @@
   "Eyewhite card": {
    "id": null,
    "images": [
-    "Eye_White_Alpha.png",
+    "SVS Eye_White_Alpha.png",
     "cf_m_hitomi_00_L_white main.light"
    ],
    "node_groups": [

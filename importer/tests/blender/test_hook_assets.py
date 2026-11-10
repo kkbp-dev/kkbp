@@ -39,14 +39,17 @@ def test_face_cards():
     assert {cards.collection, cards.bone_shapes} <= set(names["collections"])
     assert {cards.rig, *cards.meshes} <= set(names["objects"])
     assert cards.atlas in names["images"]
+    assert set(cards.eye_white_masks.values()) <= set(names["images"])
     added = appending.append(cards.path, "collections", cards.collection, hook_assets.VERSION_PROP)
     collection = next(c for c in added if appending.base_name(c.name) == cards.collection)
     materials = {appending.base_name(s.material.name): s.material for o in collection.all_objects
                  for s in o.material_slots if s.material}
-    for (material, node), role in cards.textures.items():
+    for (material, node), roles in [*cards.textures.items(), (cards.eye_white_mask, "the eye white mask")]:
         assert material in materials, material
         found = materials[material].node_tree.nodes.get(node)
-        assert found is not None and found.type == "TEX_IMAGE", f"{material}: no image node {node} for {role}"
+        assert found is not None and found.type == "TEX_IMAGE", f"{material}: no image node {node} for {roles}"
+    mask = materials[cards.eye_white_mask[0]].node_tree.nodes[cards.eye_white_mask[1]].image
+    assert mask is not None and mask.name == cards.eye_white_masks["KK Light Dark"]
     atlas = bpy.data.images[cards.atlas]
     assert atlas.file_format == "WEBP" and tuple(atlas.size) == (8192, 4480) and atlas.packed_file
 
