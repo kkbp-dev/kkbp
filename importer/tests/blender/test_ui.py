@@ -1,5 +1,7 @@
 """The panel's operators, the scene's Import Options and Preferences."""
 
+import fnmatch
+
 import bpy
 import pytest
 
@@ -54,6 +56,35 @@ def test_import_from_the_operator(build):
     assert character.Character(result.character_key).collection is not None
 
 
+def test_import_from_the_chosen_manifest(build):
+    path = build()
+    assert bpy.ops.kkbp.import_bundle(filepath=str(path / "manifest.json")) == {"FINISHED"}
+    assert settings.last_result.ok and settings.last_result.character_name == "Test Chara"
+
+
+def test_import_with_no_file_chosen_imports_the_folder(build):
+    path = build()
+    assert bpy.ops.kkbp.import_bundle(filepath=str(path) + "/", directory=str(path) + "/") == {"FINISHED"}
+    assert settings.last_result.ok
+
+
+def test_the_browser_shows_the_manifest(build):
+    """Blender 5.2 matches filter_glob against full paths, later versions against names (README, "Blender quirks")."""
+    path = build()
+    glob = bpy.ops.kkbp.import_bundle.get_rna_type().properties["filter_glob"].default
+    assert len(glob) <= 15  # BLI_path_extension_check_glob cuts each pattern there
+    for name in (str(path / "manifest.json"), "manifest.json"):
+        assert fnmatch.fnmatchcase(name, glob)
+    assert not fnmatch.fnmatchcase(str(path / "body.glb"), glob)
+
+
+def test_choosing_another_file_is_reported(build):
+    path = build()
+    with pytest.raises(RuntimeError, match="Choose the Export Bundle's manifest.json"):
+        bpy.ops.kkbp.import_bundle(filepath=str(path / "body.glb"), directory=str(path))
+    assert settings.last_result is None
+
+
 def test_the_log_opens_when_the_import_warns(build):
     path = build()
     bpy.ops.kkbp.import_bundle(directory=str(path))
@@ -85,6 +116,7 @@ class _Layout:
     def __init__(self, lines=None):
         self.lines = [] if lines is None else lines
         self.texts = []
+        self.operators = []
 
     def split(self, factor):
         line = _Layout(self.lines)
@@ -100,8 +132,16 @@ class _Layout:
     def prop(self, group, name, text=None):
         self.texts.append((name, text))
 
-    def operator(self, *args, **kwargs):
-        pass
+    def operator(self, idname, text=None, **kwargs):
+        self.operators.append((idname, text))
+
+
+def test_the_file_browser_button_names_the_manifest():
+    """The browser's button shows the operator's label; the panel's button keeps its own text."""
+    assert bpy.ops.kkbp.import_bundle.get_rna_type().name == "Import manifest.json"
+    layout = _Layout()
+    submodule("ui.panel").KKBP_PT_import.draw(type("Panel", (), {"layout": layout})(), bpy.context)
+    assert ("kkbp.import_bundle", "Import Export Bundle") in layout.operators
 
 
 def test_each_option_is_one_line_beside_its_owner():

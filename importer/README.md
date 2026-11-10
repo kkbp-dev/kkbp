@@ -70,6 +70,7 @@ Traps met while writing the importer and its tests. The rules they led to are in
 - `Material.use_nodes` is deprecated in 5.x; new materials already have a node tree.
 - Appending from the library makes `.001` copies of node groups and images the file already has; `templates.py` and `appending.py` remap them.
 - Driver expressions are capped at 256 characters, and in background runs drivers only evaluate after `scene.frame_set(...)`.
+- Blender 5.2's file browser matches an operator's `filter_glob` against each file's full path (`filelist_readjob_common.cc`), later versions against its name alone, so a bare file name such as `manifest.json` shows nothing on 5.2. `*manifest.json` matches both; each pattern is cut at 15 characters.
 - Blender's glTF importer copies vertices per primitive when primitives share an accessor (KK's and KKS's eyeline get 364 extra, an approved difference). Welding them would also merge the eyeline's doubled faces.
 - Moving an armature with `rig.data.transform()` leaves the pose stale until a mode change. Move the bones as edit bones inside `editing()`, reading every position before assigning any: setting a bone's tail moves its connected children's heads, so they would move twice (`builtin/rigify/legacy.py`, `move_rig`).
 
