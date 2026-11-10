@@ -15,11 +15,12 @@ from types import MappingProxyType
 from typing import Mapping
 
 from . import kk, kks, svs
+from .corrections import CorrectionError, Corrections, parse as _parse_corrections
 
 _MODULES = {m.GAME: m for m in (kk, kks, svs)}
 # What a profile module may set. Each is optional in a module that EXTENDS another, and replaces
 # the base profile's value when set.
-_FIELDS = ("TEMPLATE_SET", "RAW_TEXTURES", "PATTERN_VALUES", "BONES", "EDIT")
+_FIELDS = ("TEMPLATE_SET", "RAW_TEXTURES", "PATTERN_VALUES", "BONES", "EDIT", "CORRECTIONS")
 
 
 class ProfileError(Exception):
@@ -107,6 +108,7 @@ class Profile:
     pattern_values: Mapping[str, str]  # Raw Property (`.x` for a vector component) -> template param
     bones: BoneRules
     edit: EditRules
+    corrections: Corrections  # the game's joint corrections (profiles/corrections.py)
 
 
 def games() -> tuple[str, ...]:
@@ -132,7 +134,8 @@ def _resolve(game, seen):
             raise ProfileError(f"profile {game} extends {extends}, which has no profile")
         base = _resolve(extends, seen + (game,))
         values = {"TEMPLATE_SET": base.template_set, "RAW_TEXTURES": dict(base.raw_textures),
-                  "PATTERN_VALUES": dict(base.pattern_values), "BONES": base.bones, "EDIT": base.edit}
+                  "PATTERN_VALUES": dict(base.pattern_values), "BONES": base.bones, "EDIT": base.edit,
+                  "CORRECTIONS": base.corrections}
     for name in _FIELDS:
         if hasattr(module, name):
             value = getattr(module, name)
@@ -145,7 +148,17 @@ def _resolve(game, seen):
                    raw_textures=MappingProxyType(dict(values["RAW_TEXTURES"])),
                    pattern_values=MappingProxyType(dict(values["PATTERN_VALUES"])),
                    bones=bones if isinstance(bones, BoneRules) else _bone_rules(game, bones),
-                   edit=values["EDIT"] if isinstance(values["EDIT"], EditRules) else _edit_rules(game, values["EDIT"]))
+                   edit=values["EDIT"] if isinstance(values["EDIT"], EditRules) else _edit_rules(game, values["EDIT"]),
+                   corrections=_corrections(game, values["CORRECTIONS"]))
+
+
+def _corrections(game, data):
+    if isinstance(data, Corrections):
+        return data
+    try:
+        return _parse_corrections(game, data)
+    except CorrectionError as ex:
+        raise ProfileError(str(ex)) from None
 
 
 def _source(game, text):
@@ -202,4 +215,4 @@ def _bone_rules(game, data):
         raise ProfileError(f"profile {game}: BONES is malformed ({ex})") from None
 
 
-__all__ = ["BoneRule", "BoneRules", "EditColor", "EditRules", "Profile", "Source", "ProfileError", "games", "get"]
+__all__ = ["BoneRule", "BoneRules", "Corrections", "EditColor", "EditRules", "Profile", "Source", "ProfileError", "games", "get"]

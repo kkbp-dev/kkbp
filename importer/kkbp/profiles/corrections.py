@@ -248,9 +248,10 @@ def read(rules: Corrections, pose: Pose, i: Input, rest: Pose | None = None) -> 
 class _Names(dict):
     """Formula names, worked out when a formula first asks for them."""
 
-    def __init__(self, rules, pose, rest):
+    def __init__(self, rules, pose, rest, given=None):
         super().__init__(FUNCTIONS)
         self.rules, self.pose, self.rest = rules, pose, rest
+        self.update(given or {})
 
     def __missing__(self, name):
         if name in self.rules.inputs:
@@ -267,11 +268,12 @@ def formula_values(rules: Corrections, pose: Pose, names, rest: Pose | None = No
     return {n: env[n] for n in names}
 
 
-def evaluate(rules: Corrections, pose: Pose, rest: Pose | None = None) -> Pose:
-    """`pose` after one run of the game's corrections. `rest` is where the rest_ inputs are read."""
+def evaluate(rules: Corrections, pose: Pose, rest: Pose | None = None, given=None) -> Pose:
+    """`pose` after one run of the game's corrections. `rest` is where the rest_ inputs are read;
+    `given` sets inputs by name instead of reading them."""
     pose = pose.copy()
     for o in rules.outputs:
-        env = _Names(rules, pose, rest)  # afresh: an earlier output may be a later one's input
+        env = _Names(rules, pose, rest, given)  # afresh: an earlier output may be a later one's input
         new = {axis: float(eval(f, {"__builtins__": {}}, env)) for axis, f in o.formulas.items()}  # noqa: S307
         bone = pose.bones[o.bone]
         if o.kind == "rotation":

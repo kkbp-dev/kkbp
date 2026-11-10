@@ -121,3 +121,49 @@ def to_euler(order: str, q: Quat) -> Vec:
     else:
         raise ValueError(f"Euler order {order!r} isn't one the corrections use")
     return (math.degrees(x), math.degrees(y), math.degrees(z))
+
+
+# --- Euler angles from a quaternion, as the game works them out -------------------------------
+
+def _element(row, col):
+    """Rotation matrix element m[row][col] of the game's quaternion, written with the Blender
+    quaternion components w, x, y, z of a glTF-space frame: the game's y and z are their negatives."""
+    # in the game's components: products of two, as in gamemath.matrix
+    table = {
+        (0, 0): "1-2*(y*y+z*z)", (0, 1): "2*(z*w-x*y)", (0, 2): "-2*(x*z+y*w)",
+        (1, 0): "-2*(x*y+z*w)", (1, 1): "1-2*(x*x+z*z)", (1, 2): "2*(y*z-x*w)",
+        (2, 0): "2*(y*w-x*z)", (2, 1): "2*(y*z+x*w)", (2, 2): "1-2*(x*x+y*y)",
+    }
+    return table[(row, col)]
+
+
+def _neg(e):
+    return f"-({e})"
+
+
+def euler_expression(order: str, axis: int) -> str:
+    """A simple driver expression for one Euler angle, in degrees, as `ConvertRotation` gives it
+    (gamemath.to_euler), from variables w, x, y, z."""
+    m = _element
+    clamp = "asin(max(-1,min(1,{})))"
+    if order == "yzx":
+        n = m(1, 0)
+        main = {0: f"atan2({_neg(m(1, 2))},{m(1, 1)})", 1: f"atan2({_neg(m(2, 0))},{m(0, 0)})", 2: clamp.format(n)}
+        pole = {0: "0", 1: f"atan2({m(0, 2)},{m(2, 2)})", 2: clamp.format(n)}
+    elif order == "zxy":
+        n = m(2, 1)
+        main = {0: clamp.format(n), 1: f"atan2({_neg(m(2, 0))},{m(2, 2)})", 2: f"atan2({_neg(m(0, 1))},{m(1, 1)})"}
+        pole = {0: clamp.format(n), 1: "0", 2: f"atan2({m(1, 0)},{m(0, 0)})"}
+    elif order == "zyx":
+        n = _neg(m(2, 0))
+        main = {0: f"atan2({m(2, 1)},{m(2, 2)})", 1: clamp.format(n), 2: f"atan2({m(1, 0)},{m(0, 0)})"}
+        pole = {0: "0", 1: clamp.format(n), 2: f"atan2({_neg(m(0, 1))},{m(1, 1)})"}
+    elif order == "yxz":
+        n = _neg(m(1, 2))
+        main = {0: clamp.format(n), 1: f"atan2({m(0, 2)},{m(2, 2)})", 2: f"atan2({m(1, 0)},{m(1, 1)})"}
+        pole = {0: clamp.format(n), 1: f"atan2({_neg(m(2, 0))},{m(0, 0)})", 2: "0"}
+    else:
+        raise ValueError(order)
+    if main[axis] == pole[axis]:
+        return f"degrees({main[axis]})"
+    return f"degrees({pole[axis]} if {n}>0.9999 else {main[axis]})"

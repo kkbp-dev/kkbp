@@ -5,7 +5,7 @@ runs only on the Games it names. Steps never check ctx.game: Game differences co
 lists, the Game Profile (ctx.profile) and the bundle's Roles, Groups and Names.
 """
 
-from ..steps import armature, materials, mesh
+from ..steps import armature, corrections, materials, mesh
 from .step import Step
 
 STEPS: list[Step] = [
@@ -24,6 +24,7 @@ STEPS: list[Step] = [
     Step(armature.bend_limbs_for_ik),
     Step(armature.orient_fingers_and_legs, games=["KK", "KKS"]),
     Step(armature.sort_bone_collections),
+    Step(corrections.add_joint_corrections, options=[corrections.OPTION]),
     Step(materials.apply_templates),
     Step(materials.apply_outfit_body_textures),
     Step(materials.drive_material_changes),

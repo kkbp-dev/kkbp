@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Records what a game's joint corrections do to its Sample Card, for the importer's tests
 # (docs/design/joint-corrections.md): deploys the exporter, runs its correction probe on the poses
-# from importer/tools/correction_poses.py, and writes importer/tests/data/corrections/<game>.json.
+# from importer/tools/correction_poses.py, and writes importer/tests/data/corrections/<game>.json.gz.
 # It starts the game, so it refuses to run while the game is open.
 #
-# Usage: scripts/probe-corrections.sh kk|kks|svs
+# Usage: scripts/probe-corrections.sh kk|kks|svs [copy of the untrimmed probe output]
 set -euo pipefail
 
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -20,5 +20,6 @@ python3 "$repo/importer/tools/correction_poses.py" "$game" "$work/poses.json"
 "$repo/scripts/auto-export.sh" "$game" "$repo/contract/sample-cards/$game.png" "$work/out" \
   "\"probe_corrections\": \"$(winpath "$work/raw.json")\", \"probe_poses\": \"$(winpath "$work/poses.json")\""
 mkdir -p "$repo/importer/tests/data/corrections"
-python3 "$repo/importer/tools/correction_poses.py" --trim "$work/raw.json" "$repo/importer/tests/data/corrections/$game.json"
-echo "Wrote importer/tests/data/corrections/$game.json"
+python3 "$repo/importer/tools/correction_poses.py" --trim "$game" "$work/raw.json" "$repo/importer/tests/data/corrections/$game.json.gz"
+if [[ -n "${2:-}" ]]; then cp "$work/raw.json" "$2"; fi
+echo "Wrote importer/tests/data/corrections/$game.json.gz"
