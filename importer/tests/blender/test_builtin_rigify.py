@@ -105,6 +105,15 @@ def _panel_order(collections):
         yield from _panel_order(c.children)
 
 
+def test_junk_is_a_bone_collection_but_not_in_the_panel(ch):
+    """Issue #25: legacy put whichever collection came third on row 1, which was Junk, beside Torso."""
+    junk = ch.rig.data.collections_all[prepare.JUNK]
+    assert junk.rigify_ui_row == 0
+    torso = ch.rig.data.collections_all[commons.torsoLayerName]
+    row = [c.name for c in ch.rig.data.collections_all if c.rigify_ui_row == torso.rigify_ui_row]
+    assert sorted(row) == sorted([commons.torsoLayerName, commons.torsoLayerName + commons.fkLayerSuffix])
+
+
 def test_an_empty_hidden_custom_collection_sits_right_of_nsfw(ch):
     """Issue #7: somewhere for the user's own bones, drawn beside NSFW in the Rig Layers panel."""
     collections = ch.rig.data.collections_all
