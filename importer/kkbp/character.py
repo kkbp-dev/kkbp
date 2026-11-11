@@ -14,10 +14,10 @@ import bpy
 
 from .bundle import Bundle, open_bundle
 
-PART_ROLES = ("body", "hair", "outfit", "alt_outfit", "tears", "gag_eyes", "tongue", "armature", "rig", "face_card", "eyes",
+PART_ROLES = ("body", "hair", "outfit", "alt_outfit", "tears", "gag_eyes", "armature", "rig", "face_card", "eyes",
               "eyebrows")
 # Roles a Character has at most one of.
-SINGLE_ROLES = ("body", "armature", "rig", "tears", "gag_eyes", "tongue")
+SINGLE_ROLES = ("body", "armature", "rig", "tears", "gag_eyes")
 # Roles whose Parts must name their Outfit.
 OUTFIT_ROLES = ("outfit", "alt_outfit")
 
@@ -144,7 +144,6 @@ class Character:
     rig = property(lambda self: self._one("rig"), doc="The Rigify control rig, or None.")
     tears = property(lambda self: self._one("tears"))
     gag_eyes = property(lambda self: self._one("gag_eyes"))
-    tongue = property(lambda self: self._one("tongue"))
     hairs = property(lambda self: self.parts("hair"))
     outfits = property(lambda self: self.parts("outfit"))
     alt_outfits = property(lambda self: self.parts("alt_outfit"))

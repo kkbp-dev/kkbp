@@ -1,5 +1,7 @@
 # One tongue carries the mouth keys and the tongue bones
 
+[ADR 0039](0039-the-tongue-is-part-of-body.md) changes where the tongue goes: it is part of Body, and the `tongue` Part is gone. The merge below still holds.
+
 The games have two copies of one tongue mesh: the head's, which the mouth expressions move, and the body's rigged one, weighted to the bones under the `tongue_root` Bone Role and normally hidden. The exporters capture both. The importer's `merge_rigged_tongue` Step keeps one: the head tongue takes the rigged tongue's weights by vertex index (the two have the same vertices in the same order), the tongue bones move by the mean offset between the two copies so they bend the head tongue from the right place, and the rigged copy is deleted. The result is the visible `tongue` Part, parented to Body, with its mouth keys driven from Body's.
 
 ## Considered Options

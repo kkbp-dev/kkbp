@@ -30,7 +30,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 |---|---|---|
 | `hide_unused_objects`: Outfit, Alts and tears/gag Collections | Replaced | Core Step `arrange_collections` (Phase 4) |
 | `hide_unused_objects`: hide the KK armature when Rigify is on | Ported | Rigify Hook hides the metarig on every Game |
-| `hide_unused_objects`: hide the rigged tongue | Dropped | One visible tongue ([ADR 0020](../adr/0020-one-tongue-with-mouth-keys-and-bones.md)) |
+| `hide_unused_objects`: hide the rigged tongue | Dropped | One visible tongue, in Body ([ADR 0020](../adr/0020-one-tongue-with-mouth-keys-and-bones.md), [ADR 0039](../adr/0039-the-tongue-is-part-of-body.md)) |
 | `hide_unused_objects`: exclude the Hitboxes Collection | Dropped | Hit boxes are never exported |
 | `hide_unused_objects`: exclude Bone Widgets | Ported | Rigify Hook |
 | `apply_cycles` | Ported | Convert shaders, `cycles` and `cycles_classic` (below) |
@@ -71,7 +71,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | Piece | Verdict | Why / where |
 |---|---|---|
 | `rigify_before.main`: reserved-name and duplicate-name fixes | Ported | Rigify Hook (accessory bones can still be called `root`, `torso` or `head`) |
-| optional features: skirt, rigged tongue, Better Penetration, head mod, male | Ported | From Bone Groups and the tongue Part; see the name table |
+| optional features: skirt, rigged tongue, Better Penetration, head mod, male | Ported | From Bone Groups and the tongue bones' vertex groups on Body; see the name table |
 | widgets: `createWidget`, `createEyeWidget`, `createEyesWidget`, `arrangeTripleWidgetSet` | Ported | Rigify Hook; the fixed widget meshes come from `rigify.blend` |
 | eye, chest and butt bones, tracking bones, handle bones | Ported | Rigify Hook |
 | `fix_bone_orientations`, `connectAndParentBones` | Ported | Rigify Hook, after it re-aims its bones (ADR 0017) |
@@ -79,7 +79,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | The legacy drivers' axis swaps and `invert_y/z` | Dropped | Those drivers are gone (ADR 0038) |
 | palm vertex groups, `finalizeFingerBones` rolls, `super_palm` (KK only) | Ported | Gated (D24) |
 | nipple widgets (KK only) | Ported | Gated (D24) |
-| `finalizeRiggedTongueSideBones` and the tongue rig | Ported | Rigs the single tongue Part (ADR 0020) |
+| `finalizeRiggedTongueSideBones` and the tongue rig | Ported | Rigs the single tongue, in Body (ADR 0020, ADR 0039) |
 | skirt rig (`getSkirtBoneName` indexes) | Ported | Chains found from Bone Group `skirt` and the bone tree |
 | layer setup (`RigifyLayer`, `BoneManagerLayer`, Charamaker, Toes, Face MCH) | Ported, changed | Rig collections built from the Core's (D7); the name-based splits D7 dropped stay dropped |
 | a `Custom` collection for the user's own bones | Added | Rigify Hook: empty and hidden, to the right of NSFW in the Rig Layers panel (issue #7) |
@@ -124,8 +124,8 @@ Every legacy lookup by a bone, material, object, node, socket or image name, and
 
 | Legacy | Replacement |
 |---|---|
-| `c.get_body()`, `get_hairs()`, `get_outfits()`, `get_alts()`, `get_armature()`, `get_rig()`, `get_tongue()`, `get_gags()`, `get_tears()` | `ch.body`, `ch.hairs`, `ch.outfits`, `ch.alt_outfits`, `ch.armature`, `ch.rig`, `ch.tongue`, `ch.gag_eyes`, `ch.tears` |
-| `'Body ' + c.get_name()`, `"Tongue (rigged) " + name` | `ch.body`, `ch.tongue` |
+| `c.get_body()`, `get_hairs()`, `get_outfits()`, `get_alts()`, `get_armature()`, `get_rig()`, `get_tongue()`, `get_gags()`, `get_tears()` | `ch.body`, `ch.hairs`, `ch.outfits`, `ch.alt_outfits`, `ch.armature`, `ch.rig`, `ch.body` (the tongue is in Body), `ch.gag_eyes`, `ch.tears` |
+| `'Body ' + c.get_name()`, `"Tongue (rigged) " + name` | `ch.body` for both |
 | `c.get_material_names('cf_O_face')`, `('o_body_a')` | materials with Role `face`, `body` |
 | `'KK cf_m_eyeline_down'`, `'KK cf_m_eyeline_00_up'`, `'KK cf_m_mayuge_00'` | Roles `eyeline_lower`, `eyeline_upper`, `eyebrow` |
 | `'KK cf_m_hitomi_00_cf_Ohitomi_L02'` / `_R02`, `'KK cf_m_sirome_00'` | Roles `eye_l`, `eye_r`, `eye_white` |

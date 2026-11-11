@@ -13,7 +13,7 @@ Status: agreed design, not yet implemented.
 
 ## Part Roles
 
-- Each Part carries exactly one Part Role from a closed set: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `tongue`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows` (the last two only after the link shape keys tool).
+- Each Part carries exactly one Part Role from a closed set: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows` (the last two only after the link shape keys tool).
 - Outfit Parts also carry their Outfit index.
 - `ch.add_part` is the only way to tag an object, so the tagging rules live in one place.
 
@@ -23,7 +23,7 @@ Status: agreed design, not yet implemented.
 Character.of(obj)            # the Character obj belongs to, or None
 Character.all(scene)
 ch.key / ch.name / ch.game
-ch.body / ch.armature / ch.rig / ch.tears / ch.gag_eyes / ch.tongue   # one each, or None
+ch.body / ch.armature / ch.rig / ch.tears / ch.gag_eyes   # one each, or None
 ch.control                   # ch.rig if there is one, else ch.armature
 ch.hairs / ch.outfits / ch.alt_outfits                  # lists
 ch.outfit(index)             # that Outfit's Parts

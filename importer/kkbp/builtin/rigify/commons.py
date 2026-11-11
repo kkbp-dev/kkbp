@@ -38,7 +38,10 @@ def leftNameToRightName(leftName):
 def bodyName():
     return c.get_body().name
 def riggedTongueName():
-    return c.character().tongue.name if c.character().tongue else ''
+    """The mesh the tongue rig reads: Body, which holds the tongue (ADR 0039), when the tongue is
+    weighted to the tongue bones; else ''."""
+    body = c.get_body()
+    return body.name if body is not None and riggedTongueBone1Name in body.vertex_groups else ''
 
 eyelidsShapeKeyName = "Eye Closed"
 eyelidsShapeKeyCopyName = eyelidsShapeKeyName + copyNameSuffix

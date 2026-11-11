@@ -22,8 +22,8 @@ SWITCH = Option(
              ("cycles_classic", "Cycles (classic)", "The classic shaders for Cycles"),
              ("principled", "Principled BSDF", "A very simple material setup")))
 
-# The Parts whose materials are converted: the legacy importer's body, hair, clothes and
-# alternate clothes. The tears, gag eyes and tongue keep their own templates.
+# The Parts whose materials are converted: the legacy importer's body (with the tongue, ADR 0039),
+# hair, clothes and alternate clothes. The tears and gag eyes keep their own templates.
 PARTS = ("body", "hair", "outfit", "alt_outfit")
 
 # Cycles: these draw without shadows (legacy `shadowless_mats`).

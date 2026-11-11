@@ -90,8 +90,8 @@ def test_junk_holds_the_widgets_and_the_metarig_and_is_hidden(ch):
     assert "Bone Widgets" not in bpy.data.collections
 
 
-def test_the_mouth_grid_drives_the_rigged_tongue_too(ch):
-    for obj in (ch.body, ch.tongue):
+def test_the_mouth_grid_drives_body_and_its_tongue(ch):
+    for obj in (ch.body,):
         keys = obj.data.shape_keys
         copies = [k.name for k in keys.key_blocks if k.name.endswith(commons.mouthShapekeysCopySuffix)]
         assert copies, obj.name

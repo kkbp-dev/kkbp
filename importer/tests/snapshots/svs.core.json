@@ -20,8 +20,7 @@
     },
     "objects": [
      "Armature {character}",
-     "Body {character}",
-     "Tongue (rigged) {character}"
+     "Body {character}"
     ]
    }
   },
@@ -34,7 +33,7 @@
   "materials": 27,
   "meshes": 24,
   "node_groups": 11,
-  "objects": 7
+  "objects": 6
  },
  "images": [
   "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
@@ -15861,8 +15860,8 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 47999,
-    "faces": 30942,
+    "edges": 50563,
+    "faces": 32598,
     "material_slots": [
      "cf_m_head_00",
      "cf_m_mayuge_00",
@@ -15873,6 +15872,7 @@
      "cf_m_hitomi_00_R_white",
      "cf_m_hitomi_00_R",
      "cf_m_tooth",
+     "cf_m_tango",
      "cf_m_body_00",
      "cf_m_nail_def_00",
      "cf_m_nail_def_01"
@@ -15972,7 +15972,7 @@
      "uv_eyeshadow"
     ],
     "vertex_groups": 761,
-    "vertices": 17091
+    "vertices": 18001
    },
    "modifiers": [
     {
@@ -16191,81 +16191,6 @@
    "parent": "Body {character}",
    "roles": [
     "tears"
-   ],
-   "type": "MESH"
-  },
-  "Tongue (rigged) {character}": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": "o_tango",
-   "location": [
-    0.0,
-    0.0,
-    0.0
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 2564,
-    "faces": 1656,
-    "material_slots": [
-     "cf_m_tango"
-    ],
-    "shape_key_drivers": 66,
-    "shape_keys": [
-     "Basis",
-     "Mouth A",
-     "Mouth Angry",
-     "Mouth Angry (Moderate)",
-     "Mouth Cartoony Smile",
-     "Mouth Catlike",
-     "Mouth Default",
-     "Mouth Displeased",
-     "Mouth E",
-     "Mouth Excited",
-     "Mouth Excited (Moderate)",
-     "Mouth Hate",
-     "Mouth Hold In Mouth",
-     "Mouth I",
-     "Mouth Impatient",
-     "Mouth Lonely",
-     "Mouth O",
-     "Mouth Playful",
-     "Mouth Playful L",
-     "Mouth Playful R",
-     "Mouth Serious",
-     "Mouth Serious (Moderate)",
-     "Mouth Smiling",
-     "Mouth Smiling (Moderate)",
-     "Mouth Smug",
-     "Mouth Tongue Out",
-     "Mouth Triangle",
-     "Mouth U",
-     "mouth 19",
-     "mouth 20",
-     "mouth 21",
-     "mouth 22",
-     "mouth 23",
-     "mouth 26"
-    ],
-    "uv_maps": [
-     "uv_main"
-    ],
-    "vertex_groups": 761,
-    "vertices": 910
-   },
-   "modifiers": [
-    {
-     "name": "Armature modifier",
-     "type": "ARMATURE"
-    }
-   ],
-   "parent": "Body {character}",
-   "roles": [
-    "tongue"
    ],
    "type": "MESH"
   }

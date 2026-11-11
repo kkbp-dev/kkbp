@@ -41,7 +41,7 @@ STEPS = [
 
 ```python
 # A script in the hooks folder: `kkbp` is already defined.
-@kkbp.hook(name="Fix eyebrow color", requires_api="1.0",
+@kkbp.hook(name="Fix eyebrow color", requires_api="2.0",
            options=[kkbp.Option("tint", float, default=0.5, label="Tint")])
 def after_import(ctx):
     ...
@@ -83,7 +83,7 @@ def find_kkbp():
 
 ### Hook interface version
 
-- The interface itself, version 1.0, is documented for Hook writers in [../hook-interface.md](../hook-interface.md).
+- The interface itself, version 2.0, is documented for Hook writers in [../hook-interface.md](../hook-interface.md).
 
 - The hook interface has its own `major.minor` version, separate from the add-on version. A Hook may declare the version it needs. If that doesn't match, it is skipped with a warning.
 - The versioned interface covers the `ctx` fields, the `register_hook` signature, the guaranteed starting state, the Bundle's interface and the shape of `ctx.character`.
