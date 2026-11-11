@@ -28,7 +28,7 @@ See [export-bundle.md](export-bundle.md#roles-and-canonical-names).
 
 ## Parts from Material Roles
 
-- The importer separates hair, tears, gag eyes and tongue into their own Parts by Material Role (`hair` → `hair` Part, `tears` → `tears` Part, and so on).
+- The importer separates hair, tears and gag eyes into their own Parts by Material Role (`hair` → `hair` Part, `tears` → `tears` Part, and so on). The tongue stays in Body ([ADR 0039](../adr/0039-the-tongue-is-part-of-body.md)).
 - That mapping is one table, the same for every Game, so these Steps need no game data.
 
 ## Behaviour differences
