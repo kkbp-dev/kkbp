@@ -43,6 +43,7 @@ namespace KKBP.Exporter
         private Physics physics;
         private readonly Dictionary<Renderer, MaterialRole> roles = new Dictionary<Renderer, MaterialRole>();
         private float animationSpeed = 1;
+        private FaceState startFace;
 
         public KkAdapter(ChaControl cha, ExportOptions options)
         {
@@ -127,7 +128,10 @@ namespace KKBP.Exporter
             {
                 cha.animBody.speed = animationSpeed;
             }
-            cha.ChangeEyesBlinkFlag(true);
+            if (startFace != null)
+            {
+                startFace.Apply(cha);
+            }
             if (cha.fileStatus.coordinateType != startOutfit)
             {
                 cha.ChangeCoordinateTypeAndReload((ChaFileDefine.CoordinateType)startOutfit);
@@ -138,6 +142,7 @@ namespace KKBP.Exporter
 
         private IEnumerator Prepare()
         {
+            startFace = new FaceState(cha);
             cha.ChangeEyesBlinkFlag(false);
             cha.ChangeLookEyesTarget(1, null, 0f);
             cha.ChangeLookNeckPtn(3);
@@ -176,6 +181,63 @@ namespace KKBP.Exporter
                 cha.resetDynamicBoneAll = true;
                 yield return null;
                 yield return null;
+            }
+        }
+
+        /// <summary>
+        /// The face settings Prepare changes, as the maker had them (issue 22). They live in the card's
+        /// status: without putting them back, the next export starts from the exported face, and on a fixed
+        /// mouth ChangeMouthOpenMax also sets the mouth's FixedRate, so a closed mouth stays open.
+        /// ChangeMouthFixed comes after ChangeMouthOpenMax and sets FixedRate from both. The eye-look target
+        /// is rebuilt from the saved status (given a transform, ChangeLookEyesTarget doesn't save the rate,
+        /// angle or range), then the maker's own target transform goes back.
+        /// </summary>
+        private sealed class FaceState
+        {
+            private readonly int eyesPtn, eyebrowPtn, mouthPtn, lookEyesPtn, lookNeckPtn;
+            private readonly float eyesOpenMax, eyebrowOpenMax, mouthOpenMax;
+            private readonly bool blink, mouthFixed;
+            private readonly int lookType;
+            private readonly float lookRate, lookAngle, lookRange;
+            private readonly Transform lookTarget;
+
+            public FaceState(ChaControl cha)
+            {
+                eyesPtn = cha.GetEyesPtn();
+                eyebrowPtn = cha.GetEyebrowPtn();
+                mouthPtn = cha.GetMouthPtn();
+                lookEyesPtn = cha.GetLookEyesPtn();
+                lookNeckPtn = cha.GetLookNeckPtn();
+                eyesOpenMax = cha.GetEyesOpenMax();
+                eyebrowOpenMax = cha.GetEyebrowOpenMax();
+                mouthOpenMax = cha.GetMouthOpenMax();
+                mouthFixed = cha.GetMouthFixed();
+                blink = cha.GetEyesBlinkFlag();
+                var status = cha.fileStatus;
+                lookType = status.eyesTargetType;
+                lookRate = status.eyesTargetRate;
+                lookAngle = status.eyesTargetAngle;
+                lookRange = status.eyesTargetRange;
+                lookTarget = cha.eyeLookCtrl != null ? cha.eyeLookCtrl.target : null;
+            }
+
+            public void Apply(ChaControl cha)
+            {
+                cha.ChangeEyesPtn(eyesPtn, false);
+                cha.ChangeEyebrowPtn(eyebrowPtn, false);
+                cha.ChangeMouthPtn(mouthPtn, false);
+                cha.ChangeLookEyesPtn(lookEyesPtn);
+                cha.ChangeLookEyesTarget(lookType, null, lookRate, lookAngle, lookRange);
+                if (cha.eyeLookCtrl != null && lookTarget != null)
+                {
+                    cha.eyeLookCtrl.target = lookTarget;
+                }
+                cha.ChangeLookNeckPtn(lookNeckPtn);
+                cha.ChangeEyesBlinkFlag(blink);
+                cha.ChangeEyesOpenMax(eyesOpenMax);
+                cha.ChangeEyebrowOpenMax(eyebrowOpenMax);
+                cha.ChangeMouthOpenMax(mouthOpenMax);
+                cha.ChangeMouthFixed(mouthFixed);
             }
         }
 
