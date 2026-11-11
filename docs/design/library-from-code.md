@@ -1,8 +1,8 @@
 # The library from code, and edit templates from the game's shaders
 
 Status: **agreed** (2026-11-11; every proposal in "Decisions" accepted). Part A is implemented
-([ADR 0040](../adr/0040-the-library-is-built-from-code.md), D66); Part B is in progress (its findings so far
-are under "What the measurements found"). Plan for issues #29 and #30. Terms are in [CONTEXT.md](../../CONTEXT.md).
+([ADR 0040](../adr/0040-the-library-is-built-from-code.md), D66). Part B is in progress ([ADR 0041](../adr/0041-edit-templates-follow-the-games-shaders.md),
+D67): KK's eye whites, eyebrows, eyelines and nose line are done; "Part B progress" at the end lists what is left. Plan for issues #29 and #30. Terms are in [CONTEXT.md](../../CONTEXT.md).
 
 Two pieces of work, in this order:
 
@@ -469,3 +469,56 @@ settles the colour-space question for all of them.
    extraction; `build.py`; empty diff; full test run; delete V9; docs and ADR. Commit in those steps.
 3. Part B: fix `dump.py` for KKS and dump both games; the accuracy test with the legacy numbers; then
    one shader pair at a time; remove legacy templates and saturation; docs and ADR; version 2.
+
+## Part B progress
+
+Done (ADR 0041, D67):
+
+- `importer/tools/game_shaders/dump.py` and `dxdis.py`: dump and disassemble both games' shaders, with
+  every constant and texture named (Unity 5.6 and 2019 layouts). `dump.py SITE --find FOLDER` lists
+  which asset file holds each shader. Where they are: KK `Koikatu_Data/globalgamemanagers.assets`
+  (toon_*, create_* but topN), `abdata/chara/mm_base.unity3d` (create_topN), `abdata/chara/54/chara_data_00.unity3d`
+  (main_opaque, main_item, main_hair), `54/chara_mat_00.unity3d` (main_skin), `co_bot_13.unity3d`
+  (main_alpha), `bo_hair_b_13.unity3d` (main_hair_front); KKS `abdata/chara/mm_base.unity3d` (create_*),
+  `bo_head_00.unity3d` (main_skin, main_eye, main_eyew, main_nose), `co_bot_00.unity3d`
+  (main_clothes_opaque, main_clothes_alpha), `ao_arm_00.unity3d` (main_clothes_item),
+  `bo_hair_b_00.unity3d` and `ao_head_00.unity3d` (hair_main_sun_front, hair_main_sun). The forward
+  program to read is the fragment one (type 17) whose keywords are `DIRECTIONAL` alone (KK) or the
+  fewest (KKS).
+- `importer/tools/game_shaders/models.py`: `lin`, `srgb`, `grade`, the KK light, `create_eyewhite`,
+  `toon_eyew`, `toon_nose`; `host/test_shader_models.py` checks them on the kk sample.
+- Groups `.KK srgb`, `.KK linear`, `.KK grade`, `.KK graded`, `.KK create_eyewhite`, `.KK toon_eyew`,
+  `.KK toon_nose`; templates `KK create_eyewhite`, `KK toon_eyew`, `KK toon_nose`, built on
+  `importer/tools/library/edit_templates.py`; KK's profile points eye whites, eyebrows, eyelines and
+  the nose line at them.
+- `blender/test_edit_accuracy.py`, with `importer/tests/data/edit_accuracy.json` (the legacy numbers are
+  in ADR 0041).
+
+Left, in this order (each: dump, model in models.py with a host test, fit constants, node group,
+template, Template Description with `graded=True`, profile row and colours, re-record the accuracy):
+
+1. **KKS's light.** Model `Koikano/main_eyew` (dumped as `Koikano_main_eyew.8.ps.txt`): ambient
+   `lerp(_ambientshadowG, SH, _KanoVerShift)` from the scene's light probes, the 0.67 / 0.33 light term,
+   the dark side's desaturation. Fit the few constants it reduces to under the bake (the ambient colour,
+   the light term, the ramp values) on the kks eye white, eyebrow and eyelines, then give KKS its
+   `KKS main_eyew` and `KKS create_eyew` templates and its own `EDIT["templates"]` rows. `Koikano/main_nose`
+   is likely KK's nose; check.
+2. **KK hair** (`main_hair`, `main_hair_front`): no create material in the samples; the colour mask
+   (`_Color`, `_Color2`, `_Color3`) over `_MainTex`, the `_HairGloss` highlight read twice from the
+   second UV map, `_AnotherRamp`, `_ShadowExtend`, the detail mask. The bake draws the flattened mesh,
+   not a quad, so check which terms the flat mesh leaves (front-facing normal: no rim). Then KK's
+   `saturated_roles` is empty.
+3. **KK clothes** (`create_topN` + `main_opaque`, also `main_alpha`; the tongue and teeth `main_item`):
+   `ShadeAdjustItem` (an HSV step: write it from Math nodes, as `shading._hue_tint` does), the line
+   mask, `_ShadowExtend`, `_ShadowExtendAnother`, `_AnotherRampFull`, the detail mask. `create_topN`
+   is decoded in "What the investigation found"; its pattern UVs `20 - 19 * scale` need the pattern
+   scale floats.
+4. **KK eyes** (`create_eye` + `toon_eye_lod0`): the gradient UV `_grad`, the overlays and their
+   positions (D41).
+5. **KK body and face** (`create_body`, `create_head` + `main_skin`): the paint and mole UVs, the
+   overlays on the second to fourth UV maps (check the importer's UV names), `MapValuesMain`.
+6. **KKS** for 2 to 5.
+7. When no Role uses a legacy edit template: delete them and the groups only they use, the Saturate
+   option (`scene.kkbp_edit_saturate`, the operator's option; check `docs/hook-interface.md`), the
+   LUT and dark-texture half of `kkbp/shading/`, `saturated`, `saturated_roles`,
+   `plain_color_mask_shaders` and the `how` kinds nothing uses; update ADR 0026 and 0025 to say so.
