@@ -6,18 +6,53 @@ How to write a Hook: a script that KKBP runs on each Character it imports, after
 
 Put a `.py` file in a folder and choose that folder as the hooks folder in KKBP's Preferences. KKBP loads it when the add-on starts, from **Reload hooks**, and again before each import. The script doesn't import anything to get KKBP: `kkbp` is already defined.
 
+This one adds a camera that frames the Character's face, upper body or whole body. Like any Blender script, it imports `bpy` for the rest:
+
 ```python
-@kkbp.hook(name="Eyebrows through hair", requires_api="1.0",
-           options=[kkbp.Option("eyebrows_through_hair", bool, True, "Eyebrows through hair",
-                                description="Draws the eyebrows over the hair, as the game does")])
-def eyebrows_through_hair(ctx):
-    for material in ctx.character.materials(roles=["eyebrow"]):
-        if "force_visibility" in kkbp.templates.params(material):
-            kkbp.templates.param(material, "force_visibility").default_value = int(ctx.options.eyebrows_through_hair)
-    ctx.log.info(f"Eyebrows through hair: {ctx.options.eyebrows_through_hair}")
+import bpy
+from mathutils import Vector
+
+# For each framing: the Bone Role to aim at, and how tall a slice of the Character fills the frame, in metres
+FRAMINGS = {"face": ("head", 0.45), "bust": ("neck", 0.75), "full": ("hips", 2.0)}
+
+
+@kkbp.hook(name="Portrait camera", requires_api="1.0", options=[
+    kkbp.Option("portrait_camera_framing", str, "bust", "Framing",
+                choices=["face", ("bust", "Bust"), ("full", "Full body", "From head to toe")]),
+    kkbp.Option("portrait_camera_lens", float, 85.0, "Focal length", min=20.0, max=200.0,
+                description="The camera's focal length, in millimetres"),
+])
+def portrait_camera(ctx):
+    ch = ctx.character
+    role, height = FRAMINGS[ctx.options.portrait_camera_framing]
+    bone = ctx.bundle.skeleton.by_role(role)  # the bundle's bone with that Bone Role, in any Game
+    armature = ch.armature
+    if bone is None or armature is None:
+        ctx.log.warning(f"{ch.name} has no {role} bone, so no camera was added")
+        return
+    target = armature.matrix_world @ armature.pose.bones[bone.id].head  # the armature's bones are named by Id
+
+    camera = bpy.data.objects.new(f"{ch.name} camera", bpy.data.cameras.new(f"{ch.name} camera"))
+    camera.data.lens = ctx.options.portrait_camera_lens
+    camera.data.sensor_fit = "VERTICAL"
+    # In front of the Character, which faces -Y, as far away as it takes to fit `height` in the frame
+    distance = height * camera.data.lens / camera.data.sensor_height
+    camera.location = target + Vector((0.0, -distance, 0.0))
+    aim = camera.constraints.new("TRACK_TO")  # keeps the bone in the middle of the frame when it's posed
+    aim.target, aim.subtarget = armature, bone.id
+    aim.track_axis, aim.up_axis = "TRACK_NEGATIVE_Z", "UP_Y"
+    ch.collection.objects.link(camera)
+    if bpy.context.scene.camera is None:
+        bpy.context.scene.camera = camera
+    ctx.log.info(f"Added {camera.name}, {distance:.2f} m from {bone.name} ({ctx.game})")
 ```
 
-The Hook appears in Preferences, where it can be switched off and moved up or down among the user Hooks, and its option appears in the import panel.
+The Hook appears in Preferences, where it can be switched off and moved up or down among the user Hooks, and its options appear in the import panel. Along the way it shows:
+
+- **Import Options:** each `kkbp.Option` becomes a control in the import panel and a value in `ctx.options`. Their names start with the Hook's own prefix, because every Step and Hook shares one set of names ([Import Options](#import-options)).
+- **The bundle:** `ctx.bundle` holds the game's data. The Hook finds the bone by its Bone Role rather than by name, so it works on every Game.
+- **The Character:** `ctx.character` finds the Character's armature and Collection by their tags, so it keeps working after the user renames them. The armature's bones are named by the bundle's bone Ids, which is how the Hook gets from the bundle to Blender.
+- **The log:** `ctx.log` writes to the KKBP log. A warning also counts in the import's summary.
 
 ## Registering
 
