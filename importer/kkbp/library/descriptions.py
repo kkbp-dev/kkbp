@@ -138,6 +138,13 @@ _GAME_BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("shad
 # The Game's Maker Light as toon_eyew and Koikano/main_eyew shade with it; the defaults are KK's.
 _EYEW_LIGHT = {"ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength"),
                "shadow_floor": ("lit", "Shadow floor")}
+# What main_opaque and main_item share: the shadow colour and extends, the line switches, the
+# maker's ambient and line colour.
+_ITEM_LIGHT = {"shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend"),
+               "shadow_extend_another": ("lit", "Shadow extend another"),
+               "detail_r_line_r": ("lit", "Detail R line R"), "detail_b_line_g": ("lit", "Detail B line G"),
+               "line_color_alpha": ("lit", "Line color alpha"),
+               "ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength")}
 _MISC = Template("", textures=_in("textures", main="_ST_CT.png"), params=_BAKE, copies=("textures",))
 _GENERAL_TEXTURES = _in(
     "textures", main="_ST_CT.png", **{"main.dark": "_ST_DT.png", "color_mask.plain": "_CM.pngopaque"},
@@ -230,6 +237,24 @@ _EDIT_TEMPLATES = (
                      "use_main_texture": ("lit", "Use main texture"), "color": ("lit", "Color"),
                      "color2": ("lit", "Color 2"), "color3": ("lit", "Color 3"),
                      "shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend")}),
+    Template("KK main_opaque", graded=True,
+             textures={"plain": "tex.plain", "color_mask": "tex.color_mask", "pattern_mask1": "tex.pattern_mask1",
+                       "pattern_mask2": "tex.pattern_mask2", "pattern_mask3": "tex.pattern_mask3",
+                       "detail_mask": "tex.detail_mask", "line_mask": "tex.line_mask"},
+             params={**_GAME_BAKE, **_ITEM_LIGHT,
+                     "color": ("create", "Color"), "color2": ("create", "Color 2"), "color3": ("create", "Color 3"),
+                     **{f"pattern_color{k}": ("create", f"Pattern color {k}") for k in (1, 2, 3)},
+                     **{f"pattern_color{k}_alpha": ("create", f"Pattern color {k} alpha") for k in (1, 2, 3)},
+                     **{f"pattern{k}_present": ("create", f"Pattern {k} present") for k in (1, 2, 3)},
+                     **{f"pattern_scale{k}{a}": (f"pattern{k}", f"Scale {a}") for k in (1, 2, 3) for a in "uv"},
+                     "line_width": ("lit", "Line width")}),
+    Template("KK main_item", graded=True,
+             textures={"main": "tex.main", "color_mask": "tex.color_mask", "detail_mask": "tex.detail_mask",
+                       "line_mask": "tex.line_mask"},
+             params={**_GAME_BAKE, **_ITEM_LIGHT, "use_main_texture": ("lit", "Use main texture"),
+                     "color": ("lit", "Color"), "color2": ("lit", "Color 2"), "color3": ("lit", "Color 3"),
+                     "another_ramp_full": ("lit", "Another ramp full"),
+                     "not_use_tex_specular": ("lit", "Not use tex specular")}),
     Template("KK toon_nose", graded=True, textures={"main": "tex.main"},
              params={**_GAME_BAKE, "color": ("lit", "Color"), "color_alpha": ("lit", "Color alpha")}),
 )

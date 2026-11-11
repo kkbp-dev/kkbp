@@ -7,8 +7,8 @@ sRGB-encoded values, over pixels opaque in both. Each Game's numbers go to
 `importer/tests/.work/edit-accuracy/<game>.json`; the test fails if a material is further from the
 game than `importer/tests/data/edit_accuracy.json` records (with a small margin for render noise).
 Re-record after a template change that brings a material closer, on the minimum build alone (the
-numbers ADR 0041 gives; Blender 5.3 bakes the eyelines' semi-transparent edges up to 0.004 further
-off, within the margin); the legacy templates' numbers are in ADR 0041.
+numbers ADR 0041 gives; other builds bake a few thousandths apart, within the margin); the legacy
+templates' numbers are in ADR 0041.
 
     python3 importer/tests/blender/launch.py -k edit_accuracy
     KKBP_RECORD_EDIT_ACCURACY=1 KKBP_BLENDER_LATEST=<the min build> python3 importer/tests/blender/launch.py -k edit_accuracy

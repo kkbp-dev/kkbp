@@ -487,8 +487,9 @@ Done (ADR 0041, D67):
 - `importer/tools/game_shaders/models.py`: `lin`, `srgb`, `grade`, the KK and KKS lights,
   `create_eyewhite`, `toon_eyew`, `toon_nose`; `host/test_shader_models.py` checks them on both samples.
 - Groups `.KK srgb`, `.KK linear`, `.KK grade`, `.KK graded`, `.KK create_eyewhite`, `.KK toon_eyew`,
-  `.KK toon_nose`, `.KK shadow tint`, `.KK main_hair`, `.KK hair gloss uv`; templates `KK create_eyewhite`,
-  `KK toon_eyew`, `KK toon_nose`, `KK main_hair`, built on
+  `.KK toon_nose`, `.KK shadow tint`, `.KK main_hair`, `.KK hair gloss uv`, and the clothes' (below);
+  templates `KK create_eyewhite`, `KK toon_eyew`, `KK toon_nose`, `KK main_hair`, `KK main_opaque`,
+  `KK main_item`, built on
   `importer/tools/library/edit_templates.py`; KK's profile points eye whites, eyebrows, eyelines and
   the nose line at them, and KKS's profile inherits them with its own maker light.
 - `blender/test_edit_accuracy.py`, with `importer/tests/data/edit_accuracy.json` (the legacy numbers are
@@ -508,11 +509,19 @@ template, Template Description with `graded=True`, profile row and colours, re-r
    `hair_main_sun` bakes as KK's with KK's constants, so KKS uses the template too. Link hair copies
    the colours. Left out: the gloss's second read, the rim, `_AnotherRamp` (white when absent; check a
    hair that has one), the bitangent term of `_SpeclarHeight`.
-3. **KK clothes** (`create_topN` + `main_opaque`, also `main_alpha`; the tongue and teeth `main_item`):
-   `ShadeAdjustItem` (an HSV step: write it from Math nodes, as `shading._hue_tint` does), the line
-   mask, `_ShadowExtend`, `_ShadowExtendAnother`, `_AnotherRampFull`, the detail mask. `create_topN`
-   is decoded in "What the investigation found"; its pattern UVs `20 - 19 * scale` need the pattern
-   scale floats.
+3. ~~**KK clothes**~~ Done: `models.create_topN`, `main_opaque`, `main_item`, `item_tint`; groups
+   `.KK create_topN`, `.KK pattern uv`, `.KK item tint`, `.KK main_opaque`, `.KK main_item`; templates
+   `KK main_opaque`, `KK main_item`, picked by shader (`EDIT["shader_templates"]`, before the Role).
+   Fitted globals: `_LineColorG.a` 0.065 and `_linewidthG` 0.32 (`models.LINE_*`; they trade off).
+   The other ramp follows the main one under the bake. `main_item` (teeth, tongue, items) differs from
+   `main_opaque` in its second half: a scaled tint, the detail mask's red as a highlight, linear lines.
+   Not modelled: `main_alpha` (no sample uses it; it keeps the legacy template), `_LineColorG`'s colour
+   in `main_item` (white), the nail specular. **`.KK grade` reads its LUT with Closest and filters by
+   hand**: Eevee mipmaps a Linear image by the coordinate's change between pixels, and a LUT's
+   coordinate is the colour, so sharp texture edges read a blurred LUT (blue lines on the clothes,
+   and what was left of the eyelines' error). KKS's clothes (`main_clothes_opaque`, `main_clothes_item`)
+   keep the legacy templates: KK's models fit them to 0.005 to 0.055, better than legacy but not
+   modelled, and KKS's tongue is 0.27 off, so `main_clothes_item` differs.
 4. **KK eyes** (`create_eye` + `toon_eye_lod0`): the gradient UV `_grad`, the overlays and their
    positions (D41).
 5. **KK body and face** (`create_body`, `create_head` + `main_skin`): the paint and mole UVs, the

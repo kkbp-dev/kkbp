@@ -193,3 +193,73 @@ def test_main_hair_gives_back_the_bakes(game, mid, lut):
         out = models.main_hair(main, color_mask, detail_mask, gloss, colors, models.color(m["colors"]["_ShadowColor"]),
                                m["floats"]["_ShadowExtend"], ramp)
         assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < 0.01
+
+
+def _mask(sample, holder, role, size):
+    """A mask as the shader reads it: black where the material has none."""
+    t = sample.texture(holder, role, size=size)
+    return np.zeros(size[::-1] + (4,)) if t is None else t
+
+
+@pytest.mark.parametrize("mid", ["cf_m_top_inner01", "cf_m_top_jacket06", "cf_m_bot_skirt01", "cf_m_socks_high01"])
+def test_kk_create_topN_gives_back_the_composited_texture(mid):
+    """The skirt has a pattern, scaled; the bundle's main texture is the game's own composite."""
+    sample = Sample("kk")
+    m = sample.materials[mid]
+    create = m["extensions"]["kk"]["create"]
+    reference = sample.texture(m, "main")
+    size = reference.shape[1::-1]
+    main = sample.texture(create, "main", size=size)
+    h, w = reference.shape[:2]
+    ys, xs = np.mgrid[0:h, 0:w]
+    u, v = (xs + 0.5) / w, 1 - (ys + 0.5) / h
+    patterns = []
+    for k in (1, 2, 3):
+        t = next((t for t in create["textures"] if t.get("raw") == f"_PatternMask{k}"), None)
+        if t is None:
+            patterns.append(np.ones((h, w, 1)))
+            continue
+        with Image.open(sample.root / t["file"]) as im:
+            image = (np.asarray(im.convert("RGBA"), dtype=np.float64) / 255)[::-1]
+        su, sv = (20 - 19 * create["floats"].get(f"_PatternScale{k}{a}", 0) for a in "uv")
+        patterns.append(models.sample_repeat(image, u * su * t["scale"][0] + t["offset"][0],
+                                             v * sv * t["scale"][1] + t["offset"][1])[..., 0:1])
+    colors = [models.color(create["colors"][k]) for k in ("_Color", "_Color2", "_Color3")]
+    pattern_colors = [np.append(models.color(create["colors"][f"_Color{k}_2"]), create["colors"][f"_Color{k}_2"][3])
+                      for k in (1, 2, 3)]
+    out, _ = models.create_topN(main[..., :3], main[..., 3], _mask(sample, create, "color_mask", size), patterns,
+                                colors, pattern_colors)
+    assert difference(out, reference) < 0.006
+
+
+@pytest.mark.parametrize("mid,limit", [
+    ("cf_m_top_inner01", 0.005), ("cf_m_top_deco01", 0.005), ("cf_m_bot_skirt01", 0.005),
+    ("cf_m_shoes_roafer01", 0.006), ("cf_m_top_jacket06", 0.01),
+    # Fine stripes and seams, resampled to 256 pixels here.
+    ("cf_m_bra_01", 0.015), ("cf_m_shorts_01", 0.015), ("cf_m_socks_high01", 0.015),
+])
+def test_kk_main_opaque_gives_back_the_bakes(mid, limit, lut):
+    sample = Sample("kk")
+    m = sample.materials[mid]
+    size = (256, 256)
+    main = sample.texture(m, "main", size=size)[..., :3]
+    for ramp, variant in ((1.0, "light"), (0.0, "dark")):
+        out = models.main_opaque(main, _mask(sample, m, "detail_mask", size), _mask(sample, m, "line_mask", size),
+                                 m["floats"], models.color(m["colors"]["_ShadowColor"]), ramp)
+        assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit
+
+
+@pytest.mark.parametrize("mid,limit", [("cf_m_tooth", 0.005), ("cf_m_tang", 0.015)])
+def test_kk_main_item_gives_back_the_bakes(mid, limit, lut):
+    """The tongue has no main texture (white); its dark side's red is 0.02 short where it nears 1."""
+    sample = Sample("kk")
+    m = sample.materials[mid]
+    size = (256, 256)
+    tex = sample.texture(m, "main", size=size)
+    main = np.ones(size + (3,)) if tex is None else tex[..., :3]
+    colors = [models.color(m["colors"][k]) for k in ("_Color", "_Color2", "_Color3")]
+    for ramp, variant in ((1.0, "light"), (0.0, "dark")):
+        out = models.main_item(main, _mask(sample, m, "color_mask", size), _mask(sample, m, "detail_mask", size),
+                               _mask(sample, m, "line_mask", size), colors, m["floats"],
+                               models.color(m["colors"]["_ShadowColor"]), ramp)
+        assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit

@@ -84,14 +84,15 @@ def test_editing_again_reuses_the_edit_material(ch):
 @pytest.mark.parametrize("id, template, slots, params", [
     ("cf_m_face_00", "KK Face", {"main", "plain", "color_mask", "texture4", "overlay2", "overlay3"},
      ("skin_color.light", "detail_color.dark", "light_blush_color.light")),
-    ("cf_m_top_inner01", "KK General", {"main", "main.dark", "color_mask.plain", "detail_mask", "normal"},
-     ("color_mask_red.light", "pattern_color_blue.dark")),
-    ("cf_m_bot_skirt01", "KK General", {"pattern_mask1"}, ("color_mask_red.light",)),
+    ("cf_m_top_inner01", "KK main_opaque", {"plain", "color_mask", "detail_mask"},
+     ("color", "color2", "pattern_color3", "shadow_color")),
+    ("cf_m_bot_skirt01", "KK main_opaque", {"pattern_mask1"}, ("color", "pattern_color1")),
     ("cf_m_hair_b_08_00", "KK main_hair", {"color_mask", "detail_mask", "hair_gloss"}, ("color", "color2", "color3")),
     ("cf_m_mayuge_00", "KK toon_eyew", {"main"}, ("color", "shadow_color")),
     ("cf_m_sirome_00", "KK create_eyewhite", {"create_main"}, ("create_color", "create_color2", "shadow_color")),
     ("cf_m_noseline_00", "KK toon_nose", {"main"}, ("color_alpha",)),  # its colour is black
-    ("cf_m_tang", "KK General", {"color_mask", "detail_mask"}, ("color_mask_red.light",)),
+    ("cf_m_tang", "KK main_item", {"color_mask", "detail_mask"}, ("color",)),
+    ("cf_m_tooth", "KK main_item", {"main", "color_mask", "detail_mask"}, ("color", "shadow_color")),
 ])
 def test_each_template_gets_its_slots_and_colours(ch, id, template, slots, params):
     mat = ch.material(id)
@@ -105,11 +106,11 @@ def test_each_template_gets_its_slots_and_colours(ch, id, template, slots, param
 
 def test_nothing_saturates_by_default(ch):
     """ADR 0026: no KK Role saturates by default; the templates made from the game's shaders (the hair's
-    since issue 30) grade in their nodes instead."""
+    and the clothes' since issue 30) grade in their nodes instead, and the legacy ones don't saturate."""
     b = ch.bundle()
     for id, param, source in (("cf_m_hair_b_08_00", "color", b.material("cf_m_hair_b_08_00").colors["_Color"]),
-                              ("cf_m_top_inner01", "color_mask_green.light",
-                               b.material("cf_m_top_inner01").create.colors["_Color2"])):
+                              ("cf_m_top_inner01", "color2", b.material("cf_m_top_inner01").create.colors["_Color2"]),
+                              ("cf_m_body", "skin_color.light", b.material("cf_m_body").create.colors["_Color"])):
         edit = edit_material.edit(ch, ch.material(id), log=lambda *_: None)
         assert not edit[edit_material.SATURATED], id
         assert tuple(templates.param(edit, param).default_value) == pytest.approx(edit_material._linear(source), abs=1e-3), id
@@ -164,29 +165,30 @@ def _node_mapping(mat, slot):
 
 
 def test_edits_keep_the_bundle_colours_unless_saturated(ch):
-    create = ch.bundle().material("cf_m_top_inner01").create.colors["_Color2"]
-    edit = edit_material.edit(ch, ch.material("cf_m_top_inner01"), log=lambda *_: None)
-    plain = tuple(templates.param(edit, "color_mask_green.light").default_value)
+    """On a legacy template (the body's); the ones made from the game's shaders never saturate."""
+    create = ch.bundle().material("cf_m_body").create.colors["_Color"]
+    edit = edit_material.edit(ch, ch.material("cf_m_body"), log=lambda *_: None)
+    plain = _skin(edit)
     assert plain == pytest.approx(edit_material._linear(create), abs=1e-4)
     edit = edit_material.reset(ch, edit, saturate=True, log=lambda *_: None)
-    saturated = tuple(templates.param(edit, "color_mask_green.light").default_value)
+    saturated = _skin(edit)
     assert saturated != pytest.approx(plain, abs=1e-3)
     assert any(p.name.endswith(".saturated.png") for p in ch.bundle().cache_dir("edit").iterdir())
 
 
-def _green(edit):
-    return tuple(templates.param(edit, "color_mask_green.light").default_value)
+def _skin(edit):
+    return tuple(templates.param(edit, "skin_color.light").default_value)
 
 
 def test_reset_keeps_the_saturation_the_edit_was_made_with(ch):
     """Issue #13: Reset used to fall back to the default and drop an On or Off choice."""
-    edit = edit_material.edit(ch, ch.material("cf_m_top_inner01"), saturate=True, log=lambda *_: None)
-    saturated = _green(edit)
+    edit = edit_material.edit(ch, ch.material("cf_m_body"), saturate=True, log=lambda *_: None)
+    saturated = _skin(edit)
     assert edit[edit_material.SATURATED]
     edit = edit_material.reset(ch, edit, log=lambda *_: None)
-    assert edit[edit_material.SATURATED] and _green(edit) == pytest.approx(saturated, abs=1e-4)
+    assert edit[edit_material.SATURATED] and _skin(edit) == pytest.approx(saturated, abs=1e-4)
     edit = edit_material.reset(ch, edit, saturate=False, log=lambda *_: None)
-    assert not edit[edit_material.SATURATED] and _green(edit) != pytest.approx(saturated, abs=1e-3)
+    assert not edit[edit_material.SATURATED] and _skin(edit) != pytest.approx(saturated, abs=1e-3)
 
 
 def _edit_from_the_operator(ch, id, **props):
@@ -201,10 +203,10 @@ def _edit_from_the_operator(ch, id, **props):
 def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(ch):
     """Issue #13: the panel passes the scene's Saturate choice; the operator keeps no value of its own."""
     assert bpy.context.scene.kkbp_edit_saturate == "DEFAULT"
-    edit = _edit_from_the_operator(ch, "cf_m_top_inner01", saturate="ON")
+    edit = _edit_from_the_operator(ch, "cf_m_body", saturate="ON")
     assert edit[edit_material.SATURATED]
     edit_material.cancel(edit)
-    edit = _edit_from_the_operator(ch, "cf_m_top_inner01")  # Default: clothes don't saturate
+    edit = _edit_from_the_operator(ch, "cf_m_body")  # Default: the body doesn't saturate
     assert not edit[edit_material.SATURATED]
 
 

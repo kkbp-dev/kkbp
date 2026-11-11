@@ -1,6 +1,6 @@
 # Edit templates follow the games' own shaders, and grade their light and dark as the maker camera does
 
-Updates [ADR 0026](0026-edit-materials-dont-saturate-by-default.md) as issue 30 asks. In progress: both Games' eye whites, eyebrows, eyelines, nose line and hair are done; the other Material Roles still use the legacy edit templates.
+Updates [ADR 0026](0026-edit-materials-dont-saturate-by-default.md) as issue 30 asks. In progress: both Games' eye whites, eyebrows, eyelines, nose line and hair, and KK's clothes, teeth and tongue, are done; the other Material Roles, KK's `main_alpha` and KKS's clothes still use the legacy edit templates.
 
 An edit template is rebuilt from the game's own shaders instead of the legacy templates' approximations. The shaders were read from the installed games (`importer/tools/game_shaders/dump.py` disassembles their compiled D3D11 programs; the output is the games' code and stays in `importer/tests/.work/`), and each one used is written as a numpy model in `importer/tools/game_shaders/models.py`. `host/test_shader_models.py` checks every model against the Golden Samples' own bakes, and the node groups follow the models.
 
@@ -20,31 +20,41 @@ Measured by `blender/test_edit_accuracy.py` (mean absolute difference per channe
 
 | Material | Legacy template | From the game's shader |
 |---|---|---|
-| `cf_m_sirome_00` (eye white) | 0.170 / 0.103 | 0.004 / 0.003 |
+| `cf_m_sirome_00` (eye white) | 0.170 / 0.103 | 0.003 / 0.002 |
 | `cf_m_mayuge_00` (eyebrow) | 0.019 / 0.000 | 0.003 / 0.000 |
-| `cf_m_eyeline_00_up` | 0.155 / 0.002 | 0.020 / 0.015 |
+| `cf_m_eyeline_00_up` | 0.155 / 0.002 | 0.005 / 0.001 |
 | `cf_m_eyeline_kage` | 0.562 / 0.056 | 0.006 / 0.011 |
-| `cf_m_eyeline_down` | 0.135 / 0.000 | 0.023 / 0.015 |
+| `cf_m_eyeline_down` | 0.135 / 0.000 | 0.012 / 0.000 |
 | `cf_m_noseline_00` | 0.000 / 0.000 | 0.000 / 0.000 |
-| `cf_m_hair_b_08_00` (main_hair) | 0.049 / 0.092 | 0.010 / 0.007 |
-| `cf_m_hair_f_14_00_i` (main_hair_front) | 0.035 / 0.089 | 0.010 / 0.006 |
+| `cf_m_hair_b_08_00` (main_hair) | 0.049 / 0.092 | 0.005 / 0.005 |
+| `cf_m_hair_f_14_00_i` (main_hair_front) | 0.035 / 0.089 | 0.005 / 0.004 |
+| `cf_m_top_inner01` (main_opaque) | 0.113 / 0.062 | 0.003 / 0.004 |
+| `cf_m_top_jacket06` | 0.082 / 0.096 | 0.007 / 0.001 |
+| `cf_m_top_deco01` | 0.100 / 0.096 | 0.001 / 0.001 |
+| `cf_m_bot_skirt01` (a pattern) | 0.043 / 0.037 | 0.003 / 0.003 |
+| `cf_m_bra_01` | 0.089 / 0.062 | 0.011 / 0.005 |
+| `cf_m_shorts_01` | 0.087 / 0.059 | 0.010 / 0.004 |
+| `cf_m_socks_high01` | 0.102 / 0.086 | 0.011 / 0.003 |
+| `cf_m_shoes_roafer01` | 0.092 / 0.082 | 0.004 / 0.002 |
+| `cf_m_tooth` (main_item) | 0.073 / 0.053 | 0.001 / 0.001 |
+| `cf_m_tang` (main_item) | 0.081 / 0.128 | 0.001 / 0.011 |
 
 KKS Golden Sample, with KKS's maker light:
 
 | Material | Legacy template | From the game's shader |
 |---|---|---|
-| `cf_m_sirome_00` (eye white) | 0.169 / 0.114 | 0.003 / 0.003 |
+| `cf_m_sirome_00` (eye white) | 0.169 / 0.114 | 0.002 / 0.002 |
 | `cf_m_mayuge_00` (eyebrow) | 0.019 / 0.000 | 0.003 / 0.000 |
-| `cf_m_eyeline_00_up` | 0.155 / 0.034 | 0.020 / 0.020 |
+| `cf_m_eyeline_00_up` | 0.155 / 0.034 | 0.005 / 0.004 |
 | `cf_m_eyeline_kage` | 0.563 / 0.259 | 0.005 / 0.004 |
-| `cf_m_eyeline_down` | 0.135 / 0.010 | 0.023 / 0.018 |
+| `cf_m_eyeline_down` | 0.135 / 0.010 | 0.012 / 0.004 |
 | `cf_m_noseline_00` | 0.000 / 0.000 | 0.000 / 0.000 |
-| `cf_m_hair_b_08_00` (hair_main_sun, KK's template) | 0.049 / 0.092 | 0.012 / 0.007 |
-| `cf_m_hair_f_14_00_i` (hair_main_sun_front, KK's template) | 0.035 / 0.089 | 0.013 / 0.009 |
+| `cf_m_hair_b_08_00` (hair_main_sun, KK's template) | 0.049 / 0.092 | 0.007 / 0.005 |
+| `cf_m_hair_f_14_00_i` (hair_main_sun_front, KK's template) | 0.035 / 0.089 | 0.011 / 0.008 |
 
 With KK's constants, KKS's shadow eyeline's dark would be 0.198: the shadow keeping a fifth of the lit colour is what matters, not the probes.
 
-The eyelines' dark is a little further than legacy's, whose black happened to match their nearly black dark bake: what remains is at their semi-transparent edges, where Blender filters a texture with premultiplied alpha and the game with straight alpha. The numpy models, which filter as the game does, are within 0.001 to 0.008 there.
+`.KK grade` reads its LUT with Closest sampling and does the bilinear filter in nodes. Eevee samples a Linear image through mipmaps, picked by how fast the texture coordinate changes between neighbouring pixels, and a LUT's coordinate is the colour itself. Along a texture's sharp edges (the clothes' seams and lines, the eyelines' outline), that read a blurred LUT, averaged across slices. Before the change, the clothes' lines came out blue (0.065 on the bra) and the eyelines 0.020 / 0.015 off.
 
 ## Considered Options
 
@@ -54,10 +64,12 @@ The eyelines' dark is a little further than legacy's, whose black happened to ma
 
 ## Consequences
 
-- A template made this way is named after the game's shaders (`KK toon_eyew`, `KK create_eyewhite`, `KK toon_nose`), keeps its image nodes at the top level (no texture group copied per material, so [ADR 0025](0025-edit-materials-copy-their-texture-group.md) doesn't apply to it), takes the game's own colours linear (`plain`), and is `graded` in its Template Description: the edit tool never saturates it, whatever Saturate says.
+- A template made this way is named after the game's shaders (`KK toon_eyew`, `KK create_eyewhite`, `KK toon_nose`, `KK main_hair`, `KK main_opaque`, `KK main_item`), keeps its image nodes at the top level (no texture group copied per material, so [ADR 0025](0025-edit-materials-copy-their-texture-group.md) doesn't apply to it), takes the game's own colours linear (`plain`), and is `graded` in its Template Description: the edit tool never saturates it, whatever Saturate says.
 - The Game Profile picks a template per Material Role (`LEGACY_EDIT_TEMPLATES` for the Roles not modelled yet), and sets a shader's Maker Light through `values` (the `shader:` condition). The templates' defaults are KK's; KKS's profile sets `main_eyew`'s ambient colour, strength and shadow floor. No Role of either Game saturates by default now (`saturated_roles` is empty).
 - The hair's template reads `_HairGloss` through the second UV map, moved along u by the light as the game does (`.KK hair gloss uv`). The toon value reaches `.Combine colors` through that group, so the bake's fixed value moves the gloss, and the viewport slides it with the shading. Off the mesh, the game's bake shows its quad, whose second UV map is its first; the importer's bake plane has the same.
 - Link hair copies a template's colours (the profile's colour table, floats left out), so each hair keeps its own shadow extend and gloss placement.
+- KK's clothes are picked by shader, not Role (`EDIT["shader_templates"]`: `main_opaque`, `main_item`), since one Role draws with several. `KK main_opaque` composites `create_topN` in nodes, so an edit can change the colours and patterns; `KK main_item` (teeth, tongue, items) applies its colour mask in the lit stage, as the game does. The maker's line globals, which no material carries, are fitted (`_LineColorG.a` 0.065, `_linewidthG` 0.32).
+- KKS's clothes shaders keep the legacy templates. KK's models fit KKS's opaque clothes to between 0.005 and 0.055, better than legacy (0.04 to 0.16) but not as well as KK's, and KKS's tongue is 0.27 off, so they need their own models.
 - `Lut_TimeDay.png` stays in `library.blend`, Non-Color, read by `.KK grade` (and still by the legacy saturation).
 - `importer/tests/data/edit_accuracy.json` records each material's numbers; the test fails when a material moves further from the game. Re-record it when a template brings a material closer.
 - Each further shader is the same work: dump it, model it, fit any constants against the samples, write its node group and template, point the profile at it, re-record. The legacy templates, the Saturate option and `kkbp/shading/` go when no Role uses them.

@@ -201,3 +201,87 @@ def main_hair(main, color_mask, detail_mask, gloss, colors, shadow_color, shadow
     extend = np.maximum(np.maximum(ramp, keep), 1 - shadow_extend)
     out = out * (tint + extend * (1 - tint))
     return out * max(light.light * 0.6 + 0.4, light.ambient)
+
+
+# --- clothes and items: create_topN, main_opaque, main_item -------------------------------------
+
+# The maker's line globals, which no material carries. Fitted to the KK sample's clothes; the two
+# trade off (an alpha from 0 to 0.25 with its matching width fits as well), and they only matter
+# where the detail mask's blue draws lines.
+LINE_COLOR_ALPHA = 0.065  # _LineColorG.a
+LINE_WIDTH = 0.32  # _linewidthG
+
+
+def create_topN(main, alpha, color_mask, patterns, colors, pattern_colors):
+    """create_topN (KK clothes): each colour mask channel picks its colour, or its pattern colour
+    where its pattern mask is dark. `patterns` are the masks' red (1 where there is no mask), already
+    read at `uv * (20 - 19 * scale)`; `pattern_colors` are linear rgb with their alpha last. Returns
+    linear rgb and alpha."""
+    col = np.ones(3, dtype=F)
+    for i, (pattern, color_, pattern_color) in enumerate(zip(patterns, colors, pattern_colors)):
+        p = np.maximum(pattern, 1 - pattern_color[3])
+        c = pattern_color[:3] + p * (color_ - pattern_color[:3])
+        col = col + color_mask[..., i:i + 1] * (c - col)
+    return col * np.clip(main, 0, 1), alpha
+
+
+def pastel(c):
+    """ShadeAdjustItem's first step: the hue of `c` at half its saturation, value 1 (HSV)."""
+    c = np.asarray(c, dtype=F)
+    mx = c.max(-1, keepdims=True)
+    chroma = mx - c.min(-1, keepdims=True)
+    r, g, b = c[..., 0:1], c[..., 1:2], c[..., 2:3]
+    safe = np.maximum(chroma, 1e-10)
+    h = np.where(chroma == 0, 0.0, np.where(mx == r, ((g - b) / safe) % 6,
+                                           np.where(mx == g, (b - r) / safe + 2, (r - g) / safe + 4))) / 6
+    s = chroma / (mx + 1e-10) * 0.5
+    k = np.concatenate([h, h - 1 / 3, h + 1 / 3], -1)
+    hue = np.clip(np.abs(1 - 2 * (np.abs(k) % 1)) * 3 - 1, 0, 1)
+    return 1 + s * (hue - 1)
+
+
+def item_tint(base, shadow_color, light: Light = KK):
+    """ShadeAdjustItem: the shadow tint of an item, from its own colour's hue (`base * shadow
+    colour`, pastel, at 0.9) overlaid with the ambient shadow."""
+    return shade(0.9 * pastel(base * shadow_color), ambient_shadow(light))
+
+
+def main_opaque(main, detail_mask, line_mask, floats, shadow_color, ramp, light: Light = KK):
+    """KK's main_opaque (clothes) as the bake draws it: a quad facing the camera, the normal map,
+    specular and liquid off, the other ramp following the main one. `main` is create_topN's output,
+    the masks rgba. Returns linear rgb."""
+    tint = item_tint(main, shadow_color, light)
+    line_r = line_mask[..., 0:1] + floats.get("_DetailRLineR", 0) * (detail_mask[..., 0:1] - line_mask[..., 0:1])
+    line_g = line_mask[..., 1:2] + floats.get("_DetailBLineG", 0) * (detail_mask[..., 2:3] - line_mask[..., 1:2])
+    tint = np.clip(np.maximum(1 - line_r, 1 - floats.get("_ShadowExtendAnother", 0)) * tint, 0, 1)
+    extend = 1.2 * floats.get("_ShadowExtend", 0)
+    e = np.minimum(1 - line_mask[..., 2:3], 1 - detail_mask[..., 1:2]) * extend + 1 - extend
+    col = np.clip(main * (tint + ramp * e * (1 - tint)), 0, 1)
+    a = LINE_COLOR_ALPHA
+    line = np.clip(1 - (2 - 2 * a) * (1 - 0.5 * main * tint) if a > 0.5 else a * main * tint, 0, 1)
+    width = (1 - LINE_WIDTH) * 0.89 + 0.01
+    out = line + width ** line_g * (col * (tint + e * (1 - tint)) - line)
+    return out * max(light.light * 0.6 + 0.4, light.ambient)
+
+
+def main_item(main, color_mask, detail_mask, line_mask, colors, floats, shadow_color, ramp, light: Light = KK):
+    """KK's main_item (the teeth, the tongue, items) as the bake draws it: the colour mask over the
+    main texture (white if none), darkened by the line mask's blue; its own shadow-extend scale; a
+    highlight from the detail mask's red squared, which the bake doesn't clear; the lines mixed in
+    linearly. `_LineColorG`'s colour is taken as white. Returns linear rgb."""
+    col = np.ones(3, dtype=F)
+    for i, color_ in enumerate(colors):
+        col = col + color_mask[..., i:i + 1] * (color_ - col)
+    base = main * col * (1 - line_mask[..., 2:3])
+    line_r = line_mask[..., 0:1] + floats.get("_DetailRLineR", 0) * (detail_mask[..., 0:1] - line_mask[..., 0:1])
+    full = line_r + floats.get("_AnotherRampFull", 0) * (1 - line_r)
+    k = np.clip(2 - floats.get("_ShadowExtendAnother", 0) - full, 0, 1) * 0.67 + 0.33
+    tint = k * item_tint(base, shadow_color, light)
+    col = base * (tint + ramp * (1 - tint)) + detail_mask[..., 0:1] ** 2 * (1 - floats.get("_notusetexspecular", 0))
+    col = col * max(light.light * 0.6 + 0.4, light.ambient)
+    extend = 1.2 * floats.get("_ShadowExtend", 0)
+    col = col * (tint + ((1 - detail_mask[..., 1:2]) * extend + 1 - extend) * (1 - tint))
+    line_g = line_mask[..., 1:2] + floats.get("_DetailBLineG", 0) * (detail_mask[..., 2:3] - line_mask[..., 1:2])
+    a = LINE_COLOR_ALPHA
+    line = np.clip(1 - (2 - 2 * a) * (1 - base * tint) if a > 0.5 else 2 * a * tint * base, 0, 1)
+    return col + line_g * (line - col)

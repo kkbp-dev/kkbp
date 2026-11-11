@@ -43,7 +43,8 @@ def template_for(profile, bundle_material) -> str | None:
     """The edit template for a bundle material, or None if it can't be edited."""
     if bundle_material.blend_mode in profile.edit.not_editable_blend_modes:
         return None
-    return profile.edit.templates.get(bundle_material.role)
+    by_shader = profile.edit.shader_templates.get((bundle_material.shader or "").rpartition("/")[2])
+    return by_shader or profile.edit.templates.get(bundle_material.role)
 
 
 def saturates(profile, bundle_material) -> bool:

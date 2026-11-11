@@ -84,6 +84,7 @@ class EditRules:
     """The edit material tool's tables (D38-D41); `profiles/kk.py` says what each holds."""
 
     templates: Mapping[str | None, str]
+    shader_templates: Mapping[str, str]  # a shader's name after its last `/` -> template, before the Role's
     not_editable_blend_modes: frozenset[str]
     textures: Mapping[str, tuple[Source, ...]]
     saturated: frozenset[str]
@@ -189,6 +190,7 @@ def _edit_rules(game, data):
             values.append((terms, MappingProxyType(dict(params))))
         return EditRules(
             templates=MappingProxyType(dict(data["templates"])),
+            shader_templates=MappingProxyType(dict(data.get("shader_templates", {}))),
             not_editable_blend_modes=frozenset(data["not_editable_blend_modes"]),
             textures=MappingProxyType({slot: tuple(_source(game, x) for x in sources)
                                        for slot, sources in data["textures"].items()}),

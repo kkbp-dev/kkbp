@@ -152,6 +152,15 @@ def _corrections():
 # The joint corrections (docs/design/joint-corrections.md).
 CORRECTIONS = _corrections()
 
+# main_opaque's and main_item's own values.
+_ITEM_COLORS = [
+    ["shadow_color", ["own:_ShadowColor"], "plain"],
+    ["shadow_extend", ["own:_ShadowExtend"], "float"],
+    ["shadow_extend_another", ["own:_ShadowExtendAnother"], "float"],
+    ["detail_r_line_r", ["own:_DetailRLineR"], "float"],
+    ["detail_b_line_g", ["own:_DetailBLineG"], "float"],
+]
+
 # toon_eyew's colours: the texture's tint and the shadow colour.
 _EYEW_COLORS = [["color", ["own:_Color"], "plain"], ["shadow_color", ["own:_shadowcolor"], "plain"]]
 
@@ -186,6 +195,8 @@ EDIT = {
         "hair": "KK main_hair",
         "eyeline_upper": "KK toon_eyew", "eyeline_lower": "KK toon_eyew", "eyeline_shadow": "KK toon_eyew",
     },
+    # Shader (after its last `/`) -> edit template, before the Role's: one Role draws with several.
+    "shader_templates": {"main_opaque": "KK main_opaque", "main_item": "KK main_item"},
     "not_editable_blend_modes": ["glasses"],
     # Edit slot -> where its texture comes from. `main.dark` is made from `main`, and
     # `color_mask.plain` takes `color_mask` for the plain-mask shaders below.
@@ -262,6 +273,20 @@ EDIT = {
         "KK create_eyewhite": [*_EYEW_COLORS, ["create_color", ["create:_Color"], "plain"],
                                ["create_color2", ["create:_Color2"], "plain"]],
         "KK toon_nose": [["color", ["own:_Color"], "plain"], ["color_alpha", ["own:_Color"], "alpha"]],
+        "KK main_opaque": [
+            ["color", ["create:_Color"], "plain"], ["color2", ["create:_Color2"], "plain"],
+            ["color3", ["create:_Color3"], "plain"],
+            *[[f"pattern_color{k}", [f"create:_Color{k}_2"], "plain"] for k in (1, 2, 3)],
+            *[[f"pattern_color{k}_alpha", [f"create:_Color{k}_2"], "alpha"] for k in (1, 2, 3)],
+            *[[f"pattern_scale{k}{a}", [f"create:_PatternScale{k}{a}"], "float"] for k in (1, 2, 3) for a in "uv"],
+            *_ITEM_COLORS,
+        ],
+        "KK main_item": [
+            ["color", ["own:_Color"], "plain"], ["color2", ["own:_Color2"], "plain"], ["color3", ["own:_Color3"], "plain"],
+            ["another_ramp_full", ["own:_AnotherRampFull"], "float"],
+            ["not_use_tex_specular", ["own:_notusetexspecular"], "float"],
+            *_ITEM_COLORS,
+        ],
         "KK main_hair": [
             ["color", ["own:_Color"], "plain"], ["color2", ["own:_Color2"], "plain"],
             ["color3", ["own:_Color3"], "plain"], ["shadow_color", ["own:_ShadowColor"], "plain"],
@@ -286,6 +311,10 @@ EDIT = {
         ["role:eyeline_upper", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
         ["role:eyeline_lower", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
         ["role:eyeline_shadow", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
+        # create_topN reads white where a pattern mask is missing.
+        ["missing:pattern_mask1", {"pattern1_present": 0.0}],
+        ["missing:pattern_mask2", {"pattern2_present": 0.0}],
+        ["missing:pattern_mask3", {"pattern3_present": 0.0}],
         # main_hair_front reads its gloss further along than main_hair.
         ["shader:main_hair_front", {"front": 1.0}],
     ],
