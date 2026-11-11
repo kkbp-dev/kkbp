@@ -17,7 +17,7 @@ Status: agreed design, not yet implemented.
 
 - One shader template library holds the KK and SVS templates, which share node groups.
 - Assets that aren't templates move to the built-in Hooks that use them: Rigify widgets to the Rigify Hook, the face-card rig to the face-cards Hook. Each Hook owns its own asset file.
-- The library is `importer/kkbp/library/library.blend`, built by `scripts/rework-templates.sh` from the legacy V9 file, which is kept unchanged in `importer/templates-src/` ([ADR 0018](../adr/0018-template-library-built-by-a-script.md)). The rework:
+- The library is `importer/kkbp/library/library.blend`, built by `scripts/build-library.sh` from one Python module per node group and material ([ADR 0040](../adr/0040-the-library-is-built-from-code.md)). The modules were taken from the library as ADR 0018's rework of the legacy V9 file had left it; that rework:
   - image nodes are renamed from file suffixes (`_light.png`) to role names (`tex.main.light`, `tex.alpha_mask`);
   - sockets get consistent names, and `txture Alpha` is fixed;
   - templates are restructured so that per-material data (image nodes, values) sits at the top level of each material and feeds group inputs;

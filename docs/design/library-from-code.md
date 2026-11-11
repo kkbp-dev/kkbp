@@ -1,7 +1,8 @@
 # The library from code, and edit templates from the game's shaders
 
-Status: **agreed** (2026-11-11; every proposal in "Decisions" accepted), not yet implemented. Plan for
-issues #29 and #30, written for the session that implements it. Terms are in [CONTEXT.md](../../CONTEXT.md).
+Status: **agreed** (2026-11-11; every proposal in "Decisions" accepted). Part A is implemented
+([ADR 0040](../adr/0040-the-library-is-built-from-code.md), D66); Part B is in progress (its findings so far
+are under "What the measurements found"). Plan for issues #29 and #30. Terms are in [CONTEXT.md](../../CONTEXT.md).
 
 Two pieces of work, in this order:
 
@@ -345,6 +346,37 @@ Known limits of the prototype, to fix first:
 
 Use the disassembly as the reference for the create shaders and to confirm that KKShadersRecreated
 matches the game for the lit ones (it was made for KK; KKS's `Koikano/*` may differ and must be read).
+
+### What the measurements found (2026-11-11)
+
+Numpy models of the eye-white shaders, compared pixel by pixel with the kk and kks Golden Samples,
+settled the colour-space question and found a step the plan didn't have:
+
+- **Every bundle PNG except `light` and `dark` holds the linear values the shader samples.** The
+  exporter copies each texture through a linear render target (`Materials.Read`), which decodes an
+  sRGB texture as it reads it and writes the result unencoded. So `main`, the masks and the create
+  inputs are data: they go into Blender as Non-Color and are used as they are. Read decoded instead,
+  the eyelines' fit fails (error 0.1 to 0.2 against 0.005).
+- **Colours are linearised**: the shader sees `lin(colour)` of the bundle's sRGB-encoded colours.
+  `create_eyewhite` is exactly `lerp(lin(_Color2), lin(_Color), main.r)`, stored unencoded (fit
+  residual 0.0001).
+- **The `light` and `dark` bakes are sRGB-encoded and then colour graded** by the maker camera's
+  AmplifyColor LUT, `Lut_TimeDay.png`, in **both** KK and KKS (the KKS bake clears only the grade's
+  mask). Without the grade no per-channel factor fits (error 0.02 to 0.03); with it, the eye white's
+  light factor is 1.0 per channel (error 0.0002 to 0.004). So the grade is the last step of every edit
+  template, done in nodes, not a saturation of the input textures. This is why ADR 0026 found the
+  hair and eyebrows closer saturated: the legacy templates graded the wrong thing at the wrong step.
+  Decision 6's condition doesn't hold: the LUT stays, inside the templates; the Saturate option and
+  the input-texture saturation go.
+- **KK's light constants**: `_LightColor0` term 1.0, `_ambientshadowG` = 0.15 in every channel and
+  alpha (ambient shadow S = 1 - 0.85² = 0.2775, legacy's constant), ramp 1 lit and 0 dark. With these,
+  KK's `toon_eyew` gives the eye white, eyebrow and eyelines within 0.001 to 0.005 of the bundle.
+- **KKS's shaders are different**, not KK's renamed: `Koikano/main_eyew` mixes `_ambientshadowG` with
+  the scene's light-probe ambient (`unity_SHA*`) by `_KanoVerShift`, uses a 0.67 / 0.33 light term and
+  desaturates the light by 0.75 towards its luminance on the dark side. Its constants must be fitted the
+  same way (KKS eye white: light factor 1.0, dark factor about 0.8, 0.9, 1.02).
+
+The fitting scripts used were throwaway; write the models properly as below.
 
 ### The new templates
 
