@@ -14,6 +14,8 @@ from pathlib import Path
 
 import bpy
 
+from . import compat
+
 log = logging.getLogger("kkbp")
 
 GLTF_OPTIONS = {
@@ -69,8 +71,13 @@ def problems() -> list[str]:
 
 def unset_options() -> list[str]:
     """Options the glTF importer has that GLTF_OPTIONS doesn't set (new in a Blender update)."""
-    properties = [p.identifier for p in bpy.ops.import_scene.gltf.get_rna_type().properties]
-    return [name for name in properties if name not in GLTF_OPTIONS and name not in _UI_PROPERTIES]
+    properties = _properties()
+    return [name for name in properties if name not in compat.gltf_options(GLTF_OPTIONS, properties)
+            and name not in _UI_PROPERTIES]
+
+
+def _properties() -> list[str]:
+    return [p.identifier for p in bpy.ops.import_scene.gltf.get_rna_type().properties]
 
 
 def check_at_startup():
@@ -85,7 +92,7 @@ def load(path: str | Path, collection) -> LoadedPass:
     if found:
         raise MeshLoaderError("; ".join(found))
     before = set(bpy.data.objects)
-    result = bpy.ops.import_scene.gltf(filepath=str(path), **GLTF_OPTIONS)
+    result = bpy.ops.import_scene.gltf(filepath=str(path), **compat.gltf_options(GLTF_OPTIONS, _properties()))
     if "FINISHED" not in result:
         raise MeshLoaderError(f"Blender's glTF importer couldn't read {path} ({', '.join(sorted(result))})")
     made = [o for o in bpy.data.objects if o not in before]
