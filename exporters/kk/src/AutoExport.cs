@@ -18,8 +18,11 @@ namespace KKBP.Exporter
     /// <code>
     /// { "card": "/path/card.png", "outfit": 0, "output": "/path/folder",
     ///   "options": { "all_outfits": false, ... }, "dump_shaders": "/path/shaders.json",
-    ///   "dump_bundles": [ "/path/kk/abdata/chara/mm_base.unity3d" ] }
+    ///   "dump_bundles": [ "/path/kk/abdata/chara/mm_base.unity3d" ],
+    ///   "probe_corrections": "/path/out.json", "probe_poses": "/path/poses.json" }
     /// </code>
+    /// "probe_corrections" records the game's joint corrections for the poses in "probe_poses"
+    /// instead of exporting (CorrectionProbe).
     /// "dump_bundles" (KKS only) names asset bundles, such as KK's, whose shaders the dump also lists.
     /// Every field but "card" and "output" is optional. The result goes to kkbp-autoexport.result.json
     /// next to the request: { "state": "succeeded" | "failed", "bundle": …, "error": …, "warnings": […] }.
@@ -130,6 +133,29 @@ namespace KKBP.Exporter
                 Kks.DumpShaders((string)dump, bundles);
                 Plugin.Log.LogInfo("Wrote the shader table to " + dump);
 #endif
+            }
+
+            object probe;
+            if (request.TryGet("probe_corrections", out probe) && probe != null)
+            {
+                try
+                {
+                    var cha = MakerAPI.GetCharacterControl();
+                    // Only Studio gives a Character its ExpressionBone; the maker and the main game
+                    // leave the correction bones to the animations.
+                    if (cha.expression == null)
+                    {
+                        cha.InitializeExpression();
+                    }
+                    var expression = cha.expression;
+                    CorrectionProbe.Run(cha.objTop.transform, () => expression.LateUpdate(), (string)request["probe_poses"], (string)probe);
+                    Finish(null);
+                }
+                catch (Exception e)
+                {
+                    Finish("The correction probe failed: " + e);
+                }
+                yield break;
             }
 
             Step("Exporting");

@@ -10,7 +10,7 @@ namespace KKBP.Exporter.Core
     /// </summary>
     internal sealed class BundleWriter
     {
-        public const string SchemaVersion = "1.0";
+        public const string SchemaVersion = "1.1";
 
         private static readonly byte[] PngSignature = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
 
@@ -61,6 +61,7 @@ namespace KKBP.Exporter.Core
             public Vec3 Translation;
             public Quat Rotation;
             public Vec3 Scale;
+            public Vec3 GameScale;
         }
 
         public BundleWriter(IBundleFiles files, string generator)
@@ -211,6 +212,11 @@ namespace KKBP.Exporter.Core
             var t = UnitySpace.Position(bone.Position);
             var r = Normalize(UnitySpace.Rotation(bone.Rotation));
             var s = UnitySpace.Scale(bone.Scale);
+            var gameScale = UnitySpace.Scale(bone.GameScale);
+            if (!(gameScale.X > 0 && gameScale.Y > 0 && gameScale.Z > 0) || float.IsInfinity(gameScale.X + gameScale.Y + gameScale.Z))
+            {
+                throw new ExportException("Bone '" + bone.Name + "' has a game scale that isn't above 0 on every axis.");
+            }
             BoneRecord record;
             if (bonesByKey.TryGetValue(bone.Key, out record))
             {
@@ -228,7 +234,7 @@ namespace KKBP.Exporter.Core
             record = new BoneRecord
             {
                 Key = bone.Key, Id = boneIds.Get(bone.Key, bone.Name), Name = bone.Name ?? "", ParentKey = bone.ParentKey,
-                Role = bone.Role, Group = bone.Group, Translation = t, Rotation = r, Scale = s,
+                Role = bone.Role, Group = bone.Group, Translation = t, Rotation = r, Scale = s, GameScale = gameScale,
             };
             bonesByKey.Add(bone.Key, record);
             skeletonBones.Add(record);
@@ -291,6 +297,10 @@ namespace KKBP.Exporter.Core
                     .Add("translation", Vec(bone.Translation))
                     .Add("rotation", Vec(bone.Rotation))
                     .Add("scale", Vec(bone.Scale));
+                if (!Near(bone.GameScale, Vec3.One))
+                {
+                    json.Add("game_scale", Vec(bone.GameScale));
+                }
                 result.Add(json);
             }
             return result;

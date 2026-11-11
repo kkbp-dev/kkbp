@@ -125,6 +125,28 @@ namespace KKBP.Exporter
                 yield break;
             }
 
+            object probe;
+            if (request.TryGet("probe_corrections", out probe) && probe != null)
+            {
+                try
+                {
+                    var human = HumanCustom.Instance.Human;
+                    // As in KK, the maker may leave the Character without its correction component.
+                    if (human.body.expression == null)
+                    {
+                        human.body.expression = new HumanBody.Expression(human);
+                    }
+                    var bone = human.body.expression.bone;
+                    CorrectionProbe.Run(human.objTop.transform, () => bone.LateUpdate(), (string)request["probe_poses"], (string)probe);
+                    Finish(null);
+                }
+                catch (Exception e)
+                {
+                    Finish("The correction probe failed: " + e);
+                }
+                yield break;
+            }
+
             object outfit;
             if (request.TryGet("outfit", out outfit) && outfit != null)
             {

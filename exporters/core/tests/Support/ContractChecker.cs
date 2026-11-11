@@ -73,6 +73,10 @@ namespace KKBP.Exporter.Core.Tests.Support
                 {
                     problems.Add("bone " + bone.GetProperty("id").GetString() + " has unknown parent " + parent.GetString());
                 }
+                if (bone.TryGetProperty("game_scale", out var gameScale) && gameScale.EnumerateArray().All(c => Math.Abs(c.GetDouble() - 1) < 1e-6))
+                {
+                    problems.Add("bone " + bone.GetProperty("id").GetString() + " has a game_scale of 1");
+                }
             }
             CheckUnique(problems, "Bone Role", bones.Values.Select(b => Optional(b, "role")), ContractSchemas.SetUnique("bone-role"));
 

@@ -23,7 +23,7 @@ def owners() -> list[tuple[str, list]]:
     """[(owner, [Option, ...]), ...]: each Step's and Hook's options, for the panel. The built-in Hooks
     come in the order they run (BUILTIN_HOOKS), then the user Hooks in the order they registered."""
     ordered = hooks.builtin_in_order(BUILTIN_HOOKS) + [h for h in hooks.registered() if not h.builtin]
-    out = [(f"Step {s.name}", list(s.options)) for s in STEPS if s.options]
+    out = [(s.label or f"Step {s.name}", list(s.options)) for s in STEPS if s.options]
     out += [(h.name, list(h.all_options)) for h in ordered if h.all_options]
     return out
 

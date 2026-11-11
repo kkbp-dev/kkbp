@@ -1,10 +1,11 @@
 """What the legacy armature Step did only when Rigify was on, before the Rigify scripts ran: the
-joint-correction drivers (KK and KKS), the eye controller with its UV warps, and the "clarity"
-renames the scripts expect (D23, D24, D25).
+eye controller with its UV warps, and the "clarity" renames the scripts expect (D23, D24, D25).
+The legacy joint-correction drivers are gone: the joint corrections Step copies the game's own, and
+the Rigify Hook puts them back on the generated rig (ADR 0038).
 
 Bones with a Bone Role are found by it. The joint-correction bones and the pelvis have none, so their
 names are written here: they are the bones the game's own correction components move, which the
-legacy drivers copy.
+scripts' KK-only parts use.
 """
 
 from __future__ import annotations
@@ -18,16 +19,14 @@ from ...editing import editing
 from ...bone_names import EXACT_NAMES, ROLE_NAMES  # noqa: E402  (D23)
 
 # ADR 0022: every bone the legacy joint-correction drivers and constraints, and the scripts' KK-only
-# parts, name. KK and KKS have all of them; SVS lacks seven.
+# parts, named. KK and KKS have all of them; SVS lacks seven. The drivers are gone (ADR 0038), but the
+# KK-only parts still run on the same test.
 JOINT_CORRECTION_BONES = tuple(
     [f"{b}_{s}" for s in "LR" for b in (
         "cf_d_shoulder02", "cf_d_arm01", "cf_d_arm02", "cf_d_arm03", "cf_d_forearm02", "cf_d_wrist", "cf_d_hand",
         "cf_s_elbo", "cf_s_elboback", "cf_s_forearm01", "cf_d_siri", "cf_d_thigh02", "cf_d_thigh03", "cf_s_leg",
         "cf_d_kneeF", "cf_s_kneeB", "cf_s_leg01", "cf_d_leg02", "cf_d_leg03")]
     + ["cf_s_waist02", "cf_j_waist02"])
-# ADR 0017: the legacy joint corrections were written for these bones pointing straight up.
-UPRIGHT_LENGTH = 0.1
-WAIST = "cf_j_waist02"  # the lower waist, which no Bone Role marks
 
 # The eye controller (legacy create_eye_controller_bone).
 EYES_X = "Eyesx"
@@ -46,13 +45,10 @@ def kk_extras(skeleton) -> bool:
     return all(name in names for name in JOINT_CORRECTION_BONES)
 
 
-def run(ctx, kk: bool):
+def run(ctx):
     ch, skeleton = ctx.character, ctx.bundle.skeleton
     armature = ch.armature
     role = {b.role: b.id for b in skeleton.bones if b.role}
-    if kk:
-        _reaim(armature)
-        _joint_corrections(armature, role)
     _face_mch(ctx, armature)
     _eye_groups(ctx)  # before the UV warps, which can only name vertex groups that exist
     _eye_controller(ctx, armature, role)
@@ -100,134 +96,6 @@ def _face_mch(ctx, armature):
     for bone in [b for b in (hair.bones if hair else ()) if b.name not in keep]:
         hair.unassign(bone)
         junk.assign(bone)
-
-
-def _reaim(armature):
-    """The bones the joint corrections move point straight up, roll 0, as the legacy armature had them."""
-    owners = [n for n in JOINT_CORRECTION_BONES if n != WAIST]
-    with editing(armature, "EDIT"):
-        bones = armature.data.edit_bones
-        for name in owners:
-            bone = bones.get(name)
-            if bone is not None:
-                bone.tail = bone.head + Vector((0.0, 0.0, UPRIGHT_LENGTH))
-                bone.roll = 0.0
-
-
-def _joint_corrections(armature, role):
-    """The legacy importer's copies of the game's joint corrections, as constraints and drivers
-    (create_joint_drivers; most of them came from a file by johnbbob_la_petite on the Koikatsu Discord)."""
-    def by_role(name):
-        side = "left" if name.endswith("_L") else "right"
-        for prefix, part in (("cf_j_arm00", "upper_arm"), ("cf_j_forearm01", "lower_arm"), ("cf_j_hand", "hand"),
-                             ("cf_j_thigh00", "upper_leg"), ("cf_j_leg01", "lower_leg")):
-            if name.startswith(prefix + "_"):
-                return role[f"{side}_{part}"]
-        return name
-
-    pose = armature.pose.bones
-
-    def set_copy(bone, target, influence, axis="all", mix="replace", space="LOCAL"):
-        constraint = pose[bone].constraints.new("COPY_ROTATION")
-        constraint.target = armature
-        constraint.subtarget = by_role(target)
-        constraint.influence = influence
-        constraint.target_space = constraint.owner_space = space
-        if axis == "X":
-            constraint.use_y = constraint.use_z = False
-        elif axis == "Y":
-            constraint.use_x = constraint.use_z = False
-        elif axis == "antiX":
-            constraint.use_y = constraint.use_z = False
-            constraint.invert_x = True
-        elif axis == "Z":
-            constraint.use_x = constraint.use_y = False
-        if mix == "add":
-            constraint.mix_mode = "ADD"
-
-    for s in "LR":
-        set_copy(f"cf_d_shoulder02_{s}", f"cf_j_arm00_{s}", 0.5)
-        set_copy(f"cf_d_arm01_{s}", f"cf_j_arm00_{s}", 0.75, axis="X")
-        set_copy(f"cf_d_arm02_{s}", f"cf_j_arm00_{s}", 0.5, axis="X")
-        set_copy(f"cf_d_arm03_{s}", f"cf_j_arm00_{s}", 0.25, axis="X")
-        set_copy(f"cf_d_forearm02_{s}", f"cf_j_hand_{s}", 0.33, axis="X")
-        set_copy(f"cf_d_wrist_{s}", f"cf_j_hand_{s}", 0.33, axis="X")
-        set_copy(f"cf_d_kneeF_{s}", f"cf_j_leg01_{s}", 0.5, axis="antiX", mix="add")
-        set_copy(f"cf_d_siri_{s}", f"cf_j_thigh00_{s}", 0.33)
-        set_copy(f"cf_d_thigh02_{s}", f"cf_j_thigh00_{s}", 0.25, axis="Y")
-        set_copy(f"cf_d_thigh03_{s}", f"cf_j_thigh00_{s}", 0.25, axis="Y")
-        set_copy(f"cf_d_leg02_{s}", f"cf_j_leg01_{s}", 0.33, axis="Y")
-        set_copy(f"cf_d_leg03_{s}", f"cf_j_leg01_{s}", 0.66, axis="Y")
-    # the waist moves a little when one leg turns, and with the lower waist
-    set_copy("cf_s_waist02", "cf_j_thigh00_L", 0.1, mix="add")
-    set_copy("cf_s_waist02", "cf_j_thigh00_R", 0.1, mix="add")
-    set_copy("cf_s_waist02", WAIST, 0.5, axis="antiX")
-    # this rotation helps when doing a split
-    set_copy("cf_s_leg_L", "cf_j_thigh00_L", 0.9, axis="Z", mix="add")
-    set_copy("cf_s_leg_R", "cf_j_thigh00_R", 0.9, axis="Z", mix="add")
-
-    def set_driver(bone, path, index, target, transform, factor, kind="move"):
-        """A driver on `bone`'s `path`[`index`] from `target`'s local `transform`, times the target's
-        distance to its parent, so different bone sizes give the same result."""
-        target = by_role(target)
-        fcurve = pose[bone].driver_add(path, index)
-        variable = fcurve.driver.variables.new()
-        variable.name = "var"
-        variable.type = "TRANSFORMS"
-        t = variable.targets[0]
-        t.id = armature
-        t.bone_target = target
-        t.transform_type = transform
-        t.transform_space = "LOCAL_SPACE"
-        t.rotation_mode = "QUATERNION" if kind in ("scale", "quat") else "AUTO"
-        length = str(round((pose[target].head - pose[target].parent.head).length, 3))
-        base = f"var*{length}*{factor}"
-        fcurve.driver.expression = {
-            "move": base, "quat": base, "rotation": base,
-            "movePos": f"{base} if var > 0 else 0", "moveNeg": f"{base} if var < 0 else 0",
-            "moveABS": f"abs({base})", "moveABSNeg": f"-abs({base})",
-            "moveexp": f"var*{base}", "scale": f"1 + {base}",
-        }[kind]
-
-    # knees: in toward the body and down toward the foot, faster as they bend
-    for s in "RL":
-        set_driver(f"cf_s_kneeB_{s}", "location", 1, f"cf_j_leg01_{s}", "ROT_X", "-0.2", kind="moveexp")
-        set_driver(f"cf_s_kneeB_{s}", "location", 2, f"cf_j_leg01_{s}", "ROT_X", "-0.08")
-    # knee tips: up toward the waist and in toward the body
-    for s in "RL":
-        set_driver(f"cf_d_kneeF_{s}", "location", 1, f"cf_j_leg01_{s}", "ROT_X", "0.02")
-        set_driver(f"cf_d_kneeF_{s}", "location", 2, f"cf_j_leg01_{s}", "ROT_X", "-0.04")
-    # butt: slightly up to the spine and in to the waist
-    for s in "RL":
-        set_driver(f"cf_d_siri_{s}", "location", 1, f"cf_j_thigh00_{s}", "ROT_X", "0.02")
-        set_driver(f"cf_d_siri_{s}", "location", 2, f"cf_j_thigh00_{s}", "ROT_X", "0.02")
-    # hands: up to the head and in towards the elbow
-    set_driver("cf_d_hand_R", "location", 0, "cf_j_hand_R", "ROT_Z", "-0.4", kind="moveNeg")
-    set_driver("cf_d_hand_R", "location", 1, "cf_j_hand_R", "ROT_Z", "-0.4", kind="moveNeg")
-    set_driver("cf_d_hand_L", "location", 0, "cf_j_hand_L", "ROT_Z", "-0.4", kind="movePos")
-    set_driver("cf_d_hand_L", "location", 1, "cf_j_hand_L", "ROT_Z", "0.4", kind="movePos")
-    # elbow back: out to the chest and into the shoulder; the elbow tip the other way
-    set_driver("cf_s_elboback_R", "location", 0, "cf_j_forearm01_R", "ROT_X", "-0.7")
-    set_driver("cf_s_elboback_R", "location", 2, "cf_j_forearm01_R", "ROT_X", "0.6")
-    set_driver("cf_s_elbo_R", "location", 0, "cf_j_forearm01_R", "ROT_X", "0.025")
-    set_driver("cf_s_elbo_R", "location", 2, "cf_j_forearm01_R", "ROT_X", "0.025")
-    set_driver("cf_s_elboback_L", "location", 0, "cf_j_forearm01_L", "ROT_X", "-0.7")
-    set_driver("cf_s_elboback_L", "location", 2, "cf_j_forearm01_L", "ROT_X", "-0.6")
-    set_driver("cf_s_elbo_L", "location", 0, "cf_j_forearm01_L", "ROT_X", "0.025")
-    set_driver("cf_s_elbo_L", "location", 2, "cf_j_forearm01_L", "ROT_X", "-0.025")
-    # shoulders
-    set_driver("cf_d_shoulder02_R", "location", 1, "cf_j_arm00_R", "ROT_Z", "-0.1", kind="moveNeg")
-    set_driver("cf_d_shoulder02_R", "location", 0, "cf_j_arm00_R", "ROT_Y", "0.1", kind="moveABSNeg")
-    set_driver("cf_d_shoulder02_R", "location", 2, "cf_j_arm00_R", "ROT_Y", "-0.1")
-    set_driver("cf_d_shoulder02_L", "location", 1, "cf_j_arm00_L", "ROT_Z", "0.1", kind="movePos")
-    set_driver("cf_d_shoulder02_L", "location", 0, "cf_j_arm00_L", "ROT_Y", "-0.1", kind="moveABS")
-    set_driver("cf_d_shoulder02_L", "location", 2, "cf_j_arm00_L", "ROT_Y", "0.1")
-    # legs: up to the head and slightly forwards or backwards
-    for s in "RL":
-        set_driver(f"cf_s_leg_{s}", "location", 1, f"cf_j_thigh00_{s}", "ROT_X", "1", kind="moveexp")
-        set_driver(f"cf_s_leg_{s}", "location", 2, f"cf_j_thigh00_{s}", "ROT_X", "-1.5")
-    # the waist moves out to the chest a little when the lower waist turns
-    set_driver("cf_s_waist02", "location", 2, WAIST, "ROT_X", "0.2", kind="moveABS")
 
 
 def _eye_controller(ctx, armature, role):

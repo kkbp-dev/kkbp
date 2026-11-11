@@ -64,7 +64,15 @@ def test_the_lowest_visible_vertex_stands_on_the_floor(ch):
 def test_the_pose_follows_the_bones_moved_to_the_ground(ch):
     """Moved with data.transform, the pose stayed 0.019 above the bones until a mode change."""
     bpy.context.view_layer.update()
-    for pb in ch.rig.pose.bones:
+    # The joint corrections move their bones, and what hangs from them, off the rest pose, as
+    # Studio would (ADR 0038).
+    def corrected(pb):
+        for p in [pb, *pb.parent_recursive]:
+            if p.name.startswith("JC-") or "Joint correction" in p.constraints:
+                return True
+        return False
+
+    for pb in [p for p in ch.rig.pose.bones if not corrected(p)]:
         assert (pb.matrix.translation - pb.bone.matrix_local.translation).length < 1e-4, pb.name
 
 

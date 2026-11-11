@@ -114,6 +114,7 @@ namespace KKBP.Exporter.Core.Tests.Fake
             spine.Rotation = AxisAngle(1, 0, 0, 10);
             var thigh = Bone("/BodyTop/root/hips/thigh_L", "cf_j_thigh00_L", "/BodyTop/root/hips", new Vec3(0.1f, -0.05f, 0), BoneGroup.Deform, BoneRole.LeftUpperLeg);
             thigh.Scale = new Vec3(1, 1.2f, 1);
+            thigh.GameScale = new Vec3(0.9f, 1.1f, 0.9f);
             // Slightly longer than a unit quaternion, as game rotations often are: the Core must normalise it.
             thigh.Rotation = new Quat(0, 0, 0, 1.0000002f);
             return new List<BoneData>

@@ -4,7 +4,7 @@ as functions named for what they do (docs/design/blender-compat-and-testing.md).
 `bpy.app.version` appears only here, as a tuple comparison (`bpy.app.version >= (5, 3)`). Each
 branch records the Blender version, a link to the release notes, and "remove when the minimum is X
 or later". Prefer feature detection (`hasattr`). The minimum is 5.2 LTS, so there are no version
-branches yet.
+branches yet; NEWER_GLTF_OPTIONS detects its options instead.
 
 Operators are used only where the data API has no equivalent, each with an explicit context
 through `bpy.context.temp_override`, so they never depend on what the user has selected.
@@ -15,6 +15,21 @@ from __future__ import annotations
 import bpy
 
 from ..editing import editing
+
+
+# glTF importer options that Blenders newer than the minimum have, set when the importer has them,
+# with the value the Mesh Loader wants. Each moves into mesh_loader.GLTF_OPTIONS when the minimum
+# Blender has it.
+NEWER_GLTF_OPTIONS = {
+    # New in Blender 5.3's glTF importer: load a texture's KTX version instead of its PNG. Bundles
+    # have no KTX textures. Move into GLTF_OPTIONS when the minimum is 5.3 or later.
+    "import_ktx_texture": False,
+}
+
+
+def gltf_options(base: dict, available) -> dict:
+    """The Mesh Loader's options `base`, plus each NEWER_GLTF_OPTIONS option this importer has."""
+    return {**base, **{k: v for k, v in NEWER_GLTF_OPTIONS.items() if k in available}}
 
 
 def join_meshes(target, others):

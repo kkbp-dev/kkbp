@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.0/sets/expression-category.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.1/sets/expression-category.schema.json",
   "title": "Expression category",
   "description": "Which part of the face an expression shape key belongs to. Named expressions take the category of their name prefix.",
   "type": "string",

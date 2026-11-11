@@ -156,6 +156,7 @@ namespace KKBP.Exporter
                 r.Bone = Bone(r.Key, r.Name, r.Pose, parent != null ? parent.Key : null, parent != null ? parent.Pose : (Pose?)null);
                 r.Bone.Role = BoneRules.Role(r.Name) ?? Svs.Role(r.Name);
                 r.Bone.Group = BoneRules.BodyGroup(r.Name, UnderFaceRoot(t));
+                r.Bone.GameScale = GameScale(t);
             }
         }
 
@@ -301,7 +302,24 @@ namespace KKBP.Exporter
 
         private static BoneData Copy(BoneData b)
         {
-            return new BoneData { Key = b.Key, Name = b.Name, ParentKey = b.ParentKey, Position = b.Position, Rotation = b.Rotation, Scale = b.Scale, Role = b.Role, Group = b.Group };
+            return new BoneData { Key = b.Key, Name = b.Name, ParentKey = b.ParentKey, Position = b.Position, Rotation = b.Rotation, Scale = b.Scale, GameScale = b.GameScale, Role = b.Role, Group = b.Group };
+        }
+
+        /// <summary>
+        /// The scale the game has on a bone, parents included, for the importer's joint corrections. A
+        /// mirrored axis counts as its size, and a bone the game has scaled away to nothing counts as 1:
+        /// the contract wants every axis above 0, and nothing can be corrected on such a bone anyway.
+        /// </summary>
+        private static Core.Vec3 GameScale(Transform t)
+        {
+            var s = t.lossyScale;
+            float x = Mathf.Abs(s.x), y = Mathf.Abs(s.y), z = Mathf.Abs(s.z);
+            const float least = 1e-4f;
+            if (!(x > least && y > least && z > least) || float.IsInfinity(x + y + z))
+            {
+                return Core.Vec3.One;
+            }
+            return new Core.Vec3(x, y, z);
         }
 
         private static BoneData Bone(string key, string name, Pose pose, string parentKey, Pose? parentPose)

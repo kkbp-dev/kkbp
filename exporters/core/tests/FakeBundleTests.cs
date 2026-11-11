@@ -101,7 +101,7 @@ namespace KKBP.Exporter.Core.Tests
             using var manifest = f.Json("manifest.json");
             var root = manifest.RootElement;
             Assert.Equal("KK", root.GetProperty("game").GetString());
-            Assert.Equal("1.0", root.GetProperty("schema_version").GetString());
+            Assert.Equal("1.1", root.GetProperty("schema_version").GetString());
             Assert.Equal("2026-11-01T06:26:05Z", root.GetProperty("exported_at").GetString());
             Assert.Equal("card.png", root.GetProperty("card").GetString());
             Assert.True(root.GetProperty("options").GetProperty("all_outfits").GetBoolean());
@@ -137,6 +137,16 @@ namespace KKBP.Exporter.Core.Tests
                 .Concat(outfit1.RootElement.GetProperty("meshes").EnumerateArray())
                 .Select(m => m.GetProperty("id").GetString()).ToList();
             Assert.Equal(new[] { "o_bot_skirt", "o_bot_skirt_2", "acs_ribbon", "mesh", "mesh_2", "acs_ribbon_2", "pin" }, meshes);
+        }
+
+        [Fact]
+        public void Only_a_bone_the_game_scales_has_a_game_scale()
+        {
+            using var skeleton = f.Json("skeleton.json");
+            var bones = skeleton.RootElement.GetProperty("bones").EnumerateArray().ToDictionary(b => b.GetProperty("id").GetString());
+            var scale = bones["cf_j_thigh00_L"].GetProperty("game_scale").EnumerateArray().Select(c => c.GetSingle()).ToArray();
+            Assert.Equal(new[] { 0.9f, 1.1f, 0.9f }, scale);
+            Assert.False(bones["cf_j_head"].TryGetProperty("game_scale", out _));
         }
 
         [Fact]

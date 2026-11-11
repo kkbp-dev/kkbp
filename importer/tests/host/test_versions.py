@@ -6,7 +6,7 @@ import bundle
 from bundle_builder import BundleBuilder
 
 
-def _files(version="1.0", game="KK"):
+def _files(version="1.1", game="KK"):
     b = BundleBuilder()
     b.schema_version, b.game = version, game
     return b.files()
@@ -14,12 +14,12 @@ def _files(version="1.0", game="KK"):
 
 def test_newer_minor_opens_with_a_warning(build):
     b = bundle.open_bundle(build(files=_files("1.4")))
-    assert b.warnings == ("The bundle's Schema Version 1.4 is newer than this importer's 1.0; "
+    assert b.warnings == ("The bundle's Schema Version 1.4 is newer than this importer's 1.1; "
                           "anything new in it is ignored.",)
 
 
 def test_newer_minor_keeps_unknown_set_values_with_a_warning(build):
-    files = _files("1.1")
+    files = _files("1.2")
     bones = files["skeleton.json"]["bones"]
     bones[1]["group"] = "tail"
     bones[2]["group"] = "tail"
@@ -40,12 +40,19 @@ def test_other_major_is_rejected(build, version):
                                      "this importer reads 1.x. Update KKBP."]
 
 
+def test_a_1_0_bundle_still_opens(build):
+    """1.1 only added game_scale, which a 1.0 bundle lacks: its bones count as unscaled."""
+    b = bundle.open_bundle(build(files=_files("1.0")))
+    assert not b.warnings
+    assert all(bone.game_scale == (1.0, 1.0, 1.0) for bone in b.skeleton.bones)
+
+
 def test_bad_version_string(build):
     with pytest.raises(bundle.BundleError, match="'1.0.0' isn't a major.minor version"):
         bundle.open_bundle(build(files=_files("1.0.0")))
 
 
-@pytest.mark.parametrize("version", ["1.0", "1.3"])
+@pytest.mark.parametrize("version", ["1.1", "1.3"])
 def test_unknown_game_is_rejected(build, version):
     with pytest.raises(bundle.BundleError) as caught:
         bundle.open_bundle(build(files=_files(version, game="AC")))

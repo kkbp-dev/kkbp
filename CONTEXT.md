@@ -72,6 +72,14 @@ _Avoid_: bone type, landmark
 The broad kind of a bone, such as deform, skirt, hair or accessory, written by the exporter for every bone.
 _Avoid_: bone layer, bone collection, bone category
 
+**Joint Correction**:
+The game's own movement of a correction bone, such as an elbow, knee or twist bone, worked out each frame from the pose of the limbs; its rules are in the Game Profile.
+_Avoid_: joint driver, correction driver, helper bone
+
+**Game Scale**:
+A bone's accumulated scale in the game at capture, which the rest pose leaves out and the Joint Corrections need.
+_Avoid_: lossy scale, bone scale
+
 **Material Role**:
 What a material is for, such as face, body, eyebrow or tears, written by the exporter and drawn from a closed set.
 _Avoid_: material type

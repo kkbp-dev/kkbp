@@ -82,6 +82,7 @@ The user plays these games. Details are in "Working with the games" in [exporter
 | Build or deploy an exporter | `scripts/build-exporters.sh [kk\|kks\|svs]`, `scripts/deploy-exporter.sh <game>` |
 | Export in a game from a script (card or folder) | `scripts/auto-export.sh <game> <card.png\|folder> <out>` |
 | Make the Golden Samples (first time, and after an exporter change), or one of them | `scripts/export-sample.sh` / `scripts/export-sample.sh <game>` |
+| Record a game's joint corrections for the tests (after a game update or a rule change; ADR 0038) | `scripts/probe-corrections.sh <game>` |
 | Check any bundle | `scripts/check-bundle.sh <bundle>` |
 | Package the importer zip | `scripts/package-importer.sh` |
 | Package the exporter release zip (all three Games) | `scripts/package-exporters.sh` |

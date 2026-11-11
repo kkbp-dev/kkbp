@@ -8,6 +8,7 @@ Rigify, so the rig is built without these bones.
 
 import bmesh
 
+from .. import joint_corrections
 from ..editing import editing
 from ..pipeline.hooks import hook
 from ..pipeline.options import Option
@@ -39,7 +40,12 @@ def sfw(ctx):
             keys = obj.data.shape_keys
             if keys is not None and name in keys.key_blocks:
                 obj.shape_key_remove(keys.key_blocks[name])
+    corrected = joint_corrections.has_corrections(ch.armature)
+    if corrected:
+        joint_corrections.remove(ch.armature)  # its helpers may hang from the bones that go
     bones = _delete_bones(ch.armature, nsfw | set(BONES))
+    if corrected:
+        joint_corrections.refresh(ch.armature)
     ctx.log.info(f"Removed {removed} vertices and {bones} bones")
 
 

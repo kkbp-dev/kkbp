@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.0/character.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.1/character.schema.json",
   "title": "character.json",
   "description": "Data about the Character as a whole. Phase 2 adds the shared fields the adapters need.",
   "type": "object",
