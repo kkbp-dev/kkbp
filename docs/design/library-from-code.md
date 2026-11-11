@@ -317,13 +317,12 @@ and the two old shell scripts, and move `Lut_TimeDay.png` and `SVS Eye_White_Alp
   program, and names constants and textures from the binding records Unity stores after the bytecode.
 
   ```
-  importer/.venv/bin/python -I importer/tools/game_shaders/dump.py <site-packages with UnityPy> \
+  importer/.venv/bin/python -I importer/tools/game_shaders/dump.py \
       "<name filter or *>" <output folder> <asset files...>
   ```
 
-  UnityPy is not in the dev venv. I installed it with the venv's pip into a scratch folder
-  (`pip install --target`), which touches neither the venv nor Blender. Ask before adding it to
-  `setup-importer-dev.sh`.
+  UnityPy is pinned in `importer/requirements-dev.txt`, so `scripts/setup-importer-dev.sh` puts it
+  in the dev venv (never into Blender).
 
 Where KK's shaders are: `Koikatu_Data/globalgamemanagers.assets` (the `toon_*` and `create_*` set),
 `abdata/chara/mm_base.unity3d` and `oo_base.unity3d` (`create_topN`, `main_skin`, `main_item`).

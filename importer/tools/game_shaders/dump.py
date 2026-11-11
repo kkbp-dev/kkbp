@@ -1,10 +1,11 @@
 """Dumps a Unity game's compiled shaders as readable disassembly, for writing the edit templates' node
 groups (docs/design/library-from-code.md, "Getting the shaders").
 
-    importer/.venv/bin/python -I importer/tools/game_shaders/dump.py SITE_PACKAGES FILTER OUT_DIR ASSET_FILE...
-    importer/.venv/bin/python -I importer/tools/game_shaders/dump.py SITE_PACKAGES --find FOLDER...
+    importer/.venv/bin/python -I importer/tools/game_shaders/dump.py FILTER OUT_DIR ASSET_FILE...
+    importer/.venv/bin/python -I importer/tools/game_shaders/dump.py --find FOLDER...
 
-SITE_PACKAGES holds UnityPy (installed with `pip install --target`, never into the venv or Blender).
+UnityPy comes from the dev venv (importer/requirements-dev.txt, installed by
+scripts/setup-importer-dev.sh); it never goes into Blender.
 FILTER is a comma-separated list of name parts (`create,main_skin`) or `*`. Writes one text file per
 distinct D3D11 sub-program: `<shader>.<index>.<vs|ps>.txt`, with the shader's keywords and a header
 naming every constant (cbuffer, byte offset, components) and texture slot, then the disassembly with
@@ -214,9 +215,8 @@ def header(name, i, prog):
     return "\n".join(lines)
 
 
-def find(site, folders):
-    """Prints which asset file holds each shader: `dump.py SITE --find FOLDER...`."""
-    sys.path.insert(0, site)
+def find(folders):
+    """Prints which asset file holds each shader: `dump.py --find FOLDER...`."""
     import UnityPy
     for folder in folders:
         for path in sorted(Path(folder).rglob("*")):
@@ -232,15 +232,14 @@ def find(site, folders):
 
 
 def main():
-    if sys.argv[2] == "--find":
-        return find(sys.argv[1], sys.argv[3:])
-    site, want, out = sys.argv[1], sys.argv[2], Path(sys.argv[3])
-    sys.path.insert(0, site)
+    if sys.argv[1] == "--find":
+        return find(sys.argv[2:])
+    want, out = sys.argv[1], Path(sys.argv[2])
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import UnityPy
     import dxdis
     out.mkdir(parents=True, exist_ok=True)
-    for path in sys.argv[4:]:
+    for path in sys.argv[3:]:
         env = UnityPy.load(path)
         for o in env.objects:
             if o.type.name != "Shader":
