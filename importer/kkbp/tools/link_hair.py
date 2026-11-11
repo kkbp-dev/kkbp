@@ -1,9 +1,11 @@
 """Link hair (D45): every hair material of the Character goes into edit and takes the active hair
-edit material's light and dark settings, so all the hair can be recoloured at once."""
+edit material's colours (a legacy template's light and dark settings, or the game's colours of one
+made from the game's shaders), so all the hair can be recoloured at once. Each hair keeps its own
+shader's values (its shadow extend, main_hair_front's gloss placement)."""
 
 from __future__ import annotations
 
-from .. import templates
+from .. import profiles, templates
 from ..character import ROLE
 from . import edit_material
 
@@ -20,7 +22,9 @@ def link_hair(ch, source, *, log=print) -> list:
     if not can_link(source):
         raise edit_material.EditError(f"{source.name} isn't a hair material being edited")
     original = edit_material.original(source)
-    params = [name for name in templates.template_of(source).params if name.endswith((".light", ".dark"))]
+    colors = {c.param for c in profiles.get(ch.game).edit.colors.get(source[templates.TEMPLATE], ()) if c.how != "float"}
+    params = [name for name in templates.template_of(source).params
+              if name.endswith((".light", ".dark")) or name in colors]
     linked = []
     for mat in ch.materials("hair"):
         if mat == original or not _used(mat):

@@ -183,6 +183,7 @@ EDIT = {
     "templates": {
         **LEGACY_EDIT_TEMPLATES,
         "eye_white": "KK create_eyewhite", "eyebrow": "KK toon_eyew", "nose_line": "KK toon_nose",
+        "hair": "KK main_hair",
         "eyeline_upper": "KK toon_eyew", "eyeline_lower": "KK toon_eyew", "eyeline_shadow": "KK toon_eyew",
     },
     "not_editable_blend_modes": ["glasses"],
@@ -212,7 +213,7 @@ EDIT = {
     "saturated": ["main", "plain"],
     # Material Roles that saturate by default (ADR 0026): their templates draw from colours alone, and
     # saturated they bake closest to the game's own light and dark textures. The rest don't.
-    "saturated_roles": ["hair"],
+    "saturated_roles": [],
     # These shaders draw no colour mask, though the game gives them one: it goes in the plain slot.
     "plain_color_mask_shaders": ["Shader Forge/main_opaque", "Shader Forge/main_opaque2",
                                  "Shader Forge/main_opaque_low", "Koikano/main_clothes_opaque",
@@ -261,8 +262,14 @@ EDIT = {
         "KK create_eyewhite": [*_EYEW_COLORS, ["create_color", ["create:_Color"], "plain"],
                                ["create_color2", ["create:_Color2"], "plain"]],
         "KK toon_nose": [["color", ["own:_Color"], "plain"], ["color_alpha", ["own:_Color"], "alpha"]],
+        "KK main_hair": [
+            ["color", ["own:_Color"], "plain"], ["color2", ["own:_Color2"], "plain"],
+            ["color3", ["own:_Color3"], "plain"], ["shadow_color", ["own:_ShadowColor"], "plain"],
+            ["shadow_extend", ["own:_ShadowExtend"], "float"],
+        ],
     },
-    # Values set when every condition holds: `role:R`, `raw:P` (the material has slot P),
+    # Values set when every condition holds: `role:R`, `raw:P` (the material has slot P), `shader:S`
+    # (the material's shader is S, after its last `/`),
     # `missing:S` and `has:S` (edit slot S is or isn't filled). Params a template lacks are skipped.
     "values": [
         ["role:tongue", {"maintex_saturation": 0.6, "detail_intensity_green": 0.01,
@@ -279,5 +286,7 @@ EDIT = {
         ["role:eyeline_upper", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
         ["role:eyeline_lower", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
         ["role:eyeline_shadow", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
+        # main_hair_front reads its gloss further along than main_hair.
+        ["shader:main_hair_front", {"front": 1.0}],
     ],
 }

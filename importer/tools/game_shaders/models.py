@@ -155,3 +155,49 @@ def toon_nose(main, alpha, color_, _ramp=None, light: Light = KK):
 def baked(out, lut):
     """A model's linear output as the bundle's light or dark PNG holds it."""
     return grade(srgb(out), lut)
+
+
+def sample_repeat(image, u, v):
+    """GPU bilinear sampling with repeating edges, `image` rows bottom-up (v up, as UV space)."""
+    h, w = image.shape[:2]
+    x = np.asarray(u, dtype=F) * w - 0.5
+    y = np.asarray(v, dtype=F) * h - 0.5
+    x0 = np.floor(x)
+    y0 = np.floor(y)
+    fx = (x - x0)[..., None]
+    fy = (y - y0)[..., None]
+    xi0 = x0.astype(int) % w
+    xi1 = (xi0 + 1) % w
+    yi0 = y0.astype(int) % h
+    yi1 = (yi0 + 1) % h
+    top = image[yi0, xi0] * (1 - fx) + image[yi0, xi1] * fx
+    bottom = image[yi1, xi0] * (1 - fx) + image[yi1, xi1] * fx
+    return top * (1 - fy) + bottom * fy
+
+
+def hair_gloss_shift(ramp, front):
+    """How far along u main_hair (or main_hair_front) reads `_HairGloss` from the second UV map: by
+    the light's angle, `ndl` 1 for the bake's `light` (ramp 1) and -1 for `dark` (ramp 0). The
+    texture's own offset and scale apply after."""
+    ndl = ramp * 2 - 1
+    return ndl * 0.02 + 0.99 if front else ndl * 0.005
+
+
+def main_hair(main, color_mask, detail_mask, gloss, colors, shadow_color, shadow_extend, ramp, light: Light = KK):
+    """KK's main_hair and main_hair_front, as the bake draws them on the flat mesh facing the camera
+    (no rim light, no back-face darkening, no normal map). `main` is white for a hair without a main
+    texture; `gloss` is `_HairGloss`'s red read at hair_gloss_shift. Returns linear rgb.
+
+    The shader reads the gloss a second time 0.008 higher and darkens by the difference; no bake
+    shows it, so the model leaves it out."""
+    c1, c2, c3 = colors
+    col = 1 + color_mask[..., 0:1] * (c1 - 1)
+    col = col + color_mask[..., 1:2] * (c2 - col)
+    col = col + color_mask[..., 2:3] * (c3 - col)
+    base = main * col
+    tint = shade(shadow_color, ambient_shadow(light))
+    keep = 1 - detail_mask[..., 1:2]
+    out = np.minimum(base * (tint + ramp * keep * (1 - tint)) + gloss * (ramp * 0.5 + 0.5), 1)
+    extend = np.maximum(np.maximum(ramp, keep), 1 - shadow_extend)
+    out = out * (tint + extend * (1 - tint))
+    return out * max(light.light * 0.6 + 0.4, light.ambient)

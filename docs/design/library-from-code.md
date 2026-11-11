@@ -487,7 +487,8 @@ Done (ADR 0041, D67):
 - `importer/tools/game_shaders/models.py`: `lin`, `srgb`, `grade`, the KK and KKS lights,
   `create_eyewhite`, `toon_eyew`, `toon_nose`; `host/test_shader_models.py` checks them on both samples.
 - Groups `.KK srgb`, `.KK linear`, `.KK grade`, `.KK graded`, `.KK create_eyewhite`, `.KK toon_eyew`,
-  `.KK toon_nose`; templates `KK create_eyewhite`, `KK toon_eyew`, `KK toon_nose`, built on
+  `.KK toon_nose`, `.KK shadow tint`, `.KK main_hair`, `.KK hair gloss uv`; templates `KK create_eyewhite`,
+  `KK toon_eyew`, `KK toon_nose`, `KK main_hair`, built on
   `importer/tools/library/edit_templates.py`; KK's profile points eye whites, eyebrows, eyelines and
   the nose line at them, and KKS's profile inherits them with its own maker light.
 - `blender/test_edit_accuracy.py`, with `importer/tests/data/edit_accuracy.json` (the legacy numbers are
@@ -501,11 +502,12 @@ template, Template Description with `graded=True`, profile row and colours, re-r
    `ambient_strength` and `shadow_floor`. `Koikano/main_nose` bakes as KK's nose. Each further KKS
    shader: check first whether it reduces the same way (compare the KK and KKS bakes of the same card:
    light within 0.02 means only the shadow side differs).
-2. **KK hair** (`main_hair`, `main_hair_front`): no create material in the samples; the colour mask
-   (`_Color`, `_Color2`, `_Color3`) over `_MainTex`, the `_HairGloss` highlight read twice from the
-   second UV map, `_AnotherRamp`, `_ShadowExtend`, the detail mask. The bake draws the flattened mesh,
-   not a quad, so check which terms the flat mesh leaves (front-facing normal: no rim). Then KK's
-   `saturated_roles` is empty.
+2. ~~**KK hair**~~ Done: `models.main_hair`, `.KK main_hair`, `.KK hair gloss uv`, `KK main_hair`
+   (ADR 0041). The gloss reads the second UV map; the host test rasterises it from the outfit's glTF
+   (`_second_uv`), with the exporter's island order and the quad's own UVs in the gaps. KKS's
+   `hair_main_sun` bakes as KK's with KK's constants, so KKS uses the template too. Link hair copies
+   the colours. Left out: the gloss's second read, the rim, `_AnotherRamp` (white when absent; check a
+   hair that has one), the bitangent term of `_SpeclarHeight`.
 3. **KK clothes** (`create_topN` + `main_opaque`, also `main_alpha`; the tongue and teeth `main_item`):
    `ShadeAdjustItem` (an HSV step: write it from Math nodes, as `shading._hue_tint` does), the line
    mask, `_ShadowExtend`, `_ShadowExtendAnother`, `_AnotherRampFull`, the detail mask. `create_topN`

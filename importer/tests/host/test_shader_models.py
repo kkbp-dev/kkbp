@@ -4,6 +4,7 @@ The thresholds are mean absolute differences per channel on sRGB values over opa
 legacy edit templates were 0.03 to 0.31 from the same bakes (ADR 0026)."""
 
 import json
+import struct
 
 import numpy as np
 import pytest
@@ -90,3 +91,105 @@ def test_toon_nose_gives_back_the_bakes(game, lut):
     out, _ = models.toon_nose(tex[..., :3], tex[..., 3], models.color(m["colors"]["_Color"]))
     for reference in (light_ref, dark_ref):
         assert difference(models.baked(out, lut), reference) < 0.01
+
+
+def _glb(path):
+    """A glTF binary's JSON and an accessor reader."""
+    data = path.read_bytes()
+    n = struct.unpack("<I", data[12:16])[0]
+    gltf, binary = json.loads(data[20:20 + n]), data[20 + n + 8:]
+
+    def accessor(i):
+        a = gltf["accessors"][i]
+        view = gltf["bufferViews"][a["bufferView"]]
+        comps = {"SCALAR": 1, "VEC2": 2, "VEC3": 3, "VEC4": 4}[a["type"]]
+        dtype = np.dtype({5126: np.float32, 5125: np.uint32, 5123: np.uint16, 5121: np.uint8}[a["componentType"]])
+        offset = view.get("byteOffset", 0) + a.get("byteOffset", 0)
+        stride = view.get("byteStride") or comps * dtype.itemsize
+        raw = np.frombuffer(binary, np.uint8, count=stride * (a["count"] - 1) + comps * dtype.itemsize, offset=offset)
+        rows = np.lib.stride_tricks.as_strided(raw, (a["count"], comps * dtype.itemsize), (stride, 1))
+        return rows.copy().view(dtype).reshape(a["count"], comps)
+    return gltf, accessor
+
+
+def _second_uv(sample, mid, size):
+    """The material's second UV map (v up) at each pixel of its first, rows top-down as PIL gives
+    them, as the exporter's flat mesh draws it: the island met first in vertex order in front, and
+    off the mesh the quad, whose second UV map is its first."""
+    w, h = size
+    ys, xs = np.mgrid[0:h, 0:w]
+    out = np.stack([(xs + 0.5) / w, 1 - (ys + 0.5) / h], -1)
+    for path in sample.root.glob("outfits/*/outfit.glb"):
+        gltf, accessor = _glb(path)
+        names = [m["name"] for m in gltf["materials"]]
+        if mid not in names:
+            continue
+        prims = [p for m in gltf["meshes"] for p in m["primitives"] if p.get("material") == names.index(mid)]
+        for prim in prims:
+            uv0 = accessor(prim["attributes"]["TEXCOORD_0"]).astype(np.float64)
+            uv1 = accessor(prim["attributes"]["TEXCOORD_1"]).astype(np.float64)
+            uv1[:, 1] = 1 - uv1[:, 1]  # glTF's v runs down
+            tris = accessor(prim["indices"]).reshape(-1, 3).astype(np.int64)
+            parent = np.arange(len(uv0))
+
+            def find(i):
+                while parent[i] != i:
+                    parent[i] = parent[parent[i]]
+                    i = parent[i]
+                return i
+            for a, b, c in tris:
+                for other in (b, c):
+                    ra, ro = find(a), find(other)
+                    if ra != ro:
+                        parent[ro] = ra
+            first = {}
+            for i in range(len(uv0)):
+                first.setdefault(find(i), i)
+            order = sorted(range(len(tris)), key=lambda t: -first[find(tris[t][0])])
+            px = uv0 * [w, h] - 0.5
+            for t in tris[order]:
+                p = px[t]
+                x0, y0 = np.maximum(np.floor(p.min(0)).astype(int), 0)
+                x1, y1 = np.minimum(np.ceil(p.max(0)).astype(int), [w - 1, h - 1])
+                if x1 < x0 or y1 < y0:
+                    continue
+                yy, xx = np.mgrid[y0:y1 + 1, x0:x1 + 1]
+                (ax, ay), (bx, by), (cx, cy) = p
+                den = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy)
+                if abs(den) < 1e-12:
+                    continue
+                l1 = ((by - cy) * (xx - cx) + (cx - bx) * (yy - cy)) / den
+                l2 = ((cy - ay) * (xx - cx) + (ax - cx) * (yy - cy)) / den
+                l3 = 1 - l1 - l2
+                inside = (l1 >= -1e-6) & (l2 >= -1e-6) & (l3 >= -1e-6)
+                value = l1[..., None] * uv1[t[0]] + l2[..., None] * uv1[t[1]] + l3[..., None] * uv1[t[2]]
+                out[yy[inside], xx[inside]] = value[inside]
+    return out
+
+
+@pytest.mark.parametrize("game", ["kk", "kks"])
+@pytest.mark.parametrize("mid", ["cf_m_hair_b_08_00", "cf_m_hair_f_14_00_i"])
+def test_main_hair_gives_back_the_bakes(game, mid, lut):
+    """KK's main_hair and main_hair_front, with KK's Maker Light; KKS's hair_main_sun and
+    hair_main_sun_front bake the same. At 512 pixels, to keep it quick; what remains is at UV seams,
+    where the exporter's mesh and quad renders meet."""
+    sample = Sample(game)
+    m = sample.materials[mid]
+    size = (512, 512)
+    tex = sample.texture(m, "main", size=size)
+    main = np.ones(size + (3,)) if tex is None else tex[..., :3]
+    color_mask = sample.texture(m, "color_mask", size=size)[..., :3]
+    detail_mask = sample.texture(m, "detail_mask", size=size)[..., :3]
+    gt = next(t for t in m["textures"] if t.get("raw") == "_HairGloss")
+    with Image.open(sample.root / gt["file"]) as im:
+        gloss_image = (np.asarray(im.convert("RGBA"), dtype=np.float64) / 255)[::-1]
+    uv = _second_uv(sample, mid, size)
+    colors = [models.color(m["colors"][k]) for k in ("_Color", "_Color2", "_Color3")]
+    front = m["shader"].endswith("_front")
+    for ramp, variant in ((1.0, "light"), (0.0, "dark")):
+        u = uv[..., 0] + models.hair_gloss_shift(ramp, front)
+        gloss = models.sample_repeat(gloss_image, u * gt["scale"][0] + gt["offset"][0],
+                                     uv[..., 1] * gt["scale"][1] + gt["offset"][1])[..., 0:1]
+        out = models.main_hair(main, color_mask, detail_mask, gloss, colors, models.color(m["colors"]["_ShadowColor"]),
+                               m["floats"]["_ShadowExtend"], ramp)
+        assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < 0.01

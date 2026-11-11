@@ -76,7 +76,7 @@ class Source:
 class EditColor:
     param: str
     sources: tuple[Source, ...]
-    how: str  # item, skin, light, dark, eyew_dark, plain or alpha
+    how: str  # item, skin, light, dark, eyew_dark, plain, alpha or float
 
 
 @dataclass(frozen=True)
@@ -95,8 +95,8 @@ class EditRules:
 
 
 _WHERE = ("create", "own", "current")
-_HOW = ("item", "skin", "light", "dark", "eyew_dark", "plain", "alpha")
-_CONDITIONS = ("role", "raw", "missing", "has")
+_HOW = ("item", "skin", "light", "dark", "eyew_dark", "plain", "alpha", "float")
+_CONDITIONS = ("role", "raw", "shader", "missing", "has")
 
 
 @dataclass(frozen=True)
@@ -185,7 +185,7 @@ def _edit_rules(game, data):
         for when, params in data["values"]:
             terms = tuple(when.split())
             if any(t.partition(":")[0] not in _CONDITIONS for t in terms):
-                raise ProfileError(f"profile {game}: EDIT condition {when!r} isn't role:, raw:, missing: or has:")
+                raise ProfileError(f"profile {game}: EDIT condition {when!r} isn't role:, raw:, shader:, missing: or has:")
             values.append((terms, MappingProxyType(dict(params))))
         return EditRules(
             templates=MappingProxyType(dict(data["templates"])),

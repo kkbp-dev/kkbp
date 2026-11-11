@@ -87,7 +87,7 @@ def test_editing_again_reuses_the_edit_material(ch):
     ("cf_m_top_inner01", "KK General", {"main", "main.dark", "color_mask.plain", "detail_mask", "normal"},
      ("color_mask_red.light", "pattern_color_blue.dark")),
     ("cf_m_bot_skirt01", "KK General", {"pattern_mask1"}, ("color_mask_red.light",)),
-    ("cf_m_hair_b_08_00", "KK Hair", {"color_mask", "detail_mask", "hair_gloss"}, ("hair_color.light",)),
+    ("cf_m_hair_b_08_00", "KK main_hair", {"color_mask", "detail_mask", "hair_gloss"}, ("color", "color2", "color3")),
     ("cf_m_mayuge_00", "KK toon_eyew", {"main"}, ("color", "shadow_color")),
     ("cf_m_sirome_00", "KK create_eyewhite", {"create_main"}, ("create_color", "create_color2", "shadow_color")),
     ("cf_m_noseline_00", "KK toon_nose", {"main"}, ("color_alpha",)),  # its colour is black
@@ -103,24 +103,32 @@ def test_each_template_gets_its_slots_and_colours(ch, id, template, slots, param
         assert tuple(value) != (0.0, 0.0, 0.0, 1.0) if hasattr(value, "__len__") else True, name
 
 
-def test_only_the_hair_saturates_by_default(ch):
-    """ADR 0026: the legacy hair template bakes closest to the game saturated; the others don't, and the
-    templates made from the game's shaders grade in their nodes instead (issue 30)."""
+def test_nothing_saturates_by_default(ch):
+    """ADR 0026: no KK Role saturates by default; the templates made from the game's shaders (the hair's
+    since issue 30) grade in their nodes instead."""
     b = ch.bundle()
-    for id in ("cf_m_hair_b_08_00", "cf_m_top_inner01"):
+    for id, param, source in (("cf_m_hair_b_08_00", "color", b.material("cf_m_hair_b_08_00").colors["_Color"]),
+                              ("cf_m_top_inner01", "color_mask_green.light",
+                               b.material("cf_m_top_inner01").create.colors["_Color2"])):
         edit = edit_material.edit(ch, ch.material(id), log=lambda *_: None)
-        color = templates.param(edit, "hair_color.light" if "hair" in id else "color_mask_green.light").default_value
-        source = b.material(id).colors["_Color"] if "top" not in id else b.material(id).create.colors["_Color2"]
-        plain = edit_material._linear(source)
-        assert (tuple(color) != pytest.approx(plain, abs=1e-3)) == ("hair" in id), id
+        assert not edit[edit_material.SATURATED], id
+        assert tuple(templates.param(edit, param).default_value) == pytest.approx(edit_material._linear(source), abs=1e-3), id
 
 
-def test_the_hair_without_a_plain_main_texture_keeps_the_colours(ch):
-    edit = edit_material.edit(ch, ch.material("cf_m_hair_b_08_00"), log=lambda *_: None)
+@pytest.mark.parametrize("id, front", [("cf_m_hair_b_08_00", 0.0), ("cf_m_hair_f_14_00_i", 1.0)])
+def test_the_hair_takes_its_shaders_values(ch, id, front):
+    """main_hair without a main texture draws white under its colour mask; its shadow extend comes from
+    the material, its gloss is placed by its texture transform, and main_hair_front reads it further on."""
+    bm = ch.bundle().material(id)
+    edit = edit_material.edit(ch, ch.material(id), log=lambda *_: None)
     assert "main" not in edit[edit_material.FILLED]  # KK hair has only its baked variants
-    # Its root and tip colours show through its colour mask, as in the game.
-    assert templates.param(edit, "use_color_mask.light").default_value == 1.0
-    assert templates.param(edit, "use_color_mask.dark").default_value == 1.0
+    assert templates.param(edit, "use_main_texture").default_value == 0.0
+    assert templates.param(edit, "shadow_extend").default_value == pytest.approx(bm.floats["_ShadowExtend"])
+    assert templates.param(edit, "front").default_value == front
+    gloss = next(t for t in bm.textures if t.raw == "_HairGloss")
+    mapping = templates.texture_node(edit, "hair_gloss").texture_mapping
+    assert tuple(mapping.translation[:2]) == pytest.approx(gloss.offset)
+    assert tuple(mapping.scale[:2]) == pytest.approx(gloss.scale)
 
 
 def test_the_eyebrows_take_the_games_own_colours_and_never_saturate(ch):
@@ -244,9 +252,12 @@ def test_link_hair_copies_the_active_hair_settings(ch):
     hairs = [m for m in ch.materials("hair") if _users(m)]
     assert len(hairs) > 1
     source = edit_material.edit(ch, hairs[0], log=lambda *_: None)
-    templates.param(source, "hair_color.light").default_value = (0.1, 0.2, 0.9, 1.0)
+    templates.param(source, "color").default_value = (0.1, 0.2, 0.9, 1.0)
     linked = link_hair.link_hair(ch, source, log=lambda *_: None)
     assert len(linked) == len(hairs) - 1
     for edit in linked:
         assert edit_material.is_edit(edit)
-        assert tuple(templates.param(edit, "hair_color.light").default_value) == pytest.approx((0.1, 0.2, 0.9, 1.0))
+        assert tuple(templates.param(edit, "color").default_value) == pytest.approx((0.1, 0.2, 0.9, 1.0))
+        # Each hair keeps its own shader's values.
+        front = ch.bundle().material(edit_material.original(edit)["kkbp_id"]).shader.endswith("_front")
+        assert templates.param(edit, "front").default_value == (1.0 if front else 0.0)

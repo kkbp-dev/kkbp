@@ -1,6 +1,6 @@
 # Edit templates follow the games' own shaders, and grade their light and dark as the maker camera does
 
-Updates [ADR 0026](0026-edit-materials-dont-saturate-by-default.md) as issue 30 asks. In progress: both Games' eye whites, eyebrows, eyelines and nose line are done; the other Material Roles still use the legacy edit templates.
+Updates [ADR 0026](0026-edit-materials-dont-saturate-by-default.md) as issue 30 asks. In progress: both Games' eye whites, eyebrows, eyelines, nose line and hair are done; the other Material Roles still use the legacy edit templates.
 
 An edit template is rebuilt from the game's own shaders instead of the legacy templates' approximations. The shaders were read from the installed games (`importer/tools/game_shaders/dump.py` disassembles their compiled D3D11 programs; the output is the games' code and stays in `importer/tests/.work/`), and each one used is written as a numpy model in `importer/tools/game_shaders/models.py`. `host/test_shader_models.py` checks every model against the Golden Samples' own bakes, and the node groups follow the models.
 
@@ -12,7 +12,9 @@ Comparing the models with the samples found three things the legacy importer and
 
 KK's maker light, found by fitting: the light term 1.0, `_ambientshadowG` 0.15 (ambient shadow 0.2775, legacy's constant), the ramp 1 for `light` and 0 for `dark`.
 
-KKS's shaders (`Koikano/*`) add light probes, `_KanoVerShift`, a 0.67 / 0.33 light term and a desaturated shadow, but under the bake they reduce to KK's formula with other constants. Its `light` bakes match KK's to within 0.017 for the same card; only `dark` differs. The bake's flat quad sees the probes as one ambient colour, and a light of 1.0 makes both light terms 1. What is left is the ambient colour, its strength and how much lit colour the shadow keeps (`saturate(ramp + _ambientshadowG.a)`, 0 in KK). Fitted on the KKS eye-white family, they are 0.225 / 0.216 / 0.203, 0.175 and 0.2. So KKS uses KK's templates, and its Game Profile sets these three values (`models.KKS`).
+KKS's shaders (`Koikano/*`) add light probes, `_KanoVerShift`, a 0.67 / 0.33 light term and a desaturated shadow, but under the bake they reduce to KK's formula with other constants. Its `light` bakes match KK's to within 0.017 for the same card; only `dark` differs. The bake's flat quad sees the probes as one ambient colour, and a light of 1.0 makes both light terms 1. What is left is the ambient colour, its strength and how much lit colour the shadow keeps (`saturate(ramp + _ambientshadowG.a)`, 0 in KK). Fitted on the KKS eye-white family, they are 0.225 / 0.216 / 0.203, 0.175 and 0.2. So KKS uses KK's templates, and its Game Profile sets these three values on its `Koikano/main_eyew` materials (`models.KKS`).
+
+The constants belong to a shader, not to a Game. KKS's hair shaders (`Koikano/hair_main_sun`, `hair_main_sun_front`) are two and a half times the size of KK's `main_hair`, with keyword switches (`_OLDHAIR`, `_REVERSECOLOR01`, `_GLOSSINSHADOWONOFF`). Even so, the KKS sample's hair bakes within 0.004 of the KK sample's, and KK's hair model with KK's own constants gives them back within 0.010. With `main_eyew`'s KKS constants it would be 0.028 in the dark. So KKS's hair uses KK's hair template with KK's values. That is measured on one card, not modelled: a hair whose keywords differ may not match.
 
 Measured by `blender/test_edit_accuracy.py` (mean absolute difference per channel, light / dark, sRGB values over pixels opaque in both). KK Golden Sample:
 
@@ -24,6 +26,8 @@ Measured by `blender/test_edit_accuracy.py` (mean absolute difference per channe
 | `cf_m_eyeline_kage` | 0.562 / 0.056 | 0.006 / 0.011 |
 | `cf_m_eyeline_down` | 0.135 / 0.000 | 0.023 / 0.015 |
 | `cf_m_noseline_00` | 0.000 / 0.000 | 0.000 / 0.000 |
+| `cf_m_hair_b_08_00` (main_hair) | 0.049 / 0.092 | 0.010 / 0.007 |
+| `cf_m_hair_f_14_00_i` (main_hair_front) | 0.035 / 0.089 | 0.010 / 0.006 |
 
 KKS Golden Sample, with KKS's maker light:
 
@@ -35,6 +39,8 @@ KKS Golden Sample, with KKS's maker light:
 | `cf_m_eyeline_kage` | 0.563 / 0.259 | 0.005 / 0.004 |
 | `cf_m_eyeline_down` | 0.135 / 0.010 | 0.023 / 0.018 |
 | `cf_m_noseline_00` | 0.000 / 0.000 | 0.000 / 0.000 |
+| `cf_m_hair_b_08_00` (hair_main_sun, KK's template) | 0.049 / 0.092 | 0.012 / 0.007 |
+| `cf_m_hair_f_14_00_i` (hair_main_sun_front, KK's template) | 0.035 / 0.089 | 0.013 / 0.009 |
 
 With KK's constants, KKS's shadow eyeline's dark would be 0.198: the shadow keeping a fifth of the lit colour is what matters, not the probes.
 
@@ -49,7 +55,9 @@ The eyelines' dark is a little further than legacy's, whose black happened to ma
 ## Consequences
 
 - A template made this way is named after the game's shaders (`KK toon_eyew`, `KK create_eyewhite`, `KK toon_nose`), keeps its image nodes at the top level (no texture group copied per material, so [ADR 0025](0025-edit-materials-copy-their-texture-group.md) doesn't apply to it), takes the game's own colours linear (`plain`), and is `graded` in its Template Description: the edit tool never saturates it, whatever Saturate says.
-- The Game Profile picks a template per Material Role (`LEGACY_EDIT_TEMPLATES` for the Roles not modelled yet), and sets its maker light through `values`. The templates' defaults are KK's, and KKS's profile sets its own ambient colour, strength and shadow floor. Both Games' `saturated_roles` is now the hair alone.
+- The Game Profile picks a template per Material Role (`LEGACY_EDIT_TEMPLATES` for the Roles not modelled yet), and sets a shader's Maker Light through `values` (the `shader:` condition). The templates' defaults are KK's; KKS's profile sets `main_eyew`'s ambient colour, strength and shadow floor. No Role of either Game saturates by default now (`saturated_roles` is empty).
+- The hair's template reads `_HairGloss` through the second UV map, moved along u by the light as the game does (`.KK hair gloss uv`). The toon value reaches `.Combine colors` through that group, so the bake's fixed value moves the gloss, and the viewport slides it with the shading. Off the mesh, the game's bake shows its quad, whose second UV map is its first; the importer's bake plane has the same.
+- Link hair copies a template's colours (the profile's colour table, floats left out), so each hair keeps its own shadow extend and gloss placement.
 - `Lut_TimeDay.png` stays in `library.blend`, Non-Color, read by `.KK grade` (and still by the legacy saturation).
 - `importer/tests/data/edit_accuracy.json` records each material's numbers; the test fails when a material moves further from the game. Re-record it when a template brings a material closer.
 - Each further shader is the same work: dump it, model it, fit any constants against the samples, write its node group and template, point the profile at it, re-record. The legacy templates, the Saturate option and `kkbp/shading/` go when no Role uses them.

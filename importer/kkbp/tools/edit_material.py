@@ -286,12 +286,25 @@ def _color(bm, sources):
     return None
 
 
+def _float(bm, sources):
+    for s in sources:
+        holder = bm.create if s.where == "create" else bm if s.where == "own" else None
+        if holder is not None and s.key in holder.floats:
+            return float(holder.floats[s.key])
+    return None
+
+
 def _set_colors(mat, bm, profile, saturate):
     lut = _lut() if saturate else None
     shadow = _shadow(bm, profile)
     out = (lambda c: shading.saturate_color(c, lut)) if saturate else _linear
     params = templates.template_of(mat).params
     for c in profile.edit.colors.get(mat[templates.TEMPLATE], ()):
+        if c.how == "float":
+            value = _float(bm, c.sources)
+            if value is not None:
+                _set(mat, c.param, value)
+            continue
         color = _color(bm, c.sources)
         if color is None:
             continue
@@ -322,6 +335,7 @@ def _set_values(mat, bm, profile, filled):
 def _holds(term, bm, raws, filled):
     kind, _, value = term.partition(":")
     return {"role": lambda: bm.role == value, "raw": lambda: value in raws,
+            "shader": lambda: (bm.shader or "").rpartition("/")[2] == value,
             "missing": lambda: value not in filled, "has": lambda: value in filled}[kind]()
 
 
