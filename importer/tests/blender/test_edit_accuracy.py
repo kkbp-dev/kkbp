@@ -1,0 +1,108 @@
+"""How close an unedited edit material comes to the game (ADR 0026, issue 30).
+
+For every editable material of the kk and kks Golden Samples (copies), edit it with the profile's
+default saturation, bake light and dark as Save does without saving, and compare each bake with the
+bundle's own `main.light` and `main.dark`: the mean absolute difference per channel, on the
+sRGB-encoded values, over pixels opaque in both. Each Game's numbers go to
+`importer/tests/.work/edit-accuracy/<game>.json`; the test fails if a material is further from the
+game than `importer/tests/data/edit_accuracy.json` records (with a small margin for render noise).
+Re-record after a template change that brings a material closer; the legacy templates' numbers are in
+ADR 0041.
+
+    python3 importer/tests/blender/launch.py -k edit_accuracy
+    KKBP_RECORD_EDIT_ACCURACY=1 python3 importer/tests/blender/launch.py -k edit_accuracy   # re-record
+"""
+
+import json
+import os
+import shutil
+from pathlib import Path
+
+import bpy
+import numpy as np
+import pytest
+
+from conftest import REPO, golden, kkbp, submodule
+
+character = submodule("character")
+edit_material = submodule("tools.edit_material")
+bake = submodule("tools.bake")
+profiles = submodule("profiles")
+
+RECORD = REPO / "importer" / "tests" / "data" / "edit_accuracy.json"
+REPORT = REPO / "importer" / "tests" / ".work" / "edit-accuracy"
+MARGIN = 0.01  # bakes of the same material differ this little between runs
+
+
+def _pixels(image):
+    w, h = image.size
+    px = np.empty(w * h * 4, dtype=np.float32)
+    image.pixels.foreach_get(px)
+    return px.reshape(h, w, 4)
+
+
+def _load(path):
+    image = bpy.data.images.load(str(path), check_existing=False)
+    image.colorspace_settings.name = "sRGB"
+    return image
+
+
+def difference(baked, reference):
+    """Mean absolute difference per channel over pixels opaque in both, after bringing the bake to
+    the reference's size. Image.pixels gives an 8-bit sRGB image's values as stored (sRGB-encoded)."""
+    if tuple(baked.size) != tuple(reference.size):
+        baked = baked.copy()
+        baked.scale(*reference.size)
+    a, b = _pixels(baked), _pixels(reference)
+    opaque = (a[..., 3] > 0.5) & (b[..., 3] > 0.5)
+    if not opaque.any():
+        return None
+    return float(np.abs(a[..., :3] - b[..., :3])[opaque].mean())
+
+
+def measure(ch, log=lambda *_: None):
+    """{material id: {"light": d, "dark": d}} for every editable material of `ch`."""
+    profile = profiles.get(ch.game)
+    bundle = ch.bundle()
+    out = {}
+    for bm in bundle.materials:
+        if edit_material.template_for(profile, bm) is None:
+            continue
+        light, dark = bm.texture("main", "light"), bm.texture("main", "dark")
+        material = ch.material(bm.id)
+        if light is None or dark is None or material is None:
+            continue
+        edit = edit_material.edit(ch, material, log=log)
+        try:
+            ref_light, ref_dark = _load(light.file), _load(dark.file)
+            baked_light, baked_dark = bake.bake(ch, edit, f"accuracy {bm.id}", at_least=tuple(ref_light.size), log=log)
+            out[bm.id] = {"template": edit[submodule("templates").TEMPLATE],
+                          "light": difference(baked_light, ref_light), "dark": difference(baked_dark, ref_dark)}
+        finally:
+            edit_material.cancel(edit)
+    return out
+
+
+@pytest.mark.parametrize("game", ["kk", "kks"])
+def test_unedited_edit_materials_bake_close_to_the_game(game, tmp_path):
+    copy = tmp_path / game
+    shutil.copytree(golden(game), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
+    result = kkbp.api.import_bundle(copy, hooks=[])
+    assert result.ok
+    numbers = measure(character.Character(result.character_key))
+    REPORT.mkdir(parents=True, exist_ok=True)
+    (REPORT / f"{game}.json").write_text(json.dumps(numbers, indent=1, sort_keys=True) + "\n")
+
+    recorded = json.loads(RECORD.read_text()) if RECORD.is_file() else {}
+    if os.environ.get("KKBP_RECORD_EDIT_ACCURACY"):
+        recorded[game] = {k: {"light": v["light"], "dark": v["dark"]} for k, v in numbers.items()}
+        RECORD.write_text(json.dumps(recorded, indent=1, sort_keys=True) + "\n")
+        return
+    worse = []
+    for mid, was in recorded.get(game, {}).items():
+        now = numbers.get(mid)
+        assert now is not None, f"{mid} is no longer measured"
+        for kind in ("light", "dark"):
+            if was[kind] is not None and now[kind] is not None and now[kind] > was[kind] + MARGIN:
+                worse.append(f"{mid} {kind}: {now[kind]:.3f}, recorded {was[kind]:.3f}")
+    assert not worse, "edit materials further from the game:\n" + "\n".join(worse)

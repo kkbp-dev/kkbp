@@ -106,6 +106,24 @@ class Tree:
             _set_curve_mapping(n.mapping, mapping)
         return n
 
+    def make(self, idname, name, location, props=None, ins=None, **kwargs):
+        """A node and its inputs in one call, for hand-written groups: `ins` maps an input to a value
+        or to a (node name, output) it is linked from. Returns the node's name."""
+        n = self.node(idname, name, props={"location": location, **(props or {})}, **kwargs)
+        for key, source in (ins or {}).items():
+            if isinstance(source, tuple) and len(source) == 2 and isinstance(source[0], str):
+                self.link(source[0], source[1], name, key)
+            else:
+                _socket(n.inputs, key).default_value = source
+        return name
+
+    def math(self, name, operation, a, b=None, c=None, location=(0, 0), clamp=False):
+        """A Math node: `a`, `b`, `c` are values or (node name, output) sources. Returns (name, 'Value'),
+        a source for the next node."""
+        ins = {key: v for key, v in zip(("Value", "Value_001", "Value_002"), (a, b, c)) if v is not None}
+        self.make("ShaderNodeMath", name, location, {"operation": operation, "use_clamp": clamp}, ins)
+        return (name, "Value")
+
     def link(self, from_node, from_socket, to_node, to_socket, muted=False):
         a = _socket(self.tree.nodes[from_node].outputs, from_socket)
         b = _socket(self.tree.nodes[to_node].inputs, to_socket)

@@ -152,6 +152,9 @@ def _corrections():
 # The joint corrections (docs/design/joint-corrections.md).
 CORRECTIONS = _corrections()
 
+# toon_eyew's colours: the texture's tint and the shadow colour.
+_EYEW_COLORS = [["color", ["own:_Color"], "plain"], ["shadow_color", ["own:_shadowcolor"], "plain"]]
+
 # The eyes' highlights, from the colours the game draws them with (D41).
 _EYE_COLORS = [
     ["highlight_up_color", ["own:_overcolor1"], "plain"],
@@ -164,20 +167,30 @@ _EYE_COLORS = [
 # (the material itself), then a Texture Role or a Raw Property (with `[pattern]` for one pattern),
 # tried in order; `current:` is the slot's image in the material being edited, which keeps an
 # Outfit's body alpha mask.
+# The legacy edit templates by Material Role (D38). KKS still uses all of them; KK uses them for the
+# Roles whose shaders aren't modelled yet (issue 30).
+LEGACY_EDIT_TEMPLATES = {
+    "body": "KK Body", "face": "KK Face", "hair": "KK Hair",
+    "eye_l": "KK EyeL (hitomi)", "eye_r": "KK EyeR (hitomi)", "eye_white": "KK Eyewhites (sirome)",
+    "eyebrow": "KK Eyebrows (mayuge)", "nose_line": "KK Nose", "teeth": "KK Teeth (tooth)",
+    "eyeline_upper": "KK Eyeline up", "eyeline_lower": "KK Eyeline up", "eyeline_shadow": "KK Eyeline up",
+    "tongue": "KK General", None: "KK General",
+}
+
 EDIT = {
-    # Material Role (None: none) -> edit template. Roles not listed, and glasses, aren't editable.
+    # Material Role (None: none) -> edit template. Roles not listed, and glasses, aren't editable. The
+    # templates named after a game shader follow it (importer/tools/game_shaders/models.py).
     "templates": {
-        "body": "KK Body", "face": "KK Face", "hair": "KK Hair",
-        "eye_l": "KK EyeL (hitomi)", "eye_r": "KK EyeR (hitomi)", "eye_white": "KK Eyewhites (sirome)",
-        "eyebrow": "KK Eyebrows (mayuge)", "nose_line": "KK Nose", "teeth": "KK Teeth (tooth)",
-        "eyeline_upper": "KK Eyeline up", "eyeline_lower": "KK Eyeline up", "eyeline_shadow": "KK Eyeline up",
-        "tongue": "KK General", None: "KK General",
+        **LEGACY_EDIT_TEMPLATES,
+        "eye_white": "KK create_eyewhite", "eyebrow": "KK toon_eyew", "nose_line": "KK toon_nose",
+        "eyeline_upper": "KK toon_eyew", "eyeline_lower": "KK toon_eyew", "eyeline_shadow": "KK toon_eyew",
     },
     "not_editable_blend_modes": ["glasses"],
     # Edit slot -> where its texture comes from. `main.dark` is made from `main`, and
     # `color_mask.plain` takes `color_mask` for the plain-mask shaders below.
     "textures": {
         "main": ["own:main"],
+        "create_main": ["create:main"],
         "plain": ["create:main", "own:main"],
         "color_mask": ["create:color_mask", "own:color_mask"],
         "detail_mask": ["own:detail_mask"],
@@ -199,7 +212,7 @@ EDIT = {
     "saturated": ["main", "plain"],
     # Material Roles that saturate by default (ADR 0026): their templates draw from colours alone, and
     # saturated they bake closest to the game's own light and dark textures. The rest don't.
-    "saturated_roles": ["hair", "eyebrow"],
+    "saturated_roles": ["hair"],
     # These shaders draw no colour mask, though the game gives them one: it goes in the plain slot.
     "plain_color_mask_shaders": ["Shader Forge/main_opaque", "Shader Forge/main_opaque2",
                                  "Shader Forge/main_opaque_low", "Koikano/main_clothes_opaque",
@@ -243,6 +256,11 @@ EDIT = {
             ["eyebrow_color_dark", ["own:_Color"], "eyew_dark"],
         ],
         "KK Eyeline up": [["eyeline_fade_color", ["own:_Color"], "light"]],
+        # The game's own colours, linear, as its shaders see them.
+        "KK toon_eyew": _EYEW_COLORS,
+        "KK create_eyewhite": [*_EYEW_COLORS, ["create_color", ["create:_Color"], "plain"],
+                               ["create_color2", ["create:_Color2"], "plain"]],
+        "KK toon_nose": [["color", ["own:_Color"], "plain"], ["color_alpha", ["own:_Color"], "alpha"]],
     },
     # Values set when every condition holds: `role:R`, `raw:P` (the material has slot P),
     # `missing:S` and `has:S` (edit slot S is or isn't filled). Params a template lacks are skipped.
@@ -252,8 +270,8 @@ EDIT = {
         # An AnotherRamp texture makes the red detail metallic, which no template draws.
         ["raw:_AnotherRamp", {"detail_intensity_shine": 0.0}],
         ["missing:main", {"use_main_texture": 0.0}],
-        # The game draws the eyebrows as their texture times their colour, and the hair's root and
-        # tip colours through its colour mask; the templates' switches for both are off.
+        # The game draws the eyebrows as their texture times their colour (the legacy template, KKS),
+        # and the hair's root and tip colours through its colour mask; the templates' switches are off.
         ["role:eyebrow has:main", {"use_main_texture_color": 1.0}],
         ["role:hair has:color_mask", {"use_color_mask": 1.0}],
         ["missing:main has:plain", {"use_plain_main_texture": 1.0}],

@@ -13,7 +13,7 @@
  },
  "Lut_TimeDay.png": {
   "source": "FILE",
-  "colorspace": "sRGB",
+  "colorspace": "Non-Color",
   "alpha_mode": "STRAIGHT",
   "file": "Lut_TimeDay.png"
  },

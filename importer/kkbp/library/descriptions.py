@@ -14,6 +14,8 @@
   ADR 0025), outermost first.
 - `positions`: a slot whose placement is a `Scale Vector` group node in place of the image node's own
   mapping (the edit eyes' pupil and highlights, D41).
+- `graded`: an edit template made from a game's shaders, which grades its light and dark itself as
+  the game's bake did; the edit tool never saturates its textures (issue 30).
 
 A node is named by its path: `textures/_CM.png` is the node `_CM.png` in the group of the material's
 node `textures`.
@@ -76,6 +78,7 @@ class Template:
     groups: tuple[str, ...] = field(default=())  # groups apply() needs beyond those the material holds
     copies: tuple[str, ...] = ()
     positions: Mapping[str, str] = _EMPTY
+    graded: bool = False  # an edit template that grades its light and dark as the game's bake (issue 30)
 
 
 _LIGHT_DARK_TEXTURES = {
@@ -130,6 +133,8 @@ def _in(group, **slots):
 # Every edit template bakes through these: the combine group's light-dark mix, and the texture
 # group's toon shading normals.
 _BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("textures/shade", "Use Normals?")}
+# The templates made from the games' shaders bake the same way, through their own nodes.
+_GAME_BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("shade", "Use Normals?")}
 _MISC = Template("", textures=_in("textures", main="_ST_CT.png"), params=_BAKE, copies=("textures",))
 _GENERAL_TEXTURES = _in(
     "textures", main="_ST_CT.png", **{"main.dark": "_ST_DT.png", "color_mask.plain": "_CM.pngopaque"},
@@ -207,6 +212,15 @@ _EDIT_TEMPLATES = (
                      "use_kage_texture": ("light", "Use kage texture color?"),
                      "use_down_texture": ("light", "Use down texture color?")}),
     Template("KK Teeth (tooth)", textures=_MISC.textures, params=_MISC.params, copies=_MISC.copies),
+    # The edit templates made from the games' shaders (issue 30, importer/tools/game_shaders/models.py):
+    # each slot's image node by name at the top level, shared groups, and the game's colours linear.
+    Template("KK toon_eyew", graded=True, textures={"main": "tex.main"},
+             params={**_GAME_BAKE, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color")}),
+    Template("KK create_eyewhite", graded=True, textures={"create_main": "tex.create_main"},
+             params={**_GAME_BAKE, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color"),
+                     "create_color": ("create", "Color"), "create_color2": ("create", "Color 2")}),
+    Template("KK toon_nose", graded=True, textures={"main": "tex.main"},
+             params={**_GAME_BAKE, "color": ("lit", "Color"), "color_alpha": ("lit", "Color alpha")}),
 )
 EDIT_TEMPLATES = tuple(t.name for t in _EDIT_TEMPLATES)
 

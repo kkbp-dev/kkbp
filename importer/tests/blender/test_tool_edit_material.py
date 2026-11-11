@@ -88,8 +88,9 @@ def test_editing_again_reuses_the_edit_material(ch):
      ("color_mask_red.light", "pattern_color_blue.dark")),
     ("cf_m_bot_skirt01", "KK General", {"pattern_mask1"}, ("color_mask_red.light",)),
     ("cf_m_hair_b_08_00", "KK Hair", {"color_mask", "detail_mask", "hair_gloss"}, ("hair_color.light",)),
-    # Saturated, the eyebrows' dark colour is black, as the game bakes it.
-    ("cf_m_mayuge_00", "KK Eyebrows (mayuge)", {"main"}, ("eyebrow_color",)),
+    ("cf_m_mayuge_00", "KK toon_eyew", {"main"}, ("color", "shadow_color")),
+    ("cf_m_sirome_00", "KK create_eyewhite", {"create_main"}, ("create_color", "create_color2", "shadow_color")),
+    ("cf_m_noseline_00", "KK toon_nose", {"main"}, ("color_alpha",)),  # its colour is black
     ("cf_m_tang", "KK General", {"color_mask", "detail_mask"}, ("color_mask_red.light",)),
 ])
 def test_each_template_gets_its_slots_and_colours(ch, id, template, slots, params):
@@ -102,16 +103,16 @@ def test_each_template_gets_its_slots_and_colours(ch, id, template, slots, param
         assert tuple(value) != (0.0, 0.0, 0.0, 1.0) if hasattr(value, "__len__") else True, name
 
 
-def test_only_hair_and_eyebrows_saturate_by_default(ch):
-    """ADR 0026: they bake closest to the game saturated; the other materials don't."""
+def test_only_the_hair_saturates_by_default(ch):
+    """ADR 0026: the legacy hair template bakes closest to the game saturated; the others don't, and the
+    templates made from the game's shaders grade in their nodes instead (issue 30)."""
     b = ch.bundle()
-    for id in ("cf_m_hair_b_08_00", "cf_m_mayuge_00", "cf_m_top_inner01"):
+    for id in ("cf_m_hair_b_08_00", "cf_m_top_inner01"):
         edit = edit_material.edit(ch, ch.material(id), log=lambda *_: None)
-        color = templates.param(edit, "hair_color.light" if "hair" in id else
-                                "eyebrow_color" if "mayuge" in id else "color_mask_green.light").default_value
+        color = templates.param(edit, "hair_color.light" if "hair" in id else "color_mask_green.light").default_value
         source = b.material(id).colors["_Color"] if "top" not in id else b.material(id).create.colors["_Color2"]
         plain = edit_material._linear(source)
-        assert (tuple(color) != pytest.approx(plain, abs=1e-3)) == (id != "cf_m_top_inner01"), id
+        assert (tuple(color) != pytest.approx(plain, abs=1e-3)) == ("hair" in id), id
 
 
 def test_the_hair_without_a_plain_main_texture_keeps_the_colours(ch):
@@ -122,15 +123,17 @@ def test_the_hair_without_a_plain_main_texture_keeps_the_colours(ch):
     assert templates.param(edit, "use_color_mask.dark").default_value == 1.0
 
 
-def test_the_eyebrows_multiply_their_texture_and_shade_as_toon_eyew(ch):
+def test_the_eyebrows_take_the_games_own_colours_and_never_saturate(ch):
+    """KK's eyebrows are drawn by toon_eyew_lod0, which the template follows: it gets the game's own
+    colours linear, and grades in its nodes, so even an edit asked to saturate leaves the texture."""
     bm = ch.bundle().material("cf_m_mayuge_00")
-    edit = edit_material.edit(ch, ch.material("cf_m_mayuge_00"), saturate=False, log=lambda *_: None)
-    assert templates.param(edit, "use_main_texture_color").default_value == 1.0
-    light = templates.param(edit, "eyebrow_color").default_value
-    dark = templates.param(edit, "eyebrow_color_dark").default_value
-    shaded = edit_material._linear(submodule("shading").eyew_dark_color(bm.colors["_Color"], bm.colors["_shadowcolor"]))
-    assert tuple(dark) == pytest.approx(shaded, abs=1e-4)
-    assert all(d < l for d, l in zip(dark[:3], light[:3]))
+    edit = edit_material.edit(ch, ch.material("cf_m_mayuge_00"), saturate=True, log=lambda *_: None)
+    assert edit[templates.TEMPLATE] == "KK toon_eyew" and not edit[edit_material.SATURATED]
+    assert tuple(templates.param(edit, "color").default_value) == pytest.approx(edit_material._linear(bm.colors["_Color"]))
+    assert tuple(templates.param(edit, "shadow_color").default_value) == pytest.approx(
+        edit_material._linear(bm.colors["_shadowcolor"]))
+    image = templates.texture_node(edit, "main").image
+    assert image.filepath and "saturated" not in image.name
 
 
 def test_the_eyes_are_placed_by_their_texture_transform(ch):

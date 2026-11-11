@@ -101,9 +101,11 @@ def edit(ch, material, *, saturate: bool | None = None, log=print):
 
     profile = profiles.get(ch.game)
     bm = ch.bundle().material(material[ID])
-    if saturate is None:
-        saturate = saturates(profile, bm)
     name = template_for(profile, bm)
+    if templates.library.TEMPLATES[name].graded:
+        saturate = False  # it grades its light and dark itself, as the game's bake (issue 30)
+    elif saturate is None:
+        saturate = saturates(profile, bm)
     mat = templates.template_material(name).copy()
     mat.use_fake_user = False
     mat.name = NAME.format(material.name)
