@@ -1,0 +1,116 @@
+{
+ "Eye_White_Alpha": {
+  "source": "FILE",
+  "colorspace": "Non-Color",
+  "alpha_mode": "STRAIGHT",
+  "file": "Eye_White_Alpha.png"
+ },
+ "KK OutlineMask.png": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "KK OutlineMask.png"
+ },
+ "Lut_TimeDay.png": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "Lut_TimeDay.png"
+ },
+ "MouthAtlas.webp": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "MouthAtlas.webp"
+ },
+ "SDF hair contact shadows mask 2.png": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "SDF hair contact shadows mask 2.png"
+ },
+ "SVS Eye_White_Alpha": {
+  "source": "FILE",
+  "colorspace": "Non-Color",
+  "alpha_mode": "STRAIGHT",
+  "file": "SVS Eye_White_Alpha.png"
+ },
+ "SVS OutlineMask.png": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "SVS OutlineMask.png"
+ },
+ "Template: Black": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "missing": true
+ },
+ "Template: BlackWithAlpha": {
+  "source": "GENERATED",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "size": [24, 24],
+  "generated_type": "BLANK",
+  "generated_color": [0.0, 0.0, 0.0, 1.0],
+  "float": false,
+  "file_format": "PNG"
+ },
+ "Template: Body neck shadow": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "Template Body neck shadow.png"
+ },
+ "Template: Face shinymask": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "Template Face shinymask.png"
+ },
+ "Template: Normal detail placeholder": {
+  "source": "GENERATED",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "size": [1024, 1024],
+  "generated_type": "BLANK",
+  "generated_color": [0.5, 0.5, 0.5, 0.0],
+  "float": false,
+  "file_format": "PNG"
+ },
+ "Template: Placeholder": {
+  "source": "GENERATED",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "size": [24, 24],
+  "generated_type": "BLANK",
+  "generated_color": [1.0, 1.0, 1.0, 1.0],
+  "float": false,
+  "file_format": "PNG"
+ },
+ "Template: SFW alpha mask.png": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "Template SFW alpha mask.png"
+ },
+ "Template: nose mask for pinkness": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "Template nose mask for pinkness.png"
+ },
+ "Template: orbita_1k.exr": {
+  "source": "FILE",
+  "colorspace": "Linear Rec.709",
+  "alpha_mode": "PREMUL",
+  "file": "Template orbita_1k.exr"
+ },
+ "sdf 5.png": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "sdf 5.png"
+ }
+}

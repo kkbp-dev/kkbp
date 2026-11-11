@@ -36,7 +36,7 @@
   "objects": 6
  },
  "images": [
-  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "Template orbita_1k.exr",
   "cf_hair_b_m_o_12_00 main.dark",
   "cf_hair_b_m_o_12_00 main.light",
   "cf_hair_f_m_o_03_00 main.dark",
@@ -426,7 +426,7 @@
   "cf_m_namida": {
    "id": "cf_m_namida",
    "images": [
-    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    "Template orbita_1k.exr"
    ],
    "node_groups": [
     ".KK Tears"
@@ -440,7 +440,7 @@
   "cf_m_namida_2": {
    "id": "cf_m_namida_2",
    "images": [
-    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    "Template orbita_1k.exr"
    ],
    "node_groups": [
     ".KK Tears"
@@ -454,7 +454,7 @@
   "cf_m_namida_3": {
    "id": "cf_m_namida_3",
    "images": [
-    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    "Template orbita_1k.exr"
    ],
    "node_groups": [
     ".KK Tears"

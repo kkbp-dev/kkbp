@@ -10,7 +10,7 @@ from PIL import Image
 import shading
 from conftest import REPO
 
-LUT_FILE = REPO / "importer" / "templates-src" / "Lut_TimeDay.png"
+LUT_FILE = REPO / "importer" / "library-src" / "images" / "Lut_TimeDay.png"
 
 
 @pytest.fixture(scope="module")

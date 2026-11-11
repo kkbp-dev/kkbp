@@ -6,8 +6,8 @@ is which node socket, so code never names nodes or sockets. A Template Set picks
 material from its Material Role and Blend Mode. `templates` (the bpy side) uses both.
 
 This package never imports bpy and uses relative imports only, so host tests import it directly.
-library.blend is built by scripts/rework-templates.sh; a harness test checks every description
-against it.
+library.blend is built by scripts/build-library.sh (ADR 0040); a harness test checks every
+description against it.
 """
 
 from __future__ import annotations

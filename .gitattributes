@@ -1,7 +1,7 @@
 * text=auto eol=lf
 
-# Binary files go to Git LFS: the Sample Cards, the Material Template library, the Hook assets and
-# the games' recorded joint corrections.
+# Binary files go to Git LFS: the Sample Cards, the Material Template library, the Hook assets, the
+# images they are built from (importer/library-src/images/) and the games' recorded joint corrections.
 # JSON stays plain text, so snapshot and schema diffs can be reviewed.
 *.png   filter=lfs diff=lfs merge=lfs -text
 *.jpg   filter=lfs diff=lfs merge=lfs -text
@@ -12,3 +12,5 @@
 *.dll   filter=lfs diff=lfs merge=lfs -text
 *.fbx   filter=lfs diff=lfs merge=lfs -text
 *.gz    filter=lfs diff=lfs merge=lfs -text
+*.exr   filter=lfs diff=lfs merge=lfs -text
+*.webp  filter=lfs diff=lfs merge=lfs -text

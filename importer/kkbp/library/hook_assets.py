@@ -1,8 +1,7 @@
 """The built-in Hooks' asset files and what each Hook takes from its file (D15).
 
-Each Hook that needs assets owns one file next to library.blend, built from the unchanged legacy
-V9 file by scripts/build-hook-assets.sh (importer/tools/build_hook_assets.py), the way ADR 0018
-builds the template library. These descriptions are the only place the Hooks find the files'
+Each Hook that needs assets owns one file next to library.blend, built with it by
+scripts/build-library.sh (importer/tools/library/build.py, ADR 0040). These descriptions are the only place the Hooks find the files'
 datablock and node names; a harness test checks every name against its file. Every datablock in
 the files carries `kkbp_asset_version`.
 """

@@ -1,0 +1,740 @@
+{
+ "collections": {
+  "Bone Widgets": {
+   "objects": [
+    "WidgetHips",
+    "WidgetSkirt",
+    "WidgetChest",
+    "WidgetFoot",
+    "WidgetToe",
+    "WidgetKnee",
+    "WidgetHead",
+    "WidgetFace",
+    "WidgetHeel",
+    "WidgetBP",
+    "WidgetRoot",
+    "WidgetPelvis",
+    "WidgetNeck",
+    "WidgetHandL",
+    "WidgetHandR",
+    "WidgetShoulderL",
+    "WidgetShoulderR",
+    "WidgetFinger",
+    "WidgetFingerThumb",
+    "WidgetSpine",
+    "WidgetEye",
+    "WidgetBust",
+    "WidgetBreastL",
+    "WidgetBreastR",
+    "Eye Grid",
+    "Mouth Grid",
+    "Custom1 Grid",
+    "Custom2 Grid"
+   ],
+   "children": [],
+   "use_fake_user": true,
+   "hide_viewport": false,
+   "hide_render": false,
+   "hide_select": false
+  }
+ },
+ "armatures": {},
+ "objects": {
+  "Custom1 Grid": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Grid.002"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "location": [0.10110476613044739, -0.47098761796951294, 1.500095248222351],
+    "rotation_euler": [1.5707963705062866, -0.0, 3.141592502593994],
+    "scale": [0.06837879866361618, 0.06837879866361618, 0.06837879866361618]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "Custom2 Grid": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Grid.003"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "location": [0.06954070925712585, -0.47098761796951294, 1.500095248222351],
+    "rotation_euler": [1.5707963705062866, -0.0, 3.141592502593994],
+    "scale": [0.06837879866361618, 0.06837879866361618, 0.06837879866361618]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "Eye Grid": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Grid.001"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "location": [0.13416004180908203, -0.47098761796951294, 1.500095248222351],
+    "rotation_euler": [1.5707963705062866, -0.0, 3.141592502593994],
+    "scale": [0.06837879866361618, 0.06837879866361618, 0.06837879866361618]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "Mouth Grid": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Grid"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "location": [0.3236640691757202, -0.47098761796951294, 1.500095248222351],
+    "rotation_euler": [1.5707963705062866, -0.0, 3.141592502593994],
+    "scale": [0.06837879866361618, 0.06837879866361618, 0.06837879866361618]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetBP": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.016"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetBreastL": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.001"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetBreastR": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.002"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetBust": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.019"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetChest": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.026"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetEye": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.027"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetFace": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.018"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetFinger": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Cylinder"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "scale": [0.10140079259872437, 0.10140079259872437, 0.10140079259872437]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetFingerThumb": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Cylinder.002"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "scale": [0.10140079259872437, 0.10140079259872437, 0.10140079259872437]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetFoot": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.024"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetHandL": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "WidgetHandL"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, -0.0, 0.0, -0.0],
+    [-0.0, 1.0, -0.0, 0.0],
+    [0.0, -0.0, 1.0, -0.0],
+    [-0.0, 0.0, -0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetHandR": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "WidgetHandL.001"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, -0.0, 0.0, -0.0],
+    [-0.0, 1.0, -0.0, 0.0],
+    [0.0, -0.0, 1.0, -0.0],
+    [-0.0, 0.0, -0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetHead": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.021"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetHeel": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.017"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetHips": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Cube.004"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetKnee": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.022"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetNeck": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.015"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetPelvis": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Cube.002"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetRoot": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Rootwidget"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, -0.0, 0.0, -0.0],
+    [-0.0, 1.0, -0.0, 0.0],
+    [0.0, -0.0, 1.0, -0.0],
+    [-0.0, 0.0, -0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetShoulderL": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "WidgetHandL.002"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, -0.0, 0.0, -0.0],
+    [-0.0, 1.0, -0.0, 0.0],
+    [0.0, -0.0, 1.0, -0.0],
+    [-0.0, 0.0, -0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetShoulderR": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "WidgetHandL.003"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, -0.0, 0.0, -0.0],
+    [-0.0, 1.0, -0.0, 0.0],
+    [0.0, -0.0, 1.0, -0.0],
+    [-0.0, 0.0, -0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetSkirt": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Cube.003"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetSpine": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.030"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "WidgetToe": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Circle.023"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "lineart": {
+     "crease_threshold": 0.0
+    }
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  }
+ }
+}
