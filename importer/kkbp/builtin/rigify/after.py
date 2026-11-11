@@ -363,8 +363,8 @@ def main():
                 generatedRig.data.collections[koikatsuCommons.emotionsLayerName].assign(bone)
 
 
-        # Ported: the mouth grid drives the copies of the mouth shape keys on Body and, so the mouth
-        # and tongue move together, on the rigged tongue (legacy drove Body's only).
+        # Ported: the mouth grid drives the copies of the mouth shape keys on Body, which holds the
+        # tongue too (ADR 0039), so the mouth and tongue move together.
         def rig_mouth(mesh):
             ############################################################################################################
             #first, create copies of each mouth shape key
@@ -470,8 +470,8 @@ def main():
                         f'{crossfade}*{angle}',
                     )
 
-        for mesh in [m for m in (c.get_body(), c.get_tongue()) if m is not None and m.data.shape_keys]:
-            rig_mouth(mesh)
+        if c.get_body().data.shape_keys:
+            rig_mouth(c.get_body())
 
         ##########################################################################################
         #first, create copies of each eye shape key

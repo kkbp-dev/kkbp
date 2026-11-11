@@ -17,8 +17,8 @@ from ..character import ID, KEY, OUTFIT, ROLE, SUB_COLLECTION
 
 # Material Role -> Part Role, the same for every Game (docs/design/game-profile.md). The first role
 # in this order that one of a mesh's materials has decides; a mesh with none is `body` in the Body
-# Pass and `outfit` in an Outfit Pass.
-PART_FOR_MATERIAL_ROLE = {"tears": "tears", "gag_eyes": "gag_eyes", "tongue": "tongue", "hair": "hair"}
+# Pass and `outfit` in an Outfit Pass. The tongue is part of Body (ADR 0039).
+PART_FOR_MATERIAL_ROLE = {"tears": "tears", "gag_eyes": "gag_eyes", "hair": "hair"}
 
 # UV sets by their index in the .glb, the same for every Game.
 UV_NAMES = ("uv_main", "uv_nipple_and_shine", "uv_underhair", "uv_eyeshadow")
@@ -32,13 +32,12 @@ NAMES = {
     "armature": "Armature {name}",
     "tears": "Tears {name}",
     "gag_eyes": "Gag Eyes {name}",
-    "tongue": "Tongue (rigged) {name}",
     "outfit": "Outfit {outfit:02d} {name}",
     "hair": "Hair Outfit {outfit:02d} {name}",
     "alt_outfit": "{mesh} {outfit:02d} {name}",
 }
 # Parts that move with the face, parented to Body as the legacy importer did.
-FACE_PARTS = ("tears", "gag_eyes", "tongue")
+FACE_PARTS = ("tears", "gag_eyes")
 # How much the SVS eyelid and eyelashes move forward (Blender -Y) so they don't clip into the eyes.
 EYELID_OFFSET = 0.0005
 
@@ -86,10 +85,11 @@ def merge_rigged_tongue(ctx):
     The game has two copies of one tongue mesh: the head's, moved by the mouth expressions, and the
     body's rigged one, weighted to the bones under the `tongue_root` Bone Role. The head tongue takes
     the rigged one's weights by vertex index, the tongue bones move by the offset between the two,
-    and the rigged copy goes.
+    and the rigged copy goes. The tongues are found by their `tongue` Material Role; both are Body
+    Parts, and `build_parts` joins the one left into Body (ADR 0039).
     """
     ch, bundle = ctx.character, ctx.bundle
-    tongues = ch.parts("tongue")
+    tongues = [o for o in _meshes(ch) if any(_role(bundle, s.material) == "tongue" for s in o.material_slots)]
     if len(tongues) < 2:
         return
     root = bundle.skeleton.by_role("tongue_root")
@@ -196,8 +196,8 @@ def order_shape_keys(ctx):
 
 
 def link_expression_keys(ctx):
-    """Drives the expression keys of the tears, gag-eye and tongue Parts from Body's keys of the same
-    name, so one slider on Body moves the whole face."""
+    """Drives the expression keys of the tears and gag-eye Parts from Body's keys of the same name,
+    so one slider on Body moves the whole face."""
     ch = ctx.character
     body = ch.body
     if body is None or body.data.shape_keys is None:

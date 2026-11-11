@@ -46,15 +46,23 @@ def test_the_golden_samples_import(sample, tmp_path):
     copy = tmp_path / sample  # an import writes its log into the bundle's kkbp_cache/
     shutil.copytree(golden(sample), copy)
     result, ch = _import(copy)
-    assert ch.body is not None and ch.armature is not None and ch.tongue is not None
+    assert ch.body is not None and ch.armature is not None
     assert ch.tears is not None and ch.gag_eyes is not None
     assert len(ch.outfits) == 1 and len(ch.hairs) == 1
-    tongue = ch.tongue
-    assert tongue.data.shape_keys and len(tongue.data.shape_keys.key_blocks) > 30  # the mouth keys
-    groups = {g.name for g in tongue.vertex_groups}
-    weighted = {tongue.vertex_groups[g.group].name for v in tongue.data.vertices for g in v.groups if g.weight > 0}
-    assert "cf_j_tang_01" in weighted and "cf_J_MouthCavity" not in weighted, groups
-    assert len([o for o in ch.parts("tongue")]) == 1
+    # One tongue, inside Body (ADR 0039), weighted to the tongue bones and moved by Body's mouth keys.
+    body = ch.body
+    tongue_mats = set(ch.materials(roles="tongue"))
+    holders = [o for o in ch.parts() if o.type == "MESH" and any(s.material in tongue_mats for s in o.material_slots)]
+    assert len(tongue_mats) == 1 and holders == [body], (tongue_mats, holders)
+    slots = {i for i, s in enumerate(body.material_slots) if s.material in tongue_mats}
+    verts = {v for p in body.data.polygons if p.material_index in slots for v in p.vertices}
+    names = {g.index: g.name for g in body.vertex_groups}
+    weighted = {names[g.group] for v in verts for g in body.data.vertices[v].groups if g.weight > 0}
+    assert "cf_j_tang_01" in weighted and "cf_J_MouthCavity" not in weighted, weighted
+    basis = body.data.shape_keys.reference_key
+    moved = [k.name for k in body.data.shape_keys.key_blocks[1:]
+             if any((k.data[v].co - basis.data[v].co).length > 1e-5 for v in verts)]
+    assert len(moved) >= 5, moved  # the mouth keys move the tongue (fewer in SVS, ADR 0035)
     for mat in ch.materials():
         assert mat.get(templates.TEMPLATE) in kkbp.library.TEMPLATES
     for gag in ch.materials(roles="gag_eyes"):

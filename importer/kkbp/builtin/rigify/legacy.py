@@ -36,11 +36,6 @@ def get_body():
     return character().body
 
 
-def get_tongue():
-    """The rigged tongue Part, or None."""
-    return character().tongue
-
-
 def get_name():
     return character().name
 

@@ -39,7 +39,8 @@ def test_parts_by_role():
     ch = _chika()
     assert ch.body.name == "Body"
     assert ch.armature.name == "Armature"
-    assert ch.rig is None and ch.tongue is None and ch.gag_eyes is None
+    assert ch.rig is None and ch.gag_eyes is None
+    assert not hasattr(ch, "tongue")  # the tongue is part of Body (ADR 0039)
     assert ch.control is ch.armature
     assert sorted(o.name for o in ch.hairs) == ["Hair back", "Hair front"]
     assert sorted(o.name for o in ch.outfits) == ["Skirt", "Top"]
@@ -145,15 +146,15 @@ def test_images():
 def test_undo_in_the_middle_of_a_lookup():
     ch = _chika()
     bpy.ops.ed.undo_push(message="parts made")
-    ch.add_part(_mesh("Tongue"), "tongue")
-    bpy.ops.ed.undo_push(message="tongue added")
-    held = ch.tongue
-    assert held.name == "Tongue"
+    ch.add_part(_mesh("Gag eyes"), "gag_eyes")
+    bpy.ops.ed.undo_push(message="gag eyes added")
+    held = ch.gag_eyes
+    assert held.name == "Gag eyes"
     bpy.ops.ed.undo()
     # The held reference is gone; a fresh lookup through the same Character still works.
     with pytest.raises(ReferenceError):
         held.name
-    assert ch.tongue is None
+    assert ch.gag_eyes is None
     assert ch.body.name == "Body"
 
 

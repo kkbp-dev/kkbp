@@ -244,13 +244,15 @@ def test_every_hook_starts_in_object_mode_with_nothing_selected(build):
 
 def test_hook_interface_version(build):
     ran = []
-    ok = hooks.register_hook(lambda ctx: ran.append("ok"), name="ok", source="tests", requires_api="1.0")
-    major = hooks.register_hook(lambda ctx: ran.append("major"), name="major", source="tests", requires_api="2.0")
-    minor = hooks.register_hook(lambda ctx: ran.append("minor"), name="minor", source="tests", requires_api="1.9")
-    result = _run(build(), [], [ok, major, minor])
+    ok = hooks.register_hook(lambda ctx: ran.append("ok"), name="ok", source="tests", requires_api="2.0")
+    major = hooks.register_hook(lambda ctx: ran.append("major"), name="major", source="tests", requires_api="3.0")
+    minor = hooks.register_hook(lambda ctx: ran.append("minor"), name="minor", source="tests", requires_api="2.9")
+    old = hooks.register_hook(lambda ctx: ran.append("old"), name="old", source="tests", requires_api="1.0")
+    result = _run(build(), [], [ok, major, minor, old])
     assert ran == ["ok"]
-    assert [h.status for h in result.hooks] == ["ran", "skipped", "skipped"]
-    assert result.hooks[1].reason == "it needs hook interface 2.0; this KKBP has 1.0"
+    assert [h.status for h in result.hooks] == ["ran", "skipped", "skipped", "skipped"]
+    assert result.hooks[1].reason == "it needs hook interface 3.0; this KKBP has 2.0"
+    assert result.hooks[3].reason == "it needs hook interface 1.0; this KKBP has 2.0"
     with pytest.raises(ValueError, match="should be major.minor"):
         hooks.register_hook(lambda ctx: None, name="bad", source="tests", requires_api="1")
 
@@ -292,7 +294,7 @@ def test_hook_order(monkeypatch):
 
 
 def test_the_decorator_and_unregistering():
-    @kkbp.api.hook(name="Decorated", requires_api="1.0", options=[Option("strength", float, 1.0, "Strength")])
+    @kkbp.api.hook(name="Decorated", requires_api="2.0", options=[Option("strength", float, 1.0, "Strength")])
     def after_import(ctx):
         pass
 
@@ -323,7 +325,7 @@ def _folder(tmp_path, scripts):
 
 
 GOOD = '''
-@kkbp.hook(name="Fix eyebrow color", requires_api="1.0",
+@kkbp.hook(name="Fix eyebrow color", requires_api="2.0",
            options=[kkbp.Option("tint", float, default=0.5, label="Tint")])
 def after_import(ctx):
     ctx.log.info(f"tint {ctx.options.tint} on {ctx.character.name} from {ctx.game}")

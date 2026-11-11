@@ -459,8 +459,7 @@
     },
     "objects": [
      "Body {character}",
-     "Rig {character}",
-     "Tongue (rigged) {character}"
+     "Rig {character}"
     ]
    }
   },
@@ -473,7 +472,7 @@
   "materials": 48,
   "meshes": 378,
   "node_groups": 16,
-  "objects": 424
+  "objects": 423
  },
  "images": [
   "Eye_White_Alpha.png",
@@ -1470,8 +1469,8 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 38821,
-    "faces": 25576,
+    "edges": 39471,
+    "faces": 25982,
     "material_slots": [
      "cf_m_face_00",
      "cf_m_mayuge_00",
@@ -1484,6 +1483,7 @@
      "cf_m_sirome_00_2",
      "cf_m_hitomi_00",
      "cf_m_hitomi_00_2",
+     "cf_m_tang",
      "cf_m_body",
      "Outline cf_m_face_00",
      "Outline cf_m_body"
@@ -1650,7 +1650,7 @@
      "uv_eyeshadow"
     ],
     "vertex_groups": 712,
-    "vertices": 13253
+    "vertices": 13499
    },
    "modifiers": [
     {
@@ -31747,93 +31747,6 @@
    "parent": "Body {character}",
    "roles": [
     "tears"
-   ],
-   "type": "MESH"
-  },
-  "Tongue (rigged) {character}": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": "o_tang",
-   "location": [
-    0.0,
-    0.0,
-    0.0
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 650,
-    "faces": 406,
-    "material_slots": [
-     "cf_m_tang"
-    ],
-    "shape_key_drivers": 82,
-    "shape_keys": [
-     "Basis",
-     "Mouth Amazed",
-     "Mouth Angry",
-     "Mouth Angry 2",
-     "Mouth Big A",
-     "Mouth Big E",
-     "Mouth Big O",
-     "Mouth Big U",
-     "Mouth Cartoony Smile",
-     "Mouth Catlike",
-     "Mouth Default",
-     "Mouth Dissatisfied",
-     "Mouth Eating",
-     "Mouth Eating 2",
-     "Mouth Excited (Broad)",
-     "Mouth Excited (Moderate)",
-     "Mouth Excited (Slight)",
-     "Mouth Happy (Broad)",
-     "Mouth Happy (Moderate)",
-     "Mouth Happy (Slight)",
-     "Mouth Hold In Mouth",
-     "Mouth Impatient",
-     "Mouth Kiss",
-     "Mouth Lonely",
-     "Mouth Playful",
-     "Mouth Serious 1",
-     "Mouth Serious 2",
-     "Mouth Small A",
-     "Mouth Small E",
-     "Mouth Small O",
-     "Mouth Small U",
-     "Mouth Smiling",
-     "Mouth Smug",
-     "Mouth Surprised",
-     "Mouth Surprised (Moderate)",
-     "Mouth Tongue Out",
-     "Mouth Triangle",
-     "mouth 40",
-     "Mouth Big A (Copy)",
-     "Mouth Big E (Copy)",
-     "Mouth Big O (Copy)",
-     "Mouth Big U (Copy)",
-     "Mouth Happy (Broad) (Copy)",
-     "Mouth Impatient (Copy)",
-     "Mouth Serious 2 (Copy)",
-     "Mouth Triangle (Copy)"
-    ],
-    "uv_maps": [
-     "uv_main"
-    ],
-    "vertex_groups": 710,
-    "vertices": 246
-   },
-   "modifiers": [
-    {
-     "name": "Armature modifier",
-     "type": "ARMATURE"
-    }
-   ],
-   "parent": "Body {character}",
-   "roles": [
-    "tongue"
    ],
    "type": "MESH"
   },

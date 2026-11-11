@@ -14,7 +14,7 @@ from typing import Callable
 
 from .options import Option, OptionError
 
-HOOK_API_VERSION = "1.0"
+HOOK_API_VERSION = "2.0"
 _ADDON = __package__.rpartition(".")[0]  # this add-on's package, such as bl_ext.user_default.kkbp
 FOLDER_MODULE = "kkbp_user_hooks"  # folder scripts are loaded as kkbp_user_hooks.<file stem>
 
@@ -75,7 +75,7 @@ def register_hook(fn: Callable, *, name: str, requires_api: str | None = None, o
 def hook(name: str, requires_api: str | None = None, options=(), switch: Option | None = None):
     """Decorator that registers the function as a Hook run after the Core Import.
 
-        @kkbp.hook(name="Fix eyebrow color", requires_api="1.0",
+        @kkbp.hook(name="Fix eyebrow color", requires_api="2.0",
                    options=[kkbp.Option("tint", float, default=0.5, label="Tint")])
         def after_import(ctx):
             ...
