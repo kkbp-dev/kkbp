@@ -6878,9 +6878,9 @@
       ],
       "parent": "Left arm",
       "tail": [
-       0.1151,
-       0.0219,
-       1.3549
+       0.1119,
+       0.0958,
+       1.2551
       ]
      },
      "cf_d_arm01_R": {
@@ -6892,9 +6892,9 @@
       ],
       "parent": "Right arm",
       "tail": [
-       -0.115,
-       0.0219,
-       1.3549
+       -0.112,
+       0.0958,
+       1.255
       ]
      },
      "cf_d_arm02_L": {
@@ -6906,9 +6906,9 @@
       ],
       "parent": "Left arm",
       "tail": [
-       0.2031,
-       0.0259,
-       1.3549
+       0.2,
+       0.0999,
+       1.2551
       ]
      },
      "cf_d_arm02_R": {
@@ -6920,9 +6920,9 @@
       ],
       "parent": "Right arm",
       "tail": [
-       -0.2037,
-       0.0258,
-       1.3549
+       -0.2007,
+       0.0997,
+       1.255
       ]
      },
      "cf_d_arm03_L": {
@@ -6934,9 +6934,9 @@
       ],
       "parent": "Left arm",
       "tail": [
-       0.2783,
-       0.0293,
-       1.3549
+       0.2751,
+       0.1032,
+       1.2551
       ]
      },
      "cf_d_arm03_R": {
@@ -6948,9 +6948,9 @@
       ],
       "parent": "Right arm",
       "tail": [
-       -0.2798,
-       0.0294,
-       1.3549
+       -0.2768,
+       0.1033,
+       1.2549
       ]
      },
      "cf_d_backsk_00": {
@@ -7103,8 +7103,8 @@
       "parent": "Left elbow",
       "tail": [
        0.4064,
-       0.031,
-       1.3549
+       0.105,
+       1.2549
       ]
      },
      "cf_d_forearm02_R": {
@@ -7117,8 +7117,8 @@
       "parent": "Right elbow",
       "tail": [
        -0.4148,
-       0.0307,
-       1.3549
+       0.1047,
+       1.2549
       ]
      },
      "cf_d_hand_L": {
@@ -7131,8 +7131,8 @@
       "parent": "cf_s_wrist_L",
       "tail": [
        0.4987,
-       0.0311,
-       1.3552
+       0.1051,
+       1.2552
       ]
      },
      "cf_d_hand_R": {
@@ -7145,8 +7145,8 @@
       "parent": "cf_s_wrist_R",
       "tail": [
        -0.4987,
-       0.0307,
-       1.3552
+       0.1047,
+       1.2552
       ]
      },
      "cf_d_kneeF_L": {
@@ -7159,8 +7159,8 @@
       "parent": "Left knee",
       "tail": [
        0.0737,
-       -0.0136,
-       0.559
+       0.0603,
+       0.4616
       ]
      },
      "cf_d_kneeF_R": {
@@ -7173,8 +7173,8 @@
       "parent": "Right knee",
       "tail": [
        -0.0737,
-       -0.0136,
-       0.559
+       0.0603,
+       0.4616
       ]
      },
      "cf_d_kokan": {
@@ -7201,8 +7201,8 @@
       "parent": "Left knee",
       "tail": [
        0.0737,
-       0.0296,
-       0.3397
+       0.1035,
+       0.2423
       ]
      },
      "cf_d_leg02_R": {
@@ -7215,8 +7215,8 @@
       "parent": "Right knee",
       "tail": [
        -0.0737,
-       0.0296,
-       0.3397
+       0.1035,
+       0.2423
       ]
      },
      "cf_d_leg03_L": {
@@ -7229,8 +7229,8 @@
       "parent": "Left knee",
       "tail": [
        0.0737,
-       0.0353,
-       0.1742
+       0.1093,
+       0.0768
       ]
      },
      "cf_d_leg03_R": {
@@ -7243,8 +7243,8 @@
       "parent": "Right knee",
       "tail": [
        -0.0737,
-       0.0353,
-       0.1742
+       0.1093,
+       0.0768
       ]
      },
      "cf_d_shoulder02_L": {
@@ -7341,8 +7341,8 @@
       "parent": "cf_j_waist02",
       "tail": [
        0.0622,
-       0.0147,
-       0.9909
+       0.0887,
+       0.8909
       ]
      },
      "cf_d_siri_R": {
@@ -7355,8 +7355,8 @@
       "parent": "cf_j_waist02",
       "tail": [
        -0.0622,
-       0.0147,
-       0.9909
+       0.0887,
+       0.8909
       ]
      },
      "cf_d_sirihit_L": {
@@ -7579,8 +7579,8 @@
       "parent": "Left leg",
       "tail": [
        0.0737,
-       0.0183,
-       0.7664
+       0.0923,
+       0.6677
       ]
      },
      "cf_d_thigh02_R": {
@@ -7593,8 +7593,8 @@
       "parent": "Right leg",
       "tail": [
        -0.0737,
-       0.0183,
-       0.7664
+       0.0923,
+       0.6677
       ]
      },
      "cf_d_thigh03_L": {
@@ -7607,8 +7607,8 @@
       "parent": "Left leg",
       "tail": [
        0.0737,
-       0.0202,
-       0.6561
+       0.0942,
+       0.5574
       ]
      },
      "cf_d_thigh03_R": {
@@ -7621,8 +7621,8 @@
       "parent": "Right leg",
       "tail": [
        -0.0737,
-       0.0202,
-       0.6561
+       0.0942,
+       0.5574
       ]
      },
      "cf_d_wrist_L": {
@@ -7635,8 +7635,8 @@
       "parent": "Left elbow",
       "tail": [
        0.4787,
-       0.031,
-       1.3549
+       0.105,
+       1.2549
       ]
      },
      "cf_d_wrist_R": {
@@ -7649,8 +7649,8 @@
       "parent": "Right elbow",
       "tail": [
        -0.4787,
-       0.0307,
-       1.3549
+       0.1047,
+       1.2549
       ]
      },
      "cf_hair_b_08_00": {
@@ -10070,9 +10070,9 @@
       ],
       "parent": "Left elbow",
       "tail": [
-       0.3218,
-       0.0531,
-       1.3549
+       0.3217,
+       0.1271,
+       1.2549
       ]
      },
      "cf_s_elbo_R": {
@@ -10085,8 +10085,8 @@
       "parent": "Right elbow",
       "tail": [
        -0.3218,
-       0.053,
-       1.3549
+       0.127,
+       1.2549
       ]
      },
      "cf_s_elboback_L": {
@@ -10098,9 +10098,9 @@
       ],
       "parent": "cf_s_forearm01_L",
       "tail": [
-       0.3222,
-       0.0092,
-       1.3549
+       0.3221,
+       0.0832,
+       1.2549
       ]
      },
      "cf_s_elboback_R": {
@@ -10113,8 +10113,8 @@
       "parent": "cf_s_forearm01_R",
       "tail": [
        -0.3218,
-       0.009,
-       1.3549
+       0.083,
+       1.2549
       ]
      },
      "cf_s_forearm01_L": {
@@ -10127,8 +10127,8 @@
       "parent": "Left elbow",
       "tail": [
        0.3218,
-       0.0314,
-       1.3549
+       0.1054,
+       1.2549
       ]
      },
      "cf_s_forearm01_R": {
@@ -10141,8 +10141,8 @@
       "parent": "Right elbow",
       "tail": [
        -0.3218,
-       0.031,
-       1.3549
+       0.105,
+       1.2549
       ]
      },
      "cf_s_forearm02_L": {
@@ -10225,8 +10225,8 @@
       "parent": "cf_s_leg01_L",
       "tail": [
        0.0737,
-       0.0726,
-       0.562
+       0.1466,
+       0.4646
       ]
      },
      "cf_s_kneeB_R": {
@@ -10239,8 +10239,8 @@
       "parent": "cf_s_leg01_R",
       "tail": [
        -0.0737,
-       0.0726,
-       0.562
+       0.1466,
+       0.4646
       ]
      },
      "cf_s_leg01_L": {
@@ -10253,8 +10253,8 @@
       "parent": "Left knee",
       "tail": [
        0.0737,
-       0.0219,
-       0.5603
+       0.0958,
+       0.4628
       ]
      },
      "cf_s_leg01_R": {
@@ -10267,8 +10267,8 @@
       "parent": "Right knee",
       "tail": [
        -0.0737,
-       0.0219,
-       0.5603
+       0.0958,
+       0.4628
       ]
      },
      "cf_s_leg02_L": {
@@ -10337,8 +10337,8 @@
       "parent": "cf_s_waist02",
       "tail": [
        0.0742,
-       0.0132,
-       1.0797
+       0.0872,
+       0.9797
       ]
      },
      "cf_s_leg_R": {
@@ -10351,8 +10351,8 @@
       "parent": "cf_s_waist02",
       "tail": [
        -0.0742,
-       0.0132,
-       1.0797
+       0.0872,
+       0.9797
       ]
      },
      "cf_s_neck": {
@@ -10575,8 +10575,8 @@
       "parent": "cf_j_waist02",
       "tail": [
        0.0,
-       0.0132,
-       0.9909
+       0.0872,
+       0.8909
       ]
      },
      "cf_s_wrist_L": {
@@ -13702,8 +13702,8 @@
       ]
      }
     },
-    "drivers": 124,
-    "pose_constraints": 71
+    "drivers": 89,
+    "pose_constraints": 42
    },
    "constraints": 0,
    "hidden": {
@@ -13893,6 +13893,10 @@
       12
      ],
      [
+      "Joint corrections (MCH)",
+      174
+     ],
+     [
       "Junk",
       0
      ],
@@ -13953,7 +13957,7 @@
       10
      ]
     ],
-    "bone_count": 1162,
+    "bone_count": 1336,
     "bones": {
      "Breasts handle": {
       "deform": false,
@@ -16585,6 +16589,2442 @@
        -0.575,
        0.0128,
        1.2518
+      ]
+     },
+     "JC-A cf_j_hand_L cf_j_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.5261,
+       0.031,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_L",
+      "tail": [
+       0.5261,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-A cf_j_hand_R cf_j_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.526,
+       0.0306,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_R",
+      "tail": [
+       -0.526,
+       0.0306,
+       1.2749
+      ]
+     },
+     "JC-A cf_j_thigh00_L cf_j_waist02": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0737,
+       0.0147,
+       0.8887
+      ]
+     },
+     "JC-A cf_j_thigh00_R cf_j_waist02": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       -0.0737,
+       0.0147,
+       0.8887
+      ]
+     },
+     "JC-F cf_j_arm00_L": {
+      "deform": false,
+      "head": [
+       0.0974,
+       0.0211,
+       1.2549
+      ],
+      "parent": "ORG-Left arm",
+      "tail": [
+       0.0974,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-F cf_j_arm00_R": {
+      "deform": false,
+      "head": [
+       -0.0973,
+       0.0211,
+       1.2549
+      ],
+      "parent": "ORG-Right arm",
+      "tail": [
+       -0.0973,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-F cf_j_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.031,
+       1.2549
+      ],
+      "parent": "ORG-Left elbow",
+      "tail": [
+       0.3218,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-F cf_j_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.0307,
+       1.2549
+      ],
+      "parent": "ORG-Right elbow",
+      "tail": [
+       -0.3218,
+       0.0307,
+       1.2749
+      ]
+     },
+     "JC-F cf_j_hand_L": {
+      "deform": false,
+      "head": [
+       0.5261,
+       0.031,
+       1.2549
+      ],
+      "parent": "ORG-Left wrist",
+      "tail": [
+       0.5261,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-F cf_j_hand_R": {
+      "deform": false,
+      "head": [
+       -0.526,
+       0.0306,
+       1.2549
+      ],
+      "parent": "ORG-Right wrist",
+      "tail": [
+       -0.526,
+       0.0306,
+       1.2749
+      ]
+     },
+     "JC-F cf_j_leg01_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "ORG-Left knee",
+      "tail": [
+       0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-F cf_j_leg01_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "ORG-Right knee",
+      "tail": [
+       -0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-F cf_j_leg03_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0353,
+       0.0742
+      ],
+      "parent": "ORG-Left ankle",
+      "tail": [
+       0.0737,
+       0.0346,
+       0.0942
+      ]
+     },
+     "JC-F cf_j_leg03_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0353,
+       0.0742
+      ],
+      "parent": "ORG-Right ankle",
+      "tail": [
+       -0.0737,
+       0.0346,
+       0.0942
+      ]
+     },
+     "JC-F cf_j_middle01_L": {
+      "deform": false,
+      "head": [
+       0.5772,
+       0.0264,
+       1.2581
+      ],
+      "parent": "ORG-MiddleFinger1_L",
+      "tail": [
+       0.5789,
+       0.0275,
+       1.278
+      ]
+     },
+     "JC-F cf_j_middle01_R": {
+      "deform": false,
+      "head": [
+       -0.5772,
+       0.026,
+       1.2581
+      ],
+      "parent": "ORG-MiddleFinger1_R",
+      "tail": [
+       -0.5754,
+       0.025,
+       1.2382
+      ]
+     },
+     "JC-F cf_j_shoulder_L": {
+      "deform": false,
+      "head": [
+       0.0139,
+       0.0211,
+       1.2549
+      ],
+      "parent": "Left shoulder",
+      "tail": [
+       0.0139,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-F cf_j_shoulder_R": {
+      "deform": false,
+      "head": [
+       -0.0139,
+       0.0211,
+       1.2549
+      ],
+      "parent": "Right shoulder",
+      "tail": [
+       -0.0139,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-F cf_j_spine02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0059,
+       1.0998
+      ],
+      "parent": "ORG-Chest",
+      "tail": [
+       0.0,
+       0.0059,
+       1.1198
+      ]
+     },
+     "JC-F cf_j_spine03": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0149,
+       1.1797
+      ],
+      "parent": "ORG-Upper Chest",
+      "tail": [
+       0.0,
+       0.0149,
+       1.1997
+      ]
+     },
+     "JC-F cf_j_thigh00_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "ORG-Left leg",
+      "tail": [
+       0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-F cf_j_thigh00_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "ORG-Right leg",
+      "tail": [
+       -0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-F cf_j_waist02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0147,
+       0.8909
+      ],
+      "parent": "cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0147,
+       0.9109
+      ]
+     },
+     "JC-F cf_s_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.0314,
+       1.2549
+      ],
+      "parent": "cf_s_forearm01_L",
+      "tail": [
+       0.3218,
+       0.0314,
+       1.2749
+      ]
+     },
+     "JC-F cf_s_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.031,
+       1.2549
+      ],
+      "parent": "cf_s_forearm01_R",
+      "tail": [
+       -0.3218,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-F cf_s_leg01_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "cf_s_leg01_L",
+      "tail": [
+       0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-F cf_s_leg01_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "cf_s_leg01_R",
+      "tail": [
+       -0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-F cf_s_waist02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0132,
+       0.8909
+      ],
+      "parent": "cf_s_waist02",
+      "tail": [
+       0.0,
+       0.0132,
+       0.9109
+      ]
+     },
+     "JC-F cf_s_wrist_L": {
+      "deform": false,
+      "head": [
+       0.4787,
+       0.0314,
+       1.2549
+      ],
+      "parent": "cf_s_wrist_L",
+      "tail": [
+       0.4787,
+       0.0314,
+       1.2749
+      ]
+     },
+     "JC-F cf_s_wrist_R": {
+      "deform": false,
+      "head": [
+       -0.4786,
+       0.031,
+       1.2549
+      ],
+      "parent": "cf_s_wrist_R",
+      "tail": [
+       -0.4786,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_arm01_L": {
+      "deform": false,
+      "head": [
+       0.0974,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_arm00_L",
+      "tail": [
+       0.0974,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_arm01_R": {
+      "deform": false,
+      "head": [
+       -0.0973,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_arm00_R",
+      "tail": [
+       -0.0973,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_arm02_L": {
+      "deform": false,
+      "head": [
+       0.0974,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_arm00_L",
+      "tail": [
+       0.0974,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_arm02_R": {
+      "deform": false,
+      "head": [
+       -0.0973,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_arm00_R",
+      "tail": [
+       -0.0973,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_arm03_L": {
+      "deform": false,
+      "head": [
+       0.0974,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_arm00_L",
+      "tail": [
+       0.0974,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_arm03_R": {
+      "deform": false,
+      "head": [
+       -0.0973,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_arm00_R",
+      "tail": [
+       -0.0973,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_bust00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0149,
+       1.1797
+      ],
+      "parent": "JC-F cf_j_spine03",
+      "tail": [
+       0.0,
+       0.0149,
+       1.1997
+      ]
+     },
+     "JC-H cf_d_forearm02_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.031,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_L",
+      "tail": [
+       0.3218,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_forearm02_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.0307,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_R",
+      "tail": [
+       -0.3218,
+       0.0307,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_hand_L": {
+      "deform": false,
+      "head": [
+       0.4787,
+       0.0314,
+       1.2549
+      ],
+      "parent": "JC-F cf_s_wrist_L",
+      "tail": [
+       0.4787,
+       0.0314,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_hand_R": {
+      "deform": false,
+      "head": [
+       -0.4786,
+       0.031,
+       1.2549
+      ],
+      "parent": "JC-F cf_s_wrist_R",
+      "tail": [
+       -0.4786,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_kneeF_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "JC-F cf_j_leg01_L",
+      "tail": [
+       0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-H cf_d_kneeF_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "JC-F cf_j_leg01_R",
+      "tail": [
+       -0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-H cf_d_leg02_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "JC-F cf_j_leg01_L",
+      "tail": [
+       0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-H cf_d_leg02_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "JC-F cf_j_leg01_R",
+      "tail": [
+       -0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-H cf_d_shoulder02_L": {
+      "deform": false,
+      "head": [
+       0.0139,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_shoulder_L",
+      "tail": [
+       0.0139,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_shoulder02_R": {
+      "deform": false,
+      "head": [
+       -0.0139,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_shoulder_R",
+      "tail": [
+       -0.0139,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_siri_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0147,
+       0.8909
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0147,
+       0.9109
+      ]
+     },
+     "JC-H cf_d_siri_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0147,
+       0.8909
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0147,
+       0.9109
+      ]
+     },
+     "JC-H cf_d_thigh01_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_thigh00_L",
+      "tail": [
+       0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-H cf_d_thigh01_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_thigh00_R",
+      "tail": [
+       -0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-H cf_d_thigh02_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_thigh00_L",
+      "tail": [
+       0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-H cf_d_thigh02_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_thigh00_R",
+      "tail": [
+       -0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-H cf_d_thigh03_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_thigh00_L",
+      "tail": [
+       0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-H cf_d_thigh03_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_thigh00_R",
+      "tail": [
+       -0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-H cf_d_wrist_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.031,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_L",
+      "tail": [
+       0.3218,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-H cf_d_wrist_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.0307,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_R",
+      "tail": [
+       -0.3218,
+       0.0307,
+       1.2749
+      ]
+     },
+     "JC-H cf_s_elbo_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.031,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_L",
+      "tail": [
+       0.3218,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-H cf_s_elbo_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.0307,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_R",
+      "tail": [
+       -0.3218,
+       0.0307,
+       1.2749
+      ]
+     },
+     "JC-H cf_s_elboback_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.0314,
+       1.2549
+      ],
+      "parent": "JC-F cf_s_forearm01_L",
+      "tail": [
+       0.3218,
+       0.0314,
+       1.2749
+      ]
+     },
+     "JC-H cf_s_elboback_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.031,
+       1.2549
+      ],
+      "parent": "JC-F cf_s_forearm01_R",
+      "tail": [
+       -0.3218,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-H cf_s_kneeB_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "JC-F cf_s_leg01_L",
+      "tail": [
+       0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-H cf_s_kneeB_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "JC-F cf_s_leg01_R",
+      "tail": [
+       -0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-H cf_s_leg_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0132,
+       0.8909
+      ],
+      "parent": "JC-F cf_s_waist02",
+      "tail": [
+       0.0,
+       0.0132,
+       0.9109
+      ]
+     },
+     "JC-H cf_s_leg_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0132,
+       0.8909
+      ],
+      "parent": "JC-F cf_s_waist02",
+      "tail": [
+       0.0,
+       0.0132,
+       0.9109
+      ]
+     },
+     "JC-I cf_j_arm00_L": {
+      "deform": false,
+      "head": [
+       0.0139,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_shoulder_L",
+      "tail": [
+       0.0139,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-I cf_j_arm00_R": {
+      "deform": false,
+      "head": [
+       -0.0139,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_shoulder_R",
+      "tail": [
+       -0.0139,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-I cf_j_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.0974,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_arm00_L",
+      "tail": [
+       0.0974,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-I cf_j_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.0973,
+       0.0211,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_arm00_R",
+      "tail": [
+       -0.0973,
+       0.0211,
+       1.2749
+      ]
+     },
+     "JC-I cf_j_hand_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.031,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_L",
+      "tail": [
+       0.3218,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-I cf_j_hand_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.0307,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_R",
+      "tail": [
+       -0.3218,
+       0.0307,
+       1.2749
+      ]
+     },
+     "JC-I cf_j_leg01_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_thigh00_L",
+      "tail": [
+       0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-I cf_j_leg01_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-F cf_j_thigh00_R",
+      "tail": [
+       -0.0737,
+       0.0144,
+       0.8887
+      ]
+     },
+     "JC-I cf_j_leg03_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "JC-F cf_j_leg01_L",
+      "tail": [
+       0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-I cf_j_leg03_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0219,
+       0.4603
+      ],
+      "parent": "JC-F cf_j_leg01_R",
+      "tail": [
+       -0.0737,
+       0.0212,
+       0.4802
+      ]
+     },
+     "JC-I cf_j_spine03": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0059,
+       1.0998
+      ],
+      "parent": "JC-F cf_j_spine02",
+      "tail": [
+       0.0,
+       0.0059,
+       1.1198
+      ]
+     },
+     "JC-I cf_j_thigh00_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0147,
+       0.8909
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0147,
+       0.9109
+      ]
+     },
+     "JC-I cf_j_thigh00_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0147,
+       0.8909
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0147,
+       0.9109
+      ]
+     },
+     "JC-P cf_j_hand_L -0.01,0.01,0": {
+      "deform": false,
+      "head": [
+       0.5361,
+       0.031,
+       1.2649
+      ],
+      "parent": "JC-F cf_j_hand_L",
+      "tail": [
+       0.5361,
+       0.031,
+       1.2849
+      ]
+     },
+     "JC-P cf_j_hand_R 0.01,0.01,0": {
+      "deform": false,
+      "head": [
+       -0.536,
+       0.0306,
+       1.2649
+      ],
+      "parent": "JC-F cf_j_hand_R",
+      "tail": [
+       -0.536,
+       0.0306,
+       1.2849
+      ]
+     },
+     "JC-P cf_j_shoulder_L 0,0.3,0": {
+      "deform": false,
+      "head": [
+       0.0139,
+       0.0211,
+       1.5213
+      ],
+      "parent": "JC-F cf_j_shoulder_L",
+      "tail": [
+       0.0139,
+       0.0211,
+       1.5413
+      ]
+     },
+     "JC-P cf_j_shoulder_R 0,0.3,0": {
+      "deform": false,
+      "head": [
+       -0.0139,
+       0.0211,
+       1.5213
+      ],
+      "parent": "JC-F cf_j_shoulder_R",
+      "tail": [
+       -0.0139,
+       0.0211,
+       1.5413
+      ]
+     },
+     "JC-P cf_j_waist02 -0.083,0.4,-0.008": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0218,
+       1.2461
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0737,
+       0.0218,
+       1.2661
+      ]
+     },
+     "JC-P cf_j_waist02 0.083,0.4,-0.008": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0218,
+       1.2461
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       -0.0737,
+       0.0218,
+       1.2661
+      ]
+     },
+     "JC-Q cf_j_forearm01_L in cf_j_shoulder_L 0,0.3,0": {
+      "deform": false,
+      "head": [
+       0.0139,
+       0.0211,
+       1.5213
+      ],
+      "parent": "JC-P cf_j_shoulder_L 0,0.3,0",
+      "tail": [
+       0.0139,
+       0.0211,
+       1.5413
+      ]
+     },
+     "JC-Q cf_j_forearm01_R in cf_j_shoulder_R 0,0.3,0": {
+      "deform": false,
+      "head": [
+       -0.0139,
+       0.0211,
+       1.5213
+      ],
+      "parent": "JC-P cf_j_shoulder_R 0,0.3,0",
+      "tail": [
+       -0.0139,
+       0.0211,
+       1.5413
+      ]
+     },
+     "JC-Q cf_j_hand_L -0.01,0.01,0 in cf_j_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.031,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_L",
+      "tail": [
+       0.3218,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-Q cf_j_hand_R 0.01,0.01,0 in cf_j_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.0307,
+       1.2549
+      ],
+      "parent": "JC-F cf_j_forearm01_R",
+      "tail": [
+       -0.3218,
+       0.0307,
+       1.2749
+      ]
+     },
+     "JC-Q cf_j_leg01_L in cf_j_thigh00_L cf_j_waist02": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-A cf_j_thigh00_L cf_j_waist02",
+      "tail": [
+       0.0737,
+       0.0147,
+       0.8887
+      ]
+     },
+     "JC-Q cf_j_leg01_L in cf_j_waist02 -0.083,0.4,-0.008": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0218,
+       1.2461
+      ],
+      "parent": "JC-P cf_j_waist02 -0.083,0.4,-0.008",
+      "tail": [
+       0.0737,
+       0.0218,
+       1.2661
+      ]
+     },
+     "JC-Q cf_j_leg01_R in cf_j_thigh00_R cf_j_waist02": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8687
+      ],
+      "parent": "JC-A cf_j_thigh00_R cf_j_waist02",
+      "tail": [
+       -0.0737,
+       0.0147,
+       0.8887
+      ]
+     },
+     "JC-Q cf_j_leg01_R in cf_j_waist02 0.083,0.4,-0.008": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0218,
+       1.2461
+      ],
+      "parent": "JC-P cf_j_waist02 0.083,0.4,-0.008",
+      "tail": [
+       -0.0737,
+       0.0218,
+       1.2661
+      ]
+     },
+     "JC-Q cf_j_middle01_L in cf_j_hand_L cf_j_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.5261,
+       0.031,
+       1.2549
+      ],
+      "parent": "JC-A cf_j_hand_L cf_j_forearm01_L",
+      "tail": [
+       0.5261,
+       0.031,
+       1.2749
+      ]
+     },
+     "JC-Q cf_j_middle01_R in cf_j_hand_R cf_j_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.526,
+       0.0306,
+       1.2549
+      ],
+      "parent": "JC-A cf_j_hand_R cf_j_forearm01_R",
+      "tail": [
+       -0.526,
+       0.0306,
+       1.2749
+      ]
+     },
+     "JC-R ankle_y_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R ankle_y_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R arm_x_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R arm_x_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R back_y_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R back_y_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R back_z_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R back_z_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R elbow_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R elbow_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R elbow_py_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R elbow_py_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R elbow_pz_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R elbow_pz_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R finger_y_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R finger_y_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hand_x_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hand_x_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R k_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R k_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_px_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_px_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_py_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_py_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_pz_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_pz_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_up_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_up_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R n_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R n_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R sd_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R sd_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R spine_x": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R spine_y": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R spine_z": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R thigh_y_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R thigh_y_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R vx_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R vx_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R vz_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R vz_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R wf_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R wf_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-T cf_d_arm01_L": {
+      "deform": false,
+      "head": [
+       0.0974,
+       0.0211,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_arm01_L",
+      "tail": [
+       0.0965,
+       0.0411,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_arm01_R": {
+      "deform": false,
+      "head": [
+       -0.0973,
+       0.0211,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_arm01_R",
+      "tail": [
+       -0.0964,
+       0.0411,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_arm02_L": {
+      "deform": false,
+      "head": [
+       0.0974,
+       0.0211,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_arm02_L",
+      "tail": [
+       0.0965,
+       0.0411,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_arm02_R": {
+      "deform": false,
+      "head": [
+       -0.0973,
+       0.0211,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_arm02_R",
+      "tail": [
+       -0.0964,
+       0.0411,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_arm03_L": {
+      "deform": false,
+      "head": [
+       0.0974,
+       0.0211,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_arm03_L",
+      "tail": [
+       0.0965,
+       0.0411,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_arm03_R": {
+      "deform": false,
+      "head": [
+       -0.0973,
+       0.0211,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_arm03_R",
+      "tail": [
+       -0.0964,
+       0.0411,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_bust00": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.0378,
+       1.1795
+      ],
+      "parent": "JC-H cf_d_bust00",
+      "tail": [
+       0.0,
+       -0.0178,
+       1.1795
+      ]
+     },
+     "JC-T cf_d_forearm02_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.031,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_forearm02_L",
+      "tail": [
+       0.3218,
+       0.051,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_forearm02_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.0307,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_forearm02_R",
+      "tail": [
+       -0.3218,
+       0.0507,
+       1.2548
+      ]
+     },
+     "JC-T cf_d_hand_L": {
+      "deform": false,
+      "head": [
+       0.4787,
+       0.0314,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_hand_L",
+      "tail": [
+       0.4787,
+       0.0514,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_hand_R": {
+      "deform": false,
+      "head": [
+       -0.4786,
+       0.031,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_hand_R",
+      "tail": [
+       -0.4786,
+       0.051,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_kneeF_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0219,
+       0.4601
+      ],
+      "parent": "JC-H cf_d_kneeF_L",
+      "tail": [
+       0.0737,
+       0.0419,
+       0.4608
+      ]
+     },
+     "JC-T cf_d_kneeF_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0219,
+       0.4601
+      ],
+      "parent": "JC-H cf_d_kneeF_R",
+      "tail": [
+       -0.0737,
+       0.0419,
+       0.4608
+      ]
+     },
+     "JC-T cf_d_leg02_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0219,
+       0.4601
+      ],
+      "parent": "JC-H cf_d_leg02_L",
+      "tail": [
+       0.0737,
+       0.0419,
+       0.4608
+      ]
+     },
+     "JC-T cf_d_leg02_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0219,
+       0.4601
+      ],
+      "parent": "JC-H cf_d_leg02_R",
+      "tail": [
+       -0.0737,
+       0.0419,
+       0.4608
+      ]
+     },
+     "JC-T cf_d_shoulder02_L": {
+      "deform": false,
+      "head": [
+       0.0139,
+       0.0211,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_shoulder02_L",
+      "tail": [
+       0.0338,
+       0.0227,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_shoulder02_R": {
+      "deform": false,
+      "head": [
+       -0.0139,
+       0.0211,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_shoulder02_R",
+      "tail": [
+       -0.0338,
+       0.0226,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_siri_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0147,
+       0.8907
+      ],
+      "parent": "JC-H cf_d_siri_L",
+      "tail": [
+       0.0,
+       0.0347,
+       0.8907
+      ]
+     },
+     "JC-T cf_d_siri_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0147,
+       0.8907
+      ],
+      "parent": "JC-H cf_d_siri_R",
+      "tail": [
+       0.0,
+       0.0347,
+       0.8907
+      ]
+     },
+     "JC-T cf_d_thigh01_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8685
+      ],
+      "parent": "JC-H cf_d_thigh01_L",
+      "tail": [
+       0.0737,
+       0.0347,
+       0.8689
+      ]
+     },
+     "JC-T cf_d_thigh01_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8685
+      ],
+      "parent": "JC-H cf_d_thigh01_R",
+      "tail": [
+       -0.0737,
+       0.0347,
+       0.8689
+      ]
+     },
+     "JC-T cf_d_thigh02_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8685
+      ],
+      "parent": "JC-H cf_d_thigh02_L",
+      "tail": [
+       0.0737,
+       0.0347,
+       0.8689
+      ]
+     },
+     "JC-T cf_d_thigh02_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8685
+      ],
+      "parent": "JC-H cf_d_thigh02_R",
+      "tail": [
+       -0.0737,
+       0.0347,
+       0.8689
+      ]
+     },
+     "JC-T cf_d_thigh03_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0147,
+       0.8685
+      ],
+      "parent": "JC-H cf_d_thigh03_L",
+      "tail": [
+       0.0737,
+       0.0347,
+       0.8689
+      ]
+     },
+     "JC-T cf_d_thigh03_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0147,
+       0.8685
+      ],
+      "parent": "JC-H cf_d_thigh03_R",
+      "tail": [
+       -0.0737,
+       0.0347,
+       0.8689
+      ]
+     },
+     "JC-T cf_d_wrist_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.031,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_wrist_L",
+      "tail": [
+       0.3218,
+       0.051,
+       1.2547
+      ]
+     },
+     "JC-T cf_d_wrist_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.0307,
+       1.2547
+      ],
+      "parent": "JC-H cf_d_wrist_R",
+      "tail": [
+       -0.3218,
+       0.0507,
+       1.2548
+      ]
+     },
+     "JC-T cf_s_elbo_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.031,
+       1.2547
+      ],
+      "parent": "JC-H cf_s_elbo_L",
+      "tail": [
+       0.3218,
+       0.051,
+       1.2547
+      ]
+     },
+     "JC-T cf_s_elbo_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.0307,
+       1.2547
+      ],
+      "parent": "JC-H cf_s_elbo_R",
+      "tail": [
+       -0.3218,
+       0.0507,
+       1.2548
+      ]
+     },
+     "JC-T cf_s_elboback_L": {
+      "deform": false,
+      "head": [
+       0.3218,
+       0.0314,
+       1.2547
+      ],
+      "parent": "JC-H cf_s_elboback_L",
+      "tail": [
+       0.3218,
+       0.0514,
+       1.2547
+      ]
+     },
+     "JC-T cf_s_elboback_R": {
+      "deform": false,
+      "head": [
+       -0.3218,
+       0.031,
+       1.2547
+      ],
+      "parent": "JC-H cf_s_elboback_R",
+      "tail": [
+       -0.3218,
+       0.051,
+       1.2548
+      ]
+     },
+     "JC-T cf_s_kneeB_L": {
+      "deform": false,
+      "head": [
+       0.0737,
+       0.0219,
+       0.4601
+      ],
+      "parent": "JC-H cf_s_kneeB_L",
+      "tail": [
+       0.0737,
+       0.0419,
+       0.4608
+      ]
+     },
+     "JC-T cf_s_kneeB_R": {
+      "deform": false,
+      "head": [
+       -0.0737,
+       0.0219,
+       0.4601
+      ],
+      "parent": "JC-H cf_s_kneeB_R",
+      "tail": [
+       -0.0737,
+       0.0419,
+       0.4608
+      ]
+     },
+     "JC-T cf_s_leg_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0132,
+       0.8907
+      ],
+      "parent": "JC-H cf_s_leg_L",
+      "tail": [
+       0.0,
+       0.0332,
+       0.8907
+      ]
+     },
+     "JC-T cf_s_leg_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0132,
+       0.8907
+      ],
+      "parent": "JC-H cf_s_leg_R",
+      "tail": [
+       0.0,
+       0.0332,
+       0.8907
       ]
      },
      "Left Breast handle": {
@@ -26676,9 +29116,9 @@
       ],
       "parent": "ORG-Left arm",
       "tail": [
-       0.1151,
-       0.0219,
-       1.3547
+       0.1119,
+       0.0958,
+       1.2549
       ]
      },
      "cf_d_arm01_R": {
@@ -26690,9 +29130,9 @@
       ],
       "parent": "ORG-Right arm",
       "tail": [
-       -0.115,
-       0.0219,
-       1.3547
+       -0.112,
+       0.0958,
+       1.2548
       ]
      },
      "cf_d_arm02_L": {
@@ -26704,9 +29144,9 @@
       ],
       "parent": "ORG-Left arm",
       "tail": [
-       0.2031,
-       0.0259,
-       1.3547
+       0.2,
+       0.0999,
+       1.2549
       ]
      },
      "cf_d_arm02_R": {
@@ -26718,9 +29158,9 @@
       ],
       "parent": "ORG-Right arm",
       "tail": [
-       -0.2037,
-       0.0258,
-       1.3547
+       -0.2007,
+       0.0997,
+       1.2548
       ]
      },
      "cf_d_arm03_L": {
@@ -26732,9 +29172,9 @@
       ],
       "parent": "ORG-Left arm",
       "tail": [
-       0.2783,
-       0.0293,
-       1.3547
+       0.2751,
+       0.1032,
+       1.2549
       ]
      },
      "cf_d_arm03_R": {
@@ -26746,9 +29186,9 @@
       ],
       "parent": "ORG-Right arm",
       "tail": [
-       -0.2798,
-       0.0294,
-       1.3547
+       -0.2768,
+       0.1033,
+       1.2548
       ]
      },
      "cf_d_backsk_00": {
@@ -26901,8 +29341,8 @@
       "parent": "ORG-Left elbow",
       "tail": [
        0.4064,
-       0.031,
-       1.3547
+       0.105,
+       1.2547
       ]
      },
      "cf_d_forearm02_R": {
@@ -26915,8 +29355,8 @@
       "parent": "ORG-Right elbow",
       "tail": [
        -0.4148,
-       0.0307,
-       1.3547
+       0.1047,
+       1.2548
       ]
      },
      "cf_d_hand_L": {
@@ -26929,8 +29369,8 @@
       "parent": "cf_s_wrist_L",
       "tail": [
        0.4987,
-       0.0311,
-       1.3551
+       0.1051,
+       1.255
       ]
      },
      "cf_d_hand_R": {
@@ -26943,8 +29383,8 @@
       "parent": "cf_s_wrist_R",
       "tail": [
        -0.4987,
-       0.0307,
-       1.3551
+       0.1047,
+       1.2551
       ]
      },
      "cf_d_kneeF_L": {
@@ -26957,8 +29397,8 @@
       "parent": "DEF-Left knee",
       "tail": [
        0.0737,
-       -0.0136,
-       0.5588
+       0.0603,
+       0.4614
       ]
      },
      "cf_d_kneeF_R": {
@@ -26971,8 +29411,8 @@
       "parent": "DEF-Right knee",
       "tail": [
        -0.0737,
-       -0.0136,
-       0.5588
+       0.0603,
+       0.4614
       ]
      },
      "cf_d_kokan": {
@@ -26999,8 +29439,8 @@
       "parent": "ORG-Left knee",
       "tail": [
        0.0737,
-       0.0296,
-       0.3396
+       0.1035,
+       0.2421
       ]
      },
      "cf_d_leg02_R": {
@@ -27013,8 +29453,8 @@
       "parent": "ORG-Right knee",
       "tail": [
        -0.0737,
-       0.0296,
-       0.3396
+       0.1035,
+       0.2421
       ]
      },
      "cf_d_leg03_L": {
@@ -27027,8 +29467,8 @@
       "parent": "ORG-Left knee",
       "tail": [
        0.0737,
-       0.0353,
-       0.174
+       0.1093,
+       0.0766
       ]
      },
      "cf_d_leg03_R": {
@@ -27041,8 +29481,8 @@
       "parent": "ORG-Right knee",
       "tail": [
        -0.0737,
-       0.0353,
-       0.174
+       0.1093,
+       0.0766
       ]
      },
      "cf_d_shoulder02_L": {
@@ -27139,8 +29579,8 @@
       "parent": "cf_j_waist02",
       "tail": [
        0.0622,
-       0.0147,
-       0.9907
+       0.0887,
+       0.8907
       ]
      },
      "cf_d_siri_R": {
@@ -27153,8 +29593,8 @@
       "parent": "cf_j_waist02",
       "tail": [
        -0.0622,
-       0.0147,
-       0.9907
+       0.0887,
+       0.8907
       ]
      },
      "cf_d_sirihit_L": {
@@ -27405,8 +29845,8 @@
       "parent": "ORG-Left leg",
       "tail": [
        0.0737,
-       0.0183,
-       0.7663
+       0.0923,
+       0.6676
       ]
      },
      "cf_d_thigh02_R": {
@@ -27419,8 +29859,8 @@
       "parent": "ORG-Right leg",
       "tail": [
        -0.0737,
-       0.0183,
-       0.7663
+       0.0923,
+       0.6676
       ]
      },
      "cf_d_thigh03_L": {
@@ -27433,8 +29873,8 @@
       "parent": "ORG-Left leg",
       "tail": [
        0.0737,
-       0.0202,
-       0.656
+       0.0942,
+       0.5573
       ]
      },
      "cf_d_thigh03_R": {
@@ -27447,8 +29887,8 @@
       "parent": "ORG-Right leg",
       "tail": [
        -0.0737,
-       0.0202,
-       0.656
+       0.0942,
+       0.5572
       ]
      },
      "cf_d_wrist_L": {
@@ -27461,8 +29901,8 @@
       "parent": "ORG-Left elbow",
       "tail": [
        0.4787,
-       0.031,
-       1.3547
+       0.105,
+       1.2547
       ]
      },
      "cf_d_wrist_R": {
@@ -27475,8 +29915,8 @@
       "parent": "ORG-Right elbow",
       "tail": [
        -0.4787,
-       0.0307,
-       1.3547
+       0.1047,
+       1.2547
       ]
      },
      "cf_hair_b_08_00": {
@@ -28092,7 +30532,7 @@
       "tail": [
        -0.1374,
        0.1778,
-       0.4969
+       0.497
       ]
      },
      "cf_j_sk_03_00_ik": {
@@ -29490,9 +31930,9 @@
       ],
       "parent": "DEF-Left elbow",
       "tail": [
-       0.3218,
-       0.0531,
-       1.3547
+       0.3217,
+       0.1271,
+       1.2547
       ]
      },
      "cf_s_elbo_R": {
@@ -29505,8 +31945,8 @@
       "parent": "DEF-Right elbow",
       "tail": [
        -0.3218,
-       0.053,
-       1.3548
+       0.127,
+       1.2548
       ]
      },
      "cf_s_elboback_L": {
@@ -29518,9 +31958,9 @@
       ],
       "parent": "cf_s_forearm01_L",
       "tail": [
-       0.3222,
-       0.0092,
-       1.3547
+       0.3221,
+       0.0832,
+       1.2547
       ]
      },
      "cf_s_elboback_R": {
@@ -29533,8 +31973,8 @@
       "parent": "cf_s_forearm01_R",
       "tail": [
        -0.3218,
-       0.009,
-       1.3547
+       0.083,
+       1.2548
       ]
      },
      "cf_s_forearm01_L": {
@@ -29547,8 +31987,8 @@
       "parent": "DEF-Left elbow",
       "tail": [
        0.3218,
-       0.0314,
-       1.3547
+       0.1054,
+       1.2547
       ]
      },
      "cf_s_forearm01_R": {
@@ -29561,8 +32001,8 @@
       "parent": "DEF-Right elbow",
       "tail": [
        -0.3218,
-       0.031,
-       1.3547
+       0.105,
+       1.2548
       ]
      },
      "cf_s_forearm02_L": {
@@ -29645,8 +32085,8 @@
       "parent": "cf_s_leg01_L",
       "tail": [
        0.0737,
-       0.0726,
-       0.5619
+       0.1466,
+       0.4644
       ]
      },
      "cf_s_kneeB_R": {
@@ -29659,8 +32099,8 @@
       "parent": "cf_s_leg01_R",
       "tail": [
        -0.0737,
-       0.0726,
-       0.5619
+       0.1466,
+       0.4644
       ]
      },
      "cf_s_leg01_L": {
@@ -29673,8 +32113,8 @@
       "parent": "DEF-Left knee",
       "tail": [
        0.0737,
-       0.0219,
-       0.5601
+       0.0958,
+       0.4627
       ]
      },
      "cf_s_leg01_R": {
@@ -29687,8 +32127,8 @@
       "parent": "DEF-Right knee",
       "tail": [
        -0.0737,
-       0.0219,
-       0.5601
+       0.0958,
+       0.4627
       ]
      },
      "cf_s_leg02_L": {
@@ -29757,8 +32197,8 @@
       "parent": "cf_s_waist02",
       "tail": [
        0.0742,
-       0.0132,
-       1.0795
+       0.0872,
+       0.9795
       ]
      },
      "cf_s_leg_R": {
@@ -29771,8 +32211,8 @@
       "parent": "cf_s_waist02",
       "tail": [
        -0.0742,
-       0.0132,
-       1.0795
+       0.0872,
+       0.9795
       ]
      },
      "cf_s_neck": {
@@ -29995,8 +32435,8 @@
       "parent": "cf_j_waist02",
       "tail": [
        0.0,
-       0.0132,
-       0.9907
+       0.0872,
+       0.8907
       ]
      },
      "cf_s_wrist_L": {
@@ -30224,8 +32664,8 @@
       ]
      }
     },
-    "drivers": 340,
-    "pose_constraints": 802
+    "drivers": 441,
+    "pose_constraints": 835
    },
    "constraints": 0,
    "hidden": {
@@ -42652,6 +45092,7 @@
    "Outlines": "ran",
    "Rigify": "ran",
    "SFW": "off",
+   "Separate Eyes": "off",
    "Separate meshes": "off"
   },
   "importer": "10.0.0",
@@ -42660,6 +45101,7 @@
   ],
   "result": "ok",
   "steps": {
+   "add_joint_corrections": "ran",
    "apply_outfit_body_textures": "ran",
    "apply_templates": "ran",
    "arrange_collections": "ran",

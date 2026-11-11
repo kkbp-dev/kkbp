@@ -43,7 +43,7 @@ def test_import_bundle_with_no_steps(build, monkeypatch):
     assert ch.collection.name == "Test Chara"
     assert ch.collection.name in bpy.context.scene.collection.children
     assert result.log_path == path / "kkbp_cache" / "log" / "log.txt"
-    assert "Importing Test Chara (KK, Schema Version 1.0)" in result.log_path.read_text(encoding="utf-8")
+    assert "Importing Test Chara (KK, Schema Version 1.1)" in result.log_path.read_text(encoding="utf-8")
     assert result.summary()[0].startswith("Imported Test Chara")
 
 

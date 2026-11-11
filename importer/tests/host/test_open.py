@@ -18,7 +18,7 @@ def test_default_bundle_opens_without_warnings(build, game):
 def test_manifest(build):
     path = build()
     m = bundle.open_bundle(path).manifest
-    assert (m.schema_version, m.character_name, m.exported_at) == ("1.0", "Test Chara", "2026-11-01T12:00:00Z")
+    assert (m.schema_version, m.character_name, m.exported_at) == ("1.1", "Test Chara", "2026-11-01T12:00:00Z")
     assert m.card == path / "card.png"
     assert m.options.physics is True and m.options.all_outfits is False
     assert [(p.kind, p.outfit, p.mesh, p.data) for p in m.passes] == [

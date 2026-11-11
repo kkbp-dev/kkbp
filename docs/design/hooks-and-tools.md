@@ -62,7 +62,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 |---|---|---|
 | `remove_body_seams` | Ported | Fix body seams |
 | `create_eye_controller_bone` (Rigify only) | Ported | Rigify Hook, from Bone and Material Roles |
-| `create_joint_drivers` (KK and KKS, Rigify only) | Ported | Rigify Hook, gated as D24 decides |
+| `create_joint_drivers` (KK and KKS, Rigify only) | Replaced | The joint corrections Step copies the games' own rules on every Game, Rigify or not, and the Rigify Hook rebuilds them on the generated rig (D64, ADR 0038) |
 | `rename_bones_for_clarity` | Ported, changed | Only the Rigify Hook renames, from a Bone Role table (D23); the Core keeps Ids (D9) |
 | `modify_finger_bone_orientations` | Replaced | Core Step `orient_fingers_and_legs` (Phase 4) |
 
@@ -75,7 +75,8 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | widgets: `createWidget`, `createEyeWidget`, `createEyesWidget`, `arrangeTripleWidgetSet` | Ported | Rigify Hook; the fixed widget meshes come from `rigify.blend` |
 | eye, chest and butt bones, tracking bones, handle bones | Ported | Rigify Hook |
 | `fix_bone_orientations`, `connectAndParentBones` | Ported | Rigify Hook, after it re-aims its bones (ADR 0017) |
-| KK-only joint-correction bone edits, driver axis swaps, `invert_y/z`, `relink_constraints` | Ported | Gated (D24) |
+| KK-only joint-correction bone edits, `relink_constraints` | Ported | Gated (D24) |
+| The legacy drivers' axis swaps and `invert_y/z` | Dropped | Those drivers are gone (ADR 0038) |
 | palm vertex groups, `finalizeFingerBones` rolls, `super_palm` (KK only) | Ported | Gated (D24) |
 | nipple widgets (KK only) | Ported | Gated (D24) |
 | `finalizeRiggedTongueSideBones` and the tongue rig | Ported | Rigs the single tongue Part (ADR 0020) |

@@ -74,7 +74,7 @@ Given a folder instead of a card, the request is `"folder"` and the plugin runs 
 scripts/auto-export.sh kk ~/cards /tmp/out
 ```
 
-`scripts/check-bundle.sh <bundle>` checks any bundle as the Golden Samples are checked, and `scripts/export-sample.sh [game]` makes the Golden Samples (ADR 0031). The request can also carry `"dump_shaders"` (KKS: writes the shader property table KK embeds as `kk/shader-properties.json`; `"dump_bundles"` adds the shaders of the asset bundles it lists, such as KK's `abdata/chara/mm_base.unity3d` for KK's create shaders), `"diagnose"` (SVS: describes the maker's Character instead of exporting) and `"stay": true` (SVS: leaves the game in the maker with the card loaded, for trying the window by hand).
+`scripts/check-bundle.sh <bundle>` checks any bundle as the Golden Samples are checked, and `scripts/export-sample.sh [game]` makes the Golden Samples (ADR 0031). The request can also carry `"dump_shaders"` (KKS: writes the shader property table KK embeds as `kk/shader-properties.json`; `"dump_bundles"` adds the shaders of the asset bundles it lists, such as KK's `abdata/chara/mm_base.unity3d` for KK's create shaders), `"diagnose"` (SVS: describes the maker's Character instead of exporting) and `"stay": true` (SVS: leaves the game in the maker with the card loaded, for trying the window by hand). `"probe_corrections"` with `"probe_poses"` (every Game) records what the game's own joint correction does for each pose in a list instead of exporting; `scripts/probe-corrections.sh <game>` runs it on the Sample Card and writes the importer's test data ([ADR 0038](../docs/adr/0038-joint-corrections-copy-the-games-rules.md)). The maker gives a Character no correction component, so the probe adds one.
 
 ## Writing a Game Adapter
 

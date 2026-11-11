@@ -23,7 +23,7 @@ from mathutils import Matrix, Quaternion, Vector
 
 from conftest import submodule
 
-corrections = submodule("steps.corrections")
+corrections = submodule("joint_corrections")
 rules_mod = submodule("profiles.corrections")
 gm = submodule("profiles.gamemath")
 model = submodule("bundle.model")

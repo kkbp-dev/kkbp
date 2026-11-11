@@ -180,6 +180,27 @@ def parse(game: str, data) -> Corrections:
     return rules
 
 
+def to_data(rules: Corrections) -> dict:
+    """The rules as plain data, in the form `parse` reads, for keeping them with an armature."""
+    def axis(a):
+        return _AXES[a]
+
+    inputs = {}
+    for name, i in rules.inputs.items():
+        if i.kind == "euler":
+            inputs[name] = ["euler", i.bone, i.order, axis(i.axis)]
+        elif i.kind == "point":
+            frame = [list(p) if isinstance(p, tuple) else p for p in i.frame]
+            inputs[name] = ["point", i.bone, list(i.offset) if i.offset else None, frame, axis(i.axis)]
+        else:
+            inputs[name] = [i.kind, i.bone, axis(i.axis)]
+    outputs = []
+    for o in rules.outputs:
+        formulas = {axis(a): f for a, f in o.formulas.items()}
+        outputs.append(["rotation", o.bone, o.order, formulas] if o.kind == "rotation" else [o.kind, o.bone, formulas])
+    return {"inputs": inputs, "values": dict(rules.values), "outputs": outputs}
+
+
 # --- evaluation -------------------------------------------------------------------------
 
 @dataclass

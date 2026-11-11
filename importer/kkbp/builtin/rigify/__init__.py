@@ -10,7 +10,7 @@ legacy armature Step did for them first.
 
 import bpy
 
-from ... import compat
+from ... import compat, joint_corrections
 from ...pipeline.hooks import hook
 from ...pipeline.options import Option
 from . import after, before, commons, legacy, prepare
@@ -36,8 +36,11 @@ def rigify(ctx):
     kk = prepare.kk_extras(ctx.bundle.skeleton)
     ctx.log.info("The skeleton has the joint-correction bones, so the KK-only Rigify parts run" if kk else
                  "The skeleton lacks some joint-correction bones, so the KK-only Rigify parts don't run (ADR 0022)")
+    # The legacy scripts count and re-aim bones, so the joint corrections' helper bones come off
+    # first and go back on the generated rig, where the deforming bones are (ADR 0038).
+    joint_corrections.remove(metarig)
     legacy.begin(ctx, kk)
-    prepare.run(ctx, kk)
+    prepare.run(ctx)
     before.main()
     _add_custom_collection(metarig)
 
@@ -49,6 +52,10 @@ def rigify(ctx):
     _into(rig, ch.collection)
     _move_onto(ch, metarig, rig)
     after.main()
+    if joint_corrections.has_corrections(metarig):
+        count, missing = joint_corrections.refresh(rig, source=metarig)
+        ctx.log.info(f"Put the joint corrections back on the rig: {count} bones"
+                     + (f"; none need {', '.join(missing)}, which the rig lacks" if missing else ""))
     _tidy(ch, metarig, generated_from)
     if ctx.options.sfw_mode if "sfw_mode" in ctx.options else False:
         collection = rig.data.collections_all.get(NSFW_COLLECTION)

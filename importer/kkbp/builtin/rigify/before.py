@@ -1267,57 +1267,10 @@ def main():
     
     c.switch(metarig, 'OBJECT')
     
-    if c.is_kk():
-        legConstrainedBoneNames = [koikatsuCommons.waistJointCorrectionBoneName, koikatsuCommons.leftButtockJointCorrectionBoneName, koikatsuCommons.rightButtockJointCorrectionBoneName, koikatsuCommons.leftLegJointCorrectionBoneName, koikatsuCommons.rightLegJointCorrectionBoneName]
-        for legConstrainedBoneName in legConstrainedBoneNames:
-            for constraint in metarig.pose.bones[legConstrainedBoneName].constraints:
-                if constraint.type == 'COPY_ROTATION' and (constraint.subtarget == koikatsuCommons.leftLegBoneName or constraint.subtarget == koikatsuCommons.rightLegBoneName):
-                    constraint.invert_y = True
-                    constraint.invert_z = True
-                
-    for driver in metarig.animation_data.drivers:
-        if driver.data_path.startswith("pose.bones"):
-            ownerName = driver.data_path.split('"')[1]
-            property = driver.data_path.rsplit('.', 1)[1]
-            if ownerName == koikatsuCommons.leftWristJointCorrectionBoneName and property == "location":
-                driver.driver.expression = driver.driver.expression.replace(">", "<")
-            elif (ownerName == koikatsuCommons.leftShoulderJointCorrectionBoneName or ownerName == koikatsuCommons.rightShoulderJointCorrectionBoneName) and property == "location":
-                for variable in driver.driver.variables:
-                    if len(variable.targets) == 1:
-                        if variable.targets[0].bone_target == koikatsuCommons.leftArmBoneName:
-                            if driver.array_index == 0:
-                                leftShoulderJointCorrectionBoneDriverX = driver
-                            elif driver.array_index == 1:
-                                leftShoulderJointCorrectionBoneDriverY = driver
-                            elif driver.array_index == 2:
-                                leftShoulderJointCorrectionBoneDriverZ = driver
-                        elif variable.targets[0].bone_target == koikatsuCommons.rightArmBoneName:
-                            if driver.array_index == 0:
-                                rightShoulderJointCorrectionBoneDriverX = driver
-                            elif driver.array_index == 1:
-                                rightShoulderJointCorrectionBoneDriverY = driver
-                            elif driver.array_index == 2:
-                                rightShoulderJointCorrectionBoneDriverZ = driver
-    
-    if c.is_kk():
-        shoulderJointCorrectionBoneDriverExpressionPrefix = "(-1)*"
-        if not leftShoulderJointCorrectionBoneDriverX.driver.expression.startswith(shoulderJointCorrectionBoneDriverExpressionPrefix):
-            originalExpressionX = leftShoulderJointCorrectionBoneDriverX.driver.expression
-            leftShoulderJointCorrectionBoneDriverX.driver.expression = shoulderJointCorrectionBoneDriverExpressionPrefix + leftShoulderJointCorrectionBoneDriverY.driver.expression
-            leftShoulderJointCorrectionBoneDriverX.driver.variables[0].targets[0].transform_type = 'ROT_Z'
-            leftShoulderJointCorrectionBoneDriverY.driver.expression = originalExpressionX
-            leftShoulderJointCorrectionBoneDriverY.driver.variables[0].targets[0].transform_type = 'ROT_X'
-            leftShoulderJointCorrectionBoneDriverZ.driver.expression = shoulderJointCorrectionBoneDriverExpressionPrefix + leftShoulderJointCorrectionBoneDriverZ.driver.expression
-            leftShoulderJointCorrectionBoneDriverZ.driver.variables[0].targets[0].transform_type = 'ROT_X'        
-        if not rightShoulderJointCorrectionBoneDriverY.driver.expression.startswith(shoulderJointCorrectionBoneDriverExpressionPrefix):
-            originalExpressionX = rightShoulderJointCorrectionBoneDriverX.driver.expression
-            rightShoulderJointCorrectionBoneDriverX.driver.expression = rightShoulderJointCorrectionBoneDriverY.driver.expression
-            rightShoulderJointCorrectionBoneDriverX.driver.variables[0].targets[0].transform_type = 'ROT_Z'
-            rightShoulderJointCorrectionBoneDriverY.driver.expression = shoulderJointCorrectionBoneDriverExpressionPrefix + originalExpressionX
-            rightShoulderJointCorrectionBoneDriverY.driver.variables[0].targets[0].transform_type = 'ROT_X'
-            rightShoulderJointCorrectionBoneDriverZ.driver.expression = rightShoulderJointCorrectionBoneDriverZ.driver.expression
-            rightShoulderJointCorrectionBoneDriverZ.driver.variables[0].targets[0].transform_type = 'ROT_X'
-    
+    # The legacy importer turned its joint-correction constraints and swapped its shoulder drivers'
+    # axes here, for its drivers on upright bones. Those drivers are gone (ADR 0038): the joint
+    # corrections are taken off before these scripts and put back on the generated rig.
+
     '''Apply rigify bone type to all bones'''
 
     for bone in metarig.pose.bones[:]:

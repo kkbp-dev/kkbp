@@ -19,6 +19,7 @@ class Step:
     fn: Callable
     games: tuple[str, ...] = ()
     options: tuple[Option, ...] = ()
+    label: str | None = None  # what the options panel calls the Step
 
     def __post_init__(self):
         object.__setattr__(self, "games", tuple(self.games))

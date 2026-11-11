@@ -12,4 +12,4 @@ glTF has no bone tails or roll ([ADR 0001](0001-gltf-instead-of-pmx.md)), so the
 
 - About 85% of the legacy bone directions are matched; the rest follow the rules and are listed in the baseline comparison.
 - Aimed bones are the profile's `aim_length` long; the legacy lengths came from the PMX and can't be rebuilt.
-- The Rigify Hook re-aims the bones its joint-correction drivers act on before it adds them (Phase 5), because those drivers were written for upright bones. Editing the rest pose doesn't move the mesh.
+- The Rigify Hook re-aimed the bones its legacy joint-correction drivers acted on, because those drivers were written for upright bones. Since [ADR 0038](0038-joint-corrections-copy-the-games-rules.md) the joint corrections work on the bones as this ADR aims them, and nothing re-aims them.

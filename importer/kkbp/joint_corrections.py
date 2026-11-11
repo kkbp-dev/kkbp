@@ -1,4 +1,4 @@
-"""The joint corrections Step: the game's own corrections (the Game Profile's CORRECTIONS,
+"""Joint corrections: the game's own corrections (the Game Profile's CORRECTIONS,
 profiles/corrections.py) rebuilt as hidden helper bones, constraints and drivers, so the correction
 bones follow the limbs in Blender as they do in the game (docs/design/joint-corrections.md).
 
@@ -18,20 +18,27 @@ degrees and the parent's unscaled units. The helper bones give the drivers exact
   bone copies it.
 
 Every driver is a simple expression, so the rig works with Python scripts off.
+
+The Step keeps the rules and the bones' game rest poses on the armature (`kkbp_joint_corrections`)
+and tags the bones they name (`kkbp_game_bone`). A Hook that changes the skeleton takes the
+corrections off first (`remove`) and puts them back on the finished armature (`refresh`), which finds
+each bone by its tag, so Hooks need neither the Game Profile nor the bundle's bone Ids.
 """
 
 from __future__ import annotations
 
+import json
 import math
 import re
 
 import bpy
 from mathutils import Matrix, Quaternion, Vector
 
-from ..editing import editing
-from ..pipeline.options import Option
-from ..profiles import corrections as rules_mod
-from ..profiles import gamemath as gm
+from .bundle import model
+from .editing import editing
+from .pipeline.options import Option
+from .profiles import corrections as rules_mod
+from .profiles import gamemath as gm
 
 OPTION = Option("joint_corrections", bool, True, "Joint corrections",
                 description="Moves the elbow, knee, shoulder, hip and other correction bones with the limbs, "
@@ -39,6 +46,9 @@ OPTION = Option("joint_corrections", bool, True, "Joint corrections",
 
 COLLECTION = "Joint corrections (MCH)"
 CONSTRAINT = "Joint correction"
+STASH = "kkbp_joint_corrections"  # on the armature object: the rules and the game's rest poses
+TAG = "kkbp_game_bone"  # on each bone they name: its game name
+PREFIX = "JC-"
 HELPER_LENGTH = 0.02
 # glTF space (+Y up) into Blender's (+Z up), as the glTF importer turns it.
 _TO_BLENDER = Matrix(((1, 0, 0), (0, 0, -1), (0, 1, 0)))
@@ -71,6 +81,8 @@ class GameSkeleton:
         return self.by_name[name]
 
     def parent(self, name):
+        if name not in self.by_name:
+            return None
         p = self.by_name[name].parent
         return self._by_id[p].name if p in self._by_id else None
 
@@ -130,23 +142,122 @@ def add_joint_corrections(ctx):
     armature, skeleton = ctx.character.armature, ctx.bundle.skeleton
     game = GameSkeleton(skeleton)
     rules = ctx.profile.corrections
-    have = set(armature.data.bones.keys())
-    missing = sorted(n for n in rules.bones() if game.id(n) not in have)
-    rules = rules.without(missing)
+    keep = []
+    for name in sorted(rules.bones()):
+        while name is not None and name in game.by_name and name not in keep:
+            keep.append(name)
+            name = game.parent(name)
+    # Each named bone's children with a Bone Role can stand in for it on a rig that drops it (the
+    # Rigify Hook drops KK's ankle, cf_j_leg03, and hangs the foot on the knee).
+    stand_ins = {}
+    for b in skeleton.bones:
+        parent = game.parent(b.name)
+        if b.role and parent in rules.bones() and b.name not in keep:
+            stand_ins.setdefault(parent, b.name)
+    keep += [n for n in stand_ins.values() if n not in keep]
+    bones = [game.bone(n) for n in keep]
+    armature[STASH] = json.dumps({
+        "rules": rules_mod.to_data(rules),
+        "bones": [{"name": b.name, "parent": game.parent(b.name), "translation": list(b.translation),
+                   "rotation": list(b.rotation), "game_scale": list(b.game_scale)} for b in bones],
+        "stand_ins": stand_ins})
+    for b in bones:
+        bone = armature.data.bones.get(b.id)
+        if bone is not None:
+            bone[TAG] = b.name
+    count, missing = refresh(armature)
     if missing:
         ctx.log.info(f"No joint corrections need {', '.join(missing[:12])}{' …' if len(missing) > 12 else ''}, "
                      f"which the skeleton lacks")
+    if count:
+        ctx.log.info(f"Added the game's joint corrections to {count} bones")
+    else:
+        ctx.log.info("The skeleton has none of the bones the joint corrections move")
+
+
+def has_corrections(armature) -> bool:
+    return STASH in armature
+
+
+def remove(armature):
+    """Takes the corrections off: their helper bones, drivers and constraints. The stash and the tags
+    stay, for `refresh`."""
+    if armature.animation_data:
+        for fcurve in list(armature.animation_data.drivers):
+            if fcurve.data_path.startswith(f'pose.bones["{PREFIX}'):
+                armature.animation_data.drivers.remove(fcurve)
+    for pb in armature.pose.bones:
+        c = pb.constraints.get(CONSTRAINT)
+        if c is not None:
+            pb.constraints.remove(c)
+    helpers = [b.name for b in armature.data.bones if b.name.startswith(PREFIX)]
+    if helpers:
+        with editing(armature, "EDIT"):
+            bones = armature.data.edit_bones
+            for name in helpers:
+                bones.remove(bones[name])
+    collection = armature.data.collections_all.get(COLLECTION)
+    if collection is not None:
+        armature.data.collections.remove(collection)
+
+
+def refresh(armature, source=None) -> tuple[int, list[str]]:
+    """Builds the corrections afresh on `armature` from the stash on `source` (the armature itself
+    by default), finding each bone by its tag. Returns how many bones they move, and the bones the
+    rules name that it lacks."""
+    source = source or armature
+    remove(armature)
+    if STASH not in source:
+        return 0, []
+    data = json.loads(source[STASH])
+    if source is not armature:
+        armature[STASH] = source[STASH]
+    rules = rules_mod.parse("stash", data["rules"])
+    skeleton = model.Skeleton(bones=tuple(
+        model.Bone(id=b["name"], name=b["name"], parent=b["parent"], role=None, group="deform",
+                   translation=tuple(b["translation"]), rotation=tuple(b["rotation"]), scale=(1.0, 1.0, 1.0),
+                   game_scale=tuple(b["game_scale"])) for b in data["bones"]))
+    game = GameSkeleton(skeleton)
+    bone_of = tagged_bones(armature)
+    # A dropped bone whose child stands in: the child's turns count as the bone's. Only what a bone
+    # turns is read through its stand-in, so only bones the rules read rotations of may use one.
+    turned = {i.bone for i in rules.inputs.values() if i.kind == "euler"}
+    for name, child in data.get("stand_ins", {}).items():
+        if name not in bone_of and child in bone_of and name in turned and \
+                not any(i.bone == name or name in (i.frame or ()) for i in rules.inputs.values() if i.kind == "point") and \
+                not any(o.bone == name or game.parent(o.bone) == name for o in rules.outputs):
+            bone_of[name] = bone_of[child]
+    missing = sorted(n for n in rules.bones() if n not in bone_of)
+    # a bone whose rest frame comes from its parent needs the parent too
+    framed = {i.bone for i in rules.inputs.values() if i.kind == "euler"} | {o.bone for o in rules.outputs}
+    orphans = sorted(n for n in framed if n not in missing and game.parent(n) not in bone_of)
+    rules = rules.without(missing + orphans)
     if not rules.outputs:
-        ctx.log.warning("The skeleton has none of the bones the joint corrections move")
-        return
-    count = build(armature, game, rules)
-    ctx.log.info(f"Added the game's joint corrections to {count} bones")
+        return 0, missing
+    return build(armature, game, rules, bone_of), missing
 
 
-def build(armature, game: GameSkeleton, rules: rules_mod.Corrections) -> int:
-    """Builds the corrections on `armature`, whose bones are named by the bundle's Ids. Returns how
-    many bones they move."""
-    plan = _Plan(armature, game, rules)
+def tagged_bones(armature) -> dict[str, str]:
+    """Each tagged game bone's bone in this armature: the bone of that name, else Rigify's ORG- copy,
+    else the only other bone with the tag."""
+    found = {}
+    for bone in armature.data.bones:
+        tag = bone.get(TAG)
+        if tag:
+            found.setdefault(tag, []).append(bone.name)
+    out = {}
+    for tag, names in found.items():
+        best = [n for n in names if n == tag] or [n for n in names if n.startswith("ORG-")] or \
+            [n for n in names if not n.startswith(("DEF-", "MCH-"))]
+        if len(best) >= 1:
+            out[tag] = best[0]
+    return out
+
+
+def build(armature, game: GameSkeleton, rules: rules_mod.Corrections, bone_of=None) -> int:
+    """Builds the corrections on `armature`. `bone_of` maps a game bone name to its bone in the
+    armature (by default its bundle Id). Returns how many bones they move."""
+    plan = _Plan(armature, game, rules, bone_of or {n: b.id for n, b in game.by_name.items()})
     with editing(armature, "EDIT"):
         plan.make_bones(armature.data.edit_bones)
     plan.wire(armature)
@@ -161,28 +272,9 @@ def build(armature, game: GameSkeleton, rules: rules_mod.Corrections) -> int:
     return len(plan.outputs)
 
 
-def resync(armature):
-    """After a Hook changes a correction bone's rest pose (the Rigify Hook rolls some), puts the
-    `JC-T` bone that bone copies back on it, so the bone still lands where the game puts it."""
-    with editing(armature, "EDIT"):
-        bones = armature.data.edit_bones
-        for pb in armature.pose.bones:
-            c = pb.constraints.get(CONSTRAINT)
-            if c is None or c.subtarget not in bones:
-                continue
-            target, owner = bones[c.subtarget], bones[pb.name]
-            hold = target["kkbp_jc_offset"] if "kkbp_jc_offset" in target else None
-            if hold is None:
-                continue
-            frame = Matrix([hold[i * 4:i * 4 + 4] for i in range(4)])
-            # JC-T rests at the parent frame's head turned by (game frame)^-1 @ (bone's rest).
-            game_frame = Matrix([target["kkbp_jc_frame"][i * 4:i * 4 + 4] for i in range(4)])
-            target.matrix = frame @ game_frame.inverted() @ owner.matrix
-
-
 class _Plan:
-    def __init__(self, armature, game, rules):
-        self.armature, self.game, self.rules = armature, game, rules
+    def __init__(self, armature, game, rules, bone_of):
+        self.armature, self.game, self.rules, self.bone_of = armature, game, rules, bone_of
         self.helpers: list[str] = []
         self._specs: dict[str, dict] = {}  # helper name -> how to make it
         self.outputs = _merge(rules.outputs)
@@ -207,7 +299,7 @@ class _Plan:
 
     def frame(self, bone):
         """`JC-F <bone>`: on the game's axes of the bone, following it."""
-        return self._helper(f"JC-F {bone}", parent=self.game.id(bone), matrix=self.game.frame(bone))
+        return self._helper(f"JC-F {bone}", parent=self.bone_of[bone], matrix=self.game.frame(bone))
 
     def euler_reader(self, bone):
         parent = self.game.parent(bone)
@@ -272,9 +364,8 @@ class _Plan:
             pf = self.frame(parent)
             parent_frame = self.game.frame(parent)
             h = self._helper(f"JC-H {out.bone}", parent=pf, matrix=parent_frame, mode=out.mode)
-            offset = parent_frame @ self.game.frame(out.bone).inverted() @ edit_bones[self.game.id(out.bone)].matrix
-            t = self._helper(f"JC-T {out.bone}", parent=h, matrix=offset,
-                             keep=(parent_frame, self.game.frame(out.bone)))
+            offset = parent_frame @ self.game.frame(out.bone).inverted() @ edit_bones[self.bone_of[out.bone]].matrix
+            t = self._helper(f"JC-T {out.bone}", parent=h, matrix=offset)
             self._holders[out.bone] = (h, t)
         for name in self.helpers:
             spec = self._specs[name]
@@ -283,10 +374,6 @@ class _Plan:
             eb.matrix = spec["matrix"]
             eb.use_deform = False
             eb.use_connect = False
-            if spec.get("keep"):
-                parent_frame, game_frame = spec["keep"]
-                eb["kkbp_jc_offset"] = [c for row in parent_frame for c in row]
-                eb["kkbp_jc_frame"] = [c for row in game_frame for c in row]
         for name in self.helpers:
             parent = self._specs[name]["parent"]
             if parent is not None:
@@ -348,7 +435,7 @@ class _Plan:
                 if axis in out.scale:
                     expression, variables = self._formula(out.scale[axis], f"({{}})/{_num(s[axis])}")
                     _driver(armature, ph, "scale", axis, expression, variables)
-            c = pose[self.game.id(out.bone)].constraints.new("COPY_TRANSFORMS")
+            c = pose[self.bone_of[out.bone]].constraints.new("COPY_TRANSFORMS")
             c.name = CONSTRAINT
             c.target, c.subtarget = armature, t
             c.target_space = c.owner_space = "WORLD"

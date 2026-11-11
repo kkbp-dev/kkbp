@@ -653,6 +653,10 @@
       52
      ],
      [
+      "Joint corrections (MCH)",
+      262
+     ],
+     [
       "Junk",
       276
      ],
@@ -681,7 +685,7 @@
       10
      ]
     ],
-    "bone_count": 819,
+    "bone_count": 1081,
     "bones": {
      "EyeTargetL": {
       "deform": true,
@@ -723,6 +727,3674 @@
        0.0,
        0.1192,
        1.3487
+      ]
+     },
+     "JC-F cf_d_arm00_L": {
+      "deform": false,
+      "head": [
+       0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "cf_d_arm00_L",
+      "tail": [
+       0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-F cf_d_arm00_R": {
+      "deform": false,
+      "head": [
+       -0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "cf_d_arm00_R",
+      "tail": [
+       -0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-F cf_d_forearm00_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "cf_d_forearm00_L",
+      "tail": [
+       0.3012,
+       0.0463,
+       1.2646
+      ]
+     },
+     "JC-F cf_d_forearm00_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "cf_d_forearm00_R",
+      "tail": [
+       -0.3013,
+       0.0467,
+       1.2646
+      ]
+     },
+     "JC-F cf_d_leg00_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0473,
+       0.0794
+      ],
+      "parent": "cf_d_leg00_L",
+      "tail": [
+       0.0775,
+       0.0459,
+       0.0994
+      ]
+     },
+     "JC-F cf_d_leg00_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0473,
+       0.0797
+      ],
+      "parent": "cf_d_leg00_R",
+      "tail": [
+       -0.0775,
+       0.046,
+       0.0996
+      ]
+     },
+     "JC-F cf_d_siri_L": {
+      "deform": false,
+      "head": [
+       0.0488,
+       0.0459,
+       0.9075
+      ],
+      "parent": "cf_d_siri_L",
+      "tail": [
+       0.0488,
+       0.0459,
+       0.9275
+      ]
+     },
+     "JC-F cf_d_siri_R": {
+      "deform": false,
+      "head": [
+       -0.0488,
+       0.0459,
+       0.9075
+      ],
+      "parent": "cf_d_siri_R",
+      "tail": [
+       -0.0488,
+       0.0459,
+       0.9275
+      ]
+     },
+     "JC-F cf_d_thigh00_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "cf_d_thigh00_L",
+      "tail": [
+       0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-F cf_d_thigh00_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "cf_d_thigh00_R",
+      "tail": [
+       -0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-F cf_j_arm00_L": {
+      "deform": false,
+      "head": [
+       0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "cf_j_arm00_L",
+      "tail": [
+       0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-F cf_j_arm00_R": {
+      "deform": false,
+      "head": [
+       -0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "cf_j_arm00_R",
+      "tail": [
+       -0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-F cf_j_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "cf_j_forearm01_L",
+      "tail": [
+       0.3012,
+       0.0463,
+       1.2646
+      ]
+     },
+     "JC-F cf_j_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "cf_j_forearm01_R",
+      "tail": [
+       -0.3013,
+       0.0467,
+       1.2646
+      ]
+     },
+     "JC-F cf_j_hand_L": {
+      "deform": false,
+      "head": [
+       0.4871,
+       0.0342,
+       1.2446
+      ],
+      "parent": "cf_j_hand_L",
+      "tail": [
+       0.4871,
+       0.0342,
+       1.2646
+      ]
+     },
+     "JC-F cf_j_hand_R": {
+      "deform": false,
+      "head": [
+       -0.4871,
+       0.0342,
+       1.2446
+      ],
+      "parent": "cf_j_hand_R",
+      "tail": [
+       -0.4871,
+       0.0342,
+       1.2646
+      ]
+     },
+     "JC-F cf_j_leg01_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.019,
+       0.4835
+      ],
+      "parent": "cf_j_leg01_L",
+      "tail": [
+       0.0775,
+       0.0176,
+       0.5034
+      ]
+     },
+     "JC-F cf_j_leg01_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0197,
+       0.4835
+      ],
+      "parent": "cf_j_leg01_R",
+      "tail": [
+       -0.0775,
+       0.0183,
+       0.5035
+      ]
+     },
+     "JC-F cf_j_leg03_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0473,
+       0.0794
+      ],
+      "parent": "cf_j_leg03_L",
+      "tail": [
+       0.0775,
+       0.0473,
+       0.0994
+      ]
+     },
+     "JC-F cf_j_leg03_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0473,
+       0.0794
+      ],
+      "parent": "cf_j_leg03_R",
+      "tail": [
+       -0.0775,
+       0.0473,
+       0.0994
+      ]
+     },
+     "JC-F cf_j_shoulder_L": {
+      "deform": false,
+      "head": [
+       0.0094,
+       0.035,
+       1.2446
+      ],
+      "parent": "cf_j_shoulder_L",
+      "tail": [
+       0.0094,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-F cf_j_shoulder_R": {
+      "deform": false,
+      "head": [
+       -0.0094,
+       0.035,
+       1.2446
+      ],
+      "parent": "cf_j_shoulder_R",
+      "tail": [
+       -0.0094,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-F cf_j_spine02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0017,
+       1.0523
+      ],
+      "parent": "cf_j_spine02",
+      "tail": [
+       0.0,
+       0.0017,
+       1.0723
+      ]
+     },
+     "JC-F cf_j_spine03": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0152,
+       1.1519
+      ],
+      "parent": "cf_j_spine03",
+      "tail": [
+       0.0,
+       0.0152,
+       1.1719
+      ]
+     },
+     "JC-F cf_j_thigh00_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "cf_j_thigh00_L",
+      "tail": [
+       0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-F cf_j_thigh00_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "cf_j_thigh00_R",
+      "tail": [
+       -0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-F cf_j_waist02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-F cf_s_elbo_L": {
+      "deform": false,
+      "head": [
+       0.2989,
+       0.0462,
+       1.2446
+      ],
+      "parent": "cf_s_elbo_L",
+      "tail": [
+       0.2989,
+       0.0462,
+       1.2646
+      ]
+     },
+     "JC-F cf_s_elbo_R": {
+      "deform": false,
+      "head": [
+       -0.2989,
+       0.0466,
+       1.2446
+      ],
+      "parent": "cf_s_elbo_R",
+      "tail": [
+       -0.2989,
+       0.0466,
+       1.2646
+      ]
+     },
+     "JC-F cf_s_forearm03_L": {
+      "deform": false,
+      "head": [
+       0.4493,
+       0.0367,
+       1.2446
+      ],
+      "parent": "cf_s_forearm03_L",
+      "tail": [
+       0.4493,
+       0.0367,
+       1.2646
+      ]
+     },
+     "JC-F cf_s_forearm03_R": {
+      "deform": false,
+      "head": [
+       -0.4493,
+       0.0368,
+       1.2446
+      ],
+      "parent": "cf_s_forearm03_R",
+      "tail": [
+       -0.4493,
+       0.0368,
+       1.2646
+      ]
+     },
+     "JC-F cf_s_hiplegroot": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "cf_s_hiplegroot",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-F cf_s_knee_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0194,
+       0.5145
+      ],
+      "parent": "cf_s_knee_L",
+      "tail": [
+       0.0775,
+       0.0198,
+       0.5345
+      ]
+     },
+     "JC-F cf_s_knee_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0198,
+       0.5145
+      ],
+      "parent": "cf_s_knee_R",
+      "tail": [
+       -0.0775,
+       0.02,
+       0.5345
+      ]
+     },
+     "JC-H cf_d_ana": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-H cf_d_arm01_L": {
+      "deform": false,
+      "head": [
+       0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_arm00_L",
+      "tail": [
+       0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_arm01_R": {
+      "deform": false,
+      "head": [
+       -0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_arm00_R",
+      "tail": [
+       -0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_arm02_L": {
+      "deform": false,
+      "head": [
+       0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_arm00_L",
+      "tail": [
+       0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_arm02_R": {
+      "deform": false,
+      "head": [
+       -0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_arm00_R",
+      "tail": [
+       -0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_arm03_L": {
+      "deform": false,
+      "head": [
+       0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_arm00_L",
+      "tail": [
+       0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_arm03_R": {
+      "deform": false,
+      "head": [
+       -0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_arm00_R",
+      "tail": [
+       -0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_bust00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0152,
+       1.1519
+      ],
+      "parent": "JC-F cf_j_spine03",
+      "tail": [
+       0.0,
+       0.0152,
+       1.1719
+      ]
+     },
+     "JC-H cf_d_elbo_L": {
+      "deform": false,
+      "head": [
+       0.2989,
+       0.0462,
+       1.2446
+      ],
+      "parent": "JC-F cf_s_elbo_L",
+      "tail": [
+       0.2989,
+       0.0462,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_elbo_R": {
+      "deform": false,
+      "head": [
+       -0.2989,
+       0.0466,
+       1.2446
+      ],
+      "parent": "JC-F cf_s_elbo_R",
+      "tail": [
+       -0.2989,
+       0.0466,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_elboback_L": {
+      "deform": false,
+      "head": [
+       0.2989,
+       0.0462,
+       1.2446
+      ],
+      "parent": "JC-F cf_s_elbo_L",
+      "tail": [
+       0.2989,
+       0.0462,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_elboback_R": {
+      "deform": false,
+      "head": [
+       -0.2989,
+       0.0466,
+       1.2446
+      ],
+      "parent": "JC-F cf_s_elbo_R",
+      "tail": [
+       -0.2989,
+       0.0466,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm00_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_forearm01_L",
+      "tail": [
+       0.3012,
+       0.0463,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm00_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_forearm01_R",
+      "tail": [
+       -0.3013,
+       0.0467,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_forearm00_L",
+      "tail": [
+       0.3012,
+       0.0463,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_forearm00_R",
+      "tail": [
+       -0.3013,
+       0.0467,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm02_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_forearm00_L",
+      "tail": [
+       0.3012,
+       0.0463,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm02_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_forearm00_R",
+      "tail": [
+       -0.3013,
+       0.0467,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm03_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_forearm00_L",
+      "tail": [
+       0.3012,
+       0.0463,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm03_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "JC-F cf_d_forearm00_R",
+      "tail": [
+       -0.3013,
+       0.0467,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm_wrist_L": {
+      "deform": false,
+      "head": [
+       0.4493,
+       0.0367,
+       1.2446
+      ],
+      "parent": "JC-F cf_s_forearm03_L",
+      "tail": [
+       0.4493,
+       0.0367,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_forearm_wrist_R": {
+      "deform": false,
+      "head": [
+       -0.4493,
+       0.0368,
+       1.2446
+      ],
+      "parent": "JC-F cf_s_forearm03_R",
+      "tail": [
+       -0.4493,
+       0.0368,
+       1.2646
+      ]
+     },
+     "JC-H cf_d_hipleg1_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_s_hiplegroot",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-H cf_d_hipleg1_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_s_hiplegroot",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-H cf_d_hipleg2_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_s_hiplegroot",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-H cf_d_hipleg2_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_s_hiplegroot",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-H cf_d_kneeB_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0194,
+       0.5145
+      ],
+      "parent": "JC-F cf_s_knee_L",
+      "tail": [
+       0.0775,
+       0.0198,
+       0.5345
+      ]
+     },
+     "JC-H cf_d_kneeB_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0198,
+       0.5145
+      ],
+      "parent": "JC-F cf_s_knee_R",
+      "tail": [
+       -0.0775,
+       0.02,
+       0.5345
+      ]
+     },
+     "JC-H cf_d_kneeF_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0194,
+       0.5145
+      ],
+      "parent": "JC-F cf_s_knee_L",
+      "tail": [
+       0.0775,
+       0.0198,
+       0.5345
+      ]
+     },
+     "JC-H cf_d_kneeF_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0198,
+       0.5145
+      ],
+      "parent": "JC-F cf_s_knee_R",
+      "tail": [
+       -0.0775,
+       0.02,
+       0.5345
+      ]
+     },
+     "JC-H cf_d_leg00_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.019,
+       0.4835
+      ],
+      "parent": "JC-F cf_j_leg01_L",
+      "tail": [
+       0.0775,
+       0.0176,
+       0.5034
+      ]
+     },
+     "JC-H cf_d_leg00_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0197,
+       0.4835
+      ],
+      "parent": "JC-F cf_j_leg01_R",
+      "tail": [
+       -0.0775,
+       0.0183,
+       0.5035
+      ]
+     },
+     "JC-H cf_d_leg01_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0473,
+       0.0794
+      ],
+      "parent": "JC-F cf_d_leg00_L",
+      "tail": [
+       0.0775,
+       0.0459,
+       0.0994
+      ]
+     },
+     "JC-H cf_d_leg01_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0473,
+       0.0797
+      ],
+      "parent": "JC-F cf_d_leg00_R",
+      "tail": [
+       -0.0775,
+       0.046,
+       0.0996
+      ]
+     },
+     "JC-H cf_d_leg02_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0473,
+       0.0794
+      ],
+      "parent": "JC-F cf_d_leg00_L",
+      "tail": [
+       0.0775,
+       0.0459,
+       0.0994
+      ]
+     },
+     "JC-H cf_d_leg02_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0473,
+       0.0797
+      ],
+      "parent": "JC-F cf_d_leg00_R",
+      "tail": [
+       -0.0775,
+       0.046,
+       0.0996
+      ]
+     },
+     "JC-H cf_d_leg03_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0473,
+       0.0794
+      ],
+      "parent": "JC-F cf_d_leg00_L",
+      "tail": [
+       0.0775,
+       0.0459,
+       0.0994
+      ]
+     },
+     "JC-H cf_d_leg03_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0473,
+       0.0797
+      ],
+      "parent": "JC-F cf_d_leg00_R",
+      "tail": [
+       -0.0775,
+       0.046,
+       0.0996
+      ]
+     },
+     "JC-H cf_d_siri_C": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-H cf_d_siri_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-H cf_d_siri_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-H cf_d_thigh00_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_j_thigh00_L",
+      "tail": [
+       0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-H cf_d_thigh00_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_j_thigh00_R",
+      "tail": [
+       -0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-H cf_d_thigh01_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_d_thigh00_L",
+      "tail": [
+       0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-H cf_d_thigh01_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_d_thigh00_R",
+      "tail": [
+       -0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-H cf_d_thigh02_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_d_thigh00_L",
+      "tail": [
+       0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-H cf_d_thigh02_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_d_thigh00_R",
+      "tail": [
+       -0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-H cf_d_thigh03_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_d_thigh00_L",
+      "tail": [
+       0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-H cf_d_thigh03_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_d_thigh00_R",
+      "tail": [
+       -0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-H cf_j_shoulder02_L": {
+      "deform": false,
+      "head": [
+       0.0094,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_shoulder_L",
+      "tail": [
+       0.0094,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-H cf_j_shoulder02_R": {
+      "deform": false,
+      "head": [
+       -0.0094,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_shoulder_R",
+      "tail": [
+       -0.0094,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-I cf_d_siri_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-I cf_d_siri_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-I cf_j_arm00_L": {
+      "deform": false,
+      "head": [
+       0.0094,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_shoulder_L",
+      "tail": [
+       0.0094,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-I cf_j_arm00_R": {
+      "deform": false,
+      "head": [
+       -0.0094,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_shoulder_R",
+      "tail": [
+       -0.0094,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-I cf_j_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_arm00_L",
+      "tail": [
+       0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-I cf_j_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_arm00_R",
+      "tail": [
+       -0.1015,
+       0.035,
+       1.2646
+      ]
+     },
+     "JC-I cf_j_hand_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_forearm01_L",
+      "tail": [
+       0.3012,
+       0.0463,
+       1.2646
+      ]
+     },
+     "JC-I cf_j_hand_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "JC-F cf_j_forearm01_R",
+      "tail": [
+       -0.3013,
+       0.0467,
+       1.2646
+      ]
+     },
+     "JC-I cf_j_leg01_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_j_thigh00_L",
+      "tail": [
+       0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-I cf_j_leg01_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-F cf_j_thigh00_R",
+      "tail": [
+       -0.0775,
+       0.0257,
+       0.9186
+      ]
+     },
+     "JC-I cf_j_leg03_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.019,
+       0.4835
+      ],
+      "parent": "JC-F cf_j_leg01_L",
+      "tail": [
+       0.0775,
+       0.0176,
+       0.5034
+      ]
+     },
+     "JC-I cf_j_leg03_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0197,
+       0.4835
+      ],
+      "parent": "JC-F cf_j_leg01_R",
+      "tail": [
+       -0.0775,
+       0.0183,
+       0.5035
+      ]
+     },
+     "JC-I cf_j_spine03": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0017,
+       1.0523
+      ],
+      "parent": "JC-F cf_j_spine02",
+      "tail": [
+       0.0,
+       0.0017,
+       1.0723
+      ]
+     },
+     "JC-I cf_j_thigh00_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-I cf_j_thigh00_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-F cf_j_waist02",
+      "tail": [
+       0.0,
+       0.0368,
+       0.955
+      ]
+     },
+     "JC-R a80_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R a80_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R ankle_x_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R ankle_x_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R ankle_y_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R ankle_y_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R ankle_z_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R ankle_z_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R arm_x_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R arm_x_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R arm_y_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R arm_y_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R arm_z_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R arm_z_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_bust00_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_bust00_u1": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_bust00_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_bust00_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_bust00_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_bust00_v10": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_bust00_v11": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_bust00_v12": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_forearm_wrist_L_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_forearm_wrist_L_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_forearm_wrist_L_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_forearm_wrist_L_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_forearm_wrist_R_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_forearm_wrist_R_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_forearm_wrist_R_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_forearm_wrist_R_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_hipleg1_L_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_hipleg1_L_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_hipleg1_L_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_hipleg1_L_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_hipleg1_R_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_hipleg1_R_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_hipleg1_R_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_hipleg1_R_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_L_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_L_u1": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_L_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_L_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_L_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_L_v10": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_L_v11": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_L_v12": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_R_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_R_u1": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_R_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_R_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_R_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_R_v10": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_R_v11": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_leg03_R_v12": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_siri_L_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_siri_L_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_siri_L_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_siri_L_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_siri_R_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_siri_R_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_siri_R_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_d_siri_R_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_L_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_L_u1": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_L_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_L_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_L_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_L_v10": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_L_v11": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_L_v12": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_R_u0": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_R_u1": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_R_v00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_R_v01": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_R_v02": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_R_v10": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_R_v11": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R cf_j_shoulder02_R_v12": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R e50_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R e50_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R e60_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R e60_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R e90_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R e90_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R elbow_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R elbow_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hand_x_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hand_x_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hand_y_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hand_y_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hand_z_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hand_z_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hip_py_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hip_py_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hip_pz_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hip_pz_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hip_x_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R hip_x_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R k90_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R k90_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R knee_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R spine_x": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R spine_y": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R spine_z": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R thigh_x_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R thigh_x_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R thigh_y_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R thigh_y_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R thigh_z_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-R thigh_z_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0,
+       0.0
+      ],
+      "parent": null,
+      "tail": [
+       0.0,
+       0.02,
+       0.0
+      ]
+     },
+     "JC-T cf_d_ana": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-H cf_d_ana",
+      "tail": [
+       0.0,
+       0.0436,
+       0.9538
+      ]
+     },
+     "JC-T cf_d_arm01_L": {
+      "deform": false,
+      "head": [
+       0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_arm01_L",
+      "tail": [
+       0.1003,
+       0.0549,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_arm01_R": {
+      "deform": false,
+      "head": [
+       -0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_arm01_R",
+      "tail": [
+       -0.1003,
+       0.0549,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_arm02_L": {
+      "deform": false,
+      "head": [
+       0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_arm02_L",
+      "tail": [
+       0.1003,
+       0.0549,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_arm02_R": {
+      "deform": false,
+      "head": [
+       -0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_arm02_R",
+      "tail": [
+       -0.1003,
+       0.0549,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_arm03_L": {
+      "deform": false,
+      "head": [
+       0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_arm03_L",
+      "tail": [
+       0.1003,
+       0.0549,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_arm03_R": {
+      "deform": false,
+      "head": [
+       -0.1015,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_arm03_R",
+      "tail": [
+       -0.1003,
+       0.0549,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_bust00": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0152,
+       1.1519
+      ],
+      "parent": "JC-H cf_d_bust00",
+      "tail": [
+       0.0,
+       0.0352,
+       1.1519
+      ]
+     },
+     "JC-T cf_d_elbo_L": {
+      "deform": false,
+      "head": [
+       0.2989,
+       0.0462,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_elbo_L",
+      "tail": [
+       0.3002,
+       0.0662,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_elbo_R": {
+      "deform": false,
+      "head": [
+       -0.2989,
+       0.0466,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_elbo_R",
+      "tail": [
+       -0.2995,
+       0.0666,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_elboback_L": {
+      "deform": false,
+      "head": [
+       0.2989,
+       0.0462,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_elboback_L",
+      "tail": [
+       0.3002,
+       0.0662,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_elboback_R": {
+      "deform": false,
+      "head": [
+       -0.2989,
+       0.0466,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_elboback_R",
+      "tail": [
+       -0.2995,
+       0.0666,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm00_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm00_L",
+      "tail": [
+       0.3025,
+       0.0663,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm00_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm00_R",
+      "tail": [
+       -0.3026,
+       0.0667,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm01_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm01_L",
+      "tail": [
+       0.3025,
+       0.0663,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm01_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm01_R",
+      "tail": [
+       -0.3026,
+       0.0667,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm02_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm02_L",
+      "tail": [
+       0.3025,
+       0.0663,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm02_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm02_R",
+      "tail": [
+       -0.3026,
+       0.0667,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm03_L": {
+      "deform": false,
+      "head": [
+       0.3012,
+       0.0463,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm03_L",
+      "tail": [
+       0.3025,
+       0.0663,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm03_R": {
+      "deform": false,
+      "head": [
+       -0.3013,
+       0.0467,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm03_R",
+      "tail": [
+       -0.3026,
+       0.0667,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm_wrist_L": {
+      "deform": false,
+      "head": [
+       0.4493,
+       0.0367,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm_wrist_L",
+      "tail": [
+       0.4506,
+       0.0566,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_forearm_wrist_R": {
+      "deform": false,
+      "head": [
+       -0.4493,
+       0.0368,
+       1.2446
+      ],
+      "parent": "JC-H cf_d_forearm_wrist_R",
+      "tail": [
+       -0.4506,
+       0.0567,
+       1.2446
+      ]
+     },
+     "JC-T cf_d_hipleg1_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-H cf_d_hipleg1_L",
+      "tail": [
+       0.0,
+       0.0568,
+       0.935
+      ]
+     },
+     "JC-T cf_d_hipleg1_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-H cf_d_hipleg1_R",
+      "tail": [
+       0.0,
+       0.0568,
+       0.935
+      ]
+     },
+     "JC-T cf_d_hipleg2_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-H cf_d_hipleg2_L",
+      "tail": [
+       0.0,
+       0.0568,
+       0.935
+      ]
+     },
+     "JC-T cf_d_hipleg2_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-H cf_d_hipleg2_R",
+      "tail": [
+       0.0,
+       0.0568,
+       0.935
+      ]
+     },
+     "JC-T cf_d_kneeB_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0194,
+       0.5145
+      ],
+      "parent": "JC-H cf_d_kneeB_L",
+      "tail": [
+       0.0775,
+       0.0394,
+       0.5142
+      ]
+     },
+     "JC-T cf_d_kneeB_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0198,
+       0.5145
+      ],
+      "parent": "JC-H cf_d_kneeB_R",
+      "tail": [
+       -0.0775,
+       0.0398,
+       0.5142
+      ]
+     },
+     "JC-T cf_d_kneeF_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0194,
+       0.5145
+      ],
+      "parent": "JC-H cf_d_kneeF_L",
+      "tail": [
+       0.0775,
+       0.0394,
+       0.5142
+      ]
+     },
+     "JC-T cf_d_kneeF_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0198,
+       0.5145
+      ],
+      "parent": "JC-H cf_d_kneeF_R",
+      "tail": [
+       -0.0775,
+       0.0398,
+       0.5142
+      ]
+     },
+     "JC-T cf_d_leg00_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.019,
+       0.4835
+      ],
+      "parent": "JC-H cf_d_leg00_L",
+      "tail": [
+       0.0775,
+       0.0389,
+       0.4849
+      ]
+     },
+     "JC-T cf_d_leg00_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0197,
+       0.4835
+      ],
+      "parent": "JC-H cf_d_leg00_R",
+      "tail": [
+       -0.0775,
+       0.0396,
+       0.4849
+      ]
+     },
+     "JC-T cf_d_leg01_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0473,
+       0.0794
+      ],
+      "parent": "JC-H cf_d_leg01_L",
+      "tail": [
+       0.0775,
+       0.0673,
+       0.0808
+      ]
+     },
+     "JC-T cf_d_leg01_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0473,
+       0.0797
+      ],
+      "parent": "JC-H cf_d_leg01_R",
+      "tail": [
+       -0.0775,
+       0.0673,
+       0.081
+      ]
+     },
+     "JC-T cf_d_leg02_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0473,
+       0.0794
+      ],
+      "parent": "JC-H cf_d_leg02_L",
+      "tail": [
+       0.0775,
+       0.0673,
+       0.0808
+      ]
+     },
+     "JC-T cf_d_leg02_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0473,
+       0.0797
+      ],
+      "parent": "JC-H cf_d_leg02_R",
+      "tail": [
+       -0.0775,
+       0.0673,
+       0.081
+      ]
+     },
+     "JC-T cf_d_leg03_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0473,
+       0.0794
+      ],
+      "parent": "JC-H cf_d_leg03_L",
+      "tail": [
+       0.0775,
+       0.0673,
+       0.0808
+      ]
+     },
+     "JC-T cf_d_leg03_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0473,
+       0.0797
+      ],
+      "parent": "JC-H cf_d_leg03_R",
+      "tail": [
+       -0.0775,
+       0.0673,
+       0.081
+      ]
+     },
+     "JC-T cf_d_siri_C": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-H cf_d_siri_C",
+      "tail": [
+       0.0,
+       0.0568,
+       0.935
+      ]
+     },
+     "JC-T cf_d_siri_L": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-H cf_d_siri_L",
+      "tail": [
+       0.0,
+       0.0568,
+       0.935
+      ]
+     },
+     "JC-T cf_d_siri_R": {
+      "deform": false,
+      "head": [
+       0.0,
+       0.0368,
+       0.935
+      ],
+      "parent": "JC-H cf_d_siri_R",
+      "tail": [
+       0.0,
+       0.0568,
+       0.935
+      ]
+     },
+     "JC-T cf_d_thigh00_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-H cf_d_thigh00_L",
+      "tail": [
+       0.0775,
+       0.0454,
+       0.8983
+      ]
+     },
+     "JC-T cf_d_thigh00_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-H cf_d_thigh00_R",
+      "tail": [
+       -0.0775,
+       0.0454,
+       0.8984
+      ]
+     },
+     "JC-T cf_d_thigh01_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-H cf_d_thigh01_L",
+      "tail": [
+       0.0775,
+       0.0454,
+       0.8983
+      ]
+     },
+     "JC-T cf_d_thigh01_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-H cf_d_thigh01_R",
+      "tail": [
+       -0.0775,
+       0.0454,
+       0.8984
+      ]
+     },
+     "JC-T cf_d_thigh02_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-H cf_d_thigh02_L",
+      "tail": [
+       0.0775,
+       0.0454,
+       0.8983
+      ]
+     },
+     "JC-T cf_d_thigh02_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-H cf_d_thigh02_R",
+      "tail": [
+       -0.0775,
+       0.0454,
+       0.8984
+      ]
+     },
+     "JC-T cf_d_thigh03_L": {
+      "deform": false,
+      "head": [
+       0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-H cf_d_thigh03_L",
+      "tail": [
+       0.0775,
+       0.0454,
+       0.8983
+      ]
+     },
+     "JC-T cf_d_thigh03_R": {
+      "deform": false,
+      "head": [
+       -0.0775,
+       0.0254,
+       0.8986
+      ],
+      "parent": "JC-H cf_d_thigh03_R",
+      "tail": [
+       -0.0775,
+       0.0454,
+       0.8984
+      ]
+     },
+     "JC-T cf_j_shoulder02_L": {
+      "deform": false,
+      "head": [
+       0.0094,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-H cf_j_shoulder02_L",
+      "tail": [
+       0.0094,
+       0.055,
+       1.2446
+      ]
+     },
+     "JC-T cf_j_shoulder02_R": {
+      "deform": false,
+      "head": [
+       -0.0094,
+       0.035,
+       1.2446
+      ],
+      "parent": "JC-H cf_j_shoulder02_R",
+      "tail": [
+       -0.0094,
+       0.055,
+       1.2446
       ]
      },
      "N_EyesLookTarget": {
@@ -1394,13 +5066,13 @@
       "tail": [
        0.0466,
        -0.0239,
-       1.1444
+       1.1443
       ]
      },
      "a_n_nip_R": {
       "deform": true,
       "head": [
-       -0.0741,
+       -0.0742,
        -0.0959,
        1.1554
       ],
@@ -2562,13 +6234,13 @@
      "cf_J_hairB_01_02": {
       "deform": true,
       "head": [
-       -0.0815,
+       -0.0816,
        0.074,
        1.3048
       ],
       "parent": "cf_J_hairB_01_01",
       "tail": [
-       -0.0815,
+       -0.0816,
        0.074,
        1.3548
       ]
@@ -2730,13 +6402,13 @@
      "cf_J_hairB_04_02": {
       "deform": true,
       "head": [
-       0.0854,
+       0.0855,
        0.0737,
        1.3046
       ],
       "parent": "cf_J_hairB_04_01",
       "tail": [
-       0.0854,
+       0.0855,
        0.0737,
        1.3546
       ]
@@ -4866,13 +8538,13 @@
       "tail": [
        0.0466,
        -0.0239,
-       1.1444
+       1.1443
       ]
      },
      "cf_j_bnip02_R": {
       "deform": true,
       "head": [
-       -0.0741,
+       -0.0742,
        -0.0959,
        1.1554
       ],
@@ -4894,7 +8566,7 @@
       "tail": [
        0.0458,
        -0.0219,
-       1.1441
+       1.144
       ]
      },
      "cf_j_bnip02_root_R": {
@@ -4935,7 +8607,7 @@
       "parent": "cf_t_bust01_R",
       "tail": [
        -0.0171,
-       0.0533,
+       0.0534,
        1.1437
       ]
      },
@@ -4970,9 +8642,9 @@
      "cf_j_bust03_L": {
       "deform": true,
       "head": [
-       0.0725,
+       0.0726,
        -0.0913,
-       1.1546
+       1.1545
       ],
       "parent": "cf_t_bust03_L",
       "tail": [
@@ -4990,7 +8662,7 @@
       ],
       "parent": "cf_t_bust03_R",
       "tail": [
-       -0.0453,
+       -0.0454,
        -0.021,
        1.144
       ]
@@ -5797,14 +9469,14 @@
       "deform": true,
       "head": [
        0.0493,
-       0.0806,
+       0.0807,
        0.9008
       ],
       "parent": "cf_n_siri01_L",
       "tail": [
        0.0493,
-       0.1576,
-       0.9009
+       0.1577,
+       0.9008
       ]
      },
      "cf_j_siri_R": {
@@ -7608,7 +11280,7 @@
       ],
       "parent": "cf_s_bnip01_bustsize_L",
       "tail": [
-       0.0433,
+       0.0434,
        -0.0154,
        1.1431
       ]
@@ -7636,7 +11308,7 @@
       ],
       "parent": "cf_j_bust03_L",
       "tail": [
-       0.0433,
+       0.0434,
        -0.0154,
        1.1431
       ]
@@ -7658,8 +11330,8 @@
      "cf_s_bnip02_root_L": {
       "deform": true,
       "head": [
-       0.0732,
-       -0.0932,
+       0.0733,
+       -0.0931,
        1.1548
       ],
       "parent": "cf_s_bnip02_root_nipblow_L",
@@ -7673,12 +11345,12 @@
       "deform": true,
       "head": [
        -0.0734,
-       -0.094,
+       -0.0939,
        1.1551
       ],
       "parent": "cf_s_bnip02_root_nipblow_R",
       "tail": [
-       -0.046,
+       -0.0461,
        -0.0228,
        1.1443
       ]
@@ -7686,8 +11358,8 @@
      "cf_s_bnip02_root_bustsize_L": {
       "deform": true,
       "head": [
-       0.0732,
-       -0.0932,
+       0.0733,
+       -0.0931,
        1.1548
       ],
       "parent": "cf_j_bnip02_root_L",
@@ -7701,12 +11373,12 @@
       "deform": true,
       "head": [
        -0.0734,
-       -0.094,
+       -0.0939,
        1.1551
       ],
       "parent": "cf_j_bnip02_root_R",
       "tail": [
-       -0.046,
+       -0.0461,
        -0.0228,
        1.1443
       ]
@@ -7714,8 +11386,8 @@
      "cf_s_bnip02_root_nipblow_L": {
       "deform": true,
       "head": [
-       0.0732,
-       -0.0932,
+       0.0733,
+       -0.0931,
        1.1548
       ],
       "parent": "cf_s_bnip02_root_bustsize_L",
@@ -7729,12 +11401,12 @@
       "deform": true,
       "head": [
        -0.0734,
-       -0.094,
+       -0.0939,
        1.1551
       ],
       "parent": "cf_s_bnip02_root_bustsize_R",
       "tail": [
-       -0.046,
+       -0.0461,
        -0.0228,
        1.1443
       ]
@@ -7742,14 +11414,14 @@
      "cf_s_bnip02_tip_L": {
       "deform": true,
       "head": [
-       0.074,
+       0.0741,
        -0.0952,
        1.1551
       ],
       "parent": "cf_s_bnip02_tip_nipsize_L",
       "tail": [
        0.0467,
-       -0.0241,
+       -0.024,
        1.1444
       ]
      },
@@ -7763,21 +11435,21 @@
       "parent": "cf_s_bnip02_tip_nipsize_R",
       "tail": [
        -0.0468,
-       -0.0249,
+       -0.0248,
        1.1446
       ]
      },
      "cf_s_bnip02_tip_bustsize_L": {
       "deform": true,
       "head": [
-       0.074,
+       0.0741,
        -0.0952,
        1.1551
       ],
       "parent": "cf_j_bnip02_L",
       "tail": [
        0.0467,
-       -0.0241,
+       -0.024,
        1.1444
       ]
      },
@@ -7791,21 +11463,21 @@
       "parent": "cf_j_bnip02_R",
       "tail": [
        -0.0468,
-       -0.0249,
+       -0.0248,
        1.1446
       ]
      },
      "cf_s_bnip02_tip_nipblow_L": {
       "deform": true,
       "head": [
-       0.074,
+       0.0741,
        -0.0952,
        1.1551
       ],
       "parent": "cf_s_bnip02_tip_bustsize_L",
       "tail": [
        0.0467,
-       -0.0241,
+       -0.024,
        1.1444
       ]
      },
@@ -7819,21 +11491,21 @@
       "parent": "cf_s_bnip02_tip_bustsize_R",
       "tail": [
        -0.0468,
-       -0.0249,
+       -0.0248,
        1.1446
       ]
      },
      "cf_s_bnip02_tip_nipsize_L": {
       "deform": true,
       "head": [
-       0.074,
+       0.0741,
        -0.0952,
        1.1551
       ],
       "parent": "cf_s_bnip02_tip_nipblow_L",
       "tail": [
        0.0467,
-       -0.0241,
+       -0.024,
        1.1444
       ]
      },
@@ -7847,7 +11519,7 @@
       "parent": "cf_s_bnip02_tip_nipblow_R",
       "tail": [
        -0.0468,
-       -0.0249,
+       -0.0248,
        1.1446
       ]
      },
@@ -7917,7 +11589,7 @@
       "parent": "cf_j_bust01_R",
       "tail": [
        -0.0171,
-       0.0533,
+       0.0534,
        1.1437
       ]
      },
@@ -7952,9 +11624,9 @@
      "cf_s_bust03_L": {
       "deform": true,
       "head": [
-       0.0725,
+       0.0726,
        -0.0913,
-       1.1546
+       1.1545
       ],
       "parent": "cf_j_bust03_L",
       "tail": [
@@ -7972,7 +11644,7 @@
       ],
       "parent": "cf_j_bust03_R",
       "tail": [
-       -0.0453,
+       -0.0454,
        -0.021,
        1.144
       ]
@@ -8821,14 +12493,14 @@
       "deform": true,
       "head": [
        0.0493,
-       0.0822,
+       0.0823,
        0.9008
       ],
       "parent": "cf_j_siri_L",
       "tail": [
        0.0493,
-       0.1592,
-       0.9009
+       0.1593,
+       0.9008
       ]
      },
      "cf_s_siri_R": {
@@ -9220,13 +12892,13 @@
       "tail": [
        0.0466,
        -0.0239,
-       1.1444
+       1.1443
       ]
      },
      "cf_t_bnip02_R": {
       "deform": true,
       "head": [
-       -0.0741,
+       -0.0742,
        -0.0959,
        1.1554
       ],
@@ -9248,7 +12920,7 @@
       "tail": [
        0.0458,
        -0.0219,
-       1.1441
+       1.144
       ]
      },
      "cf_t_bnip02_root_R": {
@@ -9317,16 +12989,16 @@
       "parent": "cf_j_bust01_R",
       "tail": [
        -0.0354,
-       0.0057,
+       0.0058,
        1.1484
       ]
      },
      "cf_t_bust03_L": {
       "deform": true,
       "head": [
-       0.0725,
+       0.0726,
        -0.0913,
-       1.1546
+       1.1545
       ],
       "parent": "cf_j_bust02_L",
       "tail": [
@@ -9344,7 +13016,7 @@
       ],
       "parent": "cf_j_bust02_R",
       "tail": [
-       -0.0453,
+       -0.0454,
        -0.021,
        1.144
       ]
@@ -10885,7 +14557,7 @@
       "parent": "cf_s_bust01_R",
       "tail": [
        -0.0171,
-       0.0533,
+       0.0534,
        1.1437
       ]
      },
@@ -10899,7 +14571,7 @@
       "parent": "cf_s_bust01_R",
       "tail": [
        -0.0171,
-       0.0533,
+       0.0534,
        1.1437
       ]
      },
@@ -10913,7 +14585,7 @@
       "parent": "cf_s_bust01_R",
       "tail": [
        -0.0171,
-       0.0533,
+       0.0534,
        1.1437
       ]
      },
@@ -10927,7 +14599,7 @@
       "parent": "cf_s_bust01_R",
       "tail": [
        -0.0171,
-       0.0533,
+       0.0534,
        1.1437
       ]
      },
@@ -11046,9 +14718,9 @@
      "k_f_mune03L_00": {
       "deform": true,
       "head": [
-       0.0725,
+       0.0726,
        -0.0913,
-       1.1546
+       1.1545
       ],
       "parent": "cf_s_bust03_L",
       "tail": [
@@ -11060,9 +14732,9 @@
      "k_f_mune03L_01": {
       "deform": true,
       "head": [
-       0.0725,
+       0.0726,
        -0.0913,
-       1.1546
+       1.1545
       ],
       "parent": "cf_s_bust03_L",
       "tail": [
@@ -11074,9 +14746,9 @@
      "k_f_mune03L_02": {
       "deform": true,
       "head": [
-       0.0725,
+       0.0726,
        -0.0913,
-       1.1546
+       1.1545
       ],
       "parent": "cf_s_bust03_L",
       "tail": [
@@ -11088,9 +14760,9 @@
      "k_f_mune03L_03": {
       "deform": true,
       "head": [
-       0.0725,
+       0.0726,
        -0.0913,
-       1.1546
+       1.1545
       ],
       "parent": "cf_s_bust03_L",
       "tail": [
@@ -11108,7 +14780,7 @@
       ],
       "parent": "cf_s_bust03_R",
       "tail": [
-       -0.0453,
+       -0.0454,
        -0.021,
        1.144
       ]
@@ -11122,7 +14794,7 @@
       ],
       "parent": "cf_s_bust03_R",
       "tail": [
-       -0.0453,
+       -0.0454,
        -0.021,
        1.144
       ]
@@ -11136,7 +14808,7 @@
       ],
       "parent": "cf_s_bust03_R",
       "tail": [
-       -0.0453,
+       -0.0454,
        -0.021,
        1.144
       ]
@@ -11150,7 +14822,7 @@
       ],
       "parent": "cf_s_bust03_R",
       "tail": [
-       -0.0453,
+       -0.0454,
        -0.021,
        1.144
       ]
@@ -11166,7 +14838,7 @@
       "tail": [
        0.0466,
        -0.0239,
-       1.1444
+       1.1443
       ]
      },
      "k_f_munenipL_01": {
@@ -11180,7 +14852,7 @@
       "tail": [
        0.0466,
        -0.0239,
-       1.1444
+       1.1443
       ]
      },
      "k_f_munenipL_02": {
@@ -11194,7 +14866,7 @@
       "tail": [
        0.0466,
        -0.0239,
-       1.1444
+       1.1443
       ]
      },
      "k_f_munenipL_03": {
@@ -11208,13 +14880,13 @@
       "tail": [
        0.0466,
        -0.0239,
-       1.1444
+       1.1443
       ]
      },
      "k_f_munenipR_00": {
       "deform": true,
       "head": [
-       -0.0741,
+       -0.0742,
        -0.0959,
        1.1554
       ],
@@ -11228,7 +14900,7 @@
      "k_f_munenipR_01": {
       "deform": true,
       "head": [
-       -0.0741,
+       -0.0742,
        -0.0959,
        1.1554
       ],
@@ -11242,7 +14914,7 @@
      "k_f_munenipR_02": {
       "deform": true,
       "head": [
-       -0.0741,
+       -0.0742,
        -0.0959,
        1.1554
       ],
@@ -11256,7 +14928,7 @@
      "k_f_munenipR_03": {
       "deform": true,
       "head": [
-       -0.0741,
+       -0.0742,
        -0.0959,
        1.1554
       ],
@@ -11439,56 +15111,56 @@
       "deform": true,
       "head": [
        0.0493,
-       0.0822,
+       0.0823,
        0.9008
       ],
       "parent": "cf_s_siri_L",
       "tail": [
        0.0493,
-       0.1592,
-       0.9009
+       0.1593,
+       0.9008
       ]
      },
      "k_f_siriL_01": {
       "deform": true,
       "head": [
        0.0493,
-       0.0822,
+       0.0823,
        0.9008
       ],
       "parent": "cf_s_siri_L",
       "tail": [
        0.0493,
-       0.1592,
-       0.9009
+       0.1593,
+       0.9008
       ]
      },
      "k_f_siriL_02": {
       "deform": true,
       "head": [
        0.0493,
-       0.0822,
+       0.0823,
        0.9008
       ],
       "parent": "cf_s_siri_L",
       "tail": [
        0.0493,
-       0.1592,
-       0.9009
+       0.1593,
+       0.9008
       ]
      },
      "k_f_siriL_03": {
       "deform": true,
       "head": [
        0.0493,
-       0.0822,
+       0.0823,
        0.9008
       ],
       "parent": "cf_s_siri_L",
       "tail": [
        0.0493,
-       0.1592,
-       0.9009
+       0.1593,
+       0.9008
       ]
      },
      "k_f_siriR_00": {
@@ -12150,8 +15822,8 @@
       ]
      }
     },
-    "drivers": 0,
-    "pose_constraints": 0
+    "drivers": 233,
+    "pose_constraints": 66
    },
    "constraints": 0,
    "hidden": {
@@ -12605,6 +16277,7 @@
   "log_warnings": [],
   "result": "ok",
   "steps": {
+   "add_joint_corrections": "ran",
    "apply_outfit_body_textures": "ran",
    "apply_templates": "ran",
    "arrange_collections": "ran",

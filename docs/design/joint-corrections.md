@@ -1,6 +1,6 @@
 # Joint corrections: what the games do
 
-Research for issue 10. Nothing here is implemented yet; the open decisions are at the end.
+The games' joint corrections, read for issue 10. [ADR 0038](../adr/0038-joint-corrections-copy-the-games-rules.md) says how the importer copies them; the rules themselves are `CORRECTIONS` in `profiles/kk.py` and `profiles/svs.py`, which are the reference where this note and they differ.
 
 Each game moves a set of "correction" bones every frame, after animation, from the pose of the limb bones. The importer's present drivers (`builtin/rigify/prepare.py`, `_joint_corrections`) are hand-tuned guesses at this. This note records the games' real rules.
 
@@ -12,7 +12,7 @@ Each game moves a set of "correction" bones every frame, after animation, from t
 | KKS | the same class in `KoikatsuSunshine_Data/Managed/Assembly-CSharp.dll` | decompiles to the same code as KK, constant for constant |
 | SVS | `Character.HumanExpressionBone.LateUpdate` calls `Character.HumanIndirectCorrection.OnUpdate`, which runs eleven `Correction()` methods | IL2CPP: method addresses from `LibCpp2IL` (in `BepInEx/core`), then `objdump` of `GameAssembly.dll`, constants read from `.rdata` |
 
-The SVS rules below are a hand reading of x64 disassembly. They have **not** been checked against the running game yet.
+The SVS rules below are a hand reading of x64 disassembly. The probe below confirms them: the SVS profile reproduces all 801 recorded poses. SVS sets one Euler angle at a time and reads the angles back from Unity between, so a middle angle past ±90° turns the other two by 180° before the next is set; the drivers do the same.
 
 KK only gives a Character its `ExpressionBone` in Studio (`ChaControl.InitializeExpression`, called from Studio's `AddObjectFemale` and `AddObjectMale`). In the maker and the main game the correction bones are moved by the animations alone, so a KK bundle's rest pose holds the maker animation's values, not the rules'.
 
@@ -71,14 +71,6 @@ Two things in this reading look like bugs in the game and are kept as read: the 
 
 SVS has no shoulder, wrist or hip rule that reads a position: every input is an Euler angle of one bone.
 
-## What the bundle lacks
+## In Blender
 
-- **Scale.** The games work in each parent's unscaled units; the bundle's rest pose has every scale baked into the positions ([ADR 0008](../adr/0008-bone-rest-poses-carry-no-scale.md)). In the KK Golden Sample the rest offset of `cf_d_kneeF` is 0.89 of what the formula gives, `cf_s_kneeB` 0.81, `cf_s_elbo` 0.87: the body sliders. To reproduce the offsets the importer needs each bone's scale in the game.
-- **The rest pose isn't the zero pose.** The Pass is captured in the maker's pose: `cf_j_arm00` is turned 2.5°, `cf_j_leg01` 1° (5° in SVS), `cf_j_forearm01` −7° in SVS. The corrections in the bundle's rest pose are the rules' values at those angles, so a Blender driver must give the rule's value at the current pose minus its value at the rest pose.
-
-## Replicating it in Blender
-
-- **Drivers with simple expressions.** Every rule needs only arithmetic, `sin`, `tan`, `abs`, `min`, `max` and a conditional, which Blender evaluates without Python, so the rig works with auto-run scripts off and with the add-on disabled.
-- **Reading the game's Euler angles.** A driver variable reads a bone's rotation relative to its own rest pose, in its own Blender axes; the game reads the rotation relative to the parent, rest rotation included. A hidden helper bone under the same parent, resting on the parent's game axes and copying the limb bone's rotation, gives exactly the game's local rotation, in any Euler order. This works whichever way the limb bone itself points, so the upright rule of [ADR 0017](../adr/0017-bone-tails-from-the-game-rotation.md) can stay.
-- **Reading positions** (KK shoulder, wrist, hip): a helper bone at the game's reference point with a Copy Location constraint to the elbow, finger or knee.
-- **Writing.** The correction bones are aimed bones, a fixed turn from the game's axes, so each game axis maps to one Blender channel. The Rigify Hook's `_reaim` goes away with the old drivers.
+See [ADR 0038](../adr/0038-joint-corrections-copy-the-games-rules.md) and the notes at the top of `importer/kkbp/joint_corrections.py`. In short: the Step keeps the bundle's `game_scale` for the units, reads each limb's local rotation through a helper bone on the game's axes, works out the game's Euler angles with the game's own formula, and gives each correction bone the game's local transform for the current pose, as Studio would.
