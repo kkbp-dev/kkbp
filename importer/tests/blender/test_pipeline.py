@@ -356,11 +356,27 @@ def test_the_hook_interface_docs_first_hook_runs_on_a_sample(tmp_path, monkeypat
     settings.reload_hooks()
     copy = tmp_path / "kk"
     shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
-    result = kkbp.api.import_bundle(copy, options={"eyebrows_through_hair": False}, hooks=["Eyebrows through hair"])
-    assert [(h.name, h.status) for h in result.hooks] == [("Eyebrows through hair", "ran")]
-    eyebrows = character.Character(result.character_key).materials(roles=["eyebrow"])
-    assert eyebrows and all(kkbp.api.templates.param(m, "force_visibility").default_value == 0
-                            for m in eyebrows)
+    result = kkbp.api.import_bundle(copy, options={"portrait_camera_framing": "face", "portrait_camera_lens": 50.0},
+                                    hooks=["Portrait camera"])
+    assert [(h.name, h.status) for h in result.hooks] == [("Portrait camera", "ran")]
+
+    from bpy_extras.object_utils import world_to_camera_view
+
+    ch = character.Character(result.character_key)
+    cameras = [o for o in ch.collection.objects if o.type == "CAMERA"]
+    assert len(cameras) == 1 and cameras[0].data.lens == 50.0
+    camera, armature, skeleton = cameras[0], ch.armature, kkbp.bundle.open_bundle(copy).skeleton
+    bpy.context.view_layer.update()
+
+    def point(role):
+        return armature.matrix_world @ armature.pose.bones[skeleton.by_role(role).id].head
+
+    head, eyes = point("head"), (point("left_eye") + point("right_eye")) / 2
+    x, y, depth = world_to_camera_view(bpy.context.scene, camera, head)
+    assert (round(x, 3), round(y, 3)) == (0.5, 0.5) and depth > 0, "the camera aims at the head"
+    assert (camera.matrix_world.translation - head).dot(eyes - head) > 0, "from in front of the face"
+    for role in ("left_eye", "right_eye"):
+        assert 0 < world_to_camera_view(bpy.context.scene, camera, point(role)).y < 1, "the eyes are in the frame"
 
 
 def test_reloading_the_folder_replaces_its_hooks(build, tmp_path, monkeypatch):
