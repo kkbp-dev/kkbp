@@ -474,7 +474,7 @@ settles the colour-space question for all of them.
 Done (ADR 0041, D67):
 
 - `importer/tools/game_shaders/dump.py` and `dxdis.py`: dump and disassemble both games' shaders, with
-  every constant and texture named (Unity 5.6 and 2019 layouts). `dump.py SITE --find FOLDER` lists
+  every constant and texture named (Unity 5.6 and 2019 layouts). `dump.py --find FOLDER` lists
   which asset file holds each shader. Where they are: KK `Koikatu_Data/globalgamemanagers.assets`
   (toon_*, create_* but topN), `abdata/chara/mm_base.unity3d` (create_topN), `abdata/chara/54/chara_data_00.unity3d`
   (main_opaque, main_item, main_hair), `54/chara_mat_00.unity3d` (main_skin), `co_bot_13.unity3d`
@@ -484,24 +484,23 @@ Done (ADR 0041, D67):
   `bo_hair_b_00.unity3d` and `ao_head_00.unity3d` (hair_main_sun_front, hair_main_sun). The forward
   program to read is the fragment one (type 17) whose keywords are `DIRECTIONAL` alone (KK) or the
   fewest (KKS).
-- `importer/tools/game_shaders/models.py`: `lin`, `srgb`, `grade`, the KK light, `create_eyewhite`,
-  `toon_eyew`, `toon_nose`; `host/test_shader_models.py` checks them on the kk sample.
+- `importer/tools/game_shaders/models.py`: `lin`, `srgb`, `grade`, the KK and KKS lights,
+  `create_eyewhite`, `toon_eyew`, `toon_nose`; `host/test_shader_models.py` checks them on both samples.
 - Groups `.KK srgb`, `.KK linear`, `.KK grade`, `.KK graded`, `.KK create_eyewhite`, `.KK toon_eyew`,
   `.KK toon_nose`; templates `KK create_eyewhite`, `KK toon_eyew`, `KK toon_nose`, built on
   `importer/tools/library/edit_templates.py`; KK's profile points eye whites, eyebrows, eyelines and
-  the nose line at them.
+  the nose line at them, and KKS's profile inherits them with its own maker light.
 - `blender/test_edit_accuracy.py`, with `importer/tests/data/edit_accuracy.json` (the legacy numbers are
   in ADR 0041).
 
 Left, in this order (each: dump, model in models.py with a host test, fit constants, node group,
 template, Template Description with `graded=True`, profile row and colours, re-record the accuracy):
 
-1. **KKS's light.** Model `Koikano/main_eyew` (dumped as `Koikano_main_eyew.8.ps.txt`): ambient
-   `lerp(_ambientshadowG, SH, _KanoVerShift)` from the scene's light probes, the 0.67 / 0.33 light term,
-   the dark side's desaturation. Fit the few constants it reduces to under the bake (the ambient colour,
-   the light term, the ramp values) on the kks eye white, eyebrow and eyelines, then give KKS its
-   `KKS main_eyew` and `KKS create_eyew` templates and its own `EDIT["templates"]` rows. `Koikano/main_nose`
-   is likely KK's nose; check.
+1. ~~**KKS's light.**~~ Done: under the bake `Koikano/main_eyew` is KK's toon_eyew with three other
+   constants (ADR 0041), so KKS shares KK's templates and its profile sets `ambient`,
+   `ambient_strength` and `shadow_floor`. `Koikano/main_nose` bakes as KK's nose. Each further KKS
+   shader: check first whether it reduces the same way (compare the KK and KKS bakes of the same card:
+   light within 0.02 means only the shadow side differs).
 2. **KK hair** (`main_hair`, `main_hair_front`): no create material in the samples; the colour mask
    (`_Color`, `_Color2`, `_Color3`) over `_MainTex`, the `_HairGloss` highlight read twice from the
    second UV map, `_AnotherRamp`, `_ShadowExtend`, the detail mask. The bake draws the flattened mesh,

@@ -50,7 +50,7 @@ def _bakes(sample, material):
 
 
 # (game, material, model inputs) -> the light and dark the model gives.
-def _eyew(sample, mid, lut):
+def _eyew(sample, mid, lut, light):
     m = sample.materials[mid]
     light_ref, dark_ref, size = _bakes(sample, m)
     create = m.get("extensions", {}).get("kk", {}).get("create")
@@ -62,9 +62,9 @@ def _eyew(sample, mid, lut):
         tex = sample.texture(m, "main", size=size)
         main, alpha = tex[..., :3], tex[..., 3]
     args = (main, alpha, models.color(m["colors"].get("_Color", (1, 1, 1, 1))), models.color(m["colors"]["_shadowcolor"]))
-    light, _ = models.toon_eyew(*args, ramp=1.0)
-    dark, _ = models.toon_eyew(*args, ramp=0.0)
-    return (models.baked(light, lut), light_ref), (models.baked(dark, lut), dark_ref)
+    lit, _ = models.toon_eyew(*args, ramp=1.0, light=light)
+    dark, _ = models.toon_eyew(*args, ramp=0.0, light=light)
+    return (models.baked(lit, lut), light_ref), (models.baked(dark, lut), dark_ref)
 
 
 @pytest.mark.parametrize("mid,limit", [
@@ -73,13 +73,17 @@ def _eyew(sample, mid, lut):
     # The eyelines' semi-transparent edges blend differently in the bake; fully opaque, they are within 0.008.
     ("cf_m_eyeline_kage", 0.015), ("cf_m_eyeline_down", 0.015),
 ])
-def test_kk_toon_eyew_gives_back_the_bakes(mid, limit, lut):
-    for model, reference in _eyew(Sample("kk"), mid, lut):
+@pytest.mark.parametrize("game,light", [("kk", models.KK), ("kks", models.KKS)])
+def test_toon_eyew_gives_back_the_bakes(game, light, mid, limit, lut):
+    """KK's toon_eyew_lod0 and KKS's Koikano/main_eyew, each with its Game's maker light."""
+    for model, reference in _eyew(Sample(game), mid, lut, light):
         assert difference(model, reference) < limit
 
 
-def test_kk_toon_nose_gives_back_the_bakes(lut):
-    sample = Sample("kk")
+@pytest.mark.parametrize("game", ["kk", "kks"])
+def test_toon_nose_gives_back_the_bakes(game, lut):
+    """KK's toon_nose_lod0; KKS's Koikano/main_nose bakes the same."""
+    sample = Sample(game)
     m = sample.materials["cf_m_noseline_00"]
     light_ref, dark_ref, size = _bakes(sample, m)
     tex = sample.texture(m, "main", size=size)

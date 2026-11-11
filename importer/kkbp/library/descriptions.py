@@ -135,6 +135,9 @@ def _in(group, **slots):
 _BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("textures/shade", "Use Normals?")}
 # The templates made from the games' shaders bake the same way, through their own nodes.
 _GAME_BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("shade", "Use Normals?")}
+# The Game's Maker Light as toon_eyew and Koikano/main_eyew shade with it; the defaults are KK's.
+_EYEW_LIGHT = {"ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength"),
+               "shadow_floor": ("lit", "Shadow floor")}
 _MISC = Template("", textures=_in("textures", main="_ST_CT.png"), params=_BAKE, copies=("textures",))
 _GENERAL_TEXTURES = _in(
     "textures", main="_ST_CT.png", **{"main.dark": "_ST_DT.png", "color_mask.plain": "_CM.pngopaque"},
@@ -215,9 +218,9 @@ _EDIT_TEMPLATES = (
     # The edit templates made from the games' shaders (issue 30, importer/tools/game_shaders/models.py):
     # each slot's image node by name at the top level, shared groups, and the game's colours linear.
     Template("KK toon_eyew", graded=True, textures={"main": "tex.main"},
-             params={**_GAME_BAKE, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color")}),
+             params={**_GAME_BAKE, **_EYEW_LIGHT, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color")}),
     Template("KK create_eyewhite", graded=True, textures={"create_main": "tex.create_main"},
-             params={**_GAME_BAKE, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color"),
+             params={**_GAME_BAKE, **_EYEW_LIGHT, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color"),
                      "create_color": ("create", "Color"), "create_color2": ("create", "Color 2")}),
     Template("KK toon_nose", graded=True, textures={"main": "tex.main"},
              params={**_GAME_BAKE, "color": ("lit", "Color"), "color_alpha": ("lit", "Color alpha")}),

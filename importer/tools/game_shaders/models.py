@@ -87,18 +87,30 @@ class Light:
     """The maker's light and global shading values a Game's bake runs with (fitted, see the doc)."""
 
     light: float  # the `_LightColor0` term, `max(light * 0.6 + 0.4, ambient)`, per channel the same
-    ambient: float  # `_ambientshadowG`, rgb and alpha
+    ambient: float  # `_ambientshadowG.a`: how strongly the ambient colour shades
+    # The ambient colour, rgb: KK's is `_ambientshadowG.rgb` (the same 0.15); KKS's mixes in its light
+    # probes, `lerp(_ambientshadowG.rgb, SH * 0.5 + 0.5, _KanoVerShift)`, which a bake's flat quad
+    # sees as one colour. None: `ambient` in every channel.
+    ambient_color: tuple[float, float, float] | None = None
+    # How much of the lit colour the back-lit side keeps: KKS's `saturate(ramp + _ambientshadowG.a)`
+    # with the ramp's own floor; KK's toon_eyew keeps none.
+    shadow_floor: float = 0.0
 
 
 KK = Light(light=1.0, ambient=0.15)
+# Koikano/main_eyew, fitted to the KKS sample's eye-white family (the ambient strength, colour and
+# floor trade off a little against each other; this is the best fit, within 0.003 of every bake).
+KKS = Light(light=1.0, ambient=0.175, ambient_color=(0.225, 0.216, 0.203), shadow_floor=0.2)
 
 
 def ambient_shadow(light: Light):
-    """The shaders' ambient shadow intensity from `_ambientshadowG` (the `finalAmbientShadow` block)."""
+    """The shaders' ambient shadow intensity per channel, from the ambient colour and strength (the
+    `finalAmbientShadow` block): an overlay of the two, `1 - (1 - a)(1 - colour)` for a >= 0."""
     a = light.ambient
+    c = np.full(3, a, dtype=F) if light.ambient_color is None else np.asarray(light.ambient_color, dtype=F)
     w = a * 0.5 + 0.5
-    s = 1 - (1 - a) * (1 - a) if w > 0.5 else (a + 1) * a
-    return float(np.clip(s, 0, 1))
+    s = 1 - 2 * (1 - w) * (1 - c) if w > 0.5 else 2 * w * c
+    return np.clip(s, 0, 1)
 
 
 def shade(shadow_color, s):
@@ -120,11 +132,17 @@ def create_eyewhite(main, color_, color2):
 # --- lit shaders ---------------------------------------------------------------------------
 
 def toon_eyew(main, alpha, color_, shadow_color, ramp, light: Light = KK):
-    """KK's toon_eyew_lod0 (eye whites, eyebrows, eyelines): the texture times the colour, shaded by
-    the shadow colour's tint where the light doesn't reach. Returns linear rgb and alpha."""
+    """KK's toon_eyew_lod0 and KKS's Koikano/main_eyew (eye whites, eyebrows, eyelines): the texture
+    times the colour, shaded by the shadow colour's tint where the light doesn't reach. Returns
+    linear rgb and alpha.
+
+    Koikano/main_eyew also desaturates its light term by 75 % in shadow and takes
+    `max(light * 0.67 + 0.33, ambient colour)`; with the bake's light (1.0) both give 1, as KK's
+    term does, so the model leaves them out."""
     base = main * color_
     dark = base * shade(shadow_color, ambient_shadow(light))
-    out = (dark + ramp * (base - dark)) * max(light.light * 0.6 + 0.4, light.ambient)
+    lit = min(1.0, ramp + light.shadow_floor)
+    out = (dark + lit * (base - dark)) * max(light.light * 0.6 + 0.4, light.ambient)
     return out, alpha
 
 

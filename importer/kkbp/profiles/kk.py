@@ -167,8 +167,8 @@ _EYE_COLORS = [
 # (the material itself), then a Texture Role or a Raw Property (with `[pattern]` for one pattern),
 # tried in order; `current:` is the slot's image in the material being edited, which keeps an
 # Outfit's body alpha mask.
-# The legacy edit templates by Material Role (D38). KKS still uses all of them; KK uses them for the
-# Roles whose shaders aren't modelled yet (issue 30).
+# The legacy edit templates by Material Role (D38), for the Roles whose shaders aren't modelled yet
+# (issue 30).
 LEGACY_EDIT_TEMPLATES = {
     "body": "KK Body", "face": "KK Face", "hair": "KK Hair",
     "eye_l": "KK EyeL (hitomi)", "eye_r": "KK EyeR (hitomi)", "eye_white": "KK Eyewhites (sirome)",
@@ -270,7 +270,7 @@ EDIT = {
         # An AnotherRamp texture makes the red detail metallic, which no template draws.
         ["raw:_AnotherRamp", {"detail_intensity_shine": 0.0}],
         ["missing:main", {"use_main_texture": 0.0}],
-        # The game draws the eyebrows as their texture times their colour (the legacy template, KKS),
+        # The game draws the eyebrows as their texture times their colour (the legacy template),
         # and the hair's root and tip colours through its colour mask; the templates' switches are off.
         ["role:eyebrow has:main", {"use_main_texture_color": 1.0}],
         ["role:hair has:color_mask", {"use_color_mask": 1.0}],

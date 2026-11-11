@@ -104,6 +104,10 @@ _Avoid_: matCreate, create texture
 A numpy model of one of a Game's shaders as the exporter bakes it, in `importer/tools/game_shaders/models.py`, checked against the Golden Samples; the specification an edit template's node groups follow (ADR 0041).
 _Avoid_: shader recreation, approximation
 
+**Maker Light**:
+The light and global shading values a Game's light and dark bakes run with (the light term, the ambient colour and strength, the shadow floor), fitted to the Golden Samples (`models.KK`, `models.KKS`). A Game Profile sets its own on the edit templates (ADR 0041).
+_Avoid_: scene light, lighting preset
+
 ### Exporting
 
 **Exporter Core**:
