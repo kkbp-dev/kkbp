@@ -131,8 +131,8 @@ namespace KKBP.Exporter
             while (batch.Next())
             {
                 string loadError = null;
-                Status = batch.Progress;
-                Log.LogInfo(Status);
+                Log.LogInfo(batch.Progress);
+                Status = "Loading the card…";
                 try
                 {
                     Cards.Load(batch.Card);
