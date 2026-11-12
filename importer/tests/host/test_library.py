@@ -110,7 +110,9 @@ def _edit_slots():
 def test_edit_templates_name_edit_slots(name):
     template = library.TEMPLATES[name]
     assert set(template.textures) <= _edit_slots(), set(template.textures) - _edit_slots()
-    assert template.copies and template.copies[0] == "textures"
+    # A legacy template copies its texture group (ADR 0025); one made from a game's shaders keeps its
+    # image nodes at the top level and copies nothing.
+    assert not template.copies or template.copies[0] == "textures"
     assert set(template.positions) <= set(template.textures)
     assert {"toon_shading", "use_normals"} <= set(template.params), "every edit template bakes"
 

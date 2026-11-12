@@ -116,7 +116,7 @@ def _scene(width, height):
 
 def _flat(scene, obj, material, aspect):
     """A mesh of `obj`'s faces that use `material`, each loop at its uv_main position, with every
-    UV map of `obj`."""
+    UV map and face-corner colour attribute of `obj` (main_skin's overlays read the vertex colour)."""
     src = obj.data
     index = list(src.materials).index(material)
     n_polys = len(src.polygons)
@@ -152,6 +152,13 @@ def _flat(scene, obj, material, aspect):
         layer = mesh.uv_layers.new(name=layer_name)
         layer.data.foreach_set("uv", uv.ravel())
     mesh.uv_layers[render_uv].active_render = True
+    for attribute in src.color_attributes:
+        if attribute.domain != "CORNER":
+            continue
+        values = np.empty(len(src.loops) * 4, dtype=np.float32)
+        attribute.data.foreach_get("color", values)
+        copy = mesh.color_attributes.new(attribute.name, attribute.data_type, "CORNER")
+        copy.data.foreach_set("color", values.reshape(-1, 4)[loops].ravel())
     mesh.update()
     mesh.materials.append(material)
     return _link(scene, mesh)

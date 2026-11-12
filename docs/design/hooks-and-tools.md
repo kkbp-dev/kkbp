@@ -157,7 +157,7 @@ Every legacy lookup by a bone, material, object, node, socket or image name, and
 | `.Combine colors` `mix`, `.Tex*` `shade` (bake) | the edit templates' params `toon_shading` (the combine node's own input, so the shared group isn't changed) and `use_normals` |
 | `Lut_TimeDay.png` | `library.blend`, with the edit templates (extra `lut`) |
 | edit image nodes `_ST_CT.png`, `_CM.png`, `_PM1.png`, … in `.Tex *` groups | edit slots `main`, `color_mask`, `pattern_mask1`, … by path (`textures/_CM.png`) in the edit templates' descriptions |
-| `set_uv_type` on `eyeshadowuv`, `nippleuv`, `underuv`, `hairuv` | set once in `library.blend` by `rework_templates.py` |
+| `set_uv_type` on `eyeshadowuv`, `nippleuv`, `underuv`, `hairuv` | set once in the edit templates' groups (`importer/tools/library/groups/`) |
 | `.Eye Textures positioning` `eye_scale`, `Group`, `Group.001` (from the character JSON) | the eye templates' `positions`, from the texture offsets and scales (D41) |
 
 ### Bones (Rigify Hook, SFW Hook, export prep)

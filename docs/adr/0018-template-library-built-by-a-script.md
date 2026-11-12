@@ -1,5 +1,7 @@
 # The template library is built by a script from the unchanged legacy file
 
+Superseded by [ADR 0040](0040-the-library-is-built-from-code.md): the library is now built from code, and the legacy file is gone.
+
 `importer/kkbp/library/library.blend` is not edited in Blender. `scripts/rework-templates.sh` runs `importer/tools/rework_templates.py` on `importer/templates-src/KK Shader V9.blend`, the legacy library copied unchanged, and writes the library. The script makes every change the design asks for ([material-template.md](../design/material-template.md#the-library)): it keeps only the templates, names image nodes by role, gives the shader groups one socket naming scheme and a `Hidden` input, moves per-material images onto the materials, builds the Gag template and stamps `kkbp_template_version`.
 
 ## Considered Options

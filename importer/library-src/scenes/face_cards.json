@@ -1,0 +1,2222 @@
+{
+ "collections": {
+  "Face cards": {
+   "objects": [
+    "Face card eyes",
+    "Face card rig",
+    "Face card mouth"
+   ],
+   "children": [
+    "Facecard bone shapes"
+   ],
+   "use_fake_user": true,
+   "hide_viewport": false,
+   "hide_render": false,
+   "hide_select": false
+  },
+  "Facecard bone shapes": {
+   "objects": [
+    "Facecard-bone-center",
+    "Facecard-bone-clip",
+    "Facecard-bone-eye",
+    "Facecard-bone-pupil"
+   ],
+   "children": [],
+   "use_fake_user": false,
+   "hide_viewport": true,
+   "hide_render": true,
+   "hide_select": false
+  }
+ },
+ "armatures": {
+  "Eyes_Rig": {
+   "props": {
+    "display_type": "STICK"
+   },
+   "collections": [
+    {
+     "name": "Pupil Clip",
+     "parent": null,
+     "props": {
+      "is_visible": true,
+      "is_solo": false
+     }
+    }
+   ],
+   "bones": [
+    {
+     "name": "Eyes_Root",
+     "parent": null,
+     "head": [0.0, 3.725290298461914e-09, 0.0],
+     "tail": [0.0, 3.725290298461914e-09, 0.029999971389770508],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [],
+     "props": {}
+    },
+    {
+     "name": "Eye.L",
+     "parent": "Eyes_Root",
+     "head": [0.04283784702420235, 3.725290298461914e-09, 0.0],
+     "tail": [0.04283784702420235, -0.01499999314546585, 0.0],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [],
+     "props": {}
+    },
+    {
+     "name": "Pupil.L",
+     "parent": "Eye.L",
+     "head": [0.04017762467265129, -0.00039999932050704956, 0.0019701719284057617],
+     "tail": [0.04017762467265129, -0.010399997234344482, 0.0019701719284057617],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [],
+     "props": {}
+    },
+    {
+     "name": "PupilClip_Top.L",
+     "parent": "Pupil.L",
+     "head": [0.04101363569498062, -0.0023997833486646414, 0.023439448326826096],
+     "tail": [0.04101363569498062, -0.0023997833486646414, 0.027439448982477188],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [
+      "Pupil Clip"
+     ],
+     "props": {
+      "use_deform": false
+     }
+    },
+    {
+     "name": "PupilClip_Bottom.L",
+     "parent": "Pupil.L",
+     "head": [0.03934700787067413, -0.0023997833486646414, -0.019367722794413567],
+     "tail": [0.03934700787067413, -0.0023997833486646414, -0.015367722138762474],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [
+      "Pupil Clip"
+     ],
+     "props": {
+      "use_deform": false
+     }
+    },
+    {
+     "name": "Eye.R",
+     "parent": "Eyes_Root",
+     "head": [-0.04283784702420235, 3.725290298461914e-09, 0.0],
+     "tail": [-0.04283784702420235, -0.01499999314546585, 0.0],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [],
+     "props": {}
+    },
+    {
+     "name": "Pupil.R",
+     "parent": "Eye.R",
+     "head": [-0.04011381417512894, -0.00039999932050704956, 0.0019687414169311523],
+     "tail": [-0.04011381417512894, -0.010399997234344482, 0.0019687414169311523],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [],
+     "props": {}
+    },
+    {
+     "name": "PupilClip_Top.R",
+     "parent": "Pupil.R",
+     "head": [-0.04094986617565155, -0.0023997833486646414, 0.023438019677996635],
+     "tail": [-0.04094986617565155, -0.0023997833486646414, 0.027438020333647728],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [
+      "Pupil Clip"
+     ],
+     "props": {
+      "use_deform": false
+     }
+    },
+    {
+     "name": "PupilClip_Bottom.R",
+     "parent": "Pupil.R",
+     "head": [-0.039283156394958496, -0.0023997833486646414, -0.019369155168533325],
+     "tail": [-0.039283156394958496, -0.0023997833486646414, -0.015369154512882233],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [
+      "Pupil Clip"
+     ],
+     "props": {
+      "use_deform": false
+     }
+    },
+    {
+     "name": "Mouth",
+     "parent": "Eyes_Root",
+     "head": [0.0, 3.725290298461914e-09, -0.050705838948488235],
+     "tail": [0.0, 3.725290298461914e-09, -0.036106087267398834],
+     "roll": 0.0,
+     "use_connect": false,
+     "collections": [],
+     "props": {
+      "use_relative_parent": true,
+      "envelope_distance": 0.12166470289230347,
+      "head_radius": 0.04866588115692139,
+      "tail_radius": 0.024332940578460693
+     }
+    }
+   ]
+  }
+ },
+ "objects": {
+  "Face card eyes": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Eye_Line.R"
+   ],
+   "parent": "Face card rig",
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, -0.0, -0.0, -0.0],
+    [-0.0, 1.0, 0.0, 0.10691921412944794],
+    [-0.0, -0.0, 1.0, -1.3906135559082031],
+    [-0.0, 0.0, -0.0, 1.0]
+   ],
+   "props": {
+    "location": [0.0, -0.0009199678897857666, 0.001898646354675293],
+    "delta_location": [0.0, -0.10691899806261063, 1.3906099796295166]
+   },
+   "vertex_groups": [
+    {
+     "name": "Eye.R",
+     "lock_weight": false
+    },
+    {
+     "name": "Eye.L",
+     "lock_weight": false
+    },
+    {
+     "name": "Pupil.R",
+     "lock_weight": false
+    },
+    {
+     "name": "Pupil.L",
+     "lock_weight": false
+    }
+   ],
+   "material_slots": [
+    [
+     "DATA",
+     "Eyeline card"
+    ],
+    [
+     "DATA",
+     "Eyewhite card"
+    ],
+    [
+     "DATA",
+     "Pupil R card"
+    ],
+    [
+     "DATA",
+     "Pupil L card"
+    ]
+   ],
+   "modifiers": [
+    {
+     "name": "Armature",
+     "type": "ARMATURE",
+     "object": "Face card rig",
+     "vertex_group": "",
+     "props": {}
+    },
+    {
+     "name": "Subdivision",
+     "type": "SUBSURF",
+     "object": null,
+     "vertex_group": null,
+     "props": {}
+    }
+   ],
+   "constraints": [],
+   "weights": [
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [1, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [0, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [3, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ],
+    [
+     [2, 1.0]
+    ]
+   ]
+  },
+  "Face card mouth": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "Gag Mouth"
+   ],
+   "parent": "Face card rig",
+   "parent_type": "BONE",
+   "parent_bone": "Mouth",
+   "matrix_parent_inverse": [
+    [1.0, -0.0, 0.0, 0.0002056993544101715],
+    [-0.0, 1.0, -0.0, 0.1126580536365509],
+    [-0.0, 0.0, 1.0, -1.3884360790252686],
+    [-0.0, 0.0, -0.0, 1.0]
+   ],
+   "props": {
+    "location": [-0.0021384074352681637, -0.11265800148248672, 1.3425720930099487],
+    "rotation_euler": [-7.406789848118933e-09, -4.7585150541608855e-15, -3.4237927231295547e-15],
+    "scale": [0.7782410383224487, 0.7782406806945801, 0.7782406806945801],
+    "visible_shadow": false
+   },
+   "vertex_groups": [],
+   "material_slots": [
+    [
+     "DATA",
+     "Gag Mouth"
+    ]
+   ],
+   "modifiers": [
+    {
+     "name": "Subdivision",
+     "type": "SUBSURF",
+     "object": null,
+     "vertex_group": null,
+     "props": {
+      "show_viewport": false
+     }
+    }
+   ],
+   "constraints": []
+  },
+  "Face card rig": {
+   "type": "ARMATURE",
+   "data": [
+    "Armature",
+    "Eyes_Rig"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "location": [0.05908620357513428, -0.18093810975551605, 1.3884360790252686],
+    "show_in_front": true
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": [],
+   "pose": {
+    "Eyes_Root": {
+     "custom_shape": "Facecard-bone-center",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, 0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "custom_shape_scale_xyz": [0.6800000071525574, 0.6800000071525574, 0.6800000071525574]
+     },
+     "constraints": []
+    },
+    "Eye.L": {
+     "custom_shape": "Facecard-bone-eye",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, 0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "custom_shape_scale_xyz": [3.5299999713897705, 0.20000000298023224, 3.5999999046325684],
+      "custom_shape_translation": [0.0, 0.0, 0.004999999888241291]
+     },
+     "constraints": []
+    },
+    "Pupil.L": {
+     "custom_shape": "Facecard-bone-pupil",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, 0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "custom_shape_scale_xyz": [3.0, 1.0, 3.4000000953674316],
+      "lock_location": [
+       false,
+       true,
+       false
+      ],
+      "lock_rotation": [
+       true,
+       false,
+       true
+      ],
+      "lock_rotation_w": true
+     },
+     "constraints": []
+    },
+    "PupilClip_Top.L": {
+     "custom_shape": "Facecard-bone-clip",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, -0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "rotation_mode": "XYZ",
+      "custom_shape_scale_xyz": [6.0, 1.0, 1.0],
+      "lock_location": [
+       true,
+       false,
+       true
+      ],
+      "lock_rotation": [
+       true,
+       true,
+       false
+      ],
+      "lock_rotation_w": true,
+      "lock_scale": [
+       true,
+       true,
+       true
+      ]
+     },
+     "constraints": [
+      {
+       "name": "Limit Location",
+       "type": "LIMIT_LOCATION",
+       "target": null,
+       "subtarget": null,
+       "props": {
+        "owner_space": "LOCAL",
+        "use_min_x": true,
+        "use_min_y": true,
+        "use_min_z": true,
+        "use_max_x": true,
+        "use_max_y": true,
+        "use_max_z": true,
+        "min_y": -0.07092953473329544,
+        "use_transform_limit": true
+       }
+      },
+      {
+       "name": "Limit Rotation",
+       "type": "LIMIT_ROTATION",
+       "target": null,
+       "subtarget": null,
+       "props": {
+        "owner_space": "LOCAL",
+        "use_limit_z": true,
+        "min_z": -1.3962633609771729,
+        "max_z": 1.3962633609771729,
+        "use_transform_limit": true
+       }
+      }
+     ]
+    },
+    "PupilClip_Bottom.L": {
+     "custom_shape": "Facecard-bone-clip",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, -0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "rotation_mode": "XYZ",
+      "custom_shape_scale_xyz": [6.0, 1.0, 1.0],
+      "custom_shape_translation": [0.0, 0.006000000052154064, 0.0],
+      "custom_shape_rotation_euler": [3.1415927410125732, 0.0, 0.0],
+      "lock_location": [
+       true,
+       false,
+       true
+      ],
+      "lock_rotation": [
+       true,
+       true,
+       false
+      ],
+      "lock_rotation_w": true,
+      "lock_scale": [
+       true,
+       true,
+       true
+      ]
+     },
+     "constraints": [
+      {
+       "name": "Limit Location",
+       "type": "LIMIT_LOCATION",
+       "target": null,
+       "subtarget": null,
+       "props": {
+        "owner_space": "LOCAL",
+        "use_min_x": true,
+        "use_min_y": true,
+        "use_min_z": true,
+        "use_max_x": true,
+        "use_max_y": true,
+        "use_max_z": true,
+        "max_y": 0.07092953473329544,
+        "use_transform_limit": true
+       }
+      },
+      {
+       "name": "Limit Rotation",
+       "type": "LIMIT_ROTATION",
+       "target": null,
+       "subtarget": null,
+       "props": {
+        "owner_space": "LOCAL",
+        "use_limit_z": true,
+        "min_z": -1.3962633609771729,
+        "max_z": 1.3962633609771729,
+        "use_transform_limit": true
+       }
+      }
+     ]
+    },
+    "Eye.R": {
+     "custom_shape": "Facecard-bone-eye",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, 0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "custom_shape_scale_xyz": [3.5299999713897705, 0.20000004768371582, 3.5999999046325684],
+      "custom_shape_translation": [0.0, 0.0, 0.005000000353902578]
+     },
+     "constraints": []
+    },
+    "Pupil.R": {
+     "custom_shape": "Facecard-bone-pupil",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, 0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "custom_shape_scale_xyz": [3.0, 1.0, 3.3999998569488525],
+      "lock_location": [
+       false,
+       true,
+       false
+      ],
+      "lock_rotation": [
+       true,
+       false,
+       true
+      ],
+      "lock_rotation_w": true
+     },
+     "constraints": []
+    },
+    "PupilClip_Top.R": {
+     "custom_shape": "Facecard-bone-clip",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, -0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "rotation_mode": "XYZ",
+      "custom_shape_scale_xyz": [6.0, 1.0, 1.0],
+      "lock_location": [
+       true,
+       false,
+       true
+      ],
+      "lock_rotation": [
+       true,
+       true,
+       false
+      ],
+      "lock_rotation_w": true,
+      "lock_scale": [
+       true,
+       true,
+       true
+      ]
+     },
+     "constraints": [
+      {
+       "name": "Limit Location",
+       "type": "LIMIT_LOCATION",
+       "target": null,
+       "subtarget": null,
+       "props": {
+        "owner_space": "LOCAL",
+        "use_min_x": true,
+        "use_min_y": true,
+        "use_min_z": true,
+        "use_max_x": true,
+        "use_max_y": true,
+        "use_max_z": true,
+        "min_y": -0.07092953473329544,
+        "use_transform_limit": true
+       }
+      },
+      {
+       "name": "Limit Rotation",
+       "type": "LIMIT_ROTATION",
+       "target": null,
+       "subtarget": null,
+       "props": {
+        "owner_space": "LOCAL",
+        "use_limit_z": true,
+        "min_z": -1.3962633609771729,
+        "max_z": 1.3962633609771729,
+        "use_transform_limit": true
+       }
+      }
+     ]
+    },
+    "PupilClip_Bottom.R": {
+     "custom_shape": "Facecard-bone-clip",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, -0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "rotation_mode": "XYZ",
+      "custom_shape_scale_xyz": [6.0, 1.0, 1.0],
+      "custom_shape_translation": [0.0, 0.006000000052154064, 0.0],
+      "custom_shape_rotation_euler": [3.1415927410125732, 0.0, 0.0],
+      "lock_location": [
+       true,
+       false,
+       true
+      ],
+      "lock_rotation": [
+       true,
+       true,
+       false
+      ],
+      "lock_rotation_w": true,
+      "lock_scale": [
+       true,
+       true,
+       true
+      ]
+     },
+     "constraints": [
+      {
+       "name": "Limit Location",
+       "type": "LIMIT_LOCATION",
+       "target": null,
+       "subtarget": null,
+       "props": {
+        "owner_space": "LOCAL",
+        "use_min_x": true,
+        "use_min_y": true,
+        "use_min_z": true,
+        "use_max_x": true,
+        "use_max_y": true,
+        "use_max_z": true,
+        "max_y": 0.07092953473329544,
+        "use_transform_limit": true
+       }
+      },
+      {
+       "name": "Limit Rotation",
+       "type": "LIMIT_ROTATION",
+       "target": null,
+       "subtarget": null,
+       "props": {
+        "owner_space": "LOCAL",
+        "use_limit_z": true,
+        "min_z": -1.3962633609771729,
+        "max_z": 1.3962633609771729,
+        "use_transform_limit": true
+       }
+      }
+     ]
+    },
+    "Mouth": {
+     "custom_shape": "Facecard-bone-center",
+     "custom_shape_transform": null,
+     "location": [0.0, 0.0, 0.0],
+     "rotation_quaternion": [1.0, 0.0, 0.0, 0.0],
+     "rotation_euler": [0.0, 0.0, 0.0],
+     "rotation_axis_angle": [0.0, 0.0, 1.0, 0.0],
+     "scale": [1.0, 1.0, 1.0],
+     "props": {
+      "custom_shape_scale_xyz": [0.6800000071525574, 0.6800000071525574, 0.6800000071525574]
+     },
+     "constraints": []
+    }
+   }
+  },
+  "Facecard-bone-center": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "WGT-RIG-Armature HarunoChika_Eyes track target"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "location": [5.3475637251665376e-09, -0.17116966843605042, 1.4096161127090454],
+    "rotation_euler": [-3.141592502593994, -1.570796251296997, 0.0],
+    "scale": [0.034404367208480835, 0.034404363483190536, 0.034404367208480835]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "Facecard-bone-clip": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "WGT-RIG-Armature HarunoChika_cf_j_tang_01"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "location": [5.3475637251665376e-09, 0.00449857022613287, 1.3393492698669434],
+    "rotation_euler": [2.7675211429595947, -0.0, 0.0],
+    "scale": [0.019543156027793884, 0.019543156027793884, 0.019543152302503586]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "Facecard-bone-eye": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "WGT-RIG-Armature HarunoChika_torso"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "location": [5.3475637251665376e-09, 0.007367669139057398, 0.9553713798522949],
+    "scale": [0.23919424414634705, 0.23919424414634705, 0.23919424414634705]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  },
+  "Facecard-bone-pupil": {
+   "type": "MESH",
+   "data": [
+    "Mesh",
+    "WGT-RIG-Armature HarunoChika_cf_J_CheekLow_s"
+   ],
+   "parent": null,
+   "parent_type": "OBJECT",
+   "parent_bone": "",
+   "matrix_parent_inverse": [
+    [1.0, 0.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0, 0.0],
+    [0.0, 0.0, 1.0, 0.0],
+    [0.0, 0.0, 0.0, 1.0]
+   ],
+   "props": {
+    "location": [-0.018832843750715256, -0.008083983324468136, 1.3450685739517212],
+    "rotation_euler": [-1.5707964897155762, -1.0543737378413548e-14, -3.567638273693774e-08],
+    "scale": [-0.009999990463256836, -0.009999989531934261, -0.009999989531934261]
+   },
+   "vertex_groups": [],
+   "material_slots": [],
+   "modifiers": [],
+   "constraints": []
+  }
+ }
+}

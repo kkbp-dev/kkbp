@@ -3,8 +3,8 @@
     importer/.venv/bin/python importer/tools/make_svs_eye_white_mask.py BUNDLE [OUTPUT]
 
 BUNDLE is an SVS Export Bundle, such as the Golden Sample `contract/samples/svs`; it is only read.
-OUTPUT defaults to `importer/templates-src/SVS Eye_White_Alpha.png`, which
-scripts/build-hook-assets.sh packs into face_cards.blend.
+OUTPUT defaults to `importer/library-src/images/SVS Eye_White_Alpha.png`, which
+scripts/build-library.sh packs into face_cards.blend.
 
 The face cards' Eyewhite card shows the Character's whole eye white texture and cuts out the eye
 white with a mask. The legacy mask, `Eye_White_Alpha`, is the outline of KK's eye white UV island;
@@ -26,7 +26,7 @@ from PIL import Image, ImageDraw
 
 SIZE = 512  # the legacy Eye_White_Alpha's size
 SUPERSAMPLE = 4
-DEFAULT_OUTPUT = Path(__file__).resolve().parents[1] / "templates-src" / "SVS Eye_White_Alpha.png"
+DEFAULT_OUTPUT = Path(__file__).resolve().parents[1] / "library-src" / "images" / "SVS Eye_White_Alpha.png"
 
 # glTF component types and element counts
 COMPONENTS = {5121: "B", 5123: "H", 5125: "I", 5126: "f"}

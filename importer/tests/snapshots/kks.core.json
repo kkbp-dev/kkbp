@@ -36,7 +36,7 @@
   "objects": 6
  },
  "images": [
-  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "Template orbita_1k.exr",
   "cf_bot_defpants_m main.dark",
   "cf_bot_defpants_m main.light",
   "cf_bot_defpants_m normal",
@@ -448,7 +448,7 @@
   "cf_m_namida_00": {
    "id": "cf_m_namida_00",
    "images": [
-    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "Template orbita_1k.exr",
     "cf_m_namida_00 main"
    ],
    "node_groups": [
@@ -463,7 +463,7 @@
   "cf_m_namida_00_2": {
    "id": "cf_m_namida_00_2",
    "images": [
-    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "Template orbita_1k.exr",
     "cf_m_namida_00_2 main"
    ],
    "node_groups": [
@@ -478,7 +478,7 @@
   "cf_m_namida_00_3": {
    "id": "cf_m_namida_00_3",
    "images": [
-    "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "Template orbita_1k.exr",
     "cf_m_namida_00_3 main"
    ],
    "node_groups": [

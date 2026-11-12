@@ -14,6 +14,8 @@
   ADR 0025), outermost first.
 - `positions`: a slot whose placement is a `Scale Vector` group node in place of the image node's own
   mapping (the edit eyes' pupil and highlights, D41).
+- `graded`: an edit template made from a game's shaders, which grades its light and dark itself as
+  the game's bake did; the edit tool never saturates its textures (issue 30).
 
 A node is named by its path: `textures/_CM.png` is the node `_CM.png` in the group of the material's
 node `textures`.
@@ -76,6 +78,7 @@ class Template:
     groups: tuple[str, ...] = field(default=())  # groups apply() needs beyond those the material holds
     copies: tuple[str, ...] = ()
     positions: Mapping[str, str] = _EMPTY
+    graded: bool = False  # an edit template that grades its light and dark as the game's bake (issue 30)
 
 
 _LIGHT_DARK_TEXTURES = {
@@ -130,6 +133,38 @@ def _in(group, **slots):
 # Every edit template bakes through these: the combine group's light-dark mix, and the texture
 # group's toon shading normals.
 _BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("textures/shade", "Use Normals?")}
+# The templates made from the games' shaders bake the same way, through their own nodes.
+_GAME_BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("shade", "Use Normals?")}
+# The Game's Maker Light as toon_eyew and Koikano/main_eyew shade with it; the defaults are KK's.
+_EYEW_LIGHT = {"ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength"),
+               "shadow_floor": ("lit", "Shadow floor")}
+# What main_opaque and main_item share: the shadow colour and extends, the line switches, the
+# maker's ambient and line colour.
+_ITEM_LIGHT = {"shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend"),
+               "shadow_extend_another": ("lit", "Shadow extend another"),
+               "detail_r_line_r": ("lit", "Detail R line R"), "detail_b_line_g": ("lit", "Detail B line G"),
+               "line_color_alpha": ("lit", "Line color alpha"),
+               "ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength")}
+_SKIN_LIT = {"detail_normal_map_scale": ("lit", "Detail normal map scale"), "shadow_extend": ("lit", "Shadow extend"),
+             "line_tex_on": ("lit", "Line tex on"), "line_color_alpha": ("lit", "Line color alpha"),
+             "line_width": ("lit", "Line width"), "ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength"),
+             "shadow_floor": ("lit", "Shadow floor"),
+             **{f"overlay_color{k}": ("overlays", f"Overlay color {k}") for k in (1, 2, 3)},
+             **{f"overlay_color{k}_alpha": ("overlays", f"Overlay color {k} alpha") for k in (1, 2, 3)},
+             "nip_specular": ("overlays", "Nip specular"), "tex1_mask": ("overlays", "Tex1 mask"),
+             "nip": ("overlay uv", "Nip"), "nip_size": ("overlay uv", "Nip size")}
+_SKIN_TEXTURES = {"plain": "tex.plain", "color_mask": "tex.color_mask", "paint_mask": "tex.paint_mask",
+                  "detail_mask": "tex.detail_mask", "line_mask": "tex.line_mask",
+                  **{f"overlay{k}": f"tex.overlay{k}" for k in (1, 2, 3)}}
+# create_topN's half of a clothes template (edit_templates.clothes).
+_CLOTHES_TEXTURES = {"plain": "tex.plain", "color_mask": "tex.color_mask", "pattern_mask1": "tex.pattern_mask1",
+                     "pattern_mask2": "tex.pattern_mask2", "pattern_mask3": "tex.pattern_mask3",
+                     "detail_mask": "tex.detail_mask", "line_mask": "tex.line_mask"}
+_CLOTHES_CREATE = {"color": ("create", "Color"), "color2": ("create", "Color 2"), "color3": ("create", "Color 3"),
+                     **{f"pattern_color{k}": ("create", f"Pattern color {k}") for k in (1, 2, 3)},
+                     **{f"pattern_color{k}_alpha": ("create", f"Pattern color {k} alpha") for k in (1, 2, 3)},
+                     **{f"pattern{k}_present": ("create", f"Pattern {k} present") for k in (1, 2, 3)},
+                     **{f"pattern_scale{k}{a}": (f"pattern{k}", f"Scale {a}") for k in (1, 2, 3) for a in "uv"}}
 _MISC = Template("", textures=_in("textures", main="_ST_CT.png"), params=_BAKE, copies=("textures",))
 _GENERAL_TEXTURES = _in(
     "textures", main="_ST_CT.png", **{"main.dark": "_ST_DT.png", "color_mask.plain": "_CM.pngopaque"},
@@ -207,6 +242,65 @@ _EDIT_TEMPLATES = (
                      "use_kage_texture": ("light", "Use kage texture color?"),
                      "use_down_texture": ("light", "Use down texture color?")}),
     Template("KK Teeth (tooth)", textures=_MISC.textures, params=_MISC.params, copies=_MISC.copies),
+    # The edit templates made from the games' shaders (issue 30, importer/tools/game_shaders/models.py):
+    # each slot's image node by name at the top level, shared groups, and the game's colours linear.
+    Template("KK toon_eyew", graded=True, textures={"main": "tex.main"},
+             params={**_GAME_BAKE, **_EYEW_LIGHT, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color")}),
+    Template("KK create_eyewhite", graded=True, textures={"create_main": "tex.create_main"},
+             params={**_GAME_BAKE, **_EYEW_LIGHT, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color"),
+                     "create_color": ("create", "Color"), "create_color2": ("create", "Color 2")}),
+    Template("KK main_hair", graded=True,
+             textures={"main": "tex.main", "color_mask": "tex.color_mask", "detail_mask": "tex.detail_mask",
+                       "hair_gloss": "tex.hair_gloss"},
+             params={**_GAME_BAKE, "toon_shading": ("gloss", "Toon shading"), "front": ("gloss", "Front"),
+                     "ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength"),
+                     "use_main_texture": ("lit", "Use main texture"), "color": ("lit", "Color"),
+                     "color2": ("lit", "Color 2"), "color3": ("lit", "Color 3"),
+                     "shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend")}),
+    Template("KK main_opaque", graded=True, textures=_CLOTHES_TEXTURES,
+             params={**_GAME_BAKE, **_ITEM_LIGHT, **_CLOTHES_CREATE, "line_width": ("lit", "Line width")}),
+    Template("KK main_alpha", graded=True, textures=_CLOTHES_TEXTURES,
+             params={**_GAME_BAKE, **_CLOTHES_CREATE, "shadow_color": ("lit", "Shadow color"),
+                     "shadow_extend": ("lit", "Shadow extend"), "specular_color": ("lit", "Specular color"),
+                     "detail_b_line_ga": ("lit", "Detail B line GA"), "line_color_alpha": ("lit", "Line color alpha"),
+                     "line_width": ("lit", "Line width"), "ambient": ("lit", "Ambient"),
+                     "ambient_strength": ("lit", "Ambient strength")}),
+    Template("KK main_emblem", graded=True, textures={"main": "tex.main"}, params=_GAME_BAKE),
+    Template("KK main_item", graded=True,
+             textures={"main": "tex.main", "color_mask": "tex.color_mask", "detail_mask": "tex.detail_mask",
+                       "line_mask": "tex.line_mask", "another_ramp": "tex.another_ramp"},
+             params={**_GAME_BAKE, **_ITEM_LIGHT, "toon_shading": ("ramp", "Toon shading"),
+                     "use_another_ramp": ("lit", "Use another ramp"), "use_main_texture": ("lit", "Use main texture"),
+                     "color": ("lit", "Color"), "color2": ("lit", "Color 2"), "color3": ("lit", "Color 3"),
+                     "another_ramp_full": ("lit", "Another ramp full"), "line_blue": ("lit", "Line blue"),
+                     "not_use_tex_specular": ("lit", "Not use tex specular")}),
+    Template("KK toon_eye", graded=True,
+             textures={"main": "tex.main", "overlay1": "tex.overlay1", "overlay2": "tex.overlay2"},
+             params={**_GAME_BAKE, "rotation": ("iris", "Rotation"), "highlight": ("lit", "Highlight"),
+                     "overlay_color1": ("lit", "Overlay color 1"), "overlay_color1_alpha": ("lit", "Overlay color 1 alpha"),
+                     "overlay_color2": ("lit", "Overlay color 2"), "overlay_color2_alpha": ("lit", "Overlay color 2 alpha"),
+                     "shadow_color": ("lit", "Shadow color"), "ambient": ("lit", "Ambient"),
+                     "ambient_strength": ("lit", "Ambient strength")}),
+    Template("KK create_body", graded=True,
+             textures={**_SKIN_TEXTURES, "texture4": "tex.texture4", "texture3": "tex.texture3", "texture6": "tex.texture6"},
+             params={**_GAME_BAKE, **_SKIN_LIT, "tan_present": ("create", "Tan present"),
+                     **{("color" if k == 1 else f"color{k}"): ("create", "Color" if k == 1 else f"Color {k}") for k in range(1, 7)},
+                     **{f"color{k}_alpha": ("create", f"Color {k} alpha") for k in (2, 3, 4, 6)},
+                     "paint1": ("paint1", "Paint"), "paint1_w": ("paint1", "Paint w"),
+                     "paint2": ("paint2", "Paint"), "paint2_w": ("paint2", "Paint w")}),
+    Template("KK create_head", graded=True,
+             textures={**_SKIN_TEXTURES, "texture4": "tex.texture4", "texture5": "tex.texture5", "texture3": "tex.texture3",
+                       "texture7": "tex.texture7", "texture6": "tex.texture6"},
+             params={**_GAME_BAKE, **_SKIN_LIT,
+                     **{("color" if k == 1 else f"color{k}"): ("create", "Color" if k == 1 else f"Color {k}") for k in range(1, 8)},
+                     **{f"color{k}_alpha": ("create", f"Color {k} alpha") for k in range(3, 8)},
+                     "tex4uv": ("place4", "Place"), "tex4uv_w": ("place4", "Place w"),
+                     "tex5uv": ("place5", "Place"), "tex5uv_w": ("place5", "Place w"),
+                     "paint1": ("paint1", "Paint"), "paint1_w": ("paint1", "Paint w"),
+                     "paint2": ("paint2", "Paint"), "paint2_w": ("paint2", "Paint w"),
+                     "hokuro": ("mole", "Paint"), "hokuro_w": ("mole", "Paint w")}),
+    Template("KK toon_nose", graded=True, textures={"main": "tex.main"},
+             params={**_GAME_BAKE, "color": ("lit", "Color"), "color_alpha": ("lit", "Color alpha")}),
 )
 EDIT_TEMPLATES = tuple(t.name for t in _EDIT_TEMPLATES)
 

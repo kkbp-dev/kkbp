@@ -294,8 +294,8 @@ def swap(material, variant: str) -> list[str]:
         raise TemplateError(f"the {template.name} template has no {variant} variant")
     tree = material.node_tree
     node = tree.nodes[template.shader]
-    # Blender keeps a group node's links across a swap by socket identifier, which a variant made
-    # by rework_templates.py (.Principled) doesn't share with .KK; they are put back by name.
+    # Blender keeps a group node's links across a swap by socket identifier, which each group in
+    # library.blend numbers on its own (ADR 0040), so a variant doesn't share .KK's; they are put back by name.
     inputs = [(l.from_socket, l.to_socket.name) for l in tree.links if l.to_node == node]
     outputs = [(l.from_socket.name, l.to_socket) for l in tree.links if l.from_node == node]
     node.node_tree = _library_group(template.variants[variant])

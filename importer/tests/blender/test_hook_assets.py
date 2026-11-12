@@ -18,7 +18,7 @@ def _contents(path):
 
 @pytest.mark.parametrize("asset", hook_assets.FILES, ids=lambda a: a.path.name)
 def test_every_file_exists_and_every_datablock_carries_the_asset_version(asset):
-    assert asset.path.is_file(), f"run scripts/build-hook-assets.sh: {asset.path.name} is missing"
+    assert asset.path.is_file(), f"run scripts/build-library.sh: {asset.path.name} is missing"
     with bpy.data.libraries.load(str(asset.path), link=False) as (source, target):
         for kind in ("collections", "objects", "materials", "images", "node_groups"):
             setattr(target, kind, list(getattr(source, kind)))

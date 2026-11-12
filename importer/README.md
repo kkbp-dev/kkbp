@@ -17,9 +17,8 @@ See [docs/design/import-pipeline.md](../docs/design/import-pipeline.md) and [tes
 | `kkbp/shading/` | The edit materials' colour maths (LUT saturation, light and dark colours); numpy, never `bpy` |
 | `kkbp/appending.py` | Appending from the library and the asset files, with shared node groups and images |
 | `kkbp/templates.py` | `apply`, `param`, `texture`, `swap`: Material Templates in the user's file |
-| `templates-src/` | The legacy `KK Shader V9.blend` the library is built from, unchanged, and the game's colour grade `Lut_TimeDay.png` |
-| `tools/rework_templates.py` | Builds `library.blend` from it (`scripts/rework-templates.sh`) |
-| `tools/build_hook_assets.py` | Builds the Hooks' asset files from it (`scripts/build-hook-assets.sh`) |
+| `tools/library/` | Builds `library.blend` and the Hooks' asset files from code (`scripts/build-library.sh`, [ADR 0040](../docs/adr/0040-the-library-is-built-from-code.md)): `build.py`, the builder `nodes.py`, one module per node group in `groups/` and per material in `materials/`, and the decompiler, fingerprint and comparison tools |
+| `library-src/` | The images, meshes and scenes the library and asset files are built from |
 | `kkbp/api.py` | The public API hook scripts get as `kkbp` |
 | `tests/host/` | pytest tests that run without Blender |
 | `tests/blender/` | pytest tests that run inside headless Blender, on every harness build, in an isolated profile |
@@ -39,16 +38,20 @@ Run the tests:
 scripts/test-importer.sh
 ```
 
-After changing `tools/rework_templates.py`, rebuild the template library:
+After changing a module in `tools/library/` or a file in `library-src/`, rebuild the template library and the Hooks' asset files, and check them:
 
 ```bash
-scripts/rework-templates.sh
+scripts/build-library.sh
 ```
 
-After changing `tools/build_hook_assets.py`, rebuild the Hooks' asset files:
+```bash
+scripts/check-library.sh
+```
+
+To edit a node group visually, open the built `kkbp/library/library.blend` (or a copy), edit and save, then write the groups back to their modules and review the diff:
 
 ```bash
-scripts/build-hook-assets.sh
+scripts/export-library-nodes.sh importer/kkbp/library/library.blend ".Group name"
 ```
 
 After changing a schema in `contract/schema/`:

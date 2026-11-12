@@ -100,6 +100,14 @@ _Avoid_: game-specific fields
 The game material that composites a KK or KKS material's main texture from a base texture, masks and the Character's colours.
 _Avoid_: matCreate, create texture
 
+**Game Shader Model**:
+A numpy model of one of a Game's shaders as the exporter bakes it, in `importer/tools/game_shaders/models.py`, checked against the Golden Samples; the specification an edit template's node groups follow (ADR 0041).
+_Avoid_: shader recreation, approximation
+
+**Maker Light**:
+The light and global shading values a Game's shader bakes its light and dark textures with (the light term, the ambient colour and strength, the shadow floor), fitted to the Golden Samples (`models.KK`, `models.KKS`). The edit templates default to KK's; a Game Profile sets another shader's own (ADR 0041).
+_Avoid_: scene light, lighting preset
+
 ### Exporting
 
 **Exporter Core**:

@@ -43,7 +43,8 @@ def template_for(profile, bundle_material) -> str | None:
     """The edit template for a bundle material, or None if it can't be edited."""
     if bundle_material.blend_mode in profile.edit.not_editable_blend_modes:
         return None
-    return profile.edit.templates.get(bundle_material.role)
+    by_shader = profile.edit.shader_templates.get((bundle_material.shader or "").rpartition("/")[2])
+    return by_shader or profile.edit.templates.get(bundle_material.role)
 
 
 def saturates(profile, bundle_material) -> bool:
@@ -101,9 +102,11 @@ def edit(ch, material, *, saturate: bool | None = None, log=print):
 
     profile = profiles.get(ch.game)
     bm = ch.bundle().material(material[ID])
-    if saturate is None:
-        saturate = saturates(profile, bm)
     name = template_for(profile, bm)
+    if templates.library.TEMPLATES[name].graded:
+        saturate = False  # it grades its light and dark itself, as the game's bake (issue 30)
+    elif saturate is None:
+        saturate = saturates(profile, bm)
     mat = templates.template_material(name).copy()
     mat.use_fake_user = False
     mat.name = NAME.format(material.name)
@@ -284,12 +287,33 @@ def _color(bm, sources):
     return None
 
 
+def _float(bm, sources):
+    for s in sources:
+        holder = bm.create if s.where == "create" else bm if s.where == "own" else None
+        if holder is not None and s.key in holder.floats:
+            return float(holder.floats[s.key])
+    return None
+
+
+def _vector(bm, sources):
+    for s in sources:
+        holder = bm.create if s.where == "create" else bm if s.where == "own" else None
+        if holder is not None and s.key in holder.vectors:
+            return tuple(float(x) for x in holder.vectors[s.key])
+    return None
+
+
 def _set_colors(mat, bm, profile, saturate):
     lut = _lut() if saturate else None
     shadow = _shadow(bm, profile)
     out = (lambda c: shading.saturate_color(c, lut)) if saturate else _linear
     params = templates.template_of(mat).params
     for c in profile.edit.colors.get(mat[templates.TEMPLATE], ()):
+        if c.how in ("float", "vector", "vector_w"):
+            value = _float(bm, c.sources) if c.how == "float" else _vector(bm, c.sources)
+            if value is not None:
+                _set(mat, c.param, value if c.how == "float" else tuple(value[:3]) if c.how == "vector" else value[3])
+            continue
         color = _color(bm, c.sources)
         if color is None:
             continue
@@ -320,6 +344,7 @@ def _set_values(mat, bm, profile, filled):
 def _holds(term, bm, raws, filled):
     kind, _, value = term.partition(":")
     return {"role": lambda: bm.role == value, "raw": lambda: value in raws,
+            "shader": lambda: (bm.shader or "").rpartition("/")[2] == value,
             "missing": lambda: value not in filled, "has": lambda: value in filled}[kind]()
 
 

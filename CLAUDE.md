@@ -47,7 +47,7 @@ A fresh clone can't run the tests yet: the Golden Samples the tests import are m
   - Use the data API where one exists; operators only through small helpers in `compat/`; mode changes only through `editing()`.
   - Find things by Character, Part Roles, Material Roles, Bone Roles and Bone Groups, never by object or node names. The exception is bones a ported legacy script needs by exact name (the Rigify and SFW Hooks' joint-correction and nipple bones, listed in `docs/design/hooks-and-tools.md`): they are written in the Hook with a note saying why. They aren't violations.
   - The Mesh Loader (`mesh_loader.py`) is the only caller of Blender's glTF importer and sets every option in `GLTF_OPTIONS` explicitly; change one only when an import shows it is wrong.
-  - Never edit `library.blend` or the Hook asset files by hand, or the V9 source they come from: change `importer/tools/rework_templates.py` or `build_hook_assets.py` and rebuild (ADR 0018, ADR 0024).
+  - Never edit `library.blend` or the Hook asset files by hand: change a node module in `importer/tools/library/groups/` or `materials/`, or a source file in `importer/library-src/`, and rebuild with `scripts/build-library.sh` (ADR 0040). A group edited visually in Blender goes back into its module with `scripts/export-library-nodes.sh`.
   - The KKBP log goes to the bundle's `kkbp_cache/log/log.txt`, replaced by each import, never into the `.blend`.
   - Pillow is pinned (`PILLOW_VERSION` in `kkbp/pillow.py`) and raised only on purpose. A wheel must match the running Python and platform; never hard-code a tag such as `cp313`.
   - The Pillow installer rewrites the `blender_manifest.toml` of the add-on it runs from and fills its `wheels/`. Never link `importer/kkbp` itself into a Blender profile; profiles get a copy.
@@ -86,8 +86,9 @@ The user plays these games. Details are in "Working with the games" in [exporter
 | Check any bundle | `scripts/check-bundle.sh <bundle>` |
 | Package the importer zip | `scripts/package-importer.sh` |
 | Package the exporter release zip (all three Games) | `scripts/package-exporters.sh` |
-| Rebuild the template library or Hook assets | `scripts/rework-templates.sh`, `scripts/build-hook-assets.sh` |
-| Redraw the face cards' SVS eye white mask (then rebuild the Hook assets) | `importer/.venv/bin/python importer/tools/make_svs_eye_white_mask.py contract/samples/svs` |
+| Rebuild the template library and Hook assets, or check the committed ones match their sources | `scripts/build-library.sh`, `scripts/check-library.sh` |
+| Write node groups edited in Blender back to their modules | `scripts/export-library-nodes.sh <file.blend> [name ...]` |
+| Redraw the face cards' SVS eye white mask (then `scripts/build-library.sh`) | `importer/.venv/bin/python importer/tools/make_svs_eye_white_mask.py contract/samples/svs` |
 | Regenerate the importer's copy of the contract sets | `scripts/gen-importer-contract.sh` |
 
 Run the importer's host tests and pytest only on `importer/.venv/bin/python` (Blender's own Python, ADR 0015), never the system `python3`. `run.py` and `launch.py` run on the system `python3` (3.11 or later).
@@ -102,7 +103,7 @@ Run the importer's host tests and pytest only on `importer/.venv/bin/python` (Bl
   3. the C# contract checker, `exporters/core/tests/Support/ContractChecker.cs`;
   4. the Core's own check in `exporters/core/src/BundleWriter.cs`, with a failure test and a line in the `exporters/README.md` list;
   5. the importer's `importer/kkbp/bundle/` (`rules.py`, the reader, `_contract.py` through `scripts/gen-importer-contract.sh`) and `importer/tests/bundle_builder.py`.
-- **A new Hook:** a module in `importer/kkbp/builtin/`, its place in `BUILTIN_HOOKS` (`importer/kkbp/pipeline/steps.py`), its own asset file if it needs one (built by `scripts/build-hook-assets.sh`), and a rule in `importer/tests/harness/hook_owns.py` for what it may change.
+- **A new Hook:** a module in `importer/kkbp/builtin/`, its place in `BUILTIN_HOOKS` (`importer/kkbp/pipeline/steps.py`), its own asset file if it needs one (a table entry in `importer/tools/library/build.py`, built by `scripts/build-library.sh`), and a rule in `importer/tests/harness/hook_owns.py` for what it may change.
 - **A new shader in KK:** KK's Unity 5.6 can't list a shader's properties, so every shader KK captures needs an entry in `exporters/kk/shader-properties.json`, made by the KKS `dump_shaders` request ([exporters/README.md](exporters/README.md)).
 - **A new Blender release:**
   - Add or point a build in `importer/tests/harness/harness.toml`. Today `min` and `latest` both point at `/snap/bin/blender` (5.2), so every check runs on 5.2 alone.

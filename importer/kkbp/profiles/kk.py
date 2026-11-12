@@ -152,6 +152,39 @@ def _corrections():
 # The joint corrections (docs/design/joint-corrections.md).
 CORRECTIONS = _corrections()
 
+_SKIN_COLORS = [
+    ["detail_normal_map_scale", ["own:_DetailNormalMapScale"], "float"],
+    ["shadow_extend", ["own:_ShadowExtend"], "float"],
+    ["line_tex_on", ["own:_linetexon"], "float"],
+    *[[f"overlay_color{k}", [f"own:_overcolor{k}"], "plain"] for k in (1, 2, 3)],
+    *[[f"overlay_color{k}_alpha", [f"own:_overcolor{k}"], "alpha"] for k in (1, 2, 3)],
+    ["nip_specular", ["own:_nip_specular"], "float"], ["tex1_mask", ["own:_tex1mask"], "float"],
+    ["nip", ["own:_nip"], "float"], ["nip_size", ["own:_nipsize"], "float"],
+    ["paint1", ["create:_paint1"], "vector"], ["paint1_w", ["create:_paint1"], "vector_w"],
+    ["paint2", ["create:_paint2"], "vector"], ["paint2_w", ["create:_paint2"], "vector_w"],
+]
+
+# create_topN's colours and pattern scales (main_opaque's and main_alpha's create stage).
+_CREATE_TOPN_COLORS = [
+    ["color", ["create:_Color"], "plain"], ["color2", ["create:_Color2"], "plain"],
+    ["color3", ["create:_Color3"], "plain"],
+    *[[f"pattern_color{k}", [f"create:_Color{k}_2"], "plain"] for k in (1, 2, 3)],
+    *[[f"pattern_color{k}_alpha", [f"create:_Color{k}_2"], "alpha"] for k in (1, 2, 3)],
+    *[[f"pattern_scale{k}{a}", [f"create:_PatternScale{k}{a}"], "float"] for k in (1, 2, 3) for a in "uv"],
+]
+
+# main_opaque's and main_item's own values.
+_ITEM_COLORS = [
+    ["shadow_color", ["own:_ShadowColor"], "plain"],
+    ["shadow_extend", ["own:_ShadowExtend"], "float"],
+    ["shadow_extend_another", ["own:_ShadowExtendAnother"], "float"],
+    ["detail_r_line_r", ["own:_DetailRLineR"], "float"],
+    ["detail_b_line_g", ["own:_DetailBLineG"], "float"],
+]
+
+# toon_eyew's colours: the texture's tint and the shadow colour.
+_EYEW_COLORS = [["color", ["own:_Color"], "plain"], ["shadow_color", ["own:_shadowcolor"], "plain"]]
+
 # The eyes' highlights, from the colours the game draws them with (D41).
 _EYE_COLORS = [
     ["highlight_up_color", ["own:_overcolor1"], "plain"],
@@ -164,20 +197,35 @@ _EYE_COLORS = [
 # (the material itself), then a Texture Role or a Raw Property (with `[pattern]` for one pattern),
 # tried in order; `current:` is the slot's image in the material being edited, which keeps an
 # Outfit's body alpha mask.
+# The legacy edit templates by Material Role (D38), for the Roles whose shaders aren't modelled yet
+# (issue 30).
+LEGACY_EDIT_TEMPLATES = {
+    "body": "KK Body", "face": "KK Face", "hair": "KK Hair",
+    "eye_l": "KK EyeL (hitomi)", "eye_r": "KK EyeR (hitomi)", "eye_white": "KK Eyewhites (sirome)",
+    "eyebrow": "KK Eyebrows (mayuge)", "nose_line": "KK Nose", "teeth": "KK Teeth (tooth)",
+    "eyeline_upper": "KK Eyeline up", "eyeline_lower": "KK Eyeline up", "eyeline_shadow": "KK Eyeline up",
+    "tongue": "KK General", None: "KK General",
+}
+
 EDIT = {
-    # Material Role (None: none) -> edit template. Roles not listed, and glasses, aren't editable.
+    # Material Role (None: none) -> edit template. Roles not listed, and glasses, aren't editable. The
+    # templates named after a game shader follow it (importer/tools/game_shaders/models.py).
     "templates": {
-        "body": "KK Body", "face": "KK Face", "hair": "KK Hair",
-        "eye_l": "KK EyeL (hitomi)", "eye_r": "KK EyeR (hitomi)", "eye_white": "KK Eyewhites (sirome)",
-        "eyebrow": "KK Eyebrows (mayuge)", "nose_line": "KK Nose", "teeth": "KK Teeth (tooth)",
-        "eyeline_upper": "KK Eyeline up", "eyeline_lower": "KK Eyeline up", "eyeline_shadow": "KK Eyeline up",
-        "tongue": "KK General", None: "KK General",
+        **LEGACY_EDIT_TEMPLATES,
+        "eye_white": "KK create_eyewhite", "eyebrow": "KK toon_eyew", "nose_line": "KK toon_nose",
+        "hair": "KK main_hair", "eye_l": "KK toon_eye", "eye_r": "KK toon_eye",
+        "body": "KK create_body", "face": "KK create_head",
+        "eyeline_upper": "KK toon_eyew", "eyeline_lower": "KK toon_eyew", "eyeline_shadow": "KK toon_eyew",
     },
+    # Shader (after its last `/`) -> edit template, before the Role's: one Role draws with several.
+    "shader_templates": {"main_opaque": "KK main_opaque", "main_alpha": "KK main_alpha", "main_item": "KK main_item",
+                         "main_emblem": "KK main_emblem"},
     "not_editable_blend_modes": ["glasses"],
     # Edit slot -> where its texture comes from. `main.dark` is made from `main`, and
     # `color_mask.plain` takes `color_mask` for the plain-mask shaders below.
     "textures": {
         "main": ["own:main"],
+        "create_main": ["create:main"],
         "plain": ["create:main", "own:main"],
         "color_mask": ["create:color_mask", "own:color_mask"],
         "detail_mask": ["own:detail_mask"],
@@ -189,9 +237,11 @@ EDIT = {
         "texture6": ["create:_Texture6"], "texture7": ["create:_Texture7"],
         "overlay1": ["own:_overtex1"], "overlay1.left": ["own:_overtex1"],
         "overlay2": ["own:_overtex2"], "overlay3": ["own:_overtex3"],
+        "paint_mask": ["create:_paintmask"],
         "pattern_mask1": ["create:_PatternMask1"], "pattern_mask2": ["create:_PatternMask2"],
         "pattern_mask3": ["create:_PatternMask3"],
         "hair_gloss": ["own:_HairGloss"],
+        "another_ramp": ["own:_AnotherRamp"],
         "expression.0": ["own:_expression[cf_t_expression_00]"],
         "expression.1": ["own:_expression[cf_t_expression_01]"],
     },
@@ -199,7 +249,7 @@ EDIT = {
     "saturated": ["main", "plain"],
     # Material Roles that saturate by default (ADR 0026): their templates draw from colours alone, and
     # saturated they bake closest to the game's own light and dark textures. The rest don't.
-    "saturated_roles": ["hair", "eyebrow"],
+    "saturated_roles": [],
     # These shaders draw no colour mask, though the game gives them one: it goes in the plain slot.
     "plain_color_mask_shaders": ["Shader Forge/main_opaque", "Shader Forge/main_opaque2",
                                  "Shader Forge/main_opaque_low", "Koikano/main_clothes_opaque",
@@ -243,8 +293,53 @@ EDIT = {
             ["eyebrow_color_dark", ["own:_Color"], "eyew_dark"],
         ],
         "KK Eyeline up": [["eyeline_fade_color", ["own:_Color"], "light"]],
+        # The game's own colours, linear, as its shaders see them.
+        "KK toon_eyew": _EYEW_COLORS,
+        "KK create_eyewhite": [*_EYEW_COLORS, ["create_color", ["create:_Color"], "plain"],
+                               ["create_color2", ["create:_Color2"], "plain"]],
+        "KK toon_nose": [["color", ["own:_Color"], "plain"], ["color_alpha", ["own:_Color"], "alpha"]],
+        "KK create_body": [
+            *[[("color" if k == 1 else f"color{k}"), [f"create:_Color{'' if k == 1 else k}"], "plain"] for k in range(1, 7)],
+            *[[f"color{k}_alpha", [f"create:_Color{k}"], "alpha"] for k in (2, 3, 4, 6)],
+            *_SKIN_COLORS,
+        ],
+        "KK create_head": [
+            *[[("color" if k == 1 else f"color{k}"), [f"create:_Color{'' if k == 1 else k}"], "plain"] for k in range(1, 8)],
+            *[[f"color{k}_alpha", [f"create:_Color{k}"], "alpha"] for k in range(3, 8)],
+            ["tex4uv", ["create:_tex4uv"], "vector"], ["tex4uv_w", ["create:_tex4uv"], "vector_w"],
+            ["tex5uv", ["create:_tex5uv"], "vector"], ["tex5uv_w", ["create:_tex5uv"], "vector_w"],
+            ["hokuro", ["create:_hokuro"], "vector"], ["hokuro_w", ["create:_hokuro"], "vector_w"],
+            *_SKIN_COLORS,
+        ],
+        "KK toon_eye": [
+            ["overlay_color1", ["own:_overcolor1"], "plain"], ["overlay_color1_alpha", ["own:_overcolor1"], "alpha"],
+            ["overlay_color2", ["own:_overcolor2"], "plain"], ["overlay_color2_alpha", ["own:_overcolor2"], "alpha"],
+            ["shadow_color", ["own:_shadowcolor"], "plain"],
+            ["highlight", ["own:_isHighLight"], "float"], ["rotation", ["own:_rotation"], "float"],
+        ],
+        "KK main_opaque": [
+            *_CREATE_TOPN_COLORS,
+            *_ITEM_COLORS,
+        ],
+        "KK main_alpha": [
+            *_CREATE_TOPN_COLORS,
+            ["shadow_color", ["own:_ShadowColor"], "plain"], ["specular_color", ["own:_SpecularColor"], "plain"],
+            ["shadow_extend", ["own:_ShadowExtend"], "float"], ["detail_b_line_ga", ["own:_DetailBLineGA"], "float"],
+        ],
+        "KK main_item": [
+            ["color", ["own:_Color"], "plain"], ["color2", ["own:_Color2"], "plain"], ["color3", ["own:_Color3"], "plain"],
+            ["another_ramp_full", ["own:_AnotherRampFull"], "float"],
+            ["not_use_tex_specular", ["own:_notusetexspecular"], "float"],
+            *_ITEM_COLORS,
+        ],
+        "KK main_hair": [
+            ["color", ["own:_Color"], "plain"], ["color2", ["own:_Color2"], "plain"],
+            ["color3", ["own:_Color3"], "plain"], ["shadow_color", ["own:_ShadowColor"], "plain"],
+            ["shadow_extend", ["own:_ShadowExtend"], "float"],
+        ],
     },
-    # Values set when every condition holds: `role:R`, `raw:P` (the material has slot P),
+    # Values set when every condition holds: `role:R`, `raw:P` (the material has slot P), `shader:S`
+    # (the material's shader is S, after its last `/`),
     # `missing:S` and `has:S` (edit slot S is or isn't filled). Params a template lacks are skipped.
     "values": [
         ["role:tongue", {"maintex_saturation": 0.6, "detail_intensity_green": 0.01,
@@ -252,8 +347,8 @@ EDIT = {
         # An AnotherRamp texture makes the red detail metallic, which no template draws.
         ["raw:_AnotherRamp", {"detail_intensity_shine": 0.0}],
         ["missing:main", {"use_main_texture": 0.0}],
-        # The game draws the eyebrows as their texture times their colour, and the hair's root and
-        # tip colours through its colour mask; the templates' switches for both are off.
+        # The game draws the eyebrows as their texture times their colour (the legacy template),
+        # and the hair's root and tip colours through its colour mask; the templates' switches are off.
         ["role:eyebrow has:main", {"use_main_texture_color": 1.0}],
         ["role:hair has:color_mask", {"use_color_mask": 1.0}],
         ["missing:main has:plain", {"use_plain_main_texture": 1.0}],
@@ -261,5 +356,25 @@ EDIT = {
         ["role:eyeline_upper", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
         ["role:eyeline_lower", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
         ["role:eyeline_shadow", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
+        # An image node without an image reads black, opaque: a decal or overlay whose texture is
+        # missing is switched off by its colour's alpha, as the game's transparent default is.
+        ["missing:overlay1", {"overlay_color1_alpha": 0.0}],
+        ["missing:overlay2", {"overlay_color2_alpha": 0.0}],
+        ["missing:overlay3", {"overlay_color3_alpha": 0.0}],
+        ["missing:texture3", {"color3_alpha": 0.0}],
+        ["missing:texture5", {"color5_alpha": 0.0}],
+        ["missing:texture6", {"color6_alpha": 0.0}],
+        ["missing:texture7", {"color7_alpha": 0.0}],
+        ["role:face missing:texture4", {"color4_alpha": 0.0}],
+        # main_item reads its other ramp where it has one.
+        ["has:another_ramp", {"use_another_ramp": 1.0}],
+        # create_body reads white where the tan lines are missing.
+        ["role:body missing:texture4", {"tan_present": 0.0}],
+        # create_topN reads white where a pattern mask is missing.
+        ["missing:pattern_mask1", {"pattern1_present": 0.0}],
+        ["missing:pattern_mask2", {"pattern2_present": 0.0}],
+        ["missing:pattern_mask3", {"pattern3_present": 0.0}],
+        # main_hair_front reads its gloss further along than main_hair.
+        ["shader:main_hair_front", {"front": 1.0}],
     ],
 }

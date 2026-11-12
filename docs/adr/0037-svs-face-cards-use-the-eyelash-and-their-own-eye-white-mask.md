@@ -22,5 +22,5 @@ The fix:
 
 - SVS face cards show the eye white, the pupils and the eyelash. They have no lower line or shadow, and the eyelash sits where SVS's texture puts it, not where KK's eyeline would.
 - The Eyewhite card shows a little less of the texture's bottom than SVS's island covers, so the SVS eye white is cut slightly flat at the bottom.
-- If SVS's eye mesh UVs ever change, rerun the tool on a new Golden Sample, then `scripts/build-hook-assets.sh`.
+- If SVS's eye mesh UVs ever change, rerun the tool on a new Golden Sample, then `scripts/build-library.sh` (ADR 0040).
 - Any bundle missing a card's roles now gets an empty layer instead of a black one.
