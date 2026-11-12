@@ -322,3 +322,108 @@ def toon_eye(main, overlay1, overlay2, overcolor1, overcolor2, is_highlight, sha
     lit = np.clip(ramp + hl, 0, 1)
     out = np.clip((col * tint + lit * (col - col * tint)) * max(light.light * 0.6 + 0.4, light.ambient), 0, 1)
     return out, np.maximum(main[..., 3:4], hl)[..., 0]
+
+
+# --- skin: main_skin --------------------------------------------------------------------------------
+
+def skin_tint(col, light: Light = KK):
+    """main_skin's shadow tint: the colour's own hue at 0.66 of its saturation (HSV, value 1), at 0.9,
+    overlaid with the ambient shadow. Unlike the items' it takes no shadow colour."""
+    return shade(0.9 * (1 + (pastel(col) - 1) * (0.66 / 0.5)), ambient_shadow(light))
+
+
+def nipple_uv(uv1, vertex_red, nip, nip_size):
+    """Where main_skin reads `_overtex1` on the body: the second UV map scaled about the nipple by
+    `_nipsize` away from its middle, all times the vertex colour's red, when `_nip` is on."""
+    reach = np.clip(np.linalg.norm(uv1 - 0.5, axis=-1, keepdims=True) * (1 / 0.06) - 1, 0, 1)
+    scaled = uv1 * (2 - 1.4 * nip_size) + (0.7 * nip_size - 0.5)
+    moved = uv1 + reach * (scaled - uv1)
+    return vertex_red * (uv1 + nip * (moved - uv1))
+
+
+def skin_overlays(main, overlay1, overlay2, overlay3, colors, floats):
+    """main_skin's three overlays over the main texture, on the mesh only (the bake's quad has them
+    cleared; pass zeros there): the nipples (`_overtex1`, tinted, with a `_tex1mask` mode), the
+    underhair (`_overtex2`) and the face's eyeshadow (`_overtex3`). Overlays are rgba as read;
+    `colors` the three `_overcolor`s, linear rgb with their alpha last."""
+    c1, c2, c3 = (np.asarray(c, dtype=F) for c in colors)
+    o1 = overlay1 * c1
+    nipple = overlay1[..., 0:1] * (c1[:3] + overlay1[..., 1:2] * floats.get("_nip_specular", 0) * 0.33)
+    o1rgb = o1[..., :3] + np.clip(floats.get("_tex1mask", 0), 0, 1) * (nipple - o1[..., :3])
+    col = main + o1[..., 3:4] * (o1rgb - main)
+    col = col + overlay2[..., 3:4] * c2[3] * (c2[:3] * overlay2[..., :3] - col)
+    return col + overlay3[..., 3:4] * c3[3] * (overlay3[..., :3] * c3[:3] - col)
+
+
+def main_skin(col, detail_mask, line_mask, floats, ramp, light: Light = KK):
+    """KK's main_skin (body, face) as the bake draws it: the quad facing the camera with the normal
+    maps, specular, rim and liquid off. `col` is the main texture with the overlays over it. The line
+    mask's red and blue are weighted by `_DetailNormalMapScale`; `_LineColorG`'s colour is taken as
+    white and the face shadow (`_FaceShadowG`) as at most 1. Returns linear rgb."""
+    tint = skin_tint(col, light)
+    scale = floats.get("_DetailNormalMapScale", 0)
+    extend = 1.2 * floats.get("_ShadowExtend", 0)
+    e = np.minimum(1 - line_mask[..., 2:3] * scale, 1 - detail_mask[..., 1:2]) * extend + 1 - extend
+    x = col * (tint + ramp * e * (1 - tint)) * max(light.light * 0.6 + 0.4, light.ambient)
+    x = x * (tint + e * (1 - tint))
+    lined = col * tint * ((1 - detail_mask[..., 1:2]) * 0.5 + 0.5)
+    a = LINE_COLOR_ALPHA
+    line = np.clip(1 - (2 - 2 * a) * (1 - lined) if a > 0.5 else 2 * a * lined, 0, 1)
+    shows = np.minimum(1 - 0.5 * line_mask[..., 0:1] * scale, ((1 - LINE_WIDTH) * 0.8 + 0.2) ** line_mask[..., 1:2])
+    shows = floats.get("_linetexon", 0) * (shows - 1) + 1
+    return line + shows * (x - line)
+
+
+# --- skin: create_body, create_head -----------------------------------------------------------------
+
+def paint_uv(u, v, p):
+    """create_body's and create_head's paint UV: `(uv + p.xy) * 2s + 0.5 - s`, s = 2 - 2 p.w, turned
+    about the middle by p.z turns (eye_rotation's sense), before the texture's own transform."""
+    s = 2 - 2 * p[3]
+    return eye_rotation((u + p[0]) * 2 * s + 0.5 - s, (v + p[1]) * 2 * s + 0.5 - s, p[2])
+
+
+def mole_uv(u, v, p):
+    """create_head's mole (`_hokuro`) UV: paint_uv without the turn."""
+    s = 2 - 2 * p[3]
+    return (u + p[0]) * 2 * s + 0.5 - s, (v + p[1]) * 2 * s + 0.5 - s
+
+
+def face_uv(u, v, p):
+    """create_head's `_tex4uv` and `_tex5uv` placement: `(uv + p.xy) * s - s + 0.5`, s = 1 - p.zw."""
+    su, sv = 1 - p[2], 1 - p[3]
+    return (u + p[0]) * su - su + 0.5, (v + p[1]) * sv - sv + 0.5
+
+
+def _layer(base, texture, color_):
+    """A create shader's decal: the texture times the colour over `base`, by the texture's alpha
+    times the colour's (rgba, linear rgb with alpha last)."""
+    return base + texture[..., 3:4] * color_[3] * (texture[..., :3] * color_[:3] - base)
+
+
+def create_body(main, color_mask, tan, paint1, paint2, paint_mask, colors):
+    """create_body (KK): the skin colour (with the tan lines, `_Texture4`), the colour mask's green
+    detail colour, the two paints (by the paint mask's red) and the nails (blue). `colors` maps
+    `_Color` to `_Color6`, each linear rgb with its alpha last; textures are rgba as read."""
+    c = colors
+    t = np.maximum(tan[..., 0:1], 1 - c["_Color4"][3])
+    skin = c["_Color4"][:3] + t * (c["_Color"][:3] - c["_Color4"][:3])
+    detail = 1 + color_mask[..., 1:2] * c["_Color2"][3] * (c["_Color2"][:3] - 1)
+    base = skin * main * detail
+    base = base + paint1[..., 3:4] * c["_Color3"][3] * paint_mask[..., 0:1] * (paint1[..., :3] * c["_Color3"][:3] - base)
+    base = base + paint2[..., 3:4] * c["_Color6"][3] * paint_mask[..., 0:1] * (paint2[..., :3] * c["_Color6"][:3] - base)
+    return base + color_mask[..., 2:3] * (c["_Color5"][:3] * base - base)
+
+
+def create_head(main, color_mask, texture4, texture5, paint1, paint2, paint_mask, mole, colors):
+    """create_head (KK): the skin and detail colours by the colour mask (its blue keeps white), the
+    face decals `_Texture4` and `_Texture5`, the two paints by the paint mask's red, and the mole.
+    `colors` maps `_Color` to `_Color7`, linear rgb with alpha last."""
+    c = colors
+    skin = (1 + color_mask[..., 0:1] * (c["_Color"][:3] - 1)) * (1 + color_mask[..., 1:2] * (c["_Color2"][:3] - 1))
+    base = np.maximum(color_mask[..., 2:3], skin) * main
+    base = _layer(base, texture4, c["_Color4"])
+    base = _layer(base, texture5, c["_Color5"])
+    base = base + paint1[..., 3:4] * c["_Color3"][3] * paint_mask[..., 0:1] * (paint1[..., :3] * c["_Color3"][:3] - base)
+    base = base + paint2[..., 3:4] * c["_Color7"][3] * paint_mask[..., 0:1] * (paint2[..., :3] * c["_Color7"][:3] - base)
+    return _layer(base, mole, c["_Color6"])

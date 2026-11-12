@@ -6,7 +6,8 @@ its shaders bake (issue 30, importer/tools/game_shaders/models.py):
   main_hair_front with KK's own values, and Koikano/main_eye as KK's toon_eye_lod0 (measured on the
   KKS Golden Sample; not modelled).
 
-The Roles whose shaders aren't modelled yet use the legacy edit templates, as KK's do."""
+The Roles whose shaders aren't modelled yet use the legacy edit templates, as KK's do, and so do the
+body and face: KKS composites them with its own create_skinbody and create_skinface."""
 
 from . import kk
 
@@ -17,7 +18,8 @@ EXTENDS = "KK"
 # the KKS Golden Sample's bakes.
 _EYEW_LIGHT = {"ambient": [0.225, 0.216, 0.203, 1.0], "ambient_strength": 0.175, "shadow_floor": 0.2}
 
-EDIT = {**kk.EDIT, "values": [
+EDIT = {**kk.EDIT, "templates": {**kk.EDIT["templates"], "body": kk.LEGACY_EDIT_TEMPLATES["body"],
+                                   "face": kk.LEGACY_EDIT_TEMPLATES["face"]}, "values": [
     *kk.EDIT["values"],
     ["shader:main_eyew", _EYEW_LIGHT],
     ["shader:hair_main_sun_front", {"front": 1.0}],

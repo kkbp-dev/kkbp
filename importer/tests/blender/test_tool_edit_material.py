@@ -1,4 +1,6 @@
-"""Edit material, Cancel, Reset, Save and Link hair on a copy of the KK golden sample (D37-D46)."""
+"""Edit material, Cancel, Reset, Save and Link hair on a copy of the KK golden sample (D37-D46); the
+legacy templates' own behaviour (texture groups, saturation) on the KKS sample, whose body still uses
+one."""
 
 import shutil
 
@@ -28,6 +30,21 @@ def ch(kk_copy):
     return character.Character(result.character_key)
 
 
+@pytest.fixture(scope="module")
+def kks_copy(tmp_path_factory):
+    copy = tmp_path_factory.mktemp("edit") / "kks"
+    shutil.copytree(golden("kks"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
+    return copy
+
+
+@pytest.fixture
+def legacy(kks_copy):
+    """The KKS sample, whose body and face keep the legacy edit templates."""
+    result = kkbp.api.import_bundle(kks_copy, hooks=[])
+    assert result.ok
+    return character.Character(result.character_key)
+
+
 def _image(mat, slot):
     node = templates.texture_node(mat, slot)
     return node.image if node is not None else None
@@ -37,7 +54,26 @@ def _users(material):
     return [o for o in bpy.data.objects if any(s.material == material for s in o.material_slots)]
 
 
-def test_editing_the_body_fills_it_from_the_create_material(ch):
+def test_editing_the_body_composites_it_from_the_create_material(ch):
+    """KK's body follows create_body and main_skin: its create textures and colours, linear."""
+    bm = ch.bundle().material("cf_m_body")
+    body = ch.material("cf_m_body")
+    users = _users(body)
+    edit = edit_material.edit(ch, body, log=lambda *_: None)
+    assert edit.name == "Edit cf_m_body" and edit[templates.TEMPLATE] == "KK create_body"
+    assert _users(edit) == users and not _users(body) and body.use_fake_user
+    assert {"plain", "color_mask", "paint_mask", "detail_mask", "line_mask", "overlay1", "overlay2"} <= set(edit[edit_material.FILLED])
+    assert not templates.own_groups(edit)
+    assert tuple(templates.param(edit, "color").default_value) == pytest.approx(edit_material._linear(bm.create.colors["_Color"]))
+    assert tuple(templates.param(edit, "paint1").default_value) == pytest.approx(bm.create.vectors["_paint1"][:3])
+    assert templates.param(edit, "paint1_w").default_value == pytest.approx(bm.create.vectors["_paint1"][3])
+    assert templates.param(edit, "tan_present").default_value == 0.0  # no tan lines: the skin colour alone
+    assert templates.param(edit, "color3_alpha").default_value == 0.0  # no paint
+    assert templates.param(edit, "nip").default_value == 1.0
+
+
+def test_editing_a_legacy_body_fills_it_from_the_create_material(legacy):
+    ch = legacy
     body = ch.material("cf_m_body")
     users = _users(body)
     edit = edit_material.edit(ch, body, log=lambda *_: None)
@@ -82,8 +118,7 @@ def test_editing_again_reuses_the_edit_material(ch):
 
 
 @pytest.mark.parametrize("id, template, slots, params", [
-    ("cf_m_face_00", "KK Face", {"main", "plain", "color_mask", "texture4", "overlay2", "overlay3"},
-     ("skin_color.light", "detail_color.dark", "light_blush_color.light")),
+    ("cf_m_face_00", "KK create_head", {"plain", "color_mask", "texture4", "overlay3"}, ("color", "color4", "tex4uv")),
     ("cf_m_top_inner01", "KK main_opaque", {"plain", "color_mask", "detail_mask"},
      ("color", "color2", "pattern_color3", "shadow_color")),
     ("cf_m_bot_skirt01", "KK main_opaque", {"pattern_mask1"}, ("color", "pattern_color1")),
@@ -110,7 +145,7 @@ def test_nothing_saturates_by_default(ch):
     b = ch.bundle()
     for id, param, source in (("cf_m_hair_b_08_00", "color", b.material("cf_m_hair_b_08_00").colors["_Color"]),
                               ("cf_m_top_inner01", "color2", b.material("cf_m_top_inner01").create.colors["_Color2"]),
-                              ("cf_m_body", "skin_color.light", b.material("cf_m_body").create.colors["_Color"])):
+                              ("cf_m_body", "color", b.material("cf_m_body").create.colors["_Color"])):
         edit = edit_material.edit(ch, ch.material(id), log=lambda *_: None)
         assert not edit[edit_material.SATURATED], id
         assert tuple(templates.param(edit, param).default_value) == pytest.approx(edit_material._linear(source), abs=1e-3), id
@@ -163,8 +198,9 @@ def test_the_eyes_are_placed_by_their_texture_transform(ch):
     assert {"main", "overlay1", "overlay2"} <= set(edit[edit_material.FILLED])
 
 
-def test_edits_keep_the_bundle_colours_unless_saturated(ch):
-    """On a legacy template (the body's); the ones made from the game's shaders never saturate."""
+def test_edits_keep_the_bundle_colours_unless_saturated(legacy):
+    """On a legacy template (KKS's body's); the ones made from the game's shaders never saturate."""
+    ch = legacy
     create = ch.bundle().material("cf_m_body").create.colors["_Color"]
     edit = edit_material.edit(ch, ch.material("cf_m_body"), log=lambda *_: None)
     plain = _skin(edit)
@@ -179,8 +215,9 @@ def _skin(edit):
     return tuple(templates.param(edit, "skin_color.light").default_value)
 
 
-def test_reset_keeps_the_saturation_the_edit_was_made_with(ch):
+def test_reset_keeps_the_saturation_the_edit_was_made_with(legacy):
     """Issue #13: Reset used to fall back to the default and drop an On or Off choice."""
+    ch = legacy
     edit = edit_material.edit(ch, ch.material("cf_m_body"), saturate=True, log=lambda *_: None)
     saturated = _skin(edit)
     assert edit[edit_material.SATURATED]
@@ -199,8 +236,9 @@ def _edit_from_the_operator(ch, id, **props):
     return obj.active_material
 
 
-def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(ch):
+def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(legacy):
     """Issue #13: the panel passes the scene's Saturate choice; the operator keeps no value of its own."""
+    ch = legacy
     assert bpy.context.scene.kkbp_edit_saturate == "DEFAULT"
     edit = _edit_from_the_operator(ch, "cf_m_body", saturate="ON")
     assert edit[edit_material.SATURATED]

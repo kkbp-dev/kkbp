@@ -152,6 +152,18 @@ def _corrections():
 # The joint corrections (docs/design/joint-corrections.md).
 CORRECTIONS = _corrections()
 
+_SKIN_COLORS = [
+    ["detail_normal_map_scale", ["own:_DetailNormalMapScale"], "float"],
+    ["shadow_extend", ["own:_ShadowExtend"], "float"],
+    ["line_tex_on", ["own:_linetexon"], "float"],
+    *[[f"overlay_color{k}", [f"own:_overcolor{k}"], "plain"] for k in (1, 2, 3)],
+    *[[f"overlay_color{k}_alpha", [f"own:_overcolor{k}"], "alpha"] for k in (1, 2, 3)],
+    ["nip_specular", ["own:_nip_specular"], "float"], ["tex1_mask", ["own:_tex1mask"], "float"],
+    ["nip", ["own:_nip"], "float"], ["nip_size", ["own:_nipsize"], "float"],
+    ["paint1", ["create:_paint1"], "vector"], ["paint1_w", ["create:_paint1"], "vector_w"],
+    ["paint2", ["create:_paint2"], "vector"], ["paint2_w", ["create:_paint2"], "vector_w"],
+]
+
 # main_opaque's and main_item's own values.
 _ITEM_COLORS = [
     ["shadow_color", ["own:_ShadowColor"], "plain"],
@@ -193,6 +205,7 @@ EDIT = {
         **LEGACY_EDIT_TEMPLATES,
         "eye_white": "KK create_eyewhite", "eyebrow": "KK toon_eyew", "nose_line": "KK toon_nose",
         "hair": "KK main_hair", "eye_l": "KK toon_eye", "eye_r": "KK toon_eye",
+        "body": "KK create_body", "face": "KK create_head",
         "eyeline_upper": "KK toon_eyew", "eyeline_lower": "KK toon_eyew", "eyeline_shadow": "KK toon_eyew",
     },
     # Shader (after its last `/`) -> edit template, before the Role's: one Role draws with several.
@@ -214,6 +227,7 @@ EDIT = {
         "texture6": ["create:_Texture6"], "texture7": ["create:_Texture7"],
         "overlay1": ["own:_overtex1"], "overlay1.left": ["own:_overtex1"],
         "overlay2": ["own:_overtex2"], "overlay3": ["own:_overtex3"],
+        "paint_mask": ["create:_paintmask"],
         "pattern_mask1": ["create:_PatternMask1"], "pattern_mask2": ["create:_PatternMask2"],
         "pattern_mask3": ["create:_PatternMask3"],
         "hair_gloss": ["own:_HairGloss"],
@@ -273,6 +287,19 @@ EDIT = {
         "KK create_eyewhite": [*_EYEW_COLORS, ["create_color", ["create:_Color"], "plain"],
                                ["create_color2", ["create:_Color2"], "plain"]],
         "KK toon_nose": [["color", ["own:_Color"], "plain"], ["color_alpha", ["own:_Color"], "alpha"]],
+        "KK create_body": [
+            *[[("color" if k == 1 else f"color{k}"), [f"create:_Color{'' if k == 1 else k}"], "plain"] for k in range(1, 7)],
+            *[[f"color{k}_alpha", [f"create:_Color{k}"], "alpha"] for k in (2, 3, 4, 6)],
+            *_SKIN_COLORS,
+        ],
+        "KK create_head": [
+            *[[("color" if k == 1 else f"color{k}"), [f"create:_Color{'' if k == 1 else k}"], "plain"] for k in range(1, 8)],
+            *[[f"color{k}_alpha", [f"create:_Color{k}"], "alpha"] for k in range(3, 8)],
+            ["tex4uv", ["create:_tex4uv"], "vector"], ["tex4uv_w", ["create:_tex4uv"], "vector_w"],
+            ["tex5uv", ["create:_tex5uv"], "vector"], ["tex5uv_w", ["create:_tex5uv"], "vector_w"],
+            ["hokuro", ["create:_hokuro"], "vector"], ["hokuro_w", ["create:_hokuro"], "vector_w"],
+            *_SKIN_COLORS,
+        ],
         "KK toon_eye": [
             ["overlay_color1", ["own:_overcolor1"], "plain"], ["overlay_color1_alpha", ["own:_overcolor1"], "alpha"],
             ["overlay_color2", ["own:_overcolor2"], "plain"], ["overlay_color2_alpha", ["own:_overcolor2"], "alpha"],
@@ -317,6 +344,18 @@ EDIT = {
         ["role:eyeline_upper", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
         ["role:eyeline_lower", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
         ["role:eyeline_shadow", {"use_kage_texture": 0.0, "use_down_texture": 0.0}],
+        # An image node without an image reads black, opaque: a decal or overlay whose texture is
+        # missing is switched off by its colour's alpha, as the game's transparent default is.
+        ["missing:overlay1", {"overlay_color1_alpha": 0.0}],
+        ["missing:overlay2", {"overlay_color2_alpha": 0.0}],
+        ["missing:overlay3", {"overlay_color3_alpha": 0.0}],
+        ["missing:texture3", {"color3_alpha": 0.0}],
+        ["missing:texture5", {"color5_alpha": 0.0}],
+        ["missing:texture6", {"color6_alpha": 0.0}],
+        ["missing:texture7", {"color7_alpha": 0.0}],
+        ["role:face missing:texture4", {"color4_alpha": 0.0}],
+        # create_body reads white where the tan lines are missing.
+        ["role:body missing:texture4", {"tan_present": 0.0}],
         # create_topN reads white where a pattern mask is missing.
         ["missing:pattern_mask1", {"pattern1_present": 0.0}],
         ["missing:pattern_mask2", {"pattern2_present": 0.0}],

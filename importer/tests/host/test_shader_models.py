@@ -112,14 +112,14 @@ def _glb(path):
     return gltf, accessor
 
 
-def _second_uv(sample, mid, size):
-    """The material's second UV map (v up) at each pixel of its first, rows top-down as PIL gives
-    them, as the exporter's flat mesh draws it: the island met first in vertex order in front, and
-    off the mesh the quad, whose second UV map is its first."""
+def _raster(paths, mid, size, attributes):
+    """The material's mesh attributes (glTF names; UVs with v up) at each pixel of its first UV map,
+    rows top-down as PIL gives them, as the exporter's flat mesh draws it: the island met first in
+    vertex order in front. A dict of arrays, with a `covered` mask; NaN where no mesh is."""
     w, h = size
-    ys, xs = np.mgrid[0:h, 0:w]
-    out = np.stack([(xs + 0.5) / w, 1 - (ys + 0.5) / h], -1)
-    for path in sample.root.glob("outfits/*/outfit.glb"):
+    out = {a: None for a in attributes}
+    covered = np.zeros((h, w), dtype=bool)
+    for path in paths:
         gltf, accessor = _glb(path)
         names = [m["name"] for m in gltf["materials"]]
         if mid not in names:
@@ -127,8 +127,16 @@ def _second_uv(sample, mid, size):
         prims = [p for m in gltf["meshes"] for p in m["primitives"] if p.get("material") == names.index(mid)]
         for prim in prims:
             uv0 = accessor(prim["attributes"]["TEXCOORD_0"]).astype(np.float64)
-            uv1 = accessor(prim["attributes"]["TEXCOORD_1"]).astype(np.float64)
-            uv1[:, 1] = 1 - uv1[:, 1]  # glTF's v runs down
+            values = {}
+            for a in attributes:
+                if a not in prim["attributes"]:
+                    continue
+                v = accessor(prim["attributes"][a]).astype(np.float64)
+                if a.startswith("TEXCOORD"):
+                    v[:, 1] = 1 - v[:, 1]  # glTF's v runs down
+                values[a] = v
+                if out[a] is None:
+                    out[a] = np.full((h, w, v.shape[1]), np.nan)
             tris = accessor(prim["indices"]).reshape(-1, 3).astype(np.int64)
             parent = np.arange(len(uv0))
 
@@ -162,9 +170,22 @@ def _second_uv(sample, mid, size):
                 l2 = ((cy - ay) * (xx - cx) + (ax - cx) * (yy - cy)) / den
                 l3 = 1 - l1 - l2
                 inside = (l1 >= -1e-6) & (l2 >= -1e-6) & (l3 >= -1e-6)
-                value = l1[..., None] * uv1[t[0]] + l2[..., None] * uv1[t[1]] + l3[..., None] * uv1[t[2]]
-                out[yy[inside], xx[inside]] = value[inside]
+                covered[yy[inside], xx[inside]] = True
+                for a, v in values.items():
+                    value = l1[..., None] * v[t[0]] + l2[..., None] * v[t[1]] + l3[..., None] * v[t[2]]
+                    out[a][yy[inside], xx[inside]] = value[inside]
+    out["covered"] = covered
     return out
+
+
+def _second_uv(sample, mid, size):
+    """The material's second UV map (v up) at each pixel of its first; off the mesh, the bake's quad,
+    whose second UV map is its first."""
+    w, h = size
+    ys, xs = np.mgrid[0:h, 0:w]
+    quad = np.stack([(xs + 0.5) / w, 1 - (ys + 0.5) / h], -1)
+    r = _raster(sample.root.glob("outfits/*/outfit.glb"), mid, size, ["TEXCOORD_1"])
+    return quad if r["TEXCOORD_1"] is None else np.where(r["covered"][..., None], r["TEXCOORD_1"], quad)
 
 
 @pytest.mark.parametrize("game", ["kk", "kks"])
@@ -321,3 +342,66 @@ def test_kk_create_eye_gives_back_the_composited_iris():
     out = models.create_eye(main[..., :3], at_grad, models.color(create["colors"]["_Color"]),
                             models.color(create["colors"]["_Color2"]), create["floats"]["_Blend"])
     assert difference(out, sample.texture(m, "main", size=(w, h))) < 0.003
+
+
+def _create_raw(sample, create, name, u, v, uv=None, default=0.0):
+    """A create texture by its Raw Property, read at `uv` (default the first UV map) through its own
+    transform; `default` everywhere when the material has none."""
+    t = next((t for t in create["textures"] if t.get("raw") == name), None)
+    if t is None:
+        return np.full(u.shape + (4,), default)
+    uu, vv = (u, v) if uv is None else uv
+    return models._bilinear(_image(sample, t), uu * t["scale"][0] + t["offset"][0], vv * t["scale"][1] + t["offset"][1])
+
+
+@pytest.mark.parametrize("mid", ["cf_m_body", "cf_m_face_00"])
+def test_kk_create_body_and_head_give_back_the_composited_skin(mid):
+    """A missing tan line texture reads white (the body's skin colour unmixed); missing decals read
+    transparent."""
+    sample = Sample("kk")
+    m = sample.materials[mid]
+    create = m["extensions"]["kk"]["create"]
+    reference = sample.texture(m, "main")
+    h, w = reference.shape[:2]
+    ys, xs = np.mgrid[0:h, 0:w]
+    u, v = (xs + 0.5) / w, 1 - (ys + 0.5) / h
+    main = sample.texture(create, "main", size=(w, h))[..., :3]
+    mask = _mask(sample, create, "color_mask", (w, h))
+    colors = {k: np.append(models.color(c), c[3]) for k, c in create["colors"].items()}
+    vec = create["vectors"]
+    raw = lambda name, uv=None, default=0.0: _create_raw(sample, create, name, u, v, uv, default)  # noqa: E731
+    if mid == "cf_m_body":
+        out = models.create_body(main, mask, raw("_Texture4", default=1.0), raw("_Texture3", models.paint_uv(u, v, vec["_paint1"])),
+                                 raw("_Texture6", models.paint_uv(u, v, vec["_paint2"])), raw("_paintmask"), colors)
+    else:
+        out = models.create_head(main, mask, raw("_Texture4", models.face_uv(u, v, vec["_tex4uv"])),
+                                 raw("_Texture5", models.face_uv(u, v, vec["_tex5uv"])),
+                                 raw("_Texture3", models.paint_uv(u, v, vec["_paint1"])),
+                                 raw("_Texture7", models.paint_uv(u, v, vec["_paint2"])), raw("_paintmask"),
+                                 raw("_Texture6", models.mole_uv(u, v, vec["_hokuro"])), colors)
+    assert difference(out, reference) < 0.003
+
+
+@pytest.mark.parametrize("mid,limit", [("cf_m_body", 0.01), ("cf_m_face_00", 0.015)])
+def test_kk_main_skin_gives_back_the_bakes(mid, limit, lut):
+    """With the overlays on the mesh's second to fourth UV maps, scaled by the vertex colour."""
+    sample = Sample("kk")
+    m = sample.materials[mid]
+    floats = m["floats"]
+    size = (512, 512)
+    r = _raster([sample.root / "body.glb"], mid, size, ["TEXCOORD_1", "TEXCOORD_2", "TEXCOORD_3", "COLOR_0"])
+    on = r["covered"][..., None]
+    vertex = np.ones(size + (4,)) if r["COLOR_0"] is None else np.nan_to_num(r["COLOR_0"], nan=1.0)
+    uv1, uv2, uv3 = (np.nan_to_num(r[f"TEXCOORD_{i}"]) for i in (1, 2, 3))
+    reads = []
+    for k, uv in ((1, models.nipple_uv(uv1, vertex[..., 0:1], floats.get("_nip", 0), floats.get("_nipsize", 0))),
+                  (2, uv2 * vertex[..., 2:3]), (3, uv3)):
+        t = next((t for t in m["textures"] if t.get("raw") == f"_overtex{k}"), None)
+        read = np.zeros(size + (4,)) if t is None else models._bilinear(
+            _image(sample, t), uv[..., 0] * t["scale"][0] + t["offset"][0], uv[..., 1] * t["scale"][1] + t["offset"][1])
+        reads.append(np.where(on, read, 0))
+    colors = [np.append(models.color(m["colors"][f"_overcolor{k}"]), m["colors"][f"_overcolor{k}"][3]) for k in (1, 2, 3)]
+    col = models.skin_overlays(sample.texture(m, "main", size=size)[..., :3], *reads, colors, floats)
+    for ramp, variant in ((1.0, "light"), (0.0, "dark")):
+        out = models.main_skin(col, _mask(sample, m, "detail_mask", size), _mask(sample, m, "line_mask", size), floats, ramp)
+        assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit

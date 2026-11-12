@@ -1,6 +1,6 @@
 # Edit templates follow the games' own shaders, and grade their light and dark as the maker camera does
 
-Updates [ADR 0026](0026-edit-materials-dont-saturate-by-default.md) as issue 30 asks. In progress: both Games' eye whites, eyebrows, eyelines, nose line, hair and irises, and KK's clothes, teeth and tongue, are done; the other Material Roles, KK's `main_alpha` and KKS's clothes still use the legacy edit templates.
+Updates [ADR 0026](0026-edit-materials-dont-saturate-by-default.md) as issue 30 asks. Every KK Material Role is done, and KKS's eye whites, eyebrows, eyelines, nose line, hair and irises. KK's `main_alpha` (no sample uses it), KKS's clothes, teeth, tongue, body and face still use the legacy edit templates.
 
 An edit template is rebuilt from the game's own shaders instead of the legacy templates' approximations. The shaders were read from the installed games (`importer/tools/game_shaders/dump.py` disassembles their compiled D3D11 programs; the output is the games' code and stays in `importer/tests/.work/`), and each one used is written as a numpy model in `importer/tools/game_shaders/models.py`. `host/test_shader_models.py` checks every model against the Golden Samples' own bakes, and the node groups follow the models.
 
@@ -37,6 +37,8 @@ Measured by `blender/test_edit_accuracy.py` (mean absolute difference per channe
 | `cf_m_socks_high01` | 0.102 / 0.086 | 0.011 / 0.003 |
 | `cf_m_shoes_roafer01` | 0.092 / 0.082 | 0.004 / 0.002 |
 | `cf_m_tooth` (main_item) | 0.073 / 0.053 | 0.001 / 0.001 |
+| `cf_m_body` (create_body, main_skin) | 0.049 / 0.088 | 0.004 / 0.008 |
+| `cf_m_face_00` (create_head, main_skin) | 0.094 / 0.130 | 0.004 / 0.017 |
 | `cf_m_hitomi_00` (toon_eye) | 0.106 / 0.073 | 0.002 / 0.004 |
 | `cf_m_hitomi_00_2` | 0.106 / 0.074 | 0.003 / 0.004 |
 | `cf_m_tang` (main_item) | 0.081 / 0.128 | 0.001 / 0.011 |
@@ -68,12 +70,15 @@ With KK's constants, KKS's shadow eyeline's dark would be 0.198: the shadow keep
 
 ## Consequences
 
-- A template made this way is named after the game's shaders (`KK toon_eyew`, `KK create_eyewhite`, `KK toon_nose`, `KK main_hair`, `KK main_opaque`, `KK main_item`, `KK toon_eye`), keeps its image nodes at the top level (no texture group copied per material, so [ADR 0025](0025-edit-materials-copy-their-texture-group.md) doesn't apply to it), takes the game's own colours linear (`plain`), and is `graded` in its Template Description: the edit tool never saturates it, whatever Saturate says.
+- A template made this way is named after the game's shaders (`KK toon_eyew`, `KK create_eyewhite`, `KK toon_nose`, `KK main_hair`, `KK main_opaque`, `KK main_item`, `KK toon_eye`, `KK create_body`, `KK create_head`), keeps its image nodes at the top level (no texture group copied per material, so [ADR 0025](0025-edit-materials-copy-their-texture-group.md) doesn't apply to it), takes the game's own colours linear (`plain`), and is `graded` in its Template Description: the edit tool never saturates it, whatever Saturate says.
 - The Game Profile picks a template per Material Role (`LEGACY_EDIT_TEMPLATES` for the Roles not modelled yet), and sets a shader's Maker Light through `values` (the `shader:` condition). The templates' defaults are KK's; KKS's profile sets `main_eyew`'s ambient colour, strength and shadow floor. No Role of either Game saturates by default now (`saturated_roles` is empty).
 - The hair's template reads `_HairGloss` through the second UV map, moved along u by the light as the game does (`.KK hair gloss uv`). The toon value reaches `.Combine colors` through that group, so the bake's fixed value moves the gloss, and the viewport slides it with the shading. Off the mesh, the game's bake shows its quad, whose second UV map is its first; the importer's bake plane has the same.
 - Link hair copies a template's colours (the profile's colour table, floats left out), so each hair keeps its own shadow extend and gloss placement.
 - KK's clothes are picked by shader, not Role (`EDIT["shader_templates"]`: `main_opaque`, `main_item`), since one Role draws with several. `KK main_opaque` composites `create_topN` in nodes, so an edit can change the colours and patterns; `KK main_item` (teeth, tongue, items) applies its colour mask in the lit stage, as the game does. The maker's line globals, which no material carries, are fitted (`_LineColorG.a` 0.065, `_linewidthG` 0.32).
 - The irises shade the game's composited iris (the material's own main texture), as the legacy template did, turned by `_rotation` and placed by its texture transform in place of the legacy `Eyepos` groups; recolouring the iris through `create_eye` (modelled as `models.create_eye`) is left for later. The highlights read the second and third UV maps; only their alpha shows, in their colours. The expression texture is left out (`_exppower` is 0 outside expressions).
+- The body and face composite create_body and create_head in nodes (the colour mask, tan lines, paints placed and turned by `_paint1`/`_paint2`, the face decals by `_tex4uv`/`_tex5uv`, the mole by `_hokuro`), put main_skin's three overlays on the mesh's second to fourth UV maps (the nipples and underhair scaled by the vertex colour, which the bake now copies to its flat mesh), and shade as main_skin bakes. Its tint takes the colour's own hue at 0.66 of its saturation, with no shadow colour; the line mask is weighted by `_DetailNormalMapScale`. The face's dark side stays a little further off (0.017) than the model (0.011).
+- An image node without an image reads black and opaque in Eevee, where the game reads a missing texture as transparent (or, for create_body's tan lines, white). So a profile value rule switches a decal or overlay off by its colour's alpha when its slot is missing, and the tan lines have a "present" switch.
+- The game clamps its overlays' samplers; the templates' overlay image nodes use Extend, so a face overlay doesn't repeat across the texture.
 - KKS's clothes shaders keep the legacy templates. KK's models fit KKS's opaque clothes to between 0.005 and 0.055, better than legacy (0.04 to 0.16) but not as well as KK's, and KKS's tongue is 0.27 off, so they need their own models.
 - `Lut_TimeDay.png` stays in `library.blend`, Non-Color, read by `.KK grade` (and still by the legacy saturation).
 - `importer/tests/data/edit_accuracy.json` records each material's numbers; the test fails when a material moves further from the game. Re-record it when a template brings a material closer.

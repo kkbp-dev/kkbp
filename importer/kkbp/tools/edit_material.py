@@ -295,16 +295,24 @@ def _float(bm, sources):
     return None
 
 
+def _vector(bm, sources):
+    for s in sources:
+        holder = bm.create if s.where == "create" else bm if s.where == "own" else None
+        if holder is not None and s.key in holder.vectors:
+            return tuple(float(x) for x in holder.vectors[s.key])
+    return None
+
+
 def _set_colors(mat, bm, profile, saturate):
     lut = _lut() if saturate else None
     shadow = _shadow(bm, profile)
     out = (lambda c: shading.saturate_color(c, lut)) if saturate else _linear
     params = templates.template_of(mat).params
     for c in profile.edit.colors.get(mat[templates.TEMPLATE], ()):
-        if c.how == "float":
-            value = _float(bm, c.sources)
+        if c.how in ("float", "vector", "vector_w"):
+            value = _float(bm, c.sources) if c.how == "float" else _vector(bm, c.sources)
             if value is not None:
-                _set(mat, c.param, value)
+                _set(mat, c.param, value if c.how == "float" else tuple(value[:3]) if c.how == "vector" else value[3])
             continue
         color = _color(bm, c.sources)
         if color is None:

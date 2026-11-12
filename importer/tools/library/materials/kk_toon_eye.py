@@ -8,6 +8,7 @@ NAME = 'KK toon_eye'
 
 def build(lib):
     t = edit_templates.begin(lib, NAME, ["main", "overlay1", "overlay2"])
+    edit_templates.clamp(t, "overlay1", "overlay2")
     t.make('ShaderNodeGroup', 'iris', (-1700, 300), {'node_tree': lib.group('.KK eye uv')})
     t.link('iris', 'Vector', 'tex.main', 'Vector')
     for k, uv_map in ((1, 'uv_nipple_and_shine'), (2, 'uv_underhair')):

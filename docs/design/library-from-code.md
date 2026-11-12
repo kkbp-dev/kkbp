@@ -489,7 +489,7 @@ Done (ADR 0041, D67):
 - Groups `.KK srgb`, `.KK linear`, `.KK grade`, `.KK graded`, `.KK create_eyewhite`, `.KK toon_eyew`,
   `.KK toon_nose`, `.KK shadow tint`, `.KK main_hair`, `.KK hair gloss uv`, and the clothes' (below);
   templates `KK create_eyewhite`, `KK toon_eyew`, `KK toon_nose`, `KK main_hair`, `KK main_opaque`,
-  `KK main_item`, `KK toon_eye`, built on
+  `KK main_item`, `KK toon_eye`, `KK create_body`, `KK create_head`, built on
   `importer/tools/library/edit_templates.py`; KK's profile points eye whites, eyebrows, eyelines and
   the nose line at them, and KKS's profile inherits them with its own maker light.
 - `blender/test_edit_accuracy.py`, with `importer/tests/data/edit_accuracy.json` (the legacy numbers are
@@ -528,9 +528,15 @@ template, Template Description with `graded=True`, profile row and colours, re-r
    and scale are on that texture, not on the create textures. Recolouring through `create_eye` in the
    template (the `_grad` UV, the vivid-light blend) is modelled and tested but not built. The
    expression texture (`_exppower`) is left out.
-5. **KK body and face** (`create_body`, `create_head` + `main_skin`): the paint and mole UVs, the
-   overlays on the second to fourth UV maps (check the importer's UV names), `MapValuesMain`.
-6. **KKS** for 2 to 5.
+5. ~~**KK body and face**~~ Done: `models.create_body`, `create_head`, `paint_uv`, `face_uv`, `mole_uv`,
+   `skin_overlays`, `nipple_uv`, `skin_tint`, `main_skin`; groups `.KK create_body`, `.KK create_head`,
+   `.KK paint uv`, `.KK face uv`, `.KK skin overlay uv`, `.KK skin overlays`, `.KK main_skin` (with
+   `importer/tools/library/decals.py`); templates `KK create_body`, `KK create_head`. The bake copies
+   the mesh's vertex colour to its flat mesh. Missing decals and overlays are switched off by their
+   colour's alpha (value rules); overlays clamp. Not modelled: `_FaceShadowG` (taken as at most 1),
+   `_LineColorG`'s colour (white), the liquid. The face's dark side is 0.017 from the bake, the model 0.011.
+6. **KKS** for 3 and 5 (its hair and eyes bake as KK's): `main_clothes_opaque`, `main_clothes_item`
+   (its tongue is 0.27 off KK's model), `create_skinbody`, `create_skinface`, `Koikano/main_skin`.
 7. When no Role uses a legacy edit template: delete them and the groups only they use, the Saturate
    option (`scene.kkbp_edit_saturate`, the operator's option; check `docs/hook-interface.md`), the
    LUT and dark-texture half of `kkbp/shading/`, `saturated`, `saturated_roles`,
