@@ -1,7 +1,7 @@
 """`.KK main_item`: KK's main_item (the teeth, the tongue, items) as the exporter bakes it, lit from
 the front (Light) and from behind (Dark), in linear colour (models.main_item):
 
-    base  = mix(1, Main, Use main texture) * colour mask colours over white * (1 - Line mask.b)
+    base  = mix(1, Main, Use main texture) * colour mask colours over white * (1 - Line mask.b * Line blue)
     lineR = mix(Line mask.r, Detail mask.r, Detail R line R);  full = mix(lineR, 1, Another ramp full)
     tint  = (saturate(2 - Shadow extend another - full) * 0.67 + 0.33) * `.KK item tint` of base
     spec  = Detail mask.r ^ 2 * (1 - Not use tex specular)
@@ -43,6 +43,7 @@ def build(lib):
     t.socket('INPUT', 'Detail B line G', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Not use tex specular', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Line color alpha', 'NodeSocketFloat', default_value=0.065, min_value=0.0, max_value=1.0)
+    t.socket('INPUT', 'Line blue', 'NodeSocketFloat', default_value=1.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Ambient', 'NodeSocketColor', default_value=(0.15, 0.15, 0.15, 1.0))
     t.socket('INPUT', 'Ambient strength', 'NodeSocketFloat', default_value=0.15, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Light', 'NodeSocketFloat', default_value=1.0, min_value=0.0, max_value=2.0)
@@ -62,7 +63,9 @@ def build(lib):
            {'Factor_Float': ('in', 'Use main texture'), 'A_Color': WHITE, 'B_Color': ('in', 'Main')})
     t.make('ShaderNodeVectorMath', 'main.col', (-700, 450), {'operation': 'MULTIPLY'},
            {'Vector': ('main', 'Result_Color'), 'Vector_001': previous})
-    unlined = t.math('unlined', 'SUBTRACT', 1.0, ('line', 'Blue'), location=(-1300, -850))
+    unlined = t.math('unlined', 'MULTIPLY_ADD', ('line', 'Blue'),
+                     t.math('line.blue', 'MULTIPLY', ('in', 'Line blue'), -1.0, location=(-1500, -950)), 1.0,
+                     location=(-1300, -850))
     t.make('ShaderNodeVectorMath', 'base', (-500, 450), {'operation': 'SCALE'},
            {'Vector': ('main.col', 'Vector'), 'Scale': unlined})
     t.make('ShaderNodeMix', 'alpha.main', (-1300, 100), {'data_type': 'FLOAT'},

@@ -539,10 +539,11 @@ template, Template Description with `graded=True`, profile row and colours, re-r
    `KK main_opaque` with KK's values, `Koikano/main_skin` the KK body and face templates with
    `models.KKS_SKIN` (a `shader:main_skin` value rule). Their physically based half (`_KanoVerShift`,
    probes, cubemaps) and the ramp texture's other channels would need the game's global ramp and the
-   maker scene's probes. `Koikano/main_clothes_item` (teeth, tongue) keeps the legacy templates: model
-   it to finish the Roles. KKS's create_topN pattern offset and rotation are untested (no sample
-   pattern).
-7. When no Role uses a legacy edit template: delete them and the groups only they use, the Saturate
+   maker scene's probes. `Koikano/main_clothes_item` (teeth, tongue) takes `KK main_item` without the
+   line mask's darkening (`line_blue` 0); its fourth colour and detail overlay are unmodelled (no effect
+   in the sample). KKS's create_topN pattern offset and rotation are untested (no sample pattern).
+7. Left on the legacy templates: KK's `main_emblem` (the sample's emblem) and `main_alpha` (no sample).
+   When no Role uses a legacy edit template: delete them and the groups only they use, the Saturate
    option (`scene.kkbp_edit_saturate`, the operator's option; check `docs/hook-interface.md`), the
    LUT and dark-texture half of `kkbp/shading/`, `saturated`, `saturated_roles`,
    `plain_color_mask_shaders` and the `how` kinds nothing uses; update ADR 0026 and 0025 to say so.

@@ -267,20 +267,23 @@ def main_opaque(main, detail_mask, line_mask, floats, shadow_color, ramp, light:
     return out * max(light.light * 0.6 + 0.4, light.ambient)
 
 
-def main_item(main, color_mask, detail_mask, line_mask, colors, floats, shadow_color, ramp, light: Light = KK):
+def main_item(main, color_mask, detail_mask, line_mask, colors, floats, shadow_color, ramp, light: Light = KK,
+              line_blue=1.0):
     """KK's main_item (the teeth, the tongue, items) as the bake draws it: the colour mask over the
     main texture (white if none), darkened by the line mask's blue; its own shadow-extend scale; a
     highlight from the detail mask's red squared, which the bake doesn't clear; the lines mixed in
-    linearly. `_LineColorG`'s colour is taken as white. Returns linear rgb."""
+    linearly. `_LineColorG`'s colour is taken as white. KKS's Koikano/main_clothes_item doesn't darken
+    by the line mask's blue (`line_blue` 0) and comes close this way. Returns linear rgb."""
     col = np.ones(3, dtype=F)
     for i, color_ in enumerate(colors):
         col = col + color_mask[..., i:i + 1] * (color_ - col)
-    base = main * col * (1 - line_mask[..., 2:3])
+    base = main * col * (1 - line_blue * line_mask[..., 2:3])
     line_r = line_mask[..., 0:1] + floats.get("_DetailRLineR", 0) * (detail_mask[..., 0:1] - line_mask[..., 0:1])
     full = line_r + floats.get("_AnotherRampFull", 0) * (1 - line_r)
     k = np.clip(2 - floats.get("_ShadowExtendAnother", 0) - full, 0, 1) * 0.67 + 0.33
     tint = k * item_tint(base, shadow_color, light)
-    col = base * (tint + ramp * (1 - tint)) + detail_mask[..., 0:1] ** 2 * (1 - floats.get("_notusetexspecular", 0))
+    lit = min(1.0, ramp + light.shadow_floor)
+    col = base * (tint + lit * (1 - tint)) + detail_mask[..., 0:1] ** 2 * (1 - floats.get("_notusetexspecular", 0))
     col = col * max(light.light * 0.6 + 0.4, light.ambient)
     extend = 1.2 * floats.get("_ShadowExtend", 0)
     col = col * (tint + ((1 - detail_mask[..., 1:2]) * extend + 1 - extend) * (1 - tint))

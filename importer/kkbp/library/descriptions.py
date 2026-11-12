@@ -264,7 +264,7 @@ _EDIT_TEMPLATES = (
                        "line_mask": "tex.line_mask"},
              params={**_GAME_BAKE, **_ITEM_LIGHT, "use_main_texture": ("lit", "Use main texture"),
                      "color": ("lit", "Color"), "color2": ("lit", "Color 2"), "color3": ("lit", "Color 3"),
-                     "another_ramp_full": ("lit", "Another ramp full"),
+                     "another_ramp_full": ("lit", "Another ramp full"), "line_blue": ("lit", "Line blue"),
                      "not_use_tex_specular": ("lit", "Not use tex specular")}),
     Template("KK toon_eye", graded=True,
              textures={"main": "tex.main", "overlay1": "tex.overlay1", "overlay2": "tex.overlay2"},

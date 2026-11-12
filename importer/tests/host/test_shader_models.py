@@ -270,19 +270,24 @@ def test_kk_main_opaque_gives_back_the_bakes(mid, limit, lut):
         assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit
 
 
-@pytest.mark.parametrize("mid,limit", [("cf_m_tooth", 0.005), ("cf_m_tang", 0.015)])
-def test_kk_main_item_gives_back_the_bakes(mid, limit, lut):
-    """The tongue has no main texture (white); its dark side's red is 0.02 short where it nears 1."""
-    sample = Sample("kk")
+@pytest.mark.parametrize("game,mid,line_blue,limits", [
+    ("kk", "cf_m_tooth", 1.0, (0.005, 0.005)), ("kk", "cf_m_tang", 1.0, (0.005, 0.015)),
+    # KKS's Koikano/main_clothes_item, approximated without the line mask's darkening; legacy was
+    # 0.073 / 0.051 and 0.081 / 0.076.
+    ("kks", "cf_m_tooth", 0.0, (0.005, 0.015)), ("kks", "cf_m_tang", 0.0, (0.005, 0.05)),
+])
+def test_main_item_gives_back_the_bakes(game, mid, line_blue, limits, lut):
+    """The tongue has no main texture (white); KK's dark side's red is 0.02 short where it nears 1."""
+    sample = Sample(game)
     m = sample.materials[mid]
     size = (256, 256)
     tex = sample.texture(m, "main", size=size)
     main = np.ones(size + (3,)) if tex is None else tex[..., :3]
     colors = [models.color(m["colors"][k]) for k in ("_Color", "_Color2", "_Color3")]
-    for ramp, variant in ((1.0, "light"), (0.0, "dark")):
+    for ramp, variant, limit in ((1.0, "light", limits[0]), (0.0, "dark", limits[1])):
         out = models.main_item(main, _mask(sample, m, "color_mask", size), _mask(sample, m, "detail_mask", size),
                                _mask(sample, m, "line_mask", size), colors, m["floats"],
-                               models.color(m["colors"]["_ShadowColor"]), ramp)
+                               models.color(m["colors"]["_ShadowColor"]), ramp, line_blue=line_blue)
         assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit
 
 

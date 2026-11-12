@@ -1,6 +1,6 @@
-"""Edit material, Cancel, Reset, Save and Link hair on a copy of the KK golden sample (D37-D46); the
-legacy templates' own behaviour (texture groups, saturation) on the KKS sample, whose teeth and tongue
-still use them."""
+"""Edit material, Cancel, Reset, Save and Link hair on a copy of the KK golden sample (D37-D46). The
+legacy templates' own behaviour (texture groups, saturation) is tested on the emblem (main_emblem),
+the last material in the samples that uses one."""
 
 import shutil
 
@@ -26,21 +26,6 @@ def kk_copy(tmp_path_factory):
 @pytest.fixture
 def ch(kk_copy):
     result = kkbp.api.import_bundle(kk_copy, hooks=[])
-    assert result.ok
-    return character.Character(result.character_key)
-
-
-@pytest.fixture(scope="module")
-def kks_copy(tmp_path_factory):
-    copy = tmp_path_factory.mktemp("edit") / "kks"
-    shutil.copytree(golden("kks"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
-    return copy
-
-
-@pytest.fixture
-def legacy(kks_copy):
-    """The KKS sample, whose teeth and tongue keep the legacy edit templates."""
-    result = kkbp.api.import_bundle(kks_copy, hooks=[])
     assert result.ok
     return character.Character(result.character_key)
 
@@ -72,23 +57,18 @@ def test_editing_the_body_composites_it_from_the_create_material(ch):
     assert templates.param(edit, "nip").default_value == 1.0
 
 
-def test_editing_a_legacy_material_copies_its_texture_groups(legacy):
-    """KKS's tongue keeps a legacy template (KK General): its texture groups are its own (ADR 0025), and
-    its colours come in light and dark versions, the dark one darker."""
-    ch = legacy
-    tongue = ch.material("cf_m_tang")
-    users = _users(tongue)
-    edit = edit_material.edit(ch, tongue, log=lambda *_: None)
-    assert edit.name == "Edit cf_m_tang" and edit[templates.TEMPLATE] == "KK General"
-    assert _users(edit) == users and not _users(tongue) and tongue.use_fake_user
-    filled = set(edit[edit_material.FILLED])
-    assert {"color_mask", "detail_mask"} <= filled
-    assert all(_image(edit, slot) is not None for slot in filled)
+def test_editing_a_legacy_material_copies_its_texture_groups(ch):
+    """The emblem keeps a legacy template (KK General): its texture groups are its own (ADR 0025),
+    and its dark texture is made once, into the Cache."""
+    emblem = ch.material("cf_m_emblem")
+    users = _users(emblem)
+    edit = edit_material.edit(ch, emblem, log=lambda *_: None)
+    assert edit.name == "Edit cf_m_emblem" and edit[templates.TEMPLATE] == "KK General"
+    assert _users(edit) == users and not _users(emblem) and emblem.use_fake_user
+    assert {"main", "main.dark"} <= set(edit[edit_material.FILLED])
     own = templates.own_groups(edit)
-    assert own and all(g.name.endswith("Edit cf_m_tang") and g.users == 1 for g in own)
-    light = templates.param(edit, "color_mask_red.light").default_value
-    dark = templates.param(edit, "color_mask_red.dark").default_value
-    assert sum(dark[:3]) < sum(light[:3]) and light[0] > 0.5
+    assert own and all(g.name.endswith("Edit cf_m_emblem") and g.users == 1 for g in own)
+    assert any(".dark." in p.name for p in ch.bundle().cache_dir("edit").iterdir())
     assert edit_material.edit(ch, edit) is edit
 
 
@@ -194,34 +174,27 @@ def test_the_eyes_are_placed_by_their_texture_transform(ch):
     assert {"main", "overlay1", "overlay2"} <= set(edit[edit_material.FILLED])
 
 
-def test_edits_keep_the_bundle_colours_unless_saturated(legacy):
-    """On the legacy templates left (KKS's tongue and teeth); the ones made from the game's shaders
-    never saturate."""
-    ch = legacy
-    own = ch.bundle().material("cf_m_tang").colors["_Color"]
-    edit = edit_material.edit(ch, ch.material("cf_m_tang"), log=lambda *_: None)
-    plain = _red(edit)
-    assert plain == pytest.approx(edit_material._linear(own), abs=1e-4)
+def _saturated(edit):
+    return "saturated" in templates.texture_node(edit, "main").image.name
+
+
+def test_edits_keep_the_bundle_texture_unless_saturated(ch):
+    """On a legacy template (the emblem's); the ones made from the game's shaders never saturate."""
+    edit = edit_material.edit(ch, ch.material("cf_m_emblem"), log=lambda *_: None)
+    assert not _saturated(edit)
     edit = edit_material.reset(ch, edit, saturate=True, log=lambda *_: None)
-    assert _red(edit) != pytest.approx(plain, abs=1e-3)
-    edit_material.edit(ch, ch.material("cf_m_tooth"), saturate=True, log=lambda *_: None)
+    assert _saturated(edit)
     assert any(p.name.endswith(".saturated.png") for p in ch.bundle().cache_dir("edit").iterdir())
 
 
-def _red(edit):
-    return tuple(templates.param(edit, "color_mask_red.light").default_value)
-
-
-def test_reset_keeps_the_saturation_the_edit_was_made_with(legacy):
+def test_reset_keeps_the_saturation_the_edit_was_made_with(ch):
     """Issue #13: Reset used to fall back to the default and drop an On or Off choice."""
-    ch = legacy
-    edit = edit_material.edit(ch, ch.material("cf_m_tang"), saturate=True, log=lambda *_: None)
-    saturated = _red(edit)
-    assert edit[edit_material.SATURATED]
+    edit = edit_material.edit(ch, ch.material("cf_m_emblem"), saturate=True, log=lambda *_: None)
+    assert edit[edit_material.SATURATED] and _saturated(edit)
     edit = edit_material.reset(ch, edit, log=lambda *_: None)
-    assert edit[edit_material.SATURATED] and _red(edit) == pytest.approx(saturated, abs=1e-4)
+    assert edit[edit_material.SATURATED] and _saturated(edit)
     edit = edit_material.reset(ch, edit, saturate=False, log=lambda *_: None)
-    assert not edit[edit_material.SATURATED] and _red(edit) != pytest.approx(saturated, abs=1e-3)
+    assert not edit[edit_material.SATURATED] and not _saturated(edit)
 
 
 def _edit_from_the_operator(ch, id, **props):
@@ -233,14 +206,13 @@ def _edit_from_the_operator(ch, id, **props):
     return obj.active_material
 
 
-def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(legacy):
+def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(ch):
     """Issue #13: the panel passes the scene's Saturate choice; the operator keeps no value of its own."""
-    ch = legacy
     assert bpy.context.scene.kkbp_edit_saturate == "DEFAULT"
-    edit = _edit_from_the_operator(ch, "cf_m_tang", saturate="ON")
+    edit = _edit_from_the_operator(ch, "cf_m_emblem", saturate="ON")
     assert edit[edit_material.SATURATED]
     edit_material.cancel(edit)
-    edit = _edit_from_the_operator(ch, "cf_m_tang")  # Default: the tongue doesn't saturate
+    edit = _edit_from_the_operator(ch, "cf_m_emblem")  # Default: the emblem doesn't saturate
     assert not edit[edit_material.SATURATED]
 
 
