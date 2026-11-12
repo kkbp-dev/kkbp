@@ -4,9 +4,11 @@ the front (Light) and from behind (Dark), in linear colour (models.main_item):
     base  = mix(1, Main, Use main texture) * colour mask colours over white * (1 - Line mask.b * Line blue)
     lineR = mix(Line mask.r, Detail mask.r, Detail R line R);  full = mix(lineR, 1, Another ramp full)
     tint  = (saturate(2 - Shadow extend another - full) * 0.67 + 0.33) * `.KK item tint` of base
-    spec  = Detail mask.r ^ 2 * (1 - Not use tex specular)
+    spec  = Detail mask.r ^ 2 * (1 - Not use tex specular), lit side only (n.h is 0 behind: a NaN)
+    ramp  = lit: mix(1, Another ramp.r, full * Use another ramp), dark: Another ramp.r * full * Use another
+            ramp; Another ramp is `_AnotherRamp` read at the toon value (`.KK ramp uv`)
     e     = (1 - Detail mask.g) * 1.2 * Shadow extend + 1 - 1.2 * Shadow extend
-    X     = (base * (lit: 1, dark: tint) + spec) * f * mix(tint, 1, e)
+    X     = (base * mix(tint, 1, ramp) + spec) * f * mix(tint, 1, e)
     line  = Line color alpha > 0.5 ? 1 - (2 - 2a)(1 - base * tint) : 2a * base * tint, clamped
     X     = mix(X, line, mix(Line mask.g, Detail mask.b, Detail B line G))
     Alpha = saturate(2 * mix(1, Main alpha, Use main texture)) * 2 - 1
@@ -39,6 +41,8 @@ def build(lib):
     t.socket('INPUT', 'Shadow extend', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Shadow extend another', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Another ramp full', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
+    t.socket('INPUT', 'Another ramp', 'NodeSocketColor', default_value=BLACK)
+    t.socket('INPUT', 'Use another ramp', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Detail R line R', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Detail B line G', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Not use tex specular', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
@@ -120,9 +124,20 @@ def build(lib):
     t.make('ShaderNodeMix', 'line.g', (1000, -900), {'data_type': 'FLOAT'},
            {'Factor_Float': ('in', 'Detail B line G'), 'A_Float': ('line', 'Green'), 'B_Float': ('detail', 'Blue')})
 
-    for name, col, y in (('Light', ('base', 'Vector'), 500), ('Dark', ('base.tint', 'Vector'), 250)):
+    # The ramp: where the red line says, the other ramp (when there is one) stands in for the main one.
+    t.make('ShaderNodeSeparateColor', 'another', (-100, 700), ins={'Color': ('in', 'Another ramp')})
+    swap = t.math('another.amount', 'MULTIPLY', ('full', 'Result_Float'), ('in', 'Use another ramp'), location=(100, 700))
+    t.make('ShaderNodeMix', 'light.ramp', (300, 750), {'data_type': 'FLOAT'},
+           {'Factor_Float': swap, 'A_Float': 1.0, 'B_Float': ('another', 'Red')})
+    dark_ramp = t.math('dark.ramp', 'MULTIPLY', swap, ('another', 'Red'), location=(300, 600))
+    for name, ramp, spec_on, y in (('Light', ('light.ramp', 'Result_Float'), spec, 500), ('Dark', dark_ramp, (0.0, 0.0, 0.0), 250)):
         key = name.lower()
-        t.make('ShaderNodeVectorMath', f'{key}.spec', (500, y), {'operation': 'ADD'}, {'Vector': col, 'Vector_001': spec})
+        t.make('ShaderNodeMix', f'{key}.shade', (300, y), {'data_type': 'RGBA'},
+               {'Factor_Float': ramp, 'A_Color': ('tint', 'Vector'), 'B_Color': WHITE})
+        t.make('ShaderNodeVectorMath', f'{key}.col', (400, y), {'operation': 'MULTIPLY'},
+               {'Vector': ('base', 'Vector'), 'Vector_001': (f'{key}.shade', 'Result_Color')})
+        t.make('ShaderNodeVectorMath', f'{key}.spec', (500, y), {'operation': 'ADD'},
+               {'Vector': (f'{key}.col', 'Vector'), 'Vector_001': spec_on})
         t.make('ShaderNodeVectorMath', f'{key}.lit', (700, y), {'operation': 'SCALE'},
                {'Vector': (f'{key}.spec', 'Vector'), 'Scale': factor})
         t.make('ShaderNodeVectorMath', f'{key}.extended', (900, y), {'operation': 'MULTIPLY'},

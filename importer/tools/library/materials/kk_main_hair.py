@@ -11,12 +11,7 @@ def build(lib):
     t = edit_templates.begin(lib, NAME, ["main", "color_mask", "detail_mask", "hair_gloss"])
     t.make('ShaderNodeGroup', 'gloss', (-1700, -900), {'node_tree': lib.group('.KK hair gloss uv'), 'width': 200.0})
     t.link('gloss', 'Vector', 'tex.hair_gloss', 'Vector')
-    tree = t.tree
-    toon = tree.nodes['combine'].inputs['Toon shading']
-    for link in [l for l in tree.links if l.to_socket == toon]:
-        tree.links.remove(link)
-    t.link('shade', 'Toon shading', 'gloss', 'Toon shading')
-    t.link('gloss', 'Toon shading', 'combine', 'Toon shading')
+    edit_templates.toon_through(t, 'gloss')
 
     t.make('ShaderNodeGroup', 'lit', (-600, 100), {'node_tree': lib.group('.KK main_hair'), 'width': 240.0},
            {'Main': ('encode.main', 'Color'), 'Main alpha': ('tex.main', 'Alpha'),

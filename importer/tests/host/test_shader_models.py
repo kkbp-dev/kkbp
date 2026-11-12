@@ -433,3 +433,63 @@ def test_kks_main_clothes_opaque_comes_close_to_kk_main_opaque(mid, limits, lut)
         out = models.main_opaque(main, _mask(sample, m, "detail_mask", size), _mask(sample, m, "line_mask", size),
                                  m["floats"], models.color(m["colors"]["_ShadowColor"]), ramp)
         assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit
+
+
+def test_kk_main_emblem_gives_back_the_bakes(lut):
+    """`_ambientshadow` is unset (0). At 256 pixels the light side's sharp edges resample apart."""
+    sample = Sample("kk")
+    m = sample.materials["cf_m_emblem"]
+    light = sample.texture(m, "main", "light")
+    size = light.shape[1::-1]
+    main = sample.texture(m, "main", size=size)[..., :3]
+    no_ambient = models.Light(light=1.0, ambient=0.0)
+    for ramp, variant, limit in ((1.0, "light", 0.025), (0.0, "dark", 0.005)):
+        out = models.main_emblem(main, ramp, no_ambient)
+        assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit
+
+
+class _Export(Sample):
+    """A KK export besides the Golden Sample: importer/tests/.work/extra/kk-alpha, made from a card with
+    main_alpha clothes and accessories (`scripts/auto-export.sh kk <card> importer/tests/.work/extra/kk-alpha`).
+    Its tests skip without it."""
+
+    def __init__(self):
+        folder = REPO / "importer" / "tests" / ".work" / "extra" / "kk-alpha"
+        bundles = sorted(folder.glob("*/materials.json")) if folder.is_dir() else []
+        if not bundles:
+            pytest.skip("no extra KK export with main_alpha in importer/tests/.work/extra/kk-alpha")
+        self.root = bundles[-1].parent
+        self.materials = {m["id"]: m for m in json.loads((self.root / "materials.json").read_text())["materials"]}
+
+
+@pytest.mark.parametrize("mid,limits", [
+    ("acs_m_hair_butterfly", (0.02, 0.015)), ("cf_m_panst_02", (0.008, 0.004)),
+    ("cf_m_top_inner01", (0.004, 0.006)), ("cf_m_top_jacket06", (0.025, 0.005)),
+])
+def test_kk_main_alpha_gives_back_the_bakes(mid, limits, lut):
+    sample = _Export()
+    m = sample.materials[mid]
+    size = (256, 256)
+    main = sample.texture(m, "main", size=size)[..., :3]
+    spec = models.color(m["colors"].get("_SpecularColor", (1, 1, 1, 1)))
+    for ramp, variant, limit in ((1.0, "light", limits[0]), (0.0, "dark", limits[1])):
+        out = models.main_alpha(main, _mask(sample, m, "detail_mask", size), m["floats"], spec,
+                                models.color(m["colors"]["_ShadowColor"]), ramp)
+        assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit
+
+
+@pytest.mark.parametrize("mid", ["acs_m_schandbag", "acs_m_megane06"])
+def test_kk_main_item_reads_its_other_ramp_and_loses_its_highlight_in_shadow(mid, lut):
+    """The handbag's detail red (1) swaps in its other ramp and draws the highlight, on the lit side
+    only; the glasses frame has neither."""
+    sample = _Export()
+    m = sample.materials[mid]
+    size = (256, 256)
+    ramp_texture = next(t for t in m["textures"] if t.get("raw") == "_AnotherRamp")
+    row = _image(sample, ramp_texture)[4, :, 0]
+    colors = [models.color(m["colors"][k]) for k in ("_Color", "_Color2", "_Color3")]
+    for ramp, variant in ((1.0, "light"), (0.0, "dark")):
+        out = models.main_item(np.ones(size + (3,)), _mask(sample, m, "color_mask", size), _mask(sample, m, "detail_mask", size),
+                               np.zeros(size + (4,)), colors, m["floats"], models.color(m["colors"]["_ShadowColor"]), ramp,
+                               another_ramp=(row[0], row[-1]))
+        assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < 0.01

@@ -38,6 +38,16 @@ def begin(lib, name, slots, *, force_visibility=0.0, props=None):
     return t
 
 
+def toon_through(t, node):
+    """Routes the toon value to `.Combine colors` through `node` (a group with a Toon shading input and
+    output), whose input is then the `toon_shading` param the bake sets."""
+    toon = t.tree.nodes["combine"].inputs["Toon shading"]
+    for link in [l for l in t.tree.links if l.to_socket == toon]:
+        t.tree.links.remove(link)
+    t.link("shade", "Toon shading", node, "Toon shading")
+    t.link(node, "Toon shading", "combine", "Toon shading")
+
+
 def clamp(t, *slots):
     """The game clamps its overlays' sampler: outside the texture, its edge (transparent) shows, not a
     repeat of it."""
@@ -49,6 +59,27 @@ def light_dark(t, node, light="Light", dark="Dark"):
     """Feeds a shader group's light and dark outputs to the grade."""
     t.link(node, light, "graded.light", "Color")
     t.link(node, dark, "graded.dark", "Color")
+
+
+CLOTHES_SLOTS = ["plain", "color_mask", "pattern_mask1", "pattern_mask2", "pattern_mask3", "detail_mask", "line_mask"]
+
+
+def clothes(lib, name, lit, ins):
+    """A clothes template: create_topN composited in nodes (the colour mask, the patterns at
+    `.KK pattern uv`), then the lit group `lit` with its inputs `ins` plus Main, into the grade."""
+    t = begin(lib, name, CLOTHES_SLOTS)
+    create = {"Main": ("encode.plain", "Color"), "Main alpha": ("tex.plain", "Alpha"),
+              "Color mask": ("encode.color_mask", "Color")}
+    for k in (1, 2, 3):
+        t.make("ShaderNodeGroup", f"pattern{k}", (-1700, 300 - (k + 1) * 320), {"node_tree": lib.group(".KK pattern uv")})
+        t.link(f"pattern{k}", "Vector", f"tex.pattern_mask{k}", "Vector")
+        create[f"Pattern {k}"] = (f"encode.pattern_mask{k}", "Color")
+    t.make("ShaderNodeGroup", "create", (-800, 400), {"node_tree": lib.group(".KK create_topN"), "width": 240.0}, create)
+    t.make("ShaderNodeGroup", "lit", (-450, 100), {"node_tree": lib.group(lit), "width": 240.0},
+           {"Main": ("create", "Color"), **ins})
+    t.link("create", "Alpha", "combine", "Main texture (alpha)")
+    light_dark(t, "lit")
+    return t
 
 
 SKIN_SLOTS = ["detail_mask", "line_mask", "overlay1", "overlay2", "overlay3"]

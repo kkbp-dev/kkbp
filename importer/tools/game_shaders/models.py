@@ -268,12 +268,18 @@ def main_opaque(main, detail_mask, line_mask, floats, shadow_color, ramp, light:
 
 
 def main_item(main, color_mask, detail_mask, line_mask, colors, floats, shadow_color, ramp, light: Light = KK,
-              line_blue=1.0):
+              line_blue=1.0, another_ramp=None):
     """KK's main_item (the teeth, the tongue, items) as the bake draws it: the colour mask over the
     main texture (white if none), darkened by the line mask's blue; its own shadow-extend scale; a
     highlight from the detail mask's red squared, which the bake doesn't clear; the lines mixed in
     linearly. `_LineColorG`'s colour is taken as white. KKS's Koikano/main_clothes_item doesn't darken
-    by the line mask's blue (`line_blue` 0) and comes close this way. Returns linear rgb."""
+    by the line mask's blue (`line_blue` 0) and comes close this way.
+
+    Where the red line (or `_AnotherRampFull`) says, `_AnotherRamp` read at n.h stands in for the main
+    ramp: the bake reads it at 1 lit and 0 from behind (`another_ramp`, its red at 0 and at 1; without
+    one it follows the ramp). The highlight is the lit side's only: from behind n.h is 0, and the
+    shader's log(0) times the cleared `_SpecularPower` is a NaN the GPU saturates to 0. Returns linear
+    rgb."""
     col = np.ones(3, dtype=F)
     for i, color_ in enumerate(colors):
         col = col + color_mask[..., i:i + 1] * (color_ - col)
@@ -283,7 +289,9 @@ def main_item(main, color_mask, detail_mask, line_mask, colors, floats, shadow_c
     k = np.clip(2 - floats.get("_ShadowExtendAnother", 0) - full, 0, 1) * 0.67 + 0.33
     tint = k * item_tint(base, shadow_color, light)
     lit = min(1.0, ramp + light.shadow_floor)
-    col = base * (tint + lit * (1 - tint)) + detail_mask[..., 0:1] ** 2 * (1 - floats.get("_notusetexspecular", 0))
+    if another_ramp is not None:
+        lit = lit + full * (another_ramp[1] * ramp + another_ramp[0] * (1 - ramp) - lit)
+    col = base * (tint + lit * (1 - tint)) + ramp * detail_mask[..., 0:1] ** 2 * (1 - floats.get("_notusetexspecular", 0))
     col = col * max(light.light * 0.6 + 0.4, light.ambient)
     extend = 1.2 * floats.get("_ShadowExtend", 0)
     col = col * (tint + ((1 - detail_mask[..., 1:2]) * extend + 1 - extend) * (1 - tint))
@@ -434,3 +442,33 @@ def create_head(main, color_mask, texture4, texture5, paint1, paint2, paint_mask
     base = base + paint1[..., 3:4] * c["_Color3"][3] * paint_mask[..., 0:1] * (paint1[..., :3] * c["_Color3"][:3] - base)
     base = base + paint2[..., 3:4] * c["_Color7"][3] * paint_mask[..., 0:1] * (paint2[..., :3] * c["_Color7"][:3] - base)
     return _layer(base, mole, c["_Color6"])
+
+
+# --- emblems: main_emblem -------------------------------------------------------------------------
+
+def main_emblem(main, ramp, light: Light = KK):
+    """KK's main_emblem (clothes emblems) as the bake draws it: the texture shaded by its own hue's
+    tint (ShadeAdjustItem's, at 0.8 instead of 0.9, no shadow colour). It reads `_ambientshadow`,
+    not `_ambientshadowG`; `light` gives it. Opaque where round(alpha ^ 0.3) is 1. Returns linear rgb."""
+    tint = shade(0.8 * pastel(main), ambient_shadow(light))
+    return (main * tint + ramp * (main - main * tint)) * max(light.light * 0.6 + 0.4, light.ambient)
+
+
+# --- clothes: main_alpha ----------------------------------------------------------------------------
+
+def main_alpha(main, detail_mask, floats, specular_color, shadow_color, ramp, light: Light = KK):
+    """KK's main_alpha (see-through clothes) as the bake draws it: the quad facing the camera with
+    the normal map, liquid and `_SpecularPower` off. The detail mask's red squared still adds the
+    specular colour (half of it in shadow), its green holds the light off, and its blue (inverted,
+    times `_DetailBLineGA`) draws the lines. Returns linear rgb; the alpha is the texture's."""
+    tint = item_tint(main, shadow_color, light)
+    keep = 1 - detail_mask[..., 1:2]
+    lit = ramp * keep
+    m = np.clip(main + detail_mask[..., 0:1] ** 2 * np.asarray(specular_color, dtype=F) * (0.5 + 0.5 * lit), 0, 1)
+    col = m * (tint + lit * (1 - tint))
+    held = np.maximum(np.maximum(1 - floats.get("_ShadowExtend", 0), ramp), keep)
+    col = col * (tint + held * (1 - tint)) * max(light.light * 0.6 + 0.4, light.ambient)
+    a = LINE_COLOR_ALPHA
+    line = np.clip(1 - (2 - 2 * a) * (1 - main * tint) if a > 0.5 else 2 * a * main * tint, 0, 1)
+    shows = ((1 - LINE_WIDTH) * 0.89 + 0.01) ** ((1 - detail_mask[..., 2:3]) * floats.get("_DetailBLineGA", 0))
+    return line + shows * (col - line)

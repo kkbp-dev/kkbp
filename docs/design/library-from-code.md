@@ -542,8 +542,14 @@ template, Template Description with `graded=True`, profile row and colours, re-r
    maker scene's probes. `Koikano/main_clothes_item` (teeth, tongue) takes `KK main_item` without the
    line mask's darkening (`line_blue` 0); its fourth colour and detail overlay are unmodelled (no effect
    in the sample). KKS's create_topN pattern offset and rotation are untested (no sample pattern).
-7. Left on the legacy templates: KK's `main_emblem` (the sample's emblem) and `main_alpha` (no sample).
-   When no Role uses a legacy edit template: delete them and the groups only they use, the Saturate
+7. ~~`main_emblem`, `main_alpha`~~ Done (ADR 0041): `models.main_emblem`, `main_alpha`; groups
+   `.KK main_emblem`, `.KK main_alpha`, `.KK ramp uv`; templates `KK main_emblem`, `KK main_alpha`
+   (create_topN's half shared through `edit_templates.clothes`). `main_alpha` was checked on a second
+   KK card exported into `importer/tests/.work/extra/kk-alpha` (its host tests skip without it).
+   `main_item` gained its `_AnotherRamp` and a lit-only highlight from the same card's accessories.
+8. The legacy templates are now only the fallback for shaders no template models (modded shaders).
+   Removing them, the Saturate option and `kkbp/shading/` would leave those uneditable: decide first.
+   If so: delete them and the groups only they use, the Saturate
    option (`scene.kkbp_edit_saturate`, the operator's option; check `docs/hook-interface.md`), the
    LUT and dark-texture half of `kkbp/shading/`, `saturated`, `saturated_roles`,
    `plain_color_mask_shaders` and the `how` kinds nothing uses; update ADR 0026 and 0025 to say so.

@@ -1,6 +1,7 @@
-"""Edit material, Cancel, Reset, Save and Link hair on a copy of the KK golden sample (D37-D46). The
-legacy templates' own behaviour (texture groups, saturation) is tested on the emblem (main_emblem),
-the last material in the samples that uses one."""
+"""Edit material, Cancel, Reset, Save and Link hair on a copy of the KK golden sample (D37-D46). Every
+material there has a template made from the game's shaders; the legacy templates' own behaviour
+(texture groups, saturation) is tested on a built bundle whose top uses a shader no template models,
+which falls back to KK General."""
 
 import shutil
 
@@ -26,6 +27,24 @@ def kk_copy(tmp_path_factory):
 @pytest.fixture
 def ch(kk_copy):
     result = kkbp.api.import_bundle(kk_copy, hooks=[])
+    assert result.ok
+    return character.Character(result.character_key)
+
+
+@pytest.fixture
+def legacy(build):
+    """A built KK bundle whose top is drawn by a modded shader (xukmi/MainOpaquePlus): no template
+    made from the game's shaders draws it, so it takes the legacy KK General."""
+    b = BundleBuilder()
+    textures = [b.add_texture("_MainTex", role="main", color=(200, 120, 90, 255)),
+                b.add_texture("_MainTex", role="main", variant="light"),
+                b.add_texture("_MainTex", role="main", variant="dark"),
+                b.add_texture("_ColorMask", role="color_mask", color=(255, 0, 0, 255))]
+    b.add_material("ct_modded", blend_mode="cutout", shader="xukmi/MainOpaquePlus", textures=textures,
+                   colors={"_ShadowColor": [0.8, 0.85, 0.9, 1.0]},
+                   create=b.add_create("Shader Forge/create_topN", colors={"_Color": [0.9, 0.3, 0.2, 1.0]}))
+    b.add_mesh("o_modded", ["ct_modded"], outfit=0, bone="cf_j_spine01")
+    result = kkbp.api.import_bundle(build(b), hooks=[])
     assert result.ok
     return character.Character(result.character_key)
 
@@ -57,17 +76,21 @@ def test_editing_the_body_composites_it_from_the_create_material(ch):
     assert templates.param(edit, "nip").default_value == 1.0
 
 
-def test_editing_a_legacy_material_copies_its_texture_groups(ch):
-    """The emblem keeps a legacy template (KK General): its texture groups are its own (ADR 0025),
-    and its dark texture is made once, into the Cache."""
-    emblem = ch.material("cf_m_emblem")
-    users = _users(emblem)
-    edit = edit_material.edit(ch, emblem, log=lambda *_: None)
-    assert edit.name == "Edit cf_m_emblem" and edit[templates.TEMPLATE] == "KK General"
-    assert _users(edit) == users and not _users(emblem) and emblem.use_fake_user
-    assert {"main", "main.dark"} <= set(edit[edit_material.FILLED])
+def test_editing_a_legacy_material_copies_its_texture_groups(legacy):
+    """A shader no template models takes KK General: its texture groups are its own (ADR 0025), its
+    colours come in light and dark versions, and its dark texture is made once, into the Cache."""
+    ch = legacy
+    top = ch.material("ct_modded")
+    users = _users(top)
+    edit = edit_material.edit(ch, top, log=lambda *_: None)
+    assert edit.name == "Edit ct_modded" and edit[templates.TEMPLATE] == "KK General"
+    assert _users(edit) == users and not _users(top) and top.use_fake_user
+    assert {"main", "main.dark", "color_mask.plain"} <= set(edit[edit_material.FILLED])  # a plain-mask shader
     own = templates.own_groups(edit)
-    assert own and all(g.name.endswith("Edit cf_m_emblem") and g.users == 1 for g in own)
+    assert own and all(g.name.endswith("Edit ct_modded") and g.users == 1 for g in own)
+    light = templates.param(edit, "color_mask_red.light").default_value
+    dark = templates.param(edit, "color_mask_red.dark").default_value
+    assert sum(dark[:3]) < sum(light[:3]) and light[0] > 0.5
     assert any(".dark." in p.name for p in ch.bundle().cache_dir("edit").iterdir())
     assert edit_material.edit(ch, edit) is edit
 
@@ -104,6 +127,7 @@ def test_editing_again_reuses_the_edit_material(ch):
     ("cf_m_noseline_00", "KK toon_nose", {"main"}, ("color_alpha",)),  # its colour is black
     ("cf_m_tang", "KK main_item", {"color_mask", "detail_mask"}, ("color",)),
     ("cf_m_tooth", "KK main_item", {"main", "color_mask", "detail_mask"}, ("color", "shadow_color")),
+    ("cf_m_emblem", "KK main_emblem", {"main"}, ()),
 ])
 def test_each_template_gets_its_slots_and_colours(ch, id, template, slots, params):
     mat = ch.material(id)
@@ -174,27 +198,32 @@ def test_the_eyes_are_placed_by_their_texture_transform(ch):
     assert {"main", "overlay1", "overlay2"} <= set(edit[edit_material.FILLED])
 
 
-def _saturated(edit):
-    return "saturated" in templates.texture_node(edit, "main").image.name
+def _red(edit):
+    return tuple(templates.param(edit, "color_mask_red.light").default_value)
 
 
-def test_edits_keep_the_bundle_texture_unless_saturated(ch):
-    """On a legacy template (the emblem's); the ones made from the game's shaders never saturate."""
-    edit = edit_material.edit(ch, ch.material("cf_m_emblem"), log=lambda *_: None)
-    assert not _saturated(edit)
+def test_edits_keep_the_bundle_colours_unless_saturated(legacy):
+    """On a legacy template; the ones made from the game's shaders never saturate."""
+    ch = legacy
+    create = ch.bundle().material("ct_modded").create.colors["_Color"]
+    edit = edit_material.edit(ch, ch.material("ct_modded"), log=lambda *_: None)
+    plain = _red(edit)
+    assert plain == pytest.approx(edit_material._linear(create), abs=1e-4)
     edit = edit_material.reset(ch, edit, saturate=True, log=lambda *_: None)
-    assert _saturated(edit)
+    assert _red(edit) != pytest.approx(plain, abs=1e-3)
     assert any(p.name.endswith(".saturated.png") for p in ch.bundle().cache_dir("edit").iterdir())
 
 
-def test_reset_keeps_the_saturation_the_edit_was_made_with(ch):
+def test_reset_keeps_the_saturation_the_edit_was_made_with(legacy):
     """Issue #13: Reset used to fall back to the default and drop an On or Off choice."""
-    edit = edit_material.edit(ch, ch.material("cf_m_emblem"), saturate=True, log=lambda *_: None)
-    assert edit[edit_material.SATURATED] and _saturated(edit)
+    ch = legacy
+    edit = edit_material.edit(ch, ch.material("ct_modded"), saturate=True, log=lambda *_: None)
+    saturated = _red(edit)
+    assert edit[edit_material.SATURATED]
     edit = edit_material.reset(ch, edit, log=lambda *_: None)
-    assert edit[edit_material.SATURATED] and _saturated(edit)
+    assert edit[edit_material.SATURATED] and _red(edit) == pytest.approx(saturated, abs=1e-4)
     edit = edit_material.reset(ch, edit, saturate=False, log=lambda *_: None)
-    assert not edit[edit_material.SATURATED] and not _saturated(edit)
+    assert not edit[edit_material.SATURATED] and _red(edit) != pytest.approx(saturated, abs=1e-3)
 
 
 def _edit_from_the_operator(ch, id, **props):
@@ -206,13 +235,14 @@ def _edit_from_the_operator(ch, id, **props):
     return obj.active_material
 
 
-def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(ch):
+def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(legacy):
     """Issue #13: the panel passes the scene's Saturate choice; the operator keeps no value of its own."""
+    ch = legacy
     assert bpy.context.scene.kkbp_edit_saturate == "DEFAULT"
-    edit = _edit_from_the_operator(ch, "cf_m_emblem", saturate="ON")
+    edit = _edit_from_the_operator(ch, "ct_modded", saturate="ON")
     assert edit[edit_material.SATURATED]
     edit_material.cancel(edit)
-    edit = _edit_from_the_operator(ch, "cf_m_emblem")  # Default: the emblem doesn't saturate
+    edit = _edit_from_the_operator(ch, "ct_modded")  # Default: nothing saturates
     assert not edit[edit_material.SATURATED]
 
 

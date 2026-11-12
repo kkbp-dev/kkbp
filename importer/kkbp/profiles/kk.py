@@ -164,6 +164,15 @@ _SKIN_COLORS = [
     ["paint2", ["create:_paint2"], "vector"], ["paint2_w", ["create:_paint2"], "vector_w"],
 ]
 
+# create_topN's colours and pattern scales (main_opaque's and main_alpha's create stage).
+_CREATE_TOPN_COLORS = [
+    ["color", ["create:_Color"], "plain"], ["color2", ["create:_Color2"], "plain"],
+    ["color3", ["create:_Color3"], "plain"],
+    *[[f"pattern_color{k}", [f"create:_Color{k}_2"], "plain"] for k in (1, 2, 3)],
+    *[[f"pattern_color{k}_alpha", [f"create:_Color{k}_2"], "alpha"] for k in (1, 2, 3)],
+    *[[f"pattern_scale{k}{a}", [f"create:_PatternScale{k}{a}"], "float"] for k in (1, 2, 3) for a in "uv"],
+]
+
 # main_opaque's and main_item's own values.
 _ITEM_COLORS = [
     ["shadow_color", ["own:_ShadowColor"], "plain"],
@@ -209,7 +218,8 @@ EDIT = {
         "eyeline_upper": "KK toon_eyew", "eyeline_lower": "KK toon_eyew", "eyeline_shadow": "KK toon_eyew",
     },
     # Shader (after its last `/`) -> edit template, before the Role's: one Role draws with several.
-    "shader_templates": {"main_opaque": "KK main_opaque", "main_item": "KK main_item"},
+    "shader_templates": {"main_opaque": "KK main_opaque", "main_alpha": "KK main_alpha", "main_item": "KK main_item",
+                         "main_emblem": "KK main_emblem"},
     "not_editable_blend_modes": ["glasses"],
     # Edit slot -> where its texture comes from. `main.dark` is made from `main`, and
     # `color_mask.plain` takes `color_mask` for the plain-mask shaders below.
@@ -231,6 +241,7 @@ EDIT = {
         "pattern_mask1": ["create:_PatternMask1"], "pattern_mask2": ["create:_PatternMask2"],
         "pattern_mask3": ["create:_PatternMask3"],
         "hair_gloss": ["own:_HairGloss"],
+        "another_ramp": ["own:_AnotherRamp"],
         "expression.0": ["own:_expression[cf_t_expression_00]"],
         "expression.1": ["own:_expression[cf_t_expression_01]"],
     },
@@ -307,12 +318,13 @@ EDIT = {
             ["highlight", ["own:_isHighLight"], "float"], ["rotation", ["own:_rotation"], "float"],
         ],
         "KK main_opaque": [
-            ["color", ["create:_Color"], "plain"], ["color2", ["create:_Color2"], "plain"],
-            ["color3", ["create:_Color3"], "plain"],
-            *[[f"pattern_color{k}", [f"create:_Color{k}_2"], "plain"] for k in (1, 2, 3)],
-            *[[f"pattern_color{k}_alpha", [f"create:_Color{k}_2"], "alpha"] for k in (1, 2, 3)],
-            *[[f"pattern_scale{k}{a}", [f"create:_PatternScale{k}{a}"], "float"] for k in (1, 2, 3) for a in "uv"],
+            *_CREATE_TOPN_COLORS,
             *_ITEM_COLORS,
+        ],
+        "KK main_alpha": [
+            *_CREATE_TOPN_COLORS,
+            ["shadow_color", ["own:_ShadowColor"], "plain"], ["specular_color", ["own:_SpecularColor"], "plain"],
+            ["shadow_extend", ["own:_ShadowExtend"], "float"], ["detail_b_line_ga", ["own:_DetailBLineGA"], "float"],
         ],
         "KK main_item": [
             ["color", ["own:_Color"], "plain"], ["color2", ["own:_Color2"], "plain"], ["color3", ["own:_Color3"], "plain"],
@@ -354,6 +366,8 @@ EDIT = {
         ["missing:texture6", {"color6_alpha": 0.0}],
         ["missing:texture7", {"color7_alpha": 0.0}],
         ["role:face missing:texture4", {"color4_alpha": 0.0}],
+        # main_item reads its other ramp where it has one.
+        ["has:another_ramp", {"use_another_ramp": 1.0}],
         # create_body reads white where the tan lines are missing.
         ["role:body missing:texture4", {"tan_present": 0.0}],
         # create_topN reads white where a pattern mask is missing.
