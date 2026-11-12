@@ -3,7 +3,8 @@ its shaders bake (issue 30, importer/tools/game_shaders/models.py):
 
 - Koikano/main_eyew bakes as KK's toon_eyew with other ambient values (`models.KKS`).
 - Koikano/hair_main_sun and hair_main_sun_front, though larger shaders, bake as KK's main_hair and
-  main_hair_front with KK's own values (measured on the KKS Golden Sample; not modelled).
+  main_hair_front with KK's own values, and Koikano/main_eye as KK's toon_eye_lod0 (measured on the
+  KKS Golden Sample; not modelled).
 
 The Roles whose shaders aren't modelled yet use the legacy edit templates, as KK's do."""
 

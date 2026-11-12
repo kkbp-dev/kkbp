@@ -285,3 +285,40 @@ def main_item(main, color_mask, detail_mask, line_mask, colors, floats, shadow_c
     a = LINE_COLOR_ALPHA
     line = np.clip(1 - (2 - 2 * a) * (1 - base * tint) if a > 0.5 else 2 * a * tint * base, 0, 1)
     return col + line_g * (line - col)
+
+
+# --- eyes: create_eye, toon_eye_lod0 ---------------------------------------------------------------
+
+def create_eye(main, color_mask_at_grad, color_, color2, blend):
+    """create_eye (KK irises): the colour mask's red (read at the `_grad` UV) picks between the two
+    colours, which the texture's red then shades, vivid-light blended by `_Blend`. Alpha is the
+    texture's times the colour's."""
+    c = color2 + color_mask_at_grad[..., 0:1] * (color_ - color2)
+    m = main[..., 0:1]
+    safe = np.maximum(m, 1e-6)
+    vivid = np.clip(np.where(m > 0.5, c / np.maximum(2 * (1 - m), 1e-6), 1 - (1 - c) * 0.5 / safe), 0, 1)
+    return c * m + blend * (vivid - c * m)
+
+
+def eye_rotation(u, v, rotation):
+    """toon_eye_lod0's iris UV: turned about the middle by `_rotation` turns, before the texture's own
+    offset and scale."""
+    a = rotation * 2 * np.pi
+    x, y = u - 0.5, v - 0.5
+    return x * np.cos(a) + y * np.sin(a) + 0.5, -x * np.sin(a) + y * np.cos(a) + 0.5
+
+
+def toon_eye(main, overlay1, overlay2, overcolor1, overcolor2, is_highlight, shadow_color, ramp, light: Light = KK):
+    """KK's toon_eye_lod0 as the bake draws it (`_exppower` 0, no expression): the two highlight
+    overlays (rgba, read on the second UV map; zero off the eye mesh, where the bake's quad has them
+    cleared) over the iris, kept lit in the shadow where they show. `overcolor`s are linear rgb with
+    their alpha last. Returns linear rgb and alpha."""
+    o1 = overlay1[..., 3:4] * np.asarray(overcolor1, dtype=F)
+    o2 = overlay2[..., 3:4] * np.asarray(overcolor2, dtype=F)
+    o = np.maximum(o1, o2)
+    hl = o[..., 3:4] * is_highlight
+    col = main[..., :3] + hl * (o[..., :3] - main[..., :3])
+    tint = shade(shadow_color, ambient_shadow(light))
+    lit = np.clip(ramp + hl, 0, 1)
+    out = np.clip((col * tint + lit * (col - col * tint)) * max(light.light * 0.6 + 0.4, light.ambient), 0, 1)
+    return out, np.maximum(main[..., 3:4], hl)[..., 0]

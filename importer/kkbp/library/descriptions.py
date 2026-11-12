@@ -255,6 +255,13 @@ _EDIT_TEMPLATES = (
                      "color": ("lit", "Color"), "color2": ("lit", "Color 2"), "color3": ("lit", "Color 3"),
                      "another_ramp_full": ("lit", "Another ramp full"),
                      "not_use_tex_specular": ("lit", "Not use tex specular")}),
+    Template("KK toon_eye", graded=True,
+             textures={"main": "tex.main", "overlay1": "tex.overlay1", "overlay2": "tex.overlay2"},
+             params={**_GAME_BAKE, "rotation": ("iris", "Rotation"), "highlight": ("lit", "Highlight"),
+                     "overlay_color1": ("lit", "Overlay color 1"), "overlay_color1_alpha": ("lit", "Overlay color 1 alpha"),
+                     "overlay_color2": ("lit", "Overlay color 2"), "overlay_color2_alpha": ("lit", "Overlay color 2 alpha"),
+                     "shadow_color": ("lit", "Shadow color"), "ambient": ("lit", "Ambient"),
+                     "ambient_strength": ("lit", "Ambient strength")}),
     Template("KK toon_nose", graded=True, textures={"main": "tex.main"},
              params={**_GAME_BAKE, "color": ("lit", "Color"), "color_alpha": ("lit", "Color alpha")}),
 )

@@ -263,3 +263,61 @@ def test_kk_main_item_gives_back_the_bakes(mid, limit, lut):
                                _mask(sample, m, "line_mask", size), colors, m["floats"],
                                models.color(m["colors"]["_ShadowColor"]), ramp)
         assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit
+
+
+class _BodyOnly:
+    """A sample whose meshes `_second_uv` reads from body.glb (the eyes, the face)."""
+
+    def __init__(self, sample):
+        self.root = type("Root", (), {"glob": staticmethod(lambda _: [sample.root / "body.glb"])})()
+
+
+def _image(sample, texture):
+    with Image.open(sample.root / texture["file"]) as im:
+        return (np.asarray(im.convert("RGBA"), dtype=np.float64) / 255)[::-1]
+
+
+@pytest.mark.parametrize("mid", ["cf_m_hitomi_00", "cf_m_hitomi_00_2"])
+def test_kk_toon_eye_gives_back_the_bakes(mid, lut):
+    """The iris turned by `_rotation` then placed by its texture transform; the highlights on the
+    second UV map, on the eye mesh only (the bake's quad has them cleared)."""
+    sample = Sample("kk")
+    m = sample.materials[mid]
+    light = sample.texture(m, "main", "light")
+    size = light.shape[1::-1]
+    h, w = light.shape[:2]
+    ys, xs = np.mgrid[0:h, 0:w]
+    u, v = (xs + 0.5) / w, 1 - (ys + 0.5) / h
+    tex = next(t for t in m["textures"] if t.get("raw") == "_MainTex" and not t.get("variant"))
+    ru, rv = models.eye_rotation(u, v, m["floats"]["_rotation"])
+    main = models._bilinear(_image(sample, tex), ru * tex["scale"][0] + tex["offset"][0], rv * tex["scale"][1] + tex["offset"][1])
+    uv = _second_uv(_BodyOnly(sample), mid, size)
+    on = (np.abs(uv - np.stack([u, v], -1)).sum(-1) > 1e-9)[..., None]
+    overlays = []
+    for raw in ("_overtex1", "_overtex2"):
+        t = next(t for t in m["textures"] if t.get("raw") == raw)
+        read = models._bilinear(_image(sample, t), uv[..., 0] * t["scale"][0] + t["offset"][0],
+                                uv[..., 1] * t["scale"][1] + t["offset"][1])
+        overlays.append(np.where(on, read, 0))
+    colors = [np.append(models.color(m["colors"][k]), m["colors"][k][3]) for k in ("_overcolor1", "_overcolor2")]
+    for ramp, variant in ((1.0, "light"), (0.0, "dark")):
+        out, _ = models.toon_eye(main, *overlays, *colors, m["floats"]["_isHighLight"],
+                                 models.color(m["colors"]["_shadowcolor"]), ramp)
+        assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < 0.006
+
+
+def test_kk_create_eye_gives_back_the_composited_iris():
+    sample = Sample("kk")
+    m = sample.materials["cf_m_hitomi_00"]
+    create = m["extensions"]["kk"]["create"]
+    main = sample.texture(create, "main")
+    h, w = main.shape[:2]
+    ys, xs = np.mgrid[0:h, 0:w]
+    u, v = (xs + 0.5) / w, 1 - (ys + 0.5) / h
+    grad = create["vectors"]["_grad"]
+    s = 1 - grad[3]
+    mask = next(t for t in create["textures"] if t.get("role") == "color_mask")
+    at_grad = models._bilinear(_image(sample, mask), (u + grad[0]) * 2 * s + 0.5 - s, (v + grad[1]) * 2 * s + 0.5 - s)
+    out = models.create_eye(main[..., :3], at_grad, models.color(create["colors"]["_Color"]),
+                            models.color(create["colors"]["_Color2"]), create["floats"]["_Blend"])
+    assert difference(out, sample.texture(m, "main", size=(w, h))) < 0.003

@@ -146,22 +146,21 @@ def test_the_eyebrows_take_the_games_own_colours_and_never_saturate(ch):
 
 
 def test_the_eyes_are_placed_by_their_texture_transform(ch):
-    eye = ch.material("cf_m_hitomi_00")
-    texture = ch.bundle().material("cf_m_hitomi_00").texture("main")
-    edit = edit_material.edit(ch, eye, log=lambda *_: None)
-    pupil = templates.node_at(edit, "textures/Eyepos/eye_scale")
-    assert pupil.inputs["Scale X"].default_value == pytest.approx(texture.scale[0])
-    assert pupil.inputs["Position X"].default_value == pytest.approx(50 * (0.5 - texture.offset[0]) / texture.scale[0])
-    assert tuple(_node_mapping(edit, "main")) == (1.0, 1.0)
-    # The positions group is this eye's own.
+    """toon_eye_lod0 turns the iris by `_rotation`, then places it by its texture transform; the
+    highlights take their colours and the highlight switch from the material (D41)."""
+    bm = ch.bundle().material("cf_m_hitomi_00")
+    texture = bm.texture("main")
+    edit = edit_material.edit(ch, ch.material("cf_m_hitomi_00"), log=lambda *_: None)
+    assert edit[templates.TEMPLATE] == "KK toon_eye"
+    mapping = templates.texture_node(edit, "main").texture_mapping
+    assert tuple(mapping.translation[:2]) == pytest.approx(texture.offset)
+    assert tuple(mapping.scale[:2]) == pytest.approx(texture.scale)
+    assert templates.param(edit, "rotation").default_value == pytest.approx(bm.floats["_rotation"])
     right = edit_material.edit(ch, ch.material("cf_m_hitomi_00_2"), log=lambda *_: None)
-    assert templates.node_at(right, "textures/Eyepos").node_tree != templates.node_at(edit, "textures/Eyepos").node_tree
-    up = templates.param(edit, "highlight_up_intensity.light").default_value
-    assert up == pytest.approx(ch.bundle().material("cf_m_hitomi_00").colors["_overcolor1"][3])
-
-
-def _node_mapping(mat, slot):
-    return templates.texture_node(mat, slot).texture_mapping.scale[:2]
+    assert templates.param(right, "rotation").default_value == pytest.approx(-bm.floats["_rotation"])
+    assert templates.param(edit, "overlay_color1_alpha").default_value == pytest.approx(bm.colors["_overcolor1"][3])
+    assert templates.param(edit, "highlight").default_value == 1.0
+    assert {"main", "overlay1", "overlay2"} <= set(edit[edit_material.FILLED])
 
 
 def test_edits_keep_the_bundle_colours_unless_saturated(ch):

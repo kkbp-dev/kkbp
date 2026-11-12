@@ -489,7 +489,7 @@ Done (ADR 0041, D67):
 - Groups `.KK srgb`, `.KK linear`, `.KK grade`, `.KK graded`, `.KK create_eyewhite`, `.KK toon_eyew`,
   `.KK toon_nose`, `.KK shadow tint`, `.KK main_hair`, `.KK hair gloss uv`, and the clothes' (below);
   templates `KK create_eyewhite`, `KK toon_eyew`, `KK toon_nose`, `KK main_hair`, `KK main_opaque`,
-  `KK main_item`, built on
+  `KK main_item`, `KK toon_eye`, built on
   `importer/tools/library/edit_templates.py`; KK's profile points eye whites, eyebrows, eyelines and
   the nose line at them, and KKS's profile inherits them with its own maker light.
 - `blender/test_edit_accuracy.py`, with `importer/tests/data/edit_accuracy.json` (the legacy numbers are
@@ -522,8 +522,12 @@ template, Template Description with `graded=True`, profile row and colours, re-r
    and what was left of the eyelines' error). KKS's clothes (`main_clothes_opaque`, `main_clothes_item`)
    keep the legacy templates: KK's models fit them to 0.005 to 0.055, better than legacy but not
    modelled, and KKS's tongue is 0.27 off, so `main_clothes_item` differs.
-4. **KK eyes** (`create_eye` + `toon_eye_lod0`): the gradient UV `_grad`, the overlays and their
-   positions (D41).
+4. ~~**KK eyes**~~ Done: `models.toon_eye`, `eye_rotation`, `create_eye`; groups `.KK eye uv`,
+   `.KK toon_eye`; template `KK toon_eye` on the eyes' Roles (KKS's too: `Koikano/main_eye` bakes as
+   KK's, measured). It shades the material's own composited iris, as legacy did: the iris's offset
+   and scale are on that texture, not on the create textures. Recolouring through `create_eye` in the
+   template (the `_grad` UV, the vivid-light blend) is modelled and tested but not built. The
+   expression texture (`_exppower`) is left out.
 5. **KK body and face** (`create_body`, `create_head` + `main_skin`): the paint and mole UVs, the
    overlays on the second to fourth UV maps (check the importer's UV names), `MapValuesMain`.
 6. **KKS** for 2 to 5.

@@ -192,7 +192,7 @@ EDIT = {
     "templates": {
         **LEGACY_EDIT_TEMPLATES,
         "eye_white": "KK create_eyewhite", "eyebrow": "KK toon_eyew", "nose_line": "KK toon_nose",
-        "hair": "KK main_hair",
+        "hair": "KK main_hair", "eye_l": "KK toon_eye", "eye_r": "KK toon_eye",
         "eyeline_upper": "KK toon_eyew", "eyeline_lower": "KK toon_eyew", "eyeline_shadow": "KK toon_eyew",
     },
     # Shader (after its last `/`) -> edit template, before the Role's: one Role draws with several.
@@ -273,6 +273,12 @@ EDIT = {
         "KK create_eyewhite": [*_EYEW_COLORS, ["create_color", ["create:_Color"], "plain"],
                                ["create_color2", ["create:_Color2"], "plain"]],
         "KK toon_nose": [["color", ["own:_Color"], "plain"], ["color_alpha", ["own:_Color"], "alpha"]],
+        "KK toon_eye": [
+            ["overlay_color1", ["own:_overcolor1"], "plain"], ["overlay_color1_alpha", ["own:_overcolor1"], "alpha"],
+            ["overlay_color2", ["own:_overcolor2"], "plain"], ["overlay_color2_alpha", ["own:_overcolor2"], "alpha"],
+            ["shadow_color", ["own:_shadowcolor"], "plain"],
+            ["highlight", ["own:_isHighLight"], "float"], ["rotation", ["own:_rotation"], "float"],
+        ],
         "KK main_opaque": [
             ["color", ["create:_Color"], "plain"], ["color2", ["create:_Color2"], "plain"],
             ["color3", ["create:_Color3"], "plain"],
