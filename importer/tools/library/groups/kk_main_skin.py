@@ -5,7 +5,7 @@ overlays.
     tint  = `.KK item tint` of Color, Saturation 0.66, white shadow colour
     e     = min(1 - Line mask.b * s, 1 - Detail mask.g) * 1.2 * Shadow extend + 1 - 1.2 * Shadow extend
             s = Detail normal map scale, which weights the line mask
-    X     = Color * (lit: mix(tint, 1, e), dark: tint) * f * mix(tint, 1, e)
+    X     = Color * (lit: mix(tint, 1, e), dark: mix(tint, 1, Shadow floor * e)) * f * mix(tint, 1, e)
     line  = overlay of Line color alpha with Color * tint * (1 - Detail mask.g / 2), clamped
     shows = min(1 - Line mask.r * s / 2, ((1 - Line width) * 0.8 + 0.2) ^ Line mask.g), 1 without Line tex on
     X     = mix(line, X, shows)
@@ -30,6 +30,7 @@ def build(lib):
     t.socket('INPUT', 'Detail normal map scale', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Shadow extend', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Line tex on', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
+    t.socket('INPUT', 'Shadow floor', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Line color alpha', 'NodeSocketFloat', default_value=0.065, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Line width', 'NodeSocketFloat', default_value=0.32, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Ambient', 'NodeSocketColor', default_value=(0.15, 0.15, 0.15, 1.0))
@@ -85,7 +86,10 @@ def build(lib):
     shows = t.math('shows', 'MULTIPLY_ADD', t.math('shows.off', 'SUBTRACT', shows, 1.0, location=(1100, -1000)),
                    ('in', 'Line tex on'), 1.0, location=(1300, -1000))
 
-    for name, shade, y in (('Light', ('shade.e', 'Result_Color'), 400), ('Dark', ('tint', 'Tint'), 100)):
+    t.make('ShaderNodeMix', 'shade.floor', (-300, -200), {'data_type': 'RGBA', 'clamp_factor': False},
+           {'Factor_Float': t.math('floor.e', 'MULTIPLY', ('in', 'Shadow floor'), e, location=(-500, -600)),
+            'A_Color': ('tint', 'Tint'), 'B_Color': WHITE})
+    for name, shade, y in (('Light', ('shade.e', 'Result_Color'), 400), ('Dark', ('shade.floor', 'Result_Color'), 100)):
         key = name.lower()
         t.make('ShaderNodeVectorMath', f'{key}.col', (100, y), {'operation': 'MULTIPLY'},
                {'Vector': ('in', 'Color'), 'Vector_001': shade})

@@ -535,8 +535,13 @@ template, Template Description with `graded=True`, profile row and colours, re-r
    the mesh's vertex colour to its flat mesh. Missing decals and overlays are switched off by their
    colour's alpha (value rules); overlays clamp. Not modelled: `_FaceShadowG` (taken as at most 1),
    `_LineColorG`'s colour (white), the liquid. The face's dark side is 0.017 from the bake, the model 0.011.
-6. **KKS** for 3 and 5 (its hair and eyes bake as KK's): `main_clothes_opaque`, `main_clothes_item`
-   (its tongue is 0.27 off KK's model), `create_skinbody`, `create_skinface`, `Koikano/main_skin`.
+6. ~~**KKS** clothes and skin~~ Approximated, not modelled (ADR 0041): `Koikano/main_clothes_opaque` takes
+   `KK main_opaque` with KK's values, `Koikano/main_skin` the KK body and face templates with
+   `models.KKS_SKIN` (a `shader:main_skin` value rule). Their physically based half (`_KanoVerShift`,
+   probes, cubemaps) and the ramp texture's other channels would need the game's global ramp and the
+   maker scene's probes. `Koikano/main_clothes_item` (teeth, tongue) keeps the legacy templates: model
+   it to finish the Roles. KKS's create_topN pattern offset and rotation are untested (no sample
+   pattern).
 7. When no Role uses a legacy edit template: delete them and the groups only they use, the Saturate
    option (`scene.kkbp_edit_saturate`, the operator's option; check `docs/hook-interface.md`), the
    LUT and dark-texture half of `kkbp/shading/`, `saturated`, `saturated_roles`,

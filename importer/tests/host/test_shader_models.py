@@ -354,11 +354,12 @@ def _create_raw(sample, create, name, u, v, uv=None, default=0.0):
     return models._bilinear(_image(sample, t), uu * t["scale"][0] + t["offset"][0], vv * t["scale"][1] + t["offset"][1])
 
 
+@pytest.mark.parametrize("game", ["kk", "kks"])
 @pytest.mark.parametrize("mid", ["cf_m_body", "cf_m_face_00"])
-def test_kk_create_body_and_head_give_back_the_composited_skin(mid):
+def test_create_body_and_head_give_back_the_composited_skin(game, mid):
     """A missing tan line texture reads white (the body's skin colour unmixed); missing decals read
-    transparent."""
-    sample = Sample("kk")
+    transparent. KKS's create_skinbody and create_skinface composite the same."""
+    sample = Sample(game)
     m = sample.materials[mid]
     create = m["extensions"]["kk"]["create"]
     reference = sample.texture(m, "main")
@@ -382,10 +383,14 @@ def test_kk_create_body_and_head_give_back_the_composited_skin(mid):
     assert difference(out, reference) < 0.003
 
 
-@pytest.mark.parametrize("mid,limit", [("cf_m_body", 0.01), ("cf_m_face_00", 0.015)])
-def test_kk_main_skin_gives_back_the_bakes(mid, limit, lut):
+@pytest.mark.parametrize("game,mid,light,limits", [
+    ("kk", "cf_m_body", models.KK, (0.01, 0.01)), ("kk", "cf_m_face_00", models.KK, (0.01, 0.015)),
+    # KKS's Koikano/main_skin, approximated (models.KKS_SKIN); legacy was 0.051 / 0.028 and 0.094 / 0.059.
+    ("kks", "cf_m_body", models.KKS_SKIN, (0.012, 0.03)), ("kks", "cf_m_face_00", models.KKS_SKIN, (0.008, 0.035)),
+])
+def test_main_skin_gives_back_the_bakes(game, mid, light, limits, lut):
     """With the overlays on the mesh's second to fourth UV maps, scaled by the vertex colour."""
-    sample = Sample("kk")
+    sample = Sample(game)
     m = sample.materials[mid]
     floats = m["floats"]
     size = (512, 512)
@@ -402,6 +407,24 @@ def test_kk_main_skin_gives_back_the_bakes(mid, limit, lut):
         reads.append(np.where(on, read, 0))
     colors = [np.append(models.color(m["colors"][f"_overcolor{k}"]), m["colors"][f"_overcolor{k}"][3]) for k in (1, 2, 3)]
     col = models.skin_overlays(sample.texture(m, "main", size=size)[..., :3], *reads, colors, floats)
-    for ramp, variant in ((1.0, "light"), (0.0, "dark")):
-        out = models.main_skin(col, _mask(sample, m, "detail_mask", size), _mask(sample, m, "line_mask", size), floats, ramp)
+    for ramp, variant, limit in ((1.0, "light", limits[0]), (0.0, "dark", limits[1])):
+        out = models.main_skin(col, _mask(sample, m, "detail_mask", size), _mask(sample, m, "line_mask", size), floats,
+                               ramp, light)
+        assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit
+
+
+@pytest.mark.parametrize("mid,limits", [
+    ("cf_top_defshirt_m", (0.025, 0.04)), ("cf_bot_defpants_m", (0.015, 0.055)), ("cf_m_bra_01", (0.012, 0.025)),
+    ("cf_m_shorts_01", (0.013, 0.028)), ("cf_m_socks_crewori", (0.035, 0.012)), ("cf_m_shoes_tennis", (0.008, 0.03)),
+])
+def test_kks_main_clothes_opaque_comes_close_to_kk_main_opaque(mid, limits, lut):
+    """KKS's Koikano/main_clothes_opaque against KK's model with KK's values: closer than the legacy
+    templates (0.04 to 0.16), not exact (its physically based half isn't modelled)."""
+    sample = Sample("kks")
+    m = sample.materials[mid]
+    size = (128, 128)
+    main = sample.texture(m, "main", size=size)[..., :3]
+    for ramp, variant, limit in ((1.0, "light", limits[0]), (0.0, "dark", limits[1])):
+        out = models.main_opaque(main, _mask(sample, m, "detail_mask", size), _mask(sample, m, "line_mask", size),
+                                 m["floats"], models.color(m["colors"]["_ShadowColor"]), ramp)
         assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < limit

@@ -101,6 +101,9 @@ KK = Light(light=1.0, ambient=0.15)
 # Koikano/main_eyew, fitted to the KKS sample's eye-white family (the ambient strength, colour and
 # floor trade off a little against each other; this is the best fit, within 0.003 of every bake).
 KKS = Light(light=1.0, ambient=0.175, ambient_color=(0.225, 0.216, 0.203), shadow_floor=0.2)
+# Koikano/main_skin under the bake, approximated by KK's main_skin with these (fitted to the KKS
+# sample's body and face; KKS's shader also blends in light probes and a physically based term).
+KKS_SKIN = Light(light=1.0, ambient=0.07, ambient_color=(0.145, 0.145, 0.145), shadow_floor=0.28)
 
 
 def ambient_shadow(light: Light):
@@ -364,7 +367,8 @@ def main_skin(col, detail_mask, line_mask, floats, ramp, light: Light = KK):
     scale = floats.get("_DetailNormalMapScale", 0)
     extend = 1.2 * floats.get("_ShadowExtend", 0)
     e = np.minimum(1 - line_mask[..., 2:3] * scale, 1 - detail_mask[..., 1:2]) * extend + 1 - extend
-    x = col * (tint + ramp * e * (1 - tint)) * max(light.light * 0.6 + 0.4, light.ambient)
+    lit = min(1.0, ramp + light.shadow_floor)
+    x = col * (tint + lit * e * (1 - tint)) * max(light.light * 0.6 + 0.4, light.ambient)
     x = x * (tint + e * (1 - tint))
     lined = col * tint * ((1 - detail_mask[..., 1:2]) * 0.5 + 0.5)
     a = LINE_COLOR_ALPHA
