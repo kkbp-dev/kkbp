@@ -548,8 +548,8 @@ template, Template Description with `graded=True`, profile row and colours, re-r
    KK card exported into `importer/tests/.work/extra/kk-alpha` (its host tests skip without it).
    `main_item` gained its `_AnotherRamp` and a lit-only highlight from the same card's accessories.
 8. The legacy templates are now only the fallback for shaders no template models (modded shaders).
-   Removing them, the Saturate option and `kkbp/shading/` would leave those uneditable: decide first.
-   If so: delete them and the groups only they use, the Saturate
+   **Decided (2026-11-12): they stay for now**, with the Saturate option and `kkbp/shading/`, so those
+   materials stay editable. If they go later: delete them and the groups only they use, the Saturate
    option (`scene.kkbp_edit_saturate`, the operator's option; check `docs/hook-interface.md`), the
    LUT and dark-texture half of `kkbp/shading/`, `saturated`, `saturated_roles`,
    `plain_color_mask_shaders` and the `how` kinds nothing uses; update ADR 0026 and 0025 to say so.
