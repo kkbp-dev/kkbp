@@ -7,7 +7,8 @@
 set -euo pipefail
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 [[ $# -ge 1 ]] || { echo "usage: scripts/export-library-nodes.sh FILE.blend [NAME ...]" >&2; exit 2; }
-blender="${KKBP_BLENDER_MIN:-$(python3 -c 'import tomllib,sys; print(tomllib.load(open(sys.argv[1],"rb"))["blender"]["min"]["path"])' "$repo/importer/tests/harness/harness.toml")}"
+# harness.toml's `min` build, or KKBP_BLENDER_MIN, resolved the way the harness does (~ expanded).
+blender="$(python3 -c 'import sys; sys.path.insert(0, sys.argv[1]); import run; print(run._builds(run._load_config(), ["min"])["min"]["path"])' "$repo/importer/tests/harness")"
 file="$1"; shift
 "$blender" --background --factory-startup --python-exit-code 1 "$file" \
   --python "$repo/importer/tools/library/export_nodes.py" -- "$repo/importer/tools/library" "$@"

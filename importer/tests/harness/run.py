@@ -3,6 +3,7 @@
     python3 importer/tests/harness/run.py builds
     python3 importer/tests/harness/run.py core [--sample kk] [--blender min] [--keep-blend] [--update]
     python3 importer/tests/harness/run.py hooks [--sample kk] [--update] [--each] [--hook NAME]
+    python3 importer/tests/harness/run.py all [--sample kk] [--blender min] [--jobs N]
 
 `builds` lists the configured Blender builds and checks their versions.
 
@@ -20,6 +21,13 @@ if an import or a Hook fails or a summary differs. With `--each` it imports once
 with only that Hook (`hooks=[that one]`) switched on, once per choice for a choice switch, and fails
 if the Hook changes anything in the summary it doesn't own (hook_owns.py); the reports go to
 importer/tests/.work/hooks/.
+
+`all` does what `core`, `hooks` and `hooks --each` do, with every import in one queue (the Core
+Import once per sample and build, not twice), and then all three checks. scripts/test-importer.sh
+runs it.
+
+`--jobs` is how many Blender processes import at once; each uses about three CPU threads, so the
+default is a quarter of the machine's threads, and at least 2.
 
 Each run gets its own Blender profile (BLENDER_USER_RESOURCES) and its own copy of the
 sample, so the user's Blender settings and the sample folders are never touched.
@@ -39,8 +47,10 @@ import tomllib
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # importer/tests: bundle_copy
 import compare  # noqa: E402
 import physics  # noqa: E402
+from bundle_copy import copy_bundle  # noqa: E402
 
 HARNESS = Path(__file__).resolve().parent
 REPO = HARNESS.parents[2]
@@ -52,6 +62,11 @@ SAMPLE_CARDS = REPO / "contract" / "sample-cards"
 VENV = REPO / "importer" / ".venv"
 ADDON = REPO / "importer" / "kkbp"
 TIMEOUT_SECONDS = 1800
+# Imports at once: a Blender import keeps about three threads busy.
+DEFAULT_JOBS = max(2, (os.cpu_count() or 4) // 4)
+# Runs whose import takes two to three times the others' (the Rigify Hook); queued first so the
+# pool doesn't end on one of them alone.
+SLOW_HOOKS = ("builtin", "Rigify")
 
 # Run details that change every time; left out of snapshots so updates diff cleanly.
 VOLATILE_RUN_KEYS = ("seconds",)
@@ -64,13 +79,16 @@ def main():
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("builds", help="list Blender builds and check their versions")
     for name, help in (("core", "import the Golden Samples with the Core Import"),
-                       ("hooks", "import the Golden Samples with the built-in Hooks")):
+                       ("hooks", "import the Golden Samples with the built-in Hooks"),
+                       ("all", "core, hooks and hooks --each in one queue")):
         cmd = sub.add_parser(name, help=help)
         cmd.add_argument("--sample", action="append", help="Golden Sample (repeatable; default: all)")
         cmd.add_argument("--blender", action="append", help="build name (repeatable; default: all)")
         cmd.add_argument("--keep-blend", action="store_true", help="save each imported scene as a .blend in .work/")
-        cmd.add_argument("--jobs", type=int, default=2, help="Blender processes at once (default 2)")
-        cmd.add_argument("--update", action="store_true", help="rewrite the snapshots from this run (review the diff)")
+        cmd.add_argument("--jobs", type=int, default=DEFAULT_JOBS,
+                         help=f"Blender processes at once (default {DEFAULT_JOBS} on this machine)")
+        if name != "all":
+            cmd.add_argument("--update", action="store_true", help="rewrite the snapshots from this run (review the diff)")
         if name == "hooks":
             cmd.add_argument("--each", action="store_true", help="run each Hook on its own and check what it changes")
             cmd.add_argument("--hook", action="append", help="with --each: only this Hook (repeatable)")
@@ -87,6 +105,8 @@ def main():
             return 1
     if args.command == "core":
         return _cmd_core(config, args)
+    if args.command == "all":
+        return _cmd_all(config, args)
     return _cmd_hooks_each(config, args) if args.each else _cmd_hooks(config, args)
 
 
@@ -164,6 +184,21 @@ def _cmd_hooks(config, args):
     return code | _check_snapshots(config, args, "hooks", "defaults")
 
 
+def _cmd_all(config, args):
+    """Every import of core, hooks and hooks --each in one queue, then their three checks."""
+    import hook_owns
+
+    kinds = [("new", "none", None), ("hooks", "builtin", None),
+             *[(r.variant, r.hook, r.options) for r in hook_owns.RUNS]]
+    code = _import_many(config, args, kinds)
+    print("== Core Import against the snapshots")
+    code |= _check_snapshots(config, args, "new", "core")
+    print("== Every built-in Hook against the snapshots")
+    code |= _check_snapshots(config, args, "hooks", "defaults")
+    print("== Each built-in Hook changes only what it owns")
+    return code | _check_owns(config, args, hook_owns.RUNS)
+
+
 def _check_snapshots(config, args, variant, profile):
     """Compares each build's summary with snapshots/<sample>.<profile>.json (names exactly, positions
     within 1 mm, bones physics moves within physics.PHYSICS_TOLERANCE), or with --update rewrites it
@@ -210,8 +245,15 @@ def _cmd_hooks_each(config, args):
     if unknown:
         raise SystemExit(f"Unknown Hook(s): {', '.join(sorted(unknown))}")
     code = _cmd_core(config, args)
-    for run in runs:
-        code |= _import_all(config, args, run.variant, run.hook, run.options)
+    code |= _import_many(config, args, [(r.variant, r.hook, r.options) for r in runs])
+    return 1 if _check_owns(config, args, runs) or code else 0
+
+
+def _check_owns(config, args, runs):
+    """Compares each Hook run's summary with the Core Import's of the same build; 1 if a Hook changed
+    something it doesn't own (hook_owns.py)."""
+    import hook_owns
+
     out_dir = WORK / "hooks"
     out_dir.mkdir(parents=True, exist_ok=True)
     failed = False
@@ -229,7 +271,7 @@ def _cmd_hooks_each(config, args):
                 failed |= bool(unowned)
                 print(f"  {build_name}/{sample} {run.label}: {len(owned)} change(s), "
                       f"{len(unowned)} outside what it owns  ({_rel(report)})")
-    return 1 if failed or code else 0
+    return 1 if failed else 0
 
 
 def _distinct_builds(config, names):
@@ -251,6 +293,12 @@ def _summary(build_name, sample, variant):
 
 def _import_all(config, args, variant, hooks, options=None):
     """Imports every selected sample on every distinct build; 1 if an import or a Hook failed."""
+    return _import_many(config, args, [(variant, hooks, options)])
+
+
+def _import_many(config, args, kinds):
+    """Imports every selected sample on every distinct build once per (variant, hooks, options) in
+    `kinds`, all in one pool; 1 if an import or a Hook failed."""
     builds = _builds(config, args.blender)
     for name, build in builds.items():
         if not _version_ok(build):
@@ -263,14 +311,17 @@ def _import_all(config, args, variant, hooks, options=None):
     for name in builds:
         if name not in distinct:
             print(f"  '{name}' is the same build as another; skipped.")
-    runs = [(name, build, s) for name, build in distinct.items() for s in samples]
+    runs = [(name, build, s, kind) for kind in kinds for name, build in distinct.items() for s in samples]
+    runs.sort(key=lambda r: r[3][1] not in SLOW_HOOKS)  # stable: the slow ones first, otherwise as given
+    if len(kinds) > 1:
+        print(f"== {len(runs)} imports, {max(1, args.jobs)} at a time")
     wheel = pillow_wheel()
     failed = False
     with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.jobs)) as pool:
-        futures = {pool.submit(_run_new, b, build, s, wheel, args.keep_blend, variant, hooks, options): (b, s)
-                   for b, build, s in runs}
+        futures = {pool.submit(_run_new, b, build, s, wheel, args.keep_blend, *kind): (b, s, kind[0])
+                   for b, build, s, kind in runs}
         for future in concurrent.futures.as_completed(futures):
-            b, s = futures[future]
+            b, s, variant = futures[future]
             r = future.result()
             ok = r["summary"] is not None
             hook_failures = [f"{h} {status}" for h, status in (r["summary"] or {}).get("run", {}).get("hooks", {}).items()
@@ -300,7 +351,7 @@ def _run_new(build_name, build, sample, wheel, keep_blend, variant="new", hooks=
     folder.mkdir(parents=True)
     profile = addon_profile(folder)
     bundle = folder / "bundle"
-    shutil.copytree(GOLDEN / sample, bundle, ignore=shutil.ignore_patterns("kkbp_cache"))
+    copy_bundle(GOLDEN / sample, bundle)  # hard links: the import writes only into kkbp_cache/
     out, log = folder / "summary.json", folder / "blender.log"
     command = [build["path"], "--background", "--factory-startup", "--python-exit-code", "1",
                "--python", str(HARNESS / "blender" / "new_import.py"), "--",

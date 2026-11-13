@@ -6,6 +6,7 @@ import bpy
 import pytest
 
 from bundle_builder import BundleBuilder
+from bundle_copy import copy_bundle
 from conftest import kkbp, submodule
 
 pipeline = submodule("pipeline")
@@ -348,8 +349,6 @@ def test_folder_scripts_get_kkbp_and_run_on_import(build, tmp_path, monkeypatch)
 
 def test_the_hook_interface_docs_first_hook_runs_on_a_sample(tmp_path, monkeypatch):
     """The example in docs/hook-interface.md, run from a hooks folder on a copy of the KK sample."""
-    import shutil
-
     from conftest import REPO, golden
 
     doc = (REPO / "docs" / "hook-interface.md").read_text(encoding="utf-8")
@@ -357,7 +356,7 @@ def test_the_hook_interface_docs_first_hook_runs_on_a_sample(tmp_path, monkeypat
     monkeypatch.setattr(settings, "hooks_folder", lambda: str(_folder(tmp_path, {"example.py": example})))
     settings.reload_hooks()
     copy = tmp_path / "kk"
-    shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
+    copy_bundle(golden("kk"), copy)
     result = kkbp.api.import_bundle(copy, options={"portrait_camera_framing": "face", "portrait_camera_lens": 50.0},
                                     hooks=["Portrait camera"])
     assert [(h.name, h.status) for h in result.hooks] == [("Portrait camera", "ran")]

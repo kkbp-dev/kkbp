@@ -12,8 +12,10 @@ All commands run from the repository root and need Python 3.11 or later on the h
 python3 importer/tests/harness/run.py builds
 ```
 
-- `min` is the minimum supported release, 5.2 LTS.
-- `latest` is the latest stable release. As of 2026-10-31 that is still 5.2 (5.3 is in beta), so both builds point at the same binary. Builds that resolve to the same binary and version are imported once.
+- `min` is the minimum supported release, 5.2 LTS: on the development machine, the release tarball in `~/.local/opt/blender-5.2.2/`.
+- `latest` is the latest stable release: the snap at `/snap/bin/blender`, 5.3.0 as of 2026-11-12.
+
+Builds that resolve to the same binary and version are imported once.
 
 To use another build without editing the file, set `KKBP_BLENDER_<NAME>`:
 
@@ -40,7 +42,7 @@ python3 importer/tests/harness/run.py core --update
 python3 importer/tests/harness/run.py hooks --update
 ```
 
-`scripts/test-importer.sh` runs this after the in-Blender tests. Each import gets its own profile with a copy of `importer/kkbp` and Pillow installed from the pinned wheel, and its own copy of the sample, so the samples stay untouched.
+Each import gets its own profile with a copy of `importer/kkbp` and Pillow installed from the pinned wheel, and its own copy of the sample, so the samples stay untouched. The copy's files are hard links to the sample's ([bundle_copy.py](../bundle_copy.py)): an import writes only into `kkbp_cache/`, which the copy leaves out.
 
 Import every Golden Sample with the Core Import followed by every built-in Hook, with the Import Options' defaults, and fail if an import or a Hook fails or the summary differs from `<sample>.defaults.json`:
 
@@ -54,7 +56,13 @@ Run each built-in Hook on its own (`hooks=[that one]`, its switch on, once per c
 python3 importer/tests/harness/run.py hooks --each [--hook "Fix body seams"]
 ```
 
-`scripts/test-importer.sh` runs all three after the in-Blender tests.
+All three at once, with every import in one queue (the Core Import once per sample and build, not twice) and then the three checks; `scripts/test-importer.sh` runs this after the in-Blender tests:
+
+```bash
+python3 importer/tests/harness/run.py all
+```
+
+`--jobs` sets how many Blender processes import at once (every command but `builds`). Each keeps about three CPU threads busy and needs up to about 1.3 GB, so the default is a quarter of the machine's threads, and at least 2.
 
 ## Scene summary
 

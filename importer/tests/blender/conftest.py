@@ -2,6 +2,7 @@
 repository; it is enabled here once per session, and every test starts from an empty scene."""
 
 import importlib
+import json
 import os
 from pathlib import Path
 
@@ -54,6 +55,72 @@ def empty_scene():
     bpy.ops.wm.read_homefile(use_empty=True)
     assert MODULE in bpy.context.preferences.addons, "reading the empty file disabled the add-on"
     yield
+
+
+class SceneCache:
+    """Scenes that take a while to make (a Golden Sample import, say), made once per session and
+    saved; every later request opens the saved file. Each request, the first included, gets a
+    freshly opened file, so a test may change the scene as it likes and every test sees the same
+    starting point, however the tests are ordered."""
+
+    def __init__(self, tmp_path_factory):
+        self._factory = tmp_path_factory
+        self._saved = {}  # key -> (scene.blend, what make returned)
+
+    def get(self, key, make):
+        """Opens the scene for `key`, making it the first time with `make(folder)`, which builds it
+        in an empty file (files it needs, such as a bundle copy, go into `folder` and must outlive the
+        session) and returns a value that holds no Blender data. Returns that value."""
+        if key not in self._saved:
+            folder = self._factory.mktemp("scene")
+            bpy.ops.wm.read_homefile(use_empty=True)
+            value = make(folder)
+            path = folder / "scene.blend"
+            # Paths stay as they are, so the images still point into the bundle copy beside it.
+            bpy.ops.wm.save_as_mainfile(filepath=str(path), relative_remap=False, compress=False)
+            self._saved[key] = (path, value)
+        path, value = self._saved[key]
+        filepaths = bpy.context.preferences.filepaths
+        trusted = filepaths.use_scripts_auto_execute
+        # As the scene was in the session that made it: Python drivers, and Rigify's rig UI script.
+        filepaths.use_scripts_auto_execute = True
+        try:
+            bpy.ops.wm.open_mainfile(filepath=str(path), load_ui=False)
+        finally:
+            filepaths.use_scripts_auto_execute = trusted
+        assert MODULE in bpy.context.preferences.addons, "opening a saved scene disabled the add-on"
+        return value
+
+
+@pytest.fixture(scope="session")
+def scenes(tmp_path_factory):
+    return SceneCache(tmp_path_factory)
+
+
+@pytest.fixture(scope="session")
+def golden_import(scenes):
+    """golden_import(sample, hooks=(), options=None) -> (ImportResult, Character): the Golden Sample
+    imported into an empty file, with the Import Options' own defaults (not Preferences'), from a
+    saved copy after the first time (SceneCache). The result is the first, real import's."""
+    from bundle_copy import copy_bundle
+
+    character = importlib.import_module(f"{MODULE}.character")
+    settings = importlib.import_module(f"{MODULE}.settings")
+
+    def _import(sample, hooks=(), options=None):
+        key = ("golden", sample, tuple(hooks), json.dumps(options or {}, sort_keys=True))
+
+        def make(folder):
+            copy = copy_bundle(golden(sample), folder / sample)
+            with pytest.MonkeyPatch.context() as mp:
+                mp.setattr(settings, "option_defaults", lambda: {})
+                result = kkbp.api.import_bundle(copy, hooks=list(hooks), options=dict(options or {}))
+            assert result.ok, f"{result.failed_step}: {result.error}"
+            return result
+
+        result = scenes.get(key, make)
+        return result, character.Character(result.character_key)
+    return _import
 
 
 @pytest.fixture

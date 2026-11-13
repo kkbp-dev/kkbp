@@ -6,13 +6,12 @@ legs, written with Blender's FBX exporter at 1/FBX_SCALE, the scale the game's o
 """
 
 import math
-import shutil
 
 import bpy
 import pytest
 from mathutils import Vector
 
-from conftest import golden, kkbp, submodule
+from conftest import submodule
 
 character = submodule("character")
 animation = submodule("tools.animation")
@@ -33,18 +32,24 @@ def no_preferences(monkeypatch):
 
 
 @pytest.fixture
-def rigged(tmp_path):
-    copy = tmp_path / "kk"
-    shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
-    result = kkbp.api.import_bundle(copy, hooks=["Rigify"])
-    assert result.ok and result.hooks[0].status == "ran", result.hooks
-    return character.Character(result.character_key)
+def walked(scenes, golden_import):
+    """(Character, walk FBX, action): the KK Golden Sample with Rigify and the walk retargeted onto
+    its rig. The retarget takes about a minute, so it is made once and each test opens a copy
+    (SceneCache)."""
+    def make(folder):
+        result, rigged = golden_import("kk", hooks=["Rigify"])
+        assert result.hooks[0].status == "ran", result.hooks
+        path = _write_walk(rigged, folder)
+        action = animation.import_animation(rigged, path, log=lambda m: None)
+        return result.character_key, path, action.name
+
+    key, path, name = scenes.get(("kk walk",), make)
+    return character.Character(key), path, bpy.data.actions[name]
 
 
-@pytest.fixture
-def walk(rigged, tmp_path):
-    """Writes the walk FBX for `rigged`'s skeleton and returns its path; the armature it was made
-    from is gone again."""
+def _write_walk(rigged, folder):
+    """Writes the walk FBX for `rigged`'s skeleton into `folder` and returns its path; the armature
+    it was made from is gone again."""
     skeleton = rigged.bundle().skeleton
     metarig = rigged.armature.data.bones
     by_id = {b.id: b for b in skeleton.bones}
@@ -86,7 +91,7 @@ def walk(rigged, tmp_path):
         hips.location = (0.0, 0.02 * phase, 0.0)
         hips.keyframe_insert("location", frame=frame)
 
-    path = tmp_path / "walk.fbx"
+    path = folder / "walk.fbx"
     for obj in bpy.context.view_layer.objects:
         obj.select_set(obj == source)
     bpy.context.view_layer.objects.active = source
@@ -107,8 +112,8 @@ def _turn(matrix, rest):
     return matrix.to_quaternion() @ rest.to_quaternion().inverted()
 
 
-def test_the_walk_drives_the_rig_like_the_game_bones(rigged, walk):
-    action = animation.import_animation(rigged, walk, log=lambda m: None)
+def test_the_walk_drives_the_rig_like_the_game_bones(walked):
+    rigged, walk, action = walked
     rig = rigged.rig
     assert action.name == "walk" and rig.animation_data.action == action
     assert not [o for o in bpy.data.objects if o.type == "ARMATURE" and o not in (rig, rigged.armature)
@@ -129,8 +134,8 @@ def test_the_walk_drives_the_rig_like_the_game_bones(rigged, walk):
             assert angle < 5, (frame, game, angle)
 
 
-def test_ik_snap_switches_the_limbs_to_ik(rigged, walk):
-    animation.import_animation(rigged, walk, log=lambda m: None)
+def test_ik_snap_switches_the_limbs_to_ik(walked):
+    rigged, _, _ = walked
     bpy.context.scene.frame_set(10)
     animation.ik_snap(rigged.rig)
     assert all(rigged.rig.pose.bones[f"{limb}_parent"]["IK_FK"] == 0 for limb in animation.LIMBS)

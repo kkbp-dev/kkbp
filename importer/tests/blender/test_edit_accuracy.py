@@ -16,16 +16,14 @@ templates' numbers are in ADR 0041.
 
 import json
 import os
-import shutil
 from pathlib import Path
 
 import bpy
 import numpy as np
 import pytest
 
-from conftest import REPO, golden, kkbp, submodule
+from conftest import REPO, submodule
 
-character = submodule("character")
 edit_material = submodule("tools.edit_material")
 bake = submodule("tools.bake")
 profiles = submodule("profiles")
@@ -85,12 +83,8 @@ def measure(ch, log=lambda *_: None):
 
 
 @pytest.mark.parametrize("game", ["kk", "kks"])
-def test_unedited_edit_materials_bake_close_to_the_game(game, tmp_path):
-    copy = tmp_path / game
-    shutil.copytree(golden(game), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
-    result = kkbp.api.import_bundle(copy, hooks=[])
-    assert result.ok
-    numbers = measure(character.Character(result.character_key))
+def test_unedited_edit_materials_bake_close_to_the_game(game, golden_import):
+    numbers = measure(golden_import(game)[1])
     REPORT.mkdir(parents=True, exist_ok=True)
     (REPORT / f"{game}.json").write_text(json.dumps(numbers, indent=1, sort_keys=True) + "\n")
 

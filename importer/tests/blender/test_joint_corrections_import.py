@@ -5,15 +5,13 @@ is in."""
 
 import json
 import math
-import shutil
 
 import bpy
 import pytest
 from mathutils import Euler, Quaternion
 
-from conftest import golden, kkbp, submodule
+from conftest import submodule
 
-character = submodule("character")
 jc = submodule("joint_corrections")
 rules_mod = submodule("profiles.corrections")
 gm = submodule("profiles.gamemath")
@@ -26,22 +24,16 @@ RIG_FK = {"upper_arm": "arm_fk", "lower_arm": "elbow_fk", "hand": "wrist_fk",
           "upper_leg": "leg_fk", "lower_leg": "knee_fk", "foot": "ankle_fk"}
 
 
-def _import(tmp_path_factory, game, rigify):
-    copy = tmp_path_factory.mktemp(f"jc-{game}") / game
-    shutil.copytree(golden(game), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
-    bpy.ops.wm.read_homefile(use_empty=True)
-    hooks = ["Rigify"] if rigify else []
-    result = kkbp.api.import_bundle(copy, hooks=hooks, options={"use_rigify": rigify})
-    assert result.ok
-    ch = character.Character(result.character_key)
-    with open(copy / "skeleton.json", encoding="utf-8") as f:
+def _import(golden_import, game, rigify):
+    _, ch = golden_import(game, hooks=["Rigify"] if rigify else [])
+    with open(ch.bundle_path / "skeleton.json", encoding="utf-8") as f:
         roles = {b["role"]: b["id"] for b in json.load(f)["bones"] if b.get("role")}
     return (ch.rig if rigify else ch.armature), roles
 
 
 @pytest.fixture(autouse=True)
 def empty_scene():
-    """Each test imports for itself."""
+    """Each test opens its own import (golden_import)."""
     yield
 
 
@@ -113,8 +105,8 @@ def _check(armature):
 
 @pytest.mark.parametrize("game", ["kk", "svs"])
 @pytest.mark.parametrize("rigify", [False, True], ids=["fk", "rigify"])
-def test_bent_limbs_move_the_correction_bones_by_the_rules(tmp_path_factory, game, rigify):
-    armature, roles = _import(tmp_path_factory, game, rigify)
+def test_bent_limbs_move_the_correction_bones_by_the_rules(golden_import, game, rigify):
+    armature, roles = _import(golden_import, game, rigify)
     _bend(armature, rigify, roles)
     # the game's own reading of the knee: the drivers saw the limbs bend
     assert abs(armature.pose.bones["JC-R knee_L"].location[0]) > 20
@@ -127,12 +119,7 @@ def test_bent_limbs_move_the_correction_bones_by_the_rules(tmp_path_factory, gam
                if d.data_path.startswith('pose.bones["JC-'))
 
 
-def test_the_option_off_leaves_no_corrections(tmp_path_factory):
-    copy = tmp_path_factory.mktemp("jc-off") / "kk"
-    shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
-    bpy.ops.wm.read_homefile(use_empty=True)
-    result = kkbp.api.import_bundle(copy, hooks=[], options={"joint_corrections": False})
-    assert result.ok
-    armature = character.Character(result.character_key).armature
+def test_the_option_off_leaves_no_corrections(golden_import):
+    armature = golden_import("kk", options={"joint_corrections": False})[1].armature
     assert jc.STASH not in armature
     assert not [b for b in armature.data.bones if b.name.startswith(jc.PREFIX)]

@@ -3,13 +3,11 @@ material there has a template made from the game's shaders; the legacy templates
 (texture groups, saturation) is tested on a built bundle whose top uses a shader no template models,
 which falls back to KK General."""
 
-import shutil
-
 import bpy
 import pytest
 
 from bundle_builder import BundleBuilder
-from conftest import golden, kkbp, submodule
+from conftest import kkbp, submodule
 
 character = submodule("character")
 templates = submodule("templates")
@@ -17,18 +15,9 @@ edit_material = submodule("tools.edit_material")
 link_hair = submodule("tools.link_hair")
 
 
-@pytest.fixture(scope="module")
-def kk_copy(tmp_path_factory):
-    copy = tmp_path_factory.mktemp("edit") / "kk"
-    shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
-    return copy
-
-
 @pytest.fixture
-def ch(kk_copy):
-    result = kkbp.api.import_bundle(kk_copy, hooks=[])
-    assert result.ok
-    return character.Character(result.character_key)
+def ch(golden_import):
+    return golden_import("kk")[1]
 
 
 @pytest.fixture

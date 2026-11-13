@@ -33,6 +33,7 @@ A fresh clone can't run the tests yet: the Golden Samples the tests import are m
 - No remote and no CI: build, test and check steps are local scripts under `scripts/`.
 - Nothing gets installed into Blender's own Python or the user's Blender profile without their OK, and each OK covers that one install.
 - Long runs (the full test suite, `export-sample.sh`, game exports) take minutes: run them in the background and wait for them.
+- Run the full test suite once, after a change. Don't run it before the change for a baseline: the committed snapshots are the baseline, and `scripts/test-importer.sh` stops at once on a tree that already passed (the green stamp). To see whether a failure predates the change, run that one test (`launch.py -k <name>`, or `run.py core --sample <game>`) on the base commit, not the whole suite.
 
 ## Rules the code follows
 
@@ -72,8 +73,8 @@ The user plays these games. Details are in "Working with the games" in [exporter
 
 | What | Command |
 |---|---|
-| Set up the importer's dev venv (once, and after any Blender update, including a silent snap refresh) | `scripts/setup-importer-dev.sh` |
-| All importer tests: host, harness, in-Blender, sample imports, each Hook, snapshots | `scripts/test-importer.sh` (no arguments) |
+| Set up the importer's dev venv (once, and after the `min` build changes) | `scripts/setup-importer-dev.sh` |
+| All importer tests: host, harness, in-Blender, sample imports, each Hook, snapshots. A tree that already passed (same files, Golden Samples and Blender builds) isn't run again; `--force` runs it anyway | `scripts/test-importer.sh` (no arguments) |
 | Only one half, or a filter | `scripts/test-importer.sh --host-only` / `--blender-only`; with pytest arguments (`-k name`) it runs only the pytest tests, not the sample imports, Hook runs or snapshot checks |
 | Only some in-Blender tests | `python3 importer/tests/blender/launch.py -k <name>` (a file path doesn't narrow it) |
 | Keep an imported scene as a `.blend` in `importer/tests/.work/runs/` | add `--keep-blend` to `run.py core` or `hooks` |
@@ -106,7 +107,7 @@ Run the importer's host tests and pytest only on `importer/.venv/bin/python` (Bl
 - **A new Hook:** a module in `importer/kkbp/builtin/`, its place in `BUILTIN_HOOKS` (`importer/kkbp/pipeline/steps.py`), its own asset file if it needs one (a table entry in `importer/tools/library/build.py`, built by `scripts/build-library.sh`), and a rule in `importer/tests/harness/hook_owns.py` for what it may change.
 - **A new shader in KK:** KK's Unity 5.6 can't list a shader's properties, so every shader KK captures needs an entry in `exporters/kk/shader-properties.json`, made by the KKS `dump_shaders` request ([exporters/README.md](exporters/README.md)).
 - **A new Blender release:**
-  - Add or point a build in `importer/tests/harness/harness.toml`. Today `min` and `latest` both point at `/snap/bin/blender` (5.2), so every check runs on 5.2 alone.
+  - Add or point a build in `importer/tests/harness/harness.toml`. Today `min` is the 5.2.2 tarball in `~/.local/opt/blender-5.2.2/` and `latest` the snap at `/snap/bin/blender` (5.3.0), and every check runs on both.
   - Fetching a build: download.blender.org refuses `curl`, and snap installs one version at a time; two side by side need snap's `experimental.parallel-instances`, which only the user can turn on. Ask the user.
   - Run the tests on it. The Mesh Loader test fails if the glTF importer gained an option `GLTF_OPTIONS` doesn't set; give it a deliberate value.
   - Put version-specific code in `compat/`.
@@ -121,10 +122,10 @@ Run the importer's host tests and pytest only on `importer/.venv/bin/python` (Bl
 The computer this repository is developed on. On another computer, follow "First-time setup" and adapt the paths below.
 
 - **Git LFS is required.** `.gitattributes` sends `png`, `jpg`, `glb`, `bin`, `blend`, `whl`, `dll` and `fbx` to LFS (set up with `git lfs install --local`). Without git-lfs a checkout gets pointer files and the tests fail. A new binary file type needs its own line in `.gitattributes`.
-- **Blender:** the builds in `importer/tests/harness/harness.toml` (5.2 LTS at `/snap/bin/blender`; override with `KKBP_BLENDER_<NAME>`). The venv points at the snap's revision path, so a snap refresh breaks it; rerun `scripts/setup-importer-dev.sh`.
+- **Blender:** the builds in `importer/tests/harness/harness.toml`: `min` is 5.2.2 LTS, the release tarball in `~/.local/opt/blender-5.2.2/`; `latest` is the snap at `/snap/bin/blender` (5.3.0, and it refreshes silently). Override either with `KKBP_BLENDER_<NAME>`. The venv is built from `min`'s Python; rerun `scripts/setup-importer-dev.sh` if `min` moves.
 - **The first in-Blender test run needs the network**, to download the pinned Pillow wheel from PyPI into `importer/tests/.work/wheels/`.
 - **.NET and Node:** .NET SDK 10 or later and Node.js, on `PATH` or in `~/.dotnet` and `~/.local/node/bin`. `scripts/check-core.sh` installs the glTF Validator. `ilspycmd` (in `~/.dotnet/tools`) decompiles the games.
 - **The games** are in `games/` (ignored by git; `KKBP_GAMES_DIR` overrides): Koikatsu, Koikatsu Sunshine and Summer Vacation Scramble, HF Patched with BepInEx, under GE-Proton through `games/play.sh <koikatsu|kks|svs>` (on this computer, a copy of `scripts/play.example.sh`). Prefixes are in `~/Games/prefixes/`, launch logs in `~/Games/logs/`. The adapters build against these installs' assemblies (ADR 0007).
 - **Game logs:** KK `games/Koikatsu/BepinEx/LogOutput.log`, KKS `games/Koikatsu Sunshine/output_log.txt`, SVS `games/Summer Vacation Scramble/BepInEx/LogOutput.log`.
-- **Run times:** one import takes 25–70 s; the full test suite takes several minutes; a game export takes one to a few minutes per card.
+- **Run times:** one headless import of a Golden Sample takes 5–15 s (Rigify the longest); the full test suite about 9 minutes (host 45 s, the in-Blender tests 4.5 min on both builds at once, the 84 harness imports 3.5 min), or under a second when the tree is already green; a game export takes one to a few minutes per card.
 - **Sample Cards** are tracked in `contract/sample-cards/<game>.png`; `batch_exporter_testing/` (ignored by git) holds more cards per game for batch tests. A fresh checkout has no Golden Samples until `scripts/export-sample.sh` makes them; the stamp beside each (`contract/samples/<game>.stamp`) makes the test scripts warn when the working tree's exporters or contract differ from the ones that made it.

@@ -5,13 +5,13 @@
 # for example KKBP_BLENDER_LATEST=/opt/blender-5.3.0/blender.
 # `version` is the major.minor the binary must report; "" accepts any.
 [blender.min]
+# The snap moved to 5.3, so 5.2 LTS is the release tarball unpacked on the development machine.
 description = "Minimum supported release: 5.2 LTS"
-path = "/snap/bin/blender"
+path = "~/.local/opt/blender-5.2.2/blender"
 version = "5.2"
 
 [blender.latest]
-# Blender 5.3 is in beta as of 2026-10-31, so the latest stable release is still 5.2.
-# Point this at the newest stable build once one is released.
+# The snap, 5.3.0 as of 2026-11-12. Point this at the newest stable build when one is released.
 description = "Latest stable release"
 path = "/snap/bin/blender"
 version = ""
