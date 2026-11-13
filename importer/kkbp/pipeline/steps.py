@@ -29,6 +29,7 @@ STEPS: list[Step] = [
     Step(joint_corrections.add_joint_corrections, options=[joint_corrections.OPTION], label="Armature"),
     Step(materials.apply_templates),
     Step(materials.apply_outfit_body_textures),
+    Step(gag.drive_frames),
     Step(gag.drive_gag_eyes),
     Step(materials.drive_material_changes),
     Step(materials.set_viewport_colors),

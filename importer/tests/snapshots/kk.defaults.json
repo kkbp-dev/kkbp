@@ -45006,6 +45006,7 @@
    "bend_limbs_for_ik": "ran",
    "build_parts": "ran",
    "combine_gag_keys": "ran",
+   "drive_frames": "ran",
    "drive_gag_eyes": "ran",
    "drive_material_changes": "ran",
    "drive_showing_keys": "ran",

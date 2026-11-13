@@ -194,3 +194,45 @@ def test_fiery_eyes_leave_the_pupils_showing(tmp_path):
     assert pupil.default_value == 0 and body[FIERY].value == 1
     _pick(ch, number=1)  # Circle Eyes 1, the first
     assert pupil.default_value == 1 and body[FIERY].value == 0
+
+
+def test_the_gag_patterns_read_the_frame_from_their_object(build):
+    """The animated patterns turn with the frame, read from a property on each object with a Gag
+    material; a driver in the material would update it, and every driver reading its dropdown, on
+    every frame (ADR 0042)."""
+    _, ch = _import(build(_two_gags()))
+    scene = bpy.context.scene
+    scene.frame_set(12)
+    gags = [m for m in ch.materials(roles="gag_eyes") if templates.template_of(m).patterns.chain is not None]
+    assert gags
+    for mat in gags:
+        chain = templates.template_of(mat).patterns.chain
+        node = templates.param(mat, chain.frame).node
+        assert (node.type, node.attribute_type, node.attribute_name) == ("ATTRIBUTE", "OBJECT", chain.frame_property)
+        assert not (mat.node_tree.animation_data and any("gag.frame" in fc.data_path
+                                                         for fc in mat.node_tree.animation_data.drivers))
+        users = [o for o in ch.parts("gag_eyes") if any(s.material == mat for s in o.material_slots)]
+        assert users
+        for obj in users:
+            assert obj[chain.frame_property] == 12
+
+
+def test_a_frame_change_updates_no_material(tmp_path):
+    """Playing an animation doesn't re-evaluate the materials or the shape keys: the drivers that
+    read the gag expression dropdown run only when it changes."""
+    copy = tmp_path / "kk"
+    shutil.copytree(golden("kk"), copy)
+    _import(copy)
+    scene = bpy.context.scene
+    seen = []
+
+    def note(scene, depsgraph):
+        seen.append({type(u.id).__name__ + " " + u.id.name for u in depsgraph.updates})
+
+    bpy.app.handlers.frame_change_post.append(note)
+    try:
+        for frame in (1, 2, 3):
+            scene.frame_set(frame)
+    finally:
+        bpy.app.handlers.frame_change_post.remove(note)
+    assert not {u for u in seen[-1] if u.startswith(("Material", "Key"))}, sorted(seen[-1])

@@ -183,7 +183,7 @@ def param(material, name: str):
                             + (f" with the {material[VARIANT]} variant" if VARIANT in material else ""))
     node_name, socket = params[name]
     node = node_at(material, node_name)
-    return node.outputs[socket] if node.type == "VALUE" else node.inputs[socket]
+    return node.outputs[socket] if node.type in ("VALUE", "ATTRIBUTE") else node.inputs[socket]
 
 
 def params(material) -> tuple[str, ...]:

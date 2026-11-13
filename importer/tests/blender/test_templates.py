@@ -88,7 +88,9 @@ def test_gag_patterns_build_a_chain(build):
     assert nodes["main.pick.1"].inputs["Index"].default_value == 2
     out = nodes["gag.output"].inputs["Color"].links[0].from_node
     assert out == nodes["main.pick.1"]
-    assert gag.node_tree.animation_data.drivers[0].driver.expression == "frame"
+    frame = nodes["main.uv.0"].inputs["Frame"].links[0].from_node
+    assert (frame.type, frame.attribute_name) == ("ATTRIBUTE", "kkbp_gag_frame")  # no driver (ADR 0042)
+    assert gag.node_tree.animation_data is None or not gag.node_tree.animation_data.drivers
 
 
 def test_raw_slots_come_from_the_profile(build):

@@ -251,6 +251,23 @@ def _drive_showing_keys(ctx, chosen, targets):
         add_driver(key, "value", chosen.targets, lambda names, group=group: f"1 if {chosen.on(names, group)} else 0")
 
 
+def drive_frames(ctx):
+    """Gives every object with a chained pattern material the frame property its Attribute node
+    reads, driven by the frame (`Chain.frame_property`). The animated patterns turn and pulse with it."""
+    for obj in _meshes(ctx.character):
+        names = set()
+        for slot in obj.material_slots:
+            mat = slot.material
+            if mat is None or mat.get(templates.TEMPLATE) is None:
+                continue
+            patterns = templates.template_of(mat).patterns
+            if patterns is not None and patterns.chain is not None and patterns.chain.frame_property:
+                names.add(patterns.chain.frame_property)
+        for name in sorted(names):
+            obj[name] = 0.0
+            obj.driver_add(f'["{name}"]').driver.expression = "frame"
+
+
 def set_pattern_values(mat, index, change, profile):
     values = {}
     for raw, value in change.floats.items():

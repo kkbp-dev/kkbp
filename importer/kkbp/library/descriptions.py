@@ -41,6 +41,10 @@ class Chain:
     output: str
     frame: str  # the param the uv groups' frame input comes from
     pattern_params: Mapping[str, str]  # param name -> uv group input
+    # The object property the frame param reads (an Attribute node), which the importer drives by
+    # the frame on every object with the material: a driver in the material would update it, and
+    # every driver reading its dropdown, on every frame (ADR 0042).
+    frame_property: str | None = None
     # The groups' own sockets, by what they are for.
     sockets: Mapping[str, str] = MappingProxyType({
         "frame": "Frame", "vector": "Vector",  # uv group
@@ -351,9 +355,10 @@ TEMPLATES: Mapping[str, Template] = MappingProxyType({t.name: t for t in (
     ),
     Template(
         "Gag",
-        params={"choice": ("gag.choice", "Value"), "frame": ("gag.frame", "Value")},
+        params={"choice": ("gag.choice", "Value"), "frame": ("gag.frame", "Fac")},
         patterns=Patterns("main", choice="choice", first=1, off=0, chain=Chain(
             uv_group=".Gag UV", pick_group=".Gag pick", output="gag.output", frame="frame",
+            frame_property="kkbp_gag_frame",
             pattern_params={"angle_speed": "Angle speed", "size_speed": "Size speed", "size_width": "Size width",
                             "tile_x": "Tile X", "tile_y": "Tile Y"}),
             picker=Picker("gag.expression", "Gag expression", menu="Gag expression", number="Number",
