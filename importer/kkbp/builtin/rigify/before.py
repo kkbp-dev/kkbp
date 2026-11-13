@@ -8,6 +8,7 @@ import statistics
 from mathutils import Matrix, Vector, Euler
 from . import commons as koikatsuCommons
 from . import names
+from . import constraints, drivers
 from ... import compat
 from ...editing import switch
 from . import widgets
@@ -188,8 +189,22 @@ def _widgets_and_handles(build):
     finalizeHandleBone(False, metarig, names.LEFT_BUTTOCK_BONE, names.LEFT_BUTTOCK_HANDLE_BONE, widgetButtockLeft)   
     finalizeHandleBone(False, metarig, names.RIGHT_BUTTOCK_BONE, names.RIGHT_BUTTOCK_HANDLE_BONE, widgetButtockRight)
     copyTransformsConstraintName = names.COPY_TRANSFORMS_CONSTRAINT_BASE + names.JOINT_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX
-    koikatsuCommons.addCopyTransformsConstraint(metarig, names.LEFT_BUTTOCK_HANDLE_BONE, names.LEFT_BUTTOCK_JOINT_CORRECTION_BONE, 'AFTER', 'LOCAL', copyTransformsConstraintName)
-    koikatsuCommons.addCopyTransformsConstraint(metarig, names.RIGHT_BUTTOCK_HANDLE_BONE, names.RIGHT_BUTTOCK_JOINT_CORRECTION_BONE, 'AFTER', 'LOCAL', copyTransformsConstraintName)
+    constraints.copy_transforms(
+        metarig,
+        names.LEFT_BUTTOCK_HANDLE_BONE,
+        names.LEFT_BUTTOCK_JOINT_CORRECTION_BONE,
+        name=copyTransformsConstraintName,
+        mix='AFTER',
+        space='LOCAL',
+    )
+    constraints.copy_transforms(
+        metarig,
+        names.RIGHT_BUTTOCK_HANDLE_BONE,
+        names.RIGHT_BUTTOCK_JOINT_CORRECTION_BONE,
+        name=copyTransformsConstraintName,
+        mix='AFTER',
+        space='LOCAL',
+    )
 
 
 def _eyes(build):
@@ -301,355 +316,1474 @@ def _eyes(build):
     
     eyesSizeFactor = 100.0
         
-    eyesHandleLimitLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_HANDLE_BONE, "01A) Limit location", "Limits the maximum reachable X and Y locations based on the left and right eye handles settings", 0.0, 0.0, 1.0)
-    eyesHandleEyelidsAutomationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_HANDLE_BONE, "02A) Eyelids automation", "Enables eyelids shape key automation when both eyes move up and down", 0.0, 0.0, 1.0)
-    eyesHandleDefaultEyelidsValueDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_HANDLE_BONE, "02B) Default eyelids value", "Eyelids shape key automation value when both eyes are at their default position", 0.05, 0.0, 1.0)
-    eyesHandleMinEyelidsValueDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_HANDLE_BONE, "02C) Min eyelids value", "Minimum reachable eyelids shape key automation value when both eyes move down", 0.0, 0.0, 1.0)
-    eyesHandleMaxEyelidsValueDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_HANDLE_BONE, "02D) Max eyelids value", "Maximum reachable eyelids shape key automation value when both eyes move up", 0.25, 0.0, 1.0)
-    eyesHandleEyelidsSpeedFactorDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_HANDLE_BONE, "02E) Eyelids speed factor", "Determines how fast the eyelids shape key automation value will change when both eyes move up and down", 2.0, 0.0, eyesSizeFactor * 10)
-    eyesHandleEyesSizeFactorDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_HANDLE_BONE, "03A) Eyes size factor", "Factors into many constraints and drivers for the eyes mechanics; it's better not to change this value", eyesSizeFactor, 0, eyesSizeFactor * 10)
-    leftEyeHandleLimitLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.LEFT_EYE_HANDLE_BONE, "01A) Limit location", "Limits the maximum reachable X and Y locations based on the settings below", 0.0, 0.0, 1.0)
-    leftEyeHandleMinXLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.LEFT_EYE_HANDLE_BONE, "01B) Min X location", "Minimum reachable X location limit", -0.075 - leftHeadDistXReference + leftHeadDistX, eyesSizeFactor * -10, eyesSizeFactor * 10)
-    leftEyeHandleMaxXLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.LEFT_EYE_HANDLE_BONE, "01C) Max X location", "Maximum reachable X location limit", 0.25 - leftHeadDistXReference + leftHeadDistX, eyesSizeFactor * -10, eyesSizeFactor * 10)
-    leftEyeHandleMinYLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.LEFT_EYE_HANDLE_BONE, "01D) Min Y location", "Minimum reachable Y location limit", -0.1 - leftHeadDistZReference + leftHeadDistZ, eyesSizeFactor * -10, eyesSizeFactor * 10)
-    leftEyeHandleMaxYLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.LEFT_EYE_HANDLE_BONE, "01E) Max Y location", "Maximum reachable Y location limit", 0.13 - leftHeadDistZReference + leftHeadDistZ, eyesSizeFactor * -10, eyesSizeFactor * 10)
-    leftEyeHandleSpeedCorrectionDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.LEFT_EYE_HANDLE_BONE, "02A) Speed correction", "Increases the speed at which the eye moves when not controlled directly in order to reach its maximum location limits at the same time as the other eye", 0.0, 0.0, 1.0)
-    rightEyeHandleLimitLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.RIGHT_EYE_HANDLE_BONE, "01A) Limit location", "Limits the maximum reachable X and Y locations based on the settings below", 0.0, 0.0, 1.0)
-    rightEyeHandleMinXLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.RIGHT_EYE_HANDLE_BONE, "01B) Min X location", "Minimum reachable X location limit", -0.25 - rightHeadDistXReference + rightHeadDistX, eyesSizeFactor * -10, eyesSizeFactor * 10)
-    rightEyeHandleMaxXLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.RIGHT_EYE_HANDLE_BONE, "01C) Max X location", "Maximum reachable X location limit", 0.075 - rightHeadDistXReference + rightHeadDistX, eyesSizeFactor * -10, eyesSizeFactor * 10)
-    rightEyeHandleMinYLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.RIGHT_EYE_HANDLE_BONE, "01D) Min Y location", "Minimum reachable Y location limit", -0.1 - rightHeadDistZReference + rightHeadDistZ, eyesSizeFactor * -10, eyesSizeFactor * 10)
-    rightEyeHandleMaxYLocationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.RIGHT_EYE_HANDLE_BONE, "01E) Max Y location", "Maximum reachable Y location limit", 0.13 - rightHeadDistZReference + rightHeadDistZ, eyesSizeFactor * -10, eyesSizeFactor * 10)
-    rightEyeHandleSpeedCorrectionDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.RIGHT_EYE_HANDLE_BONE, "02A) Speed correction", "Increases the speed at which the eye moves when not controlled directly in order to reach its maximum location limits at the same time as the other eye", 0.0, 0.0, 1.0)
-    eyesTrackTargetParentToHeadDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_TRACK_TARGET_BONE, "01A) Parent to head", "The bone will act as if it was parented to the head bone", 1, 0, 1)
-    eyesTrackTargetParentToTorsoDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_TRACK_TARGET_BONE, "01B) Parent to torso", "The bone will act as if it was parented to the torso bone", 0, 0, 1)
-    eyesTrackTargetParentToRootDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYES_TRACK_TARGET_BONE, "01C) Parent to root", "The bone will act as if it was parented to the root bone", 0, 0, 1)
-    eyeballsSpeedFactorDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYEBALLS_BONE, "01A) Eyeballs speed factor", "Determines how fast the eyes will move when rotating the eyeball bones manually", 0.26, 0.0, 1.0)
-    eyeballsTrackTargetDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYEBALLS_BONE, "02A) Track target", "Enables tracking of the eyeballs track target bone", 0.0, 0.0, 1.0)
-    eyeballsTrackSpeedFactorDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYEBALLS_BONE, "02B) Eyeballs track speed factor", "Determines how fast the eyes will move when the eyeballs are tracking their target", 0.04, 0.0, 1.0)
-    eyeballsNearbyTargetTrackCorrectionDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYEBALLS_BONE, "02C) Nearby target track correction", "When tracking a target that moves closer to the middle of the face than its original location, the individual eyes will gradually point towards it instead of keeping the original distance between them", 0.0, 0.0, 1.0)
-    eyeballsNearbyTargetSizeFactorDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.EYEBALLS_BONE, "02D) Nearby target track size factor", "Factors into the nearby target track correction, if the character is scaled up or down after running the first Rigify script this value should be changed proportionally", rightEyeballTrackCorrectionRightEyeHandleDistY / rightEyeballTrackCorrectionRightEyeHandleDistYReference, eyesSizeFactor * -10, eyesSizeFactor * 10)
-    headTrackTargetLimitRotationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "01A) Limit rotation", "Limits the maximum reachable rotation of the head based on the settings below", 0.0, 0.0, 1.0)
-    headTrackTargetMinXRotationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "01B) Min X rotation", "Minimum reachable X angle limit", -40.0, -180.0, 0.0)
-    headTrackTargetMaxXRotationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "01C) Max X rotation", "Maximum reachable X angle limit", 50.0, 0.0, 180.0)
-    headTrackTargetMinYRotationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "01D) Min Y rotation", "Minimum reachable Y angle limit", -80.0, -180.0, 0.0)
-    headTrackTargetMaxYRotationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "01E) Max Y rotation", "Maximum reachable Y angle limit", 80.0, 0.0, 180.0)
-    headTrackTargetMinZRotationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "01F) Min Z rotation", "Minimum reachable Z angle limit", -50.0, -180.0, 0.0)
-    headTrackTargetMaxZRotationDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "01G) Max Z rotation", "Maximum reachable Z angle limit", 50.0, 0.0, 180.0)
-    headTrackTargetTrackTargetDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "02A) Track target", "Enables tracking of the head track target bone", 0.0, 0.0, 1.0)
-    headTrackTargetParentToHeadDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "03A) Parent to head", "The bone will act as if it was parented to the head bone", 1, 0, 1)
-    headTrackTargetParentToTorsoDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "03B) Parent to torso", "The bone will act as if it was parented to the torso bone", 0, 0, 1)
-    headTrackTargetParentToRootDataPath = koikatsuCommons.addBoneCustomProperty(metarig, names.HEAD_TRACK_TARGET_BONE, "03C) Parent to root", "The bone will act as if it was parented to the root bone", 0, 0, 1)
+    eyesHandleLimitLocationDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        '01A) Limit location',
+        description='Limits the maximum reachable X and Y locations based on the left and right eye handles settings',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    eyesHandleEyelidsAutomationDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        '02A) Eyelids automation',
+        description='Enables eyelids shape key automation when both eyes move up and down',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    eyesHandleDefaultEyelidsValueDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        '02B) Default eyelids value',
+        description='Eyelids shape key automation value when both eyes are at their default position',
+        default=0.05,
+        min=0.0,
+        max=1.0,
+    )
+    eyesHandleMinEyelidsValueDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        '02C) Min eyelids value',
+        description='Minimum reachable eyelids shape key automation value when both eyes move down',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    eyesHandleMaxEyelidsValueDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        '02D) Max eyelids value',
+        description='Maximum reachable eyelids shape key automation value when both eyes move up',
+        default=0.25,
+        min=0.0,
+        max=1.0,
+    )
+    eyesHandleEyelidsSpeedFactorDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        '02E) Eyelids speed factor',
+        description='Determines how fast the eyelids shape key automation value will change when both eyes move up and down',
+        default=2.0,
+        min=0.0,
+        max=eyesSizeFactor * 10,
+    )
+    eyesHandleEyesSizeFactorDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        '03A) Eyes size factor',
+        description="Factors into many constraints and drivers for the eyes mechanics; it's better not to change this value",
+        default=eyesSizeFactor,
+        min=0,
+        max=eyesSizeFactor * 10,
+    )
+    leftEyeHandleLimitLocationDataPath = drivers.bone_property(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        '01A) Limit location',
+        description='Limits the maximum reachable X and Y locations based on the settings below',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    leftEyeHandleMinXLocationDataPath = drivers.bone_property(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        '01B) Min X location',
+        description='Minimum reachable X location limit',
+        default=-0.075 - leftHeadDistXReference + leftHeadDistX,
+        min=eyesSizeFactor * -10,
+        max=eyesSizeFactor * 10,
+    )
+    leftEyeHandleMaxXLocationDataPath = drivers.bone_property(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        '01C) Max X location',
+        description='Maximum reachable X location limit',
+        default=0.25 - leftHeadDistXReference + leftHeadDistX,
+        min=eyesSizeFactor * -10,
+        max=eyesSizeFactor * 10,
+    )
+    leftEyeHandleMinYLocationDataPath = drivers.bone_property(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        '01D) Min Y location',
+        description='Minimum reachable Y location limit',
+        default=-0.1 - leftHeadDistZReference + leftHeadDistZ,
+        min=eyesSizeFactor * -10,
+        max=eyesSizeFactor * 10,
+    )
+    leftEyeHandleMaxYLocationDataPath = drivers.bone_property(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        '01E) Max Y location',
+        description='Maximum reachable Y location limit',
+        default=0.13 - leftHeadDistZReference + leftHeadDistZ,
+        min=eyesSizeFactor * -10,
+        max=eyesSizeFactor * 10,
+    )
+    leftEyeHandleSpeedCorrectionDataPath = drivers.bone_property(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        '02A) Speed correction',
+        description='Increases the speed at which the eye moves when not controlled directly in order to reach its maximum location limits at the same time as the other eye',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    rightEyeHandleLimitLocationDataPath = drivers.bone_property(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        '01A) Limit location',
+        description='Limits the maximum reachable X and Y locations based on the settings below',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    rightEyeHandleMinXLocationDataPath = drivers.bone_property(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        '01B) Min X location',
+        description='Minimum reachable X location limit',
+        default=-0.25 - rightHeadDistXReference + rightHeadDistX,
+        min=eyesSizeFactor * -10,
+        max=eyesSizeFactor * 10,
+    )
+    rightEyeHandleMaxXLocationDataPath = drivers.bone_property(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        '01C) Max X location',
+        description='Maximum reachable X location limit',
+        default=0.075 - rightHeadDistXReference + rightHeadDistX,
+        min=eyesSizeFactor * -10,
+        max=eyesSizeFactor * 10,
+    )
+    rightEyeHandleMinYLocationDataPath = drivers.bone_property(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        '01D) Min Y location',
+        description='Minimum reachable Y location limit',
+        default=-0.1 - rightHeadDistZReference + rightHeadDistZ,
+        min=eyesSizeFactor * -10,
+        max=eyesSizeFactor * 10,
+    )
+    rightEyeHandleMaxYLocationDataPath = drivers.bone_property(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        '01E) Max Y location',
+        description='Maximum reachable Y location limit',
+        default=0.13 - rightHeadDistZReference + rightHeadDistZ,
+        min=eyesSizeFactor * -10,
+        max=eyesSizeFactor * 10,
+    )
+    rightEyeHandleSpeedCorrectionDataPath = drivers.bone_property(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        '02A) Speed correction',
+        description='Increases the speed at which the eye moves when not controlled directly in order to reach its maximum location limits at the same time as the other eye',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    eyesTrackTargetParentToHeadDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_TRACK_TARGET_BONE,
+        '01A) Parent to head',
+        description='The bone will act as if it was parented to the head bone',
+        default=1,
+        min=0,
+        max=1,
+    )
+    eyesTrackTargetParentToTorsoDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_TRACK_TARGET_BONE,
+        '01B) Parent to torso',
+        description='The bone will act as if it was parented to the torso bone',
+        default=0,
+        min=0,
+        max=1,
+    )
+    eyesTrackTargetParentToRootDataPath = drivers.bone_property(
+        metarig,
+        names.EYES_TRACK_TARGET_BONE,
+        '01C) Parent to root',
+        description='The bone will act as if it was parented to the root bone',
+        default=0,
+        min=0,
+        max=1,
+    )
+    eyeballsSpeedFactorDataPath = drivers.bone_property(
+        metarig,
+        names.EYEBALLS_BONE,
+        '01A) Eyeballs speed factor',
+        description='Determines how fast the eyes will move when rotating the eyeball bones manually',
+        default=0.26,
+        min=0.0,
+        max=1.0,
+    )
+    eyeballsTrackTargetDataPath = drivers.bone_property(
+        metarig,
+        names.EYEBALLS_BONE,
+        '02A) Track target',
+        description='Enables tracking of the eyeballs track target bone',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    eyeballsTrackSpeedFactorDataPath = drivers.bone_property(
+        metarig,
+        names.EYEBALLS_BONE,
+        '02B) Eyeballs track speed factor',
+        description='Determines how fast the eyes will move when the eyeballs are tracking their target',
+        default=0.04,
+        min=0.0,
+        max=1.0,
+    )
+    eyeballsNearbyTargetTrackCorrectionDataPath = drivers.bone_property(
+        metarig,
+        names.EYEBALLS_BONE,
+        '02C) Nearby target track correction',
+        description='When tracking a target that moves closer to the middle of the face than its original location, the individual eyes will gradually point towards it instead of keeping the original distance between them',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    eyeballsNearbyTargetSizeFactorDataPath = drivers.bone_property(
+        metarig,
+        names.EYEBALLS_BONE,
+        '02D) Nearby target track size factor',
+        description='Factors into the nearby target track correction, if the character is scaled up or down after running the first Rigify script this value should be changed proportionally',
+        default=rightEyeballTrackCorrectionRightEyeHandleDistY / rightEyeballTrackCorrectionRightEyeHandleDistYReference,
+        min=eyesSizeFactor * -10,
+        max=eyesSizeFactor * 10,
+    )
+    headTrackTargetLimitRotationDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '01A) Limit rotation',
+        description='Limits the maximum reachable rotation of the head based on the settings below',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    headTrackTargetMinXRotationDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '01B) Min X rotation',
+        description='Minimum reachable X angle limit',
+        default=-40.0,
+        min=-180.0,
+        max=0.0,
+    )
+    headTrackTargetMaxXRotationDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '01C) Max X rotation',
+        description='Maximum reachable X angle limit',
+        default=50.0,
+        min=0.0,
+        max=180.0,
+    )
+    headTrackTargetMinYRotationDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '01D) Min Y rotation',
+        description='Minimum reachable Y angle limit',
+        default=-80.0,
+        min=-180.0,
+        max=0.0,
+    )
+    headTrackTargetMaxYRotationDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '01E) Max Y rotation',
+        description='Maximum reachable Y angle limit',
+        default=80.0,
+        min=0.0,
+        max=180.0,
+    )
+    headTrackTargetMinZRotationDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '01F) Min Z rotation',
+        description='Minimum reachable Z angle limit',
+        default=-50.0,
+        min=-180.0,
+        max=0.0,
+    )
+    headTrackTargetMaxZRotationDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '01G) Max Z rotation',
+        description='Maximum reachable Z angle limit',
+        default=50.0,
+        min=0.0,
+        max=180.0,
+    )
+    headTrackTargetTrackTargetDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '02A) Track target',
+        description='Enables tracking of the head track target bone',
+        default=0.0,
+        min=0.0,
+        max=1.0,
+    )
+    headTrackTargetParentToHeadDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '03A) Parent to head',
+        description='The bone will act as if it was parented to the head bone',
+        default=1,
+        min=0,
+        max=1,
+    )
+    headTrackTargetParentToTorsoDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '03B) Parent to torso',
+        description='The bone will act as if it was parented to the torso bone',
+        default=0,
+        min=0,
+        max=1,
+    )
+    headTrackTargetParentToRootDataPath = drivers.bone_property(
+        metarig,
+        names.HEAD_TRACK_TARGET_BONE,
+        '03C) Parent to root',
+        description='The bone will act as if it was parented to the root bone',
+        default=0,
+        min=0,
+        max=1,
+    )
         
-    eyesHandleTransformationConstraintEyeballLocation = koikatsuCommons.addTransformationConstraint(metarig, names.EYES_HANDLE_BONE, names.EYEBALLS_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX, 
-    'ROTATION', 'AUTO', math.radians(-180), math.radians(180), math.radians(0), math.radians(0), math.radians(-180), math.radians(180), 
-    'LOCATION', None, eyesSizeFactor / -10, eyesSizeFactor / 10, 0, 0, eyesSizeFactor / -10, eyesSizeFactor / 10)    
-    eyesHandleCopyRotationConstraintEyeball = koikatsuCommons.addCopyRotationConstraint(metarig, names.EYES_HANDLE_BONE, names.EYEBALLS_BONE, 'AFTER', 'LOCAL', names.COPY_ROTATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX, 
-    False, False, True, False, False, False)
-    eyesHandleTransformationContraintEyeballScale = koikatsuCommons.addTransformationConstraint(metarig, names.EYES_HANDLE_BONE, names.EYEBALLS_BONE, 'MULTIPLY', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.SCALE_CONSTRAINT_SUFFIX, 
-    'SCALE', None, 0.0, 100.0, 1.0, 1.0, 0.0, 100.0, 
-    'SCALE', None, 0.0, 100.0, 1.0, 1.0, 0.0, 100.0)
-    eyesHandleLimitLocationConstraint = koikatsuCommons.addLimitLocationConstraint(metarig, names.EYES_HANDLE_BONE, names.HEAD_BONE, 'CUSTOM', names.LIMIT_LOCATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX, 
-    True, -eyesSizeFactor, True, eyesSizeFactor, True, -eyesSizeFactor, True, eyesSizeFactor, False, 0.0, False, 0.0)
-    leftEyeHandleTransformationConstraintEyeballLocation = koikatsuCommons.addTransformationConstraint(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYEBALL_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX, 
-    'ROTATION', 'AUTO', math.radians(-180), math.radians(180), math.radians(0), math.radians(0), math.radians(-180), math.radians(180), 
-    'LOCATION', None, eyesSizeFactor / -10, eyesSizeFactor / 10, 0, 0, eyesSizeFactor / -10, eyesSizeFactor / 10)    
-    leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin = koikatsuCommons.addTransformationConstraint(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYEBALL_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MIN_CONSTRAINT_SUFFIX, 
-    'ROTATION', 'AUTO', math.radians(0), math.radians(0), math.radians(0), math.radians(0), math.radians(0), math.radians(0), 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0)
-    leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax = koikatsuCommons.addTransformationConstraint(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYEBALL_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MAX_CONSTRAINT_SUFFIX, 
-    'ROTATION', 'AUTO', math.radians(0), math.radians(0), math.radians(0), math.radians(0), math.radians(0), math.radians(0), 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0)
-    leftEyeHandleCopyRotationConstraintEyeball = koikatsuCommons.addCopyRotationConstraint(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYEBALL_BONE, 'AFTER', 'LOCAL', names.COPY_ROTATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX, 
-    False, False, True, False, False, False)
-    leftEyeHandleTransformationConstraintEyeballScale = koikatsuCommons.addTransformationConstraint(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYEBALL_BONE, 'MULTIPLY', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.SCALE_CONSTRAINT_SUFFIX, 
-    'SCALE', None, 0.0, 100.0, 1.0, 1.0, 0.0, 100.0, 
-    'SCALE', None, 0.0, 100.0, 1.0, 1.0, 0.0, 100.0)
-    leftEyeHandleTransformationConstraintHandleLocationCorrectionMin = koikatsuCommons.addTransformationConstraint(metarig, names.LEFT_EYE_HANDLE_BONE, names.EYES_HANDLE_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MIN_CONSTRAINT_SUFFIX, 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0, 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0)
-    leftEyeHandleTransformationConstraintHandleLocationCorrectionMax = koikatsuCommons.addTransformationConstraint(metarig, names.LEFT_EYE_HANDLE_BONE, names.EYES_HANDLE_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MAX_CONSTRAINT_SUFFIX, 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0, 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0)
-    leftEyeHandleLimitLocationConstraint = koikatsuCommons.addLimitLocationConstraint(metarig, names.LEFT_EYE_HANDLE_BONE, names.HEAD_BONE, 'CUSTOM', names.LIMIT_LOCATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX, 
-    True, -eyesSizeFactor, True, eyesSizeFactor, True, -eyesSizeFactor, True, eyesSizeFactor, False, 0.0, False, 0.0)
-    rightEyeHandleTransformationConstraintEyeballLocation = koikatsuCommons.addTransformationConstraint(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYEBALL_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX, 
-    'ROTATION', 'AUTO', math.radians(-180), math.radians(180), math.radians(0), math.radians(0), math.radians(-180), math.radians(180), 
-    'LOCATION', None, eyesSizeFactor / -10, eyesSizeFactor / 10, 0, 0, eyesSizeFactor / -10, eyesSizeFactor / 10)    
-    rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin = koikatsuCommons.addTransformationConstraint(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYEBALL_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MIN_CONSTRAINT_SUFFIX, 
-    'ROTATION', 'AUTO', math.radians(0), math.radians(0), math.radians(0), math.radians(0), math.radians(0), math.radians(0), 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0)
-    rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax = koikatsuCommons.addTransformationConstraint(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYEBALL_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MAX_CONSTRAINT_SUFFIX, 
-    'ROTATION', 'AUTO', math.radians(0), math.radians(0), math.radians(0), math.radians(0), math.radians(0), math.radians(0), 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0)
-    rightEyeHandleCopyRotationConstraintEyeball = koikatsuCommons.addCopyRotationConstraint(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYEBALL_BONE, 'AFTER', 'LOCAL', names.COPY_ROTATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX, 
-    False, False, True, False, False, False)
-    rightEyeHandleTransformationConstraintEyeballScale = koikatsuCommons.addTransformationConstraint(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYEBALL_BONE, 'MULTIPLY', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.SCALE_CONSTRAINT_SUFFIX, 
-    'SCALE', None, 0.0, 100.0, 1.0, 1.0, 0.0, 100.0, 
-    'SCALE', None, 0.0, 100.0, 1.0, 1.0, 0.0, 100.0)
-    rightEyeHandleTransformationConstraintHandleLocationCorrectionMin = koikatsuCommons.addTransformationConstraint(metarig, names.RIGHT_EYE_HANDLE_BONE, names.EYES_HANDLE_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MIN_CONSTRAINT_SUFFIX, 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0, 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0)
-    rightEyeHandleTransformationConstraintHandleLocationCorrectionMax = koikatsuCommons.addTransformationConstraint(metarig, names.RIGHT_EYE_HANDLE_BONE, names.EYES_HANDLE_BONE, 'ADD', 'LOCAL', names.TRANSFORMATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MAX_CONSTRAINT_SUFFIX, 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0, 
-    'LOCATION', None, 0, 0, 0, 0, 0, 0)
-    rightEyeHandleLimitLocationConstraint = koikatsuCommons.addLimitLocationConstraint(metarig, names.RIGHT_EYE_HANDLE_BONE, names.HEAD_BONE, 'CUSTOM', names.LIMIT_LOCATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX, 
-    True, -eyesSizeFactor, True, eyesSizeFactor, True, -eyesSizeFactor, True, eyesSizeFactor, False, 0.0, False, 0.0)
-    eyesTrackTargetParentArmatureConstraint = koikatsuCommons.addArmatureConstraint(metarig, names.EYES_TRACK_TARGET_PARENT_BONE, [names.HEAD_BONE, placeholderTorsoBoneName, placeholderRootBoneName], names.ARMATURE_CONSTRAINT_BASE + names.PARENT_CONSTRAINT_SUFFIX) 
-    eyeballsCopyRotationConstraintTrack = koikatsuCommons.addCopyRotationConstraint(metarig, names.EYEBALLS_BONE, names.EYEBALLS_TRACK_BONE, 'REPLACE', 'LOCAL', names.COPY_ROTATION_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX, 
-    True, False, False, False, True, False)
-    leftEyeballCopyRotationConstraintTrack = koikatsuCommons.addCopyRotationConstraint(metarig, names.LEFT_EYEBALL_BONE, names.LEFT_EYEBALL_TRACK_CORRECTION_BONE, 'REPLACE', 'LOCAL', names.COPY_ROTATION_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX, 
-    True, False, False, False, True, False)
-    rightEyeballCopyRotationConstraintTrack = koikatsuCommons.addCopyRotationConstraint(metarig, names.RIGHT_EYEBALL_BONE, names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE, 'REPLACE', 'LOCAL', names.COPY_ROTATION_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX, 
-    True, False, False, False, True, False)    
-    eyeballsTrackDampedTrackConstraint = koikatsuCommons.addDampedTrackConstraint(metarig, names.EYEBALLS_TRACK_BONE, names.EYES_TRACK_TARGET_BONE, names.DAMPED_TRACK_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX)
-    leftEyeballTrackDampedTrackConstraint = koikatsuCommons.addDampedTrackConstraint(metarig, names.LEFT_EYEBALL_TRACK_BONE, names.EYES_TRACK_TARGET_BONE, names.DAMPED_TRACK_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX)
-    rightEyeballTrackDampedTrackConstraint = koikatsuCommons.addDampedTrackConstraint(metarig, names.RIGHT_EYEBALL_TRACK_BONE, names.EYES_TRACK_TARGET_BONE, names.DAMPED_TRACK_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX)
-    headTransformationConstraintHeadRotation = koikatsuCommons.addTransformationConstraint(metarig, names.HEAD_BONE, names.HEAD_TRACK_BONE, 'REPLACE', 'LOCAL_WITH_PARENT', names.TRANSFORMATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX + names.ROTATION_CONSTRAINT_SUFFIX, 
-    'ROTATION', 'QUATERNION', math.radians(-180), math.radians(180), math.radians(-180), math.radians(180), math.radians(-180), math.radians(180), 
-    'ROTATION', 'AUTO', math.radians(180), math.radians(-180), math.radians(-180), math.radians(180), math.radians(-180), math.radians(180), 
-    'X', 'Z', 'Y')
-    headLimitRotationConstraint = koikatsuCommons.addLimitRotationConstraint(metarig, names.HEAD_BONE, None, 'LOCAL', names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX, 
-    True, math.radians(-180), math.radians(180), True, math.radians(-180), math.radians(180), True, math.radians(-180), math.radians(180))
-    headTrackTargetParentArmatureConstraint = koikatsuCommons.addArmatureConstraint(metarig, names.HEAD_TRACK_TARGET_PARENT_BONE, [placeholderHeadTweakBoneName, placeholderTorsoBoneName, placeholderRootBoneName], names.ARMATURE_CONSTRAINT_BASE + names.PARENT_CONSTRAINT_SUFFIX) 
-    headTrackDampedTrackConstraint = koikatsuCommons.addDampedTrackConstraint(metarig, names.HEAD_TRACK_BONE, names.HEAD_TRACK_TARGET_BONE, names.DAMPED_TRACK_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX)
+    eyesHandleTransformationConstraintEyeballLocation = constraints.transformation(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        names.EYEBALLS_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='ROTATION',
+        from_range=((math.radians(-180), math.radians(180)), (math.radians(0), math.radians(0)), (math.radians(-180), math.radians(180))),
+        map_to='LOCATION',
+        to_range=((eyesSizeFactor / -10, eyesSizeFactor / 10), (0, 0), (eyesSizeFactor / -10, eyesSizeFactor / 10)),
+        from_rotation_mode='AUTO',
+    )    
+    eyesHandleCopyRotationConstraintEyeball = constraints.copy_rotation(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        names.EYEBALLS_BONE,
+        name=names.COPY_ROTATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX,
+        mix='AFTER',
+        space='LOCAL',
+        use=(False, True, False),
+        invert=(False, False, False),
+    )
+    eyesHandleTransformationContraintEyeballScale = constraints.transformation(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        names.EYEBALLS_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.SCALE_CONSTRAINT_SUFFIX,
+        mix='MULTIPLY',
+        space='LOCAL',
+        map_from='SCALE',
+        from_range=((0.0, 100.0), (1.0, 1.0), (0.0, 100.0)),
+        map_to='SCALE',
+        to_range=((0.0, 100.0), (1.0, 1.0), (0.0, 100.0)),
+    )
+    eyesHandleLimitLocationConstraint = constraints.limit_location(
+        metarig,
+        names.EYES_HANDLE_BONE,
+        name=names.LIMIT_LOCATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX,
+        space='CUSTOM',
+        space_bone=names.HEAD_BONE,
+        min=(-eyesSizeFactor, -eyesSizeFactor, None),
+        max=(eyesSizeFactor, eyesSizeFactor, None),
+    )
+    leftEyeHandleTransformationConstraintEyeballLocation = constraints.transformation(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        names.LEFT_EYEBALL_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='ROTATION',
+        from_range=((math.radians(-180), math.radians(180)), (math.radians(0), math.radians(0)), (math.radians(-180), math.radians(180))),
+        map_to='LOCATION',
+        to_range=((eyesSizeFactor / -10, eyesSizeFactor / 10), (0, 0), (eyesSizeFactor / -10, eyesSizeFactor / 10)),
+        from_rotation_mode='AUTO',
+    )    
+    leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin = constraints.transformation(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        names.LEFT_EYEBALL_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MIN_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='ROTATION',
+        from_range=((math.radians(0), math.radians(0)), (math.radians(0), math.radians(0)), (math.radians(0), math.radians(0))),
+        map_to='LOCATION',
+        to_range=((0, 0), (0, 0), (0, 0)),
+        from_rotation_mode='AUTO',
+    )
+    leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax = constraints.transformation(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        names.LEFT_EYEBALL_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MAX_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='ROTATION',
+        from_range=((math.radians(0), math.radians(0)), (math.radians(0), math.radians(0)), (math.radians(0), math.radians(0))),
+        map_to='LOCATION',
+        to_range=((0, 0), (0, 0), (0, 0)),
+        from_rotation_mode='AUTO',
+    )
+    leftEyeHandleCopyRotationConstraintEyeball = constraints.copy_rotation(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        names.LEFT_EYEBALL_BONE,
+        name=names.COPY_ROTATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX,
+        mix='AFTER',
+        space='LOCAL',
+        use=(False, True, False),
+        invert=(False, False, False),
+    )
+    leftEyeHandleTransformationConstraintEyeballScale = constraints.transformation(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        names.LEFT_EYEBALL_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.SCALE_CONSTRAINT_SUFFIX,
+        mix='MULTIPLY',
+        space='LOCAL',
+        map_from='SCALE',
+        from_range=((0.0, 100.0), (1.0, 1.0), (0.0, 100.0)),
+        map_to='SCALE',
+        to_range=((0.0, 100.0), (1.0, 1.0), (0.0, 100.0)),
+    )
+    leftEyeHandleTransformationConstraintHandleLocationCorrectionMin = constraints.transformation(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        names.EYES_HANDLE_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MIN_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='LOCATION',
+        from_range=((0, 0), (0, 0), (0, 0)),
+        map_to='LOCATION',
+        to_range=((0, 0), (0, 0), (0, 0)),
+    )
+    leftEyeHandleTransformationConstraintHandleLocationCorrectionMax = constraints.transformation(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        names.EYES_HANDLE_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MAX_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='LOCATION',
+        from_range=((0, 0), (0, 0), (0, 0)),
+        map_to='LOCATION',
+        to_range=((0, 0), (0, 0), (0, 0)),
+    )
+    leftEyeHandleLimitLocationConstraint = constraints.limit_location(
+        metarig,
+        names.LEFT_EYE_HANDLE_BONE,
+        name=names.LIMIT_LOCATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX,
+        space='CUSTOM',
+        space_bone=names.HEAD_BONE,
+        min=(-eyesSizeFactor, -eyesSizeFactor, None),
+        max=(eyesSizeFactor, eyesSizeFactor, None),
+    )
+    rightEyeHandleTransformationConstraintEyeballLocation = constraints.transformation(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        names.RIGHT_EYEBALL_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='ROTATION',
+        from_range=((math.radians(-180), math.radians(180)), (math.radians(0), math.radians(0)), (math.radians(-180), math.radians(180))),
+        map_to='LOCATION',
+        to_range=((eyesSizeFactor / -10, eyesSizeFactor / 10), (0, 0), (eyesSizeFactor / -10, eyesSizeFactor / 10)),
+        from_rotation_mode='AUTO',
+    )    
+    rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin = constraints.transformation(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        names.RIGHT_EYEBALL_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MIN_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='ROTATION',
+        from_range=((math.radians(0), math.radians(0)), (math.radians(0), math.radians(0)), (math.radians(0), math.radians(0))),
+        map_to='LOCATION',
+        to_range=((0, 0), (0, 0), (0, 0)),
+        from_rotation_mode='AUTO',
+    )
+    rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax = constraints.transformation(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        names.RIGHT_EYEBALL_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MAX_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='ROTATION',
+        from_range=((math.radians(0), math.radians(0)), (math.radians(0), math.radians(0)), (math.radians(0), math.radians(0))),
+        map_to='LOCATION',
+        to_range=((0, 0), (0, 0), (0, 0)),
+        from_rotation_mode='AUTO',
+    )
+    rightEyeHandleCopyRotationConstraintEyeball = constraints.copy_rotation(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        names.RIGHT_EYEBALL_BONE,
+        name=names.COPY_ROTATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX,
+        mix='AFTER',
+        space='LOCAL',
+        use=(False, True, False),
+        invert=(False, False, False),
+    )
+    rightEyeHandleTransformationConstraintEyeballScale = constraints.transformation(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        names.RIGHT_EYEBALL_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX + names.SCALE_CONSTRAINT_SUFFIX,
+        mix='MULTIPLY',
+        space='LOCAL',
+        map_from='SCALE',
+        from_range=((0.0, 100.0), (1.0, 1.0), (0.0, 100.0)),
+        map_to='SCALE',
+        to_range=((0.0, 100.0), (1.0, 1.0), (0.0, 100.0)),
+    )
+    rightEyeHandleTransformationConstraintHandleLocationCorrectionMin = constraints.transformation(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        names.EYES_HANDLE_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MIN_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='LOCATION',
+        from_range=((0, 0), (0, 0), (0, 0)),
+        map_to='LOCATION',
+        to_range=((0, 0), (0, 0), (0, 0)),
+    )
+    rightEyeHandleTransformationConstraintHandleLocationCorrectionMax = constraints.transformation(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        names.EYES_HANDLE_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX + names.LOCATION_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX + names.MAX_CONSTRAINT_SUFFIX,
+        mix='ADD',
+        space='LOCAL',
+        map_from='LOCATION',
+        from_range=((0, 0), (0, 0), (0, 0)),
+        map_to='LOCATION',
+        to_range=((0, 0), (0, 0), (0, 0)),
+    )
+    rightEyeHandleLimitLocationConstraint = constraints.limit_location(
+        metarig,
+        names.RIGHT_EYE_HANDLE_BONE,
+        name=names.LIMIT_LOCATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX,
+        space='CUSTOM',
+        space_bone=names.HEAD_BONE,
+        min=(-eyesSizeFactor, -eyesSizeFactor, None),
+        max=(eyesSizeFactor, eyesSizeFactor, None),
+    )
+    eyesTrackTargetParentArmatureConstraint = constraints.armature(
+        metarig,
+        names.EYES_TRACK_TARGET_PARENT_BONE,
+        [names.HEAD_BONE, placeholderTorsoBoneName, placeholderRootBoneName],
+        name=names.ARMATURE_CONSTRAINT_BASE + names.PARENT_CONSTRAINT_SUFFIX,
+    ) 
+    eyeballsCopyRotationConstraintTrack = constraints.copy_rotation(
+        metarig,
+        names.EYEBALLS_BONE,
+        names.EYEBALLS_TRACK_BONE,
+        name=names.COPY_ROTATION_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX,
+        mix='REPLACE',
+        space='LOCAL',
+        use=(True, False, True),
+        invert=(False, False, False),
+    )
+    leftEyeballCopyRotationConstraintTrack = constraints.copy_rotation(
+        metarig,
+        names.LEFT_EYEBALL_BONE,
+        names.LEFT_EYEBALL_TRACK_CORRECTION_BONE,
+        name=names.COPY_ROTATION_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX,
+        mix='REPLACE',
+        space='LOCAL',
+        use=(True, False, True),
+        invert=(False, False, False),
+    )
+    rightEyeballCopyRotationConstraintTrack = constraints.copy_rotation(
+        metarig,
+        names.RIGHT_EYEBALL_BONE,
+        names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE,
+        name=names.COPY_ROTATION_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX,
+        mix='REPLACE',
+        space='LOCAL',
+        use=(True, False, True),
+        invert=(False, False, False),
+    )    
+    eyeballsTrackDampedTrackConstraint = constraints.damped_track(
+        metarig,
+        names.EYEBALLS_TRACK_BONE,
+        names.EYES_TRACK_TARGET_BONE,
+        name=names.DAMPED_TRACK_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX,
+    )
+    leftEyeballTrackDampedTrackConstraint = constraints.damped_track(
+        metarig,
+        names.LEFT_EYEBALL_TRACK_BONE,
+        names.EYES_TRACK_TARGET_BONE,
+        name=names.DAMPED_TRACK_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX,
+    )
+    rightEyeballTrackDampedTrackConstraint = constraints.damped_track(
+        metarig,
+        names.RIGHT_EYEBALL_TRACK_BONE,
+        names.EYES_TRACK_TARGET_BONE,
+        name=names.DAMPED_TRACK_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX,
+    )
+    headTransformationConstraintHeadRotation = constraints.transformation(
+        metarig,
+        names.HEAD_BONE,
+        names.HEAD_TRACK_BONE,
+        name=names.TRANSFORMATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX + names.ROTATION_CONSTRAINT_SUFFIX,
+        mix='REPLACE',
+        space='LOCAL_WITH_PARENT',
+        map_from='ROTATION',
+        from_range=((math.radians(-180), math.radians(180)), (math.radians(-180), math.radians(180)), (math.radians(-180), math.radians(180))),
+        map_to='ROTATION',
+        to_range=((math.radians(180), math.radians(-180)), (math.radians(-180), math.radians(180)), (math.radians(-180), math.radians(180))),
+        from_rotation_mode='QUATERNION',
+        to_euler_order='AUTO',
+        map_to_from=('X', 'Z', 'Y'),
+    )
+    headLimitRotationConstraint = constraints.limit_rotation(
+        metarig,
+        names.HEAD_BONE,
+        name=names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX,
+        space='LOCAL',
+        limits=((math.radians(-180), math.radians(180)), (math.radians(-180), math.radians(180)), (math.radians(-180), math.radians(180))),
+    )
+    headTrackTargetParentArmatureConstraint = constraints.armature(
+        metarig,
+        names.HEAD_TRACK_TARGET_PARENT_BONE,
+        [placeholderHeadTweakBoneName, placeholderTorsoBoneName, placeholderRootBoneName],
+        name=names.ARMATURE_CONSTRAINT_BASE + names.PARENT_CONSTRAINT_SUFFIX,
+    ) 
+    headTrackDampedTrackConstraint = constraints.damped_track(
+        metarig,
+        names.HEAD_TRACK_BONE,
+        names.HEAD_TRACK_TARGET_BONE,
+        name=names.DAMPED_TRACK_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX,
+    )
     
     eyelidsShapeKeyCopy = koikatsuCommons.duplicateShapeKey(build.body, names.EYELIDS_SHAPE_KEY, names.EYELIDS_SHAPE_KEY_COPY)
     
-    eyesHandleLocationXDriverVariable = koikatsuCommons.DriverVariable("locX", 'TRANSFORMS', metarig, names.EYES_HANDLE_BONE, 'LOCAL_SPACE', None, None, None, None, 'LOC_X', None)
-    eyesHandleDefaultEyelidsValueDriverVariable = koikatsuCommons.DriverVariable("default", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesHandleDefaultEyelidsValueDataPath, None, None)
-    eyesHandleMinEyelidsValueDriverVariable = koikatsuCommons.DriverVariable("min", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesHandleMinEyelidsValueDataPath, None, None)
-    eyesHandleMaxEyelidsValueDriverVariable = koikatsuCommons.DriverVariable("max", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesHandleMaxEyelidsValueDataPath, None, None)
-    eyesHandleEyelidsSpeedFactorDriverVariable = koikatsuCommons.DriverVariable("speed", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesHandleEyelidsSpeedFactorDataPath, None, None)
-    eyesHandleEyelidsAutomationDriverVariable = koikatsuCommons.DriverVariable("enabled", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesHandleEyelidsAutomationDataPath, None, None)
-    eyesHandleLimitLocationDriverVariable = koikatsuCommons.DriverVariable("limit", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesHandleLimitLocationDataPath, None, None)
-    eyesHandleEyesSizeFactorDriverVariable = koikatsuCommons.DriverVariable("sizeFactor", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesHandleEyesSizeFactorDataPath, None, None)
-    leftEyeHandleLimitLocationDriverVariable = koikatsuCommons.DriverVariable("limit_L", 'SINGLE_PROP', metarig, None, None, None, None, None, leftEyeHandleLimitLocationDataPath, None, None)
-    leftEyeHandleMinXLocationDriverVariable = koikatsuCommons.DriverVariable("minX_L", 'SINGLE_PROP', metarig, None, None, None, None, None, leftEyeHandleMinXLocationDataPath, None, None)
-    leftEyeHandleMaxXLocationDriverVariable = koikatsuCommons.DriverVariable("maxX_L", 'SINGLE_PROP', metarig, None, None, None, None, None, leftEyeHandleMaxXLocationDataPath, None, None)
-    leftEyeHandleMinYLocationDriverVariable = koikatsuCommons.DriverVariable("minY_L", 'SINGLE_PROP', metarig, None, None, None, None, None, leftEyeHandleMinYLocationDataPath, None, None)
-    leftEyeHandleMaxYLocationDriverVariable = koikatsuCommons.DriverVariable("maxY_L", 'SINGLE_PROP', metarig, None, None, None, None, None, leftEyeHandleMaxYLocationDataPath, None, None)
-    leftEyeHandleSpeedCorrectionDriverVariable = koikatsuCommons.DriverVariable("corr_L", 'SINGLE_PROP', metarig, None, None, None, None, None, leftEyeHandleSpeedCorrectionDataPath, None, None)
-    leftEyeHandleEyesHandleDistanceXDriverVariable = koikatsuCommons.DriverVariable("distX_L", 'LOC_DIFF', metarig, names.EYES_HANDLE_MARKER_BONE, 'WORLD_SPACE', metarig, names.LEFT_EYE_HANDLE_MARKER_X_BONE, 'WORLD_SPACE', None, None, None)
-    leftEyeHandleEyesHandleDistanceYDriverVariable = koikatsuCommons.DriverVariable("distY_L", 'LOC_DIFF', metarig, names.EYES_HANDLE_MARKER_BONE, 'WORLD_SPACE', metarig, names.LEFT_EYE_HANDLE_MARKER_Z_BONE, 'WORLD_SPACE', None, None, None)
-    leftEyeHandleHeadDistanceXDriverVariable = koikatsuCommons.DriverVariable("headDistX_L", 'LOC_DIFF', metarig, names.HEAD_BONE, 'WORLD_SPACE', metarig, names.LEFT_HEAD_MARKER_X_BONE, 'WORLD_SPACE', None, None, None)
-    leftEyeHandleHeadDistanceYDriverVariable = koikatsuCommons.DriverVariable("headDistY_L", 'LOC_DIFF', metarig, names.HEAD_BONE, 'WORLD_SPACE', metarig, names.LEFT_HEAD_MARKER_Z_BONE, 'WORLD_SPACE', None, None, None)
-    rightEyeHandleLimitLocationDriverVariable = koikatsuCommons.DriverVariable("limit_R", 'SINGLE_PROP', metarig, None, None, None, None, None, rightEyeHandleLimitLocationDataPath, None, None)
-    rightEyeHandleMinXLocationDriverVariable = koikatsuCommons.DriverVariable("minX_R", 'SINGLE_PROP', metarig, None, None, None, None, None, rightEyeHandleMinXLocationDataPath, None, None)
-    rightEyeHandleMaxXLocationDriverVariable = koikatsuCommons.DriverVariable("maxX_R", 'SINGLE_PROP', metarig, None, None, None, None, None, rightEyeHandleMaxXLocationDataPath, None, None)
-    rightEyeHandleMinYLocationDriverVariable = koikatsuCommons.DriverVariable("minY_R", 'SINGLE_PROP', metarig, None, None, None, None, None, rightEyeHandleMinYLocationDataPath, None, None)
-    rightEyeHandleMaxYLocationDriverVariable = koikatsuCommons.DriverVariable("maxY_R", 'SINGLE_PROP', metarig, None, None, None, None, None, rightEyeHandleMaxYLocationDataPath, None, None)
-    rightEyeHandleSpeedCorrectionDriverVariable = koikatsuCommons.DriverVariable("corr_R", 'SINGLE_PROP', metarig, None, None, None, None, None, rightEyeHandleSpeedCorrectionDataPath, None, None)
-    rightEyeHandleEyesHandleDistanceXDriverVariable = koikatsuCommons.DriverVariable("distX_R", 'LOC_DIFF', metarig, names.EYES_HANDLE_MARKER_BONE, 'WORLD_SPACE', metarig, names.RIGHT_EYE_HANDLE_MARKER_X_BONE, 'WORLD_SPACE', None, None, None)
-    rightEyeHandleEyesHandleDistanceYDriverVariable = koikatsuCommons.DriverVariable("distY_R", 'LOC_DIFF', metarig, names.EYES_HANDLE_MARKER_BONE, 'WORLD_SPACE', metarig, names.RIGHT_EYE_HANDLE_MARKER_Z_BONE, 'WORLD_SPACE', None, None, None)
-    rightEyeHandleHeadDistanceXDriverVariable = koikatsuCommons.DriverVariable("headdDistX_R", 'LOC_DIFF', metarig, names.HEAD_BONE, 'WORLD_SPACE', metarig, names.RIGHT_HEAD_MARKER_X_BONE, 'WORLD_SPACE', None, None, None)
-    rightEyeHandleHeadDistanceYDriverVariable = koikatsuCommons.DriverVariable("headDistY_R", 'LOC_DIFF', metarig, names.HEAD_BONE, 'WORLD_SPACE', metarig, names.RIGHT_HEAD_MARKER_Z_BONE, 'WORLD_SPACE', None, None, None)
-    eyesTrackTargetParentToHeadDriverVariable = koikatsuCommons.DriverVariable("parentHead", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesTrackTargetParentToHeadDataPath, None, None)
-    eyesTrackTargetParentToTorsoDriverVariable = koikatsuCommons.DriverVariable("parentTorso", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesTrackTargetParentToTorsoDataPath, None, None)
-    eyesTrackTargetParentToRootDriverVariable = koikatsuCommons.DriverVariable("parentRoot", 'SINGLE_PROP', metarig, None, None, None, None, None, eyesTrackTargetParentToRootDataPath, None, None)
-    eyeballsSpeedFactorDriverVariable = koikatsuCommons.DriverVariable("rotSpeed", 'SINGLE_PROP', metarig, None, None, None, None, None, eyeballsSpeedFactorDataPath, None, None)
-    eyeballsTrackTargetDriverVariable = koikatsuCommons.DriverVariable("track", 'SINGLE_PROP', metarig, None, None, None, None, None, eyeballsTrackTargetDataPath, None, None)
-    eyeballsTrackSpeedFactorDriverVariable = koikatsuCommons.DriverVariable("trackSpeed", 'SINGLE_PROP', metarig, None, None, None, None, None, eyeballsTrackSpeedFactorDataPath, None, None)
-    eyeballsNearbyTargetTrackCorrectionDriverVariable = koikatsuCommons.DriverVariable("trackCorr", 'SINGLE_PROP', metarig, None, None, None, None, None, eyeballsNearbyTargetTrackCorrectionDataPath, None, None)
-    eyeballsNearbyTargetSizeFactorDriverVariable = koikatsuCommons.DriverVariable("factor", 'SINGLE_PROP', metarig, None, None, None, None, None, eyeballsNearbyTargetSizeFactorDataPath, None, None)
-    leftEyeballRightEyeHandleMarkerDistanceDriverVariable = koikatsuCommons.DriverVariable("orgDist_L", 'LOC_DIFF', metarig, names.LEFT_EYEBALL_TRACK_CORRECTION_BONE, 'WORLD_SPACE', metarig, names.LEFT_EYE_HANDLE_MARKER_BONE, 'WORLD_SPACE', None, None, None)
-    rightEyeballRightEyeHandleMarkerDistanceDriverVariable = koikatsuCommons.DriverVariable("orgDist_R", 'LOC_DIFF', metarig, names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE, 'WORLD_SPACE', metarig, names.RIGHT_EYE_HANDLE_MARKER_BONE, 'WORLD_SPACE', None, None, None)
-    leftEyeballEyesTrackTargetDistanceDriverVariable = koikatsuCommons.DriverVariable("currDist_L", 'LOC_DIFF', metarig, names.LEFT_EYEBALL_TRACK_CORRECTION_BONE, 'WORLD_SPACE', metarig, names.EYES_TRACK_TARGET_BONE, 'WORLD_SPACE', None, None, None)
-    rightEyeballEyesTrackTargetDistanceDriverVariable = koikatsuCommons.DriverVariable("currDist_R", 'LOC_DIFF', metarig, names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE, 'WORLD_SPACE', metarig, names.EYES_TRACK_TARGET_BONE, 'WORLD_SPACE', None, None, None)
-    eyeballsTrackBoneRotationZDriverVariable = koikatsuCommons.DriverVariable("rotZ", 'TRANSFORMS', metarig, names.EYEBALLS_TRACK_BONE, 'LOCAL_SPACE', None, None, None, None, 'ROT_Z', 'QUATERNION')
-    leftEyeballTrackBoneRotationZDriverVariable = koikatsuCommons.DriverVariable("rotZ_L", 'TRANSFORMS', metarig, names.LEFT_EYEBALL_TRACK_BONE, 'LOCAL_SPACE', None, None, None, None, 'ROT_Z', 'QUATERNION')
-    rightEyeballTrackBoneRotationZDriverVariable = koikatsuCommons.DriverVariable("rotZ_R", 'TRANSFORMS', metarig, names.RIGHT_EYEBALL_TRACK_BONE, 'LOCAL_SPACE', None, None, None, None, 'ROT_Z', 'QUATERNION')
-    headTrackTargetLimitRotationDriverVariable = koikatsuCommons.DriverVariable("limit", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetLimitRotationDataPath, None, None)
-    headTrackTargetMinXRotationDriverVariable = koikatsuCommons.DriverVariable("minX", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetMinXRotationDataPath, None, None)
-    headTrackTargetMaxXRotationDriverVariable = koikatsuCommons.DriverVariable("maxX", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetMaxXRotationDataPath, None, None)
-    headTrackTargetMinYRotationDriverVariable = koikatsuCommons.DriverVariable("minY", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetMinYRotationDataPath, None, None)
-    headTrackTargetMaxYRotationDriverVariable = koikatsuCommons.DriverVariable("maxY", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetMaxYRotationDataPath, None, None)
-    headTrackTargetMinZRotationDriverVariable = koikatsuCommons.DriverVariable("minZ", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetMinZRotationDataPath, None, None)
-    headTrackTargetMaxZRotationDriverVariable = koikatsuCommons.DriverVariable("maxZ", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetMaxZRotationDataPath, None, None)
-    headTrackTargetParentToHeadDriverVariable = koikatsuCommons.DriverVariable("parentHead", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetParentToHeadDataPath, None, None)
-    headTrackTargetParentToTorsoDriverVariable = koikatsuCommons.DriverVariable("parentTorso", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetParentToTorsoDataPath, None, None)
-    headTrackTargetParentToRootDriverVariable = koikatsuCommons.DriverVariable("parentRoot", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetParentToRootDataPath, None, None)
-    headTrackTargetDriverVariable = koikatsuCommons.DriverVariable("track", 'SINGLE_PROP', metarig, None, None, None, None, None, headTrackTargetTrackTargetDataPath, None, None)
+    eyesHandleLocationXDriverVariable = drivers.Variable(
+        'locX',
+        'TRANSFORMS',
+        metarig,
+        bone=names.EYES_HANDLE_BONE,
+        space='LOCAL_SPACE',
+        transform='LOC_X',
+    )
+    eyesHandleDefaultEyelidsValueDriverVariable = drivers.Variable('default', 'SINGLE_PROP', metarig, data_path=eyesHandleDefaultEyelidsValueDataPath)
+    eyesHandleMinEyelidsValueDriverVariable = drivers.Variable('min', 'SINGLE_PROP', metarig, data_path=eyesHandleMinEyelidsValueDataPath)
+    eyesHandleMaxEyelidsValueDriverVariable = drivers.Variable('max', 'SINGLE_PROP', metarig, data_path=eyesHandleMaxEyelidsValueDataPath)
+    eyesHandleEyelidsSpeedFactorDriverVariable = drivers.Variable('speed', 'SINGLE_PROP', metarig, data_path=eyesHandleEyelidsSpeedFactorDataPath)
+    eyesHandleEyelidsAutomationDriverVariable = drivers.Variable('enabled', 'SINGLE_PROP', metarig, data_path=eyesHandleEyelidsAutomationDataPath)
+    eyesHandleLimitLocationDriverVariable = drivers.Variable('limit', 'SINGLE_PROP', metarig, data_path=eyesHandleLimitLocationDataPath)
+    eyesHandleEyesSizeFactorDriverVariable = drivers.Variable('sizeFactor', 'SINGLE_PROP', metarig, data_path=eyesHandleEyesSizeFactorDataPath)
+    leftEyeHandleLimitLocationDriverVariable = drivers.Variable('limit_L', 'SINGLE_PROP', metarig, data_path=leftEyeHandleLimitLocationDataPath)
+    leftEyeHandleMinXLocationDriverVariable = drivers.Variable('minX_L', 'SINGLE_PROP', metarig, data_path=leftEyeHandleMinXLocationDataPath)
+    leftEyeHandleMaxXLocationDriverVariable = drivers.Variable('maxX_L', 'SINGLE_PROP', metarig, data_path=leftEyeHandleMaxXLocationDataPath)
+    leftEyeHandleMinYLocationDriverVariable = drivers.Variable('minY_L', 'SINGLE_PROP', metarig, data_path=leftEyeHandleMinYLocationDataPath)
+    leftEyeHandleMaxYLocationDriverVariable = drivers.Variable('maxY_L', 'SINGLE_PROP', metarig, data_path=leftEyeHandleMaxYLocationDataPath)
+    leftEyeHandleSpeedCorrectionDriverVariable = drivers.Variable('corr_L', 'SINGLE_PROP', metarig, data_path=leftEyeHandleSpeedCorrectionDataPath)
+    leftEyeHandleEyesHandleDistanceXDriverVariable = drivers.Variable(
+        'distX_L',
+        'LOC_DIFF',
+        metarig,
+        bone=names.EYES_HANDLE_MARKER_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.LEFT_EYE_HANDLE_MARKER_X_BONE,
+        space2='WORLD_SPACE',
+    )
+    leftEyeHandleEyesHandleDistanceYDriverVariable = drivers.Variable(
+        'distY_L',
+        'LOC_DIFF',
+        metarig,
+        bone=names.EYES_HANDLE_MARKER_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.LEFT_EYE_HANDLE_MARKER_Z_BONE,
+        space2='WORLD_SPACE',
+    )
+    leftEyeHandleHeadDistanceXDriverVariable = drivers.Variable(
+        'headDistX_L',
+        'LOC_DIFF',
+        metarig,
+        bone=names.HEAD_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.LEFT_HEAD_MARKER_X_BONE,
+        space2='WORLD_SPACE',
+    )
+    leftEyeHandleHeadDistanceYDriverVariable = drivers.Variable(
+        'headDistY_L',
+        'LOC_DIFF',
+        metarig,
+        bone=names.HEAD_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.LEFT_HEAD_MARKER_Z_BONE,
+        space2='WORLD_SPACE',
+    )
+    rightEyeHandleLimitLocationDriverVariable = drivers.Variable('limit_R', 'SINGLE_PROP', metarig, data_path=rightEyeHandleLimitLocationDataPath)
+    rightEyeHandleMinXLocationDriverVariable = drivers.Variable('minX_R', 'SINGLE_PROP', metarig, data_path=rightEyeHandleMinXLocationDataPath)
+    rightEyeHandleMaxXLocationDriverVariable = drivers.Variable('maxX_R', 'SINGLE_PROP', metarig, data_path=rightEyeHandleMaxXLocationDataPath)
+    rightEyeHandleMinYLocationDriverVariable = drivers.Variable('minY_R', 'SINGLE_PROP', metarig, data_path=rightEyeHandleMinYLocationDataPath)
+    rightEyeHandleMaxYLocationDriverVariable = drivers.Variable('maxY_R', 'SINGLE_PROP', metarig, data_path=rightEyeHandleMaxYLocationDataPath)
+    rightEyeHandleSpeedCorrectionDriverVariable = drivers.Variable('corr_R', 'SINGLE_PROP', metarig, data_path=rightEyeHandleSpeedCorrectionDataPath)
+    rightEyeHandleEyesHandleDistanceXDriverVariable = drivers.Variable(
+        'distX_R',
+        'LOC_DIFF',
+        metarig,
+        bone=names.EYES_HANDLE_MARKER_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.RIGHT_EYE_HANDLE_MARKER_X_BONE,
+        space2='WORLD_SPACE',
+    )
+    rightEyeHandleEyesHandleDistanceYDriverVariable = drivers.Variable(
+        'distY_R',
+        'LOC_DIFF',
+        metarig,
+        bone=names.EYES_HANDLE_MARKER_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.RIGHT_EYE_HANDLE_MARKER_Z_BONE,
+        space2='WORLD_SPACE',
+    )
+    rightEyeHandleHeadDistanceXDriverVariable = drivers.Variable(
+        'headdDistX_R',
+        'LOC_DIFF',
+        metarig,
+        bone=names.HEAD_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.RIGHT_HEAD_MARKER_X_BONE,
+        space2='WORLD_SPACE',
+    )
+    rightEyeHandleHeadDistanceYDriverVariable = drivers.Variable(
+        'headDistY_R',
+        'LOC_DIFF',
+        metarig,
+        bone=names.HEAD_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.RIGHT_HEAD_MARKER_Z_BONE,
+        space2='WORLD_SPACE',
+    )
+    eyesTrackTargetParentToHeadDriverVariable = drivers.Variable('parentHead', 'SINGLE_PROP', metarig, data_path=eyesTrackTargetParentToHeadDataPath)
+    eyesTrackTargetParentToTorsoDriverVariable = drivers.Variable('parentTorso', 'SINGLE_PROP', metarig, data_path=eyesTrackTargetParentToTorsoDataPath)
+    eyesTrackTargetParentToRootDriverVariable = drivers.Variable('parentRoot', 'SINGLE_PROP', metarig, data_path=eyesTrackTargetParentToRootDataPath)
+    eyeballsSpeedFactorDriverVariable = drivers.Variable('rotSpeed', 'SINGLE_PROP', metarig, data_path=eyeballsSpeedFactorDataPath)
+    eyeballsTrackTargetDriverVariable = drivers.Variable('track', 'SINGLE_PROP', metarig, data_path=eyeballsTrackTargetDataPath)
+    eyeballsTrackSpeedFactorDriverVariable = drivers.Variable('trackSpeed', 'SINGLE_PROP', metarig, data_path=eyeballsTrackSpeedFactorDataPath)
+    eyeballsNearbyTargetTrackCorrectionDriverVariable = drivers.Variable('trackCorr', 'SINGLE_PROP', metarig, data_path=eyeballsNearbyTargetTrackCorrectionDataPath)
+    eyeballsNearbyTargetSizeFactorDriverVariable = drivers.Variable('factor', 'SINGLE_PROP', metarig, data_path=eyeballsNearbyTargetSizeFactorDataPath)
+    leftEyeballRightEyeHandleMarkerDistanceDriverVariable = drivers.Variable(
+        'orgDist_L',
+        'LOC_DIFF',
+        metarig,
+        bone=names.LEFT_EYEBALL_TRACK_CORRECTION_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.LEFT_EYE_HANDLE_MARKER_BONE,
+        space2='WORLD_SPACE',
+    )
+    rightEyeballRightEyeHandleMarkerDistanceDriverVariable = drivers.Variable(
+        'orgDist_R',
+        'LOC_DIFF',
+        metarig,
+        bone=names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.RIGHT_EYE_HANDLE_MARKER_BONE,
+        space2='WORLD_SPACE',
+    )
+    leftEyeballEyesTrackTargetDistanceDriverVariable = drivers.Variable(
+        'currDist_L',
+        'LOC_DIFF',
+        metarig,
+        bone=names.LEFT_EYEBALL_TRACK_CORRECTION_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.EYES_TRACK_TARGET_BONE,
+        space2='WORLD_SPACE',
+    )
+    rightEyeballEyesTrackTargetDistanceDriverVariable = drivers.Variable(
+        'currDist_R',
+        'LOC_DIFF',
+        metarig,
+        bone=names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE,
+        space='WORLD_SPACE',
+        target2=metarig,
+        bone2=names.EYES_TRACK_TARGET_BONE,
+        space2='WORLD_SPACE',
+    )
+    eyeballsTrackBoneRotationZDriverVariable = drivers.Variable(
+        'rotZ',
+        'TRANSFORMS',
+        metarig,
+        bone=names.EYEBALLS_TRACK_BONE,
+        space='LOCAL_SPACE',
+        transform='ROT_Z',
+        rotation_mode='QUATERNION',
+    )
+    leftEyeballTrackBoneRotationZDriverVariable = drivers.Variable(
+        'rotZ_L',
+        'TRANSFORMS',
+        metarig,
+        bone=names.LEFT_EYEBALL_TRACK_BONE,
+        space='LOCAL_SPACE',
+        transform='ROT_Z',
+        rotation_mode='QUATERNION',
+    )
+    rightEyeballTrackBoneRotationZDriverVariable = drivers.Variable(
+        'rotZ_R',
+        'TRANSFORMS',
+        metarig,
+        bone=names.RIGHT_EYEBALL_TRACK_BONE,
+        space='LOCAL_SPACE',
+        transform='ROT_Z',
+        rotation_mode='QUATERNION',
+    )
+    headTrackTargetLimitRotationDriverVariable = drivers.Variable('limit', 'SINGLE_PROP', metarig, data_path=headTrackTargetLimitRotationDataPath)
+    headTrackTargetMinXRotationDriverVariable = drivers.Variable('minX', 'SINGLE_PROP', metarig, data_path=headTrackTargetMinXRotationDataPath)
+    headTrackTargetMaxXRotationDriverVariable = drivers.Variable('maxX', 'SINGLE_PROP', metarig, data_path=headTrackTargetMaxXRotationDataPath)
+    headTrackTargetMinYRotationDriverVariable = drivers.Variable('minY', 'SINGLE_PROP', metarig, data_path=headTrackTargetMinYRotationDataPath)
+    headTrackTargetMaxYRotationDriverVariable = drivers.Variable('maxY', 'SINGLE_PROP', metarig, data_path=headTrackTargetMaxYRotationDataPath)
+    headTrackTargetMinZRotationDriverVariable = drivers.Variable('minZ', 'SINGLE_PROP', metarig, data_path=headTrackTargetMinZRotationDataPath)
+    headTrackTargetMaxZRotationDriverVariable = drivers.Variable('maxZ', 'SINGLE_PROP', metarig, data_path=headTrackTargetMaxZRotationDataPath)
+    headTrackTargetParentToHeadDriverVariable = drivers.Variable('parentHead', 'SINGLE_PROP', metarig, data_path=headTrackTargetParentToHeadDataPath)
+    headTrackTargetParentToTorsoDriverVariable = drivers.Variable('parentTorso', 'SINGLE_PROP', metarig, data_path=headTrackTargetParentToTorsoDataPath)
+    headTrackTargetParentToRootDriverVariable = drivers.Variable('parentRoot', 'SINGLE_PROP', metarig, data_path=headTrackTargetParentToRootDataPath)
+    headTrackTargetDriverVariable = drivers.Variable('track', 'SINGLE_PROP', metarig, data_path=headTrackTargetTrackTargetDataPath)
     
-    koikatsuCommons.addDriver(eyelidsShapeKeyCopy, "value", None, 'SCRIPTED', [eyesHandleLocationXDriverVariable, eyesHandleDefaultEyelidsValueDriverVariable, eyesHandleMinEyelidsValueDriverVariable, eyesHandleMaxEyelidsValueDriverVariable, eyesHandleEyelidsSpeedFactorDriverVariable, eyesHandleEyelidsAutomationDriverVariable], 
-    eyesHandleEyelidsAutomationDriverVariable.name + " * (" + eyesHandleMinEyelidsValueDriverVariable.name + " if (" + eyesHandleDefaultEyelidsValueDriverVariable.name + " + " + eyesHandleLocationXDriverVariable.name + " * -" + eyesHandleEyelidsSpeedFactorDriverVariable.name + " if " + eyesHandleLocationXDriverVariable.name + " < 0 else " + eyesHandleDefaultEyelidsValueDriverVariable.name + " - " + eyesHandleLocationXDriverVariable.name + " * " + eyesHandleEyelidsSpeedFactorDriverVariable.name + ") < " + eyesHandleMinEyelidsValueDriverVariable.name + " else " + eyesHandleMaxEyelidsValueDriverVariable.name + " if (" + eyesHandleDefaultEyelidsValueDriverVariable.name + " + " + eyesHandleLocationXDriverVariable.name + " * -" + eyesHandleEyelidsSpeedFactorDriverVariable.name + " if " + eyesHandleLocationXDriverVariable.name + " < 0 else " + eyesHandleDefaultEyelidsValueDriverVariable.name + " - " + eyesHandleLocationXDriverVariable.name + " * " + eyesHandleEyelidsSpeedFactorDriverVariable.name + ") > " + eyesHandleMaxEyelidsValueDriverVariable.name + " else (" + eyesHandleDefaultEyelidsValueDriverVariable.name + " + " + eyesHandleLocationXDriverVariable.name + " * -" + eyesHandleEyelidsSpeedFactorDriverVariable.name + " if " + eyesHandleLocationXDriverVariable.name + " < 0 else " + eyesHandleDefaultEyelidsValueDriverVariable.name + " - " + eyesHandleLocationXDriverVariable.name + " * " + eyesHandleEyelidsSpeedFactorDriverVariable.name + "))")
-    koikatsuCommons.addDriver(eyesHandleLimitLocationConstraint, "influence", None, 'AVERAGE', [eyesHandleLimitLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(eyesHandleLimitLocationConstraint, "min_x", None, 'SCRIPTED', [leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleEyesHandleDistanceXDriverVariable, rightEyeHandleEyesHandleDistanceXDriverVariable], 
-    leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleEyesHandleDistanceXDriverVariable.name + " if " + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleEyesHandleDistanceXDriverVariable.name + " <= " + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleEyesHandleDistanceXDriverVariable.name + " else " + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleEyesHandleDistanceXDriverVariable.name)
-    koikatsuCommons.addDriver(eyesHandleLimitLocationConstraint, "max_x", None, 'SCRIPTED', [leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleEyesHandleDistanceXDriverVariable, rightEyeHandleEyesHandleDistanceXDriverVariable], 
-    rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleEyesHandleDistanceXDriverVariable.name + " if " + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleEyesHandleDistanceXDriverVariable.name + " > " + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleEyesHandleDistanceXDriverVariable.name + " else " + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleEyesHandleDistanceXDriverVariable.name)
-    koikatsuCommons.addDriver(eyesHandleLimitLocationConstraint, "min_y", None, 'SCRIPTED', [leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleEyesHandleDistanceYDriverVariable, rightEyeHandleEyesHandleDistanceYDriverVariable], 
-    leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleEyesHandleDistanceYDriverVariable.name + " if " + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleEyesHandleDistanceYDriverVariable.name + " <= " + rightEyeHandleMinYLocationDriverVariable.name + " + " + rightEyeHandleEyesHandleDistanceYDriverVariable.name + " else " + rightEyeHandleMinYLocationDriverVariable.name + " + " + rightEyeHandleEyesHandleDistanceYDriverVariable.name)
-    koikatsuCommons.addDriver(eyesHandleLimitLocationConstraint, "max_y", None, 'SCRIPTED', [leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleEyesHandleDistanceYDriverVariable, rightEyeHandleEyesHandleDistanceYDriverVariable], 
-    rightEyeHandleMaxYLocationDriverVariable.name + " + " + rightEyeHandleEyesHandleDistanceYDriverVariable.name + " if " + rightEyeHandleMaxYLocationDriverVariable.name + " + " + rightEyeHandleEyesHandleDistanceYDriverVariable.name + " > " + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleEyesHandleDistanceYDriverVariable.name + " else " + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleEyesHandleDistanceYDriverVariable.name)
-    koikatsuCommons.addDriver(eyesHandleTransformationConstraintEyeballLocation, "influence", None, 'SCRIPTED', [eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, eyeballsTrackSpeedFactorDriverVariable], 
-    eyeballsSpeedFactorDriverVariable.name + " * (1 - " + eyeballsTrackTargetDriverVariable.name + ") + " + eyeballsTrackSpeedFactorDriverVariable.name + " * " + eyeballsTrackTargetDriverVariable.name)
-    koikatsuCommons.addDriver(eyesHandleTransformationConstraintEyeballLocation, "to_min_x", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    "-" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(eyesHandleTransformationConstraintEyeballLocation, "to_max_x", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(eyesHandleTransformationConstraintEyeballLocation, "to_min_z", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    "-" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(eyesHandleTransformationConstraintEyeballLocation, "to_max_z", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(leftEyeHandleLimitLocationConstraint, "min_x", None, 'AVERAGE', [leftEyeHandleMinXLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(leftEyeHandleLimitLocationConstraint, "max_x", None, 'AVERAGE', [leftEyeHandleMaxXLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(leftEyeHandleLimitLocationConstraint, "min_y", None, 'AVERAGE', [leftEyeHandleMinYLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(leftEyeHandleLimitLocationConstraint, "max_y", None, 'AVERAGE', [leftEyeHandleMaxYLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMax, "to_max_z", None, 'SCRIPTED', [leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") * " + eyesHandleEyesSizeFactorDriverVariable.name + " / (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleLimitLocationConstraint, "influence", None, 'AVERAGE', [leftEyeHandleLimitLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMax, "influence", None, 'AVERAGE', [leftEyeHandleSpeedCorrectionDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMax, "from_max_z", None, 'SCRIPTED', [leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMin, "from_min_z", None, 'SCRIPTED', [leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else -" + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMin, "to_min_z", None, 'SCRIPTED', [leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") * -" + eyesHandleEyesSizeFactorDriverVariable.name + " / (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") + " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMin, "influence", None, 'AVERAGE', [leftEyeHandleSpeedCorrectionDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMax, "from_max_x", None, 'SCRIPTED', [leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMax, "to_max_x", None, 'SCRIPTED', [leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") * " + eyesHandleEyesSizeFactorDriverVariable.name + " / (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMin, "from_min_x", None, 'SCRIPTED', [leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else -" + eyesHandleEyesSizeFactorDriverVariable.name + "")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintHandleLocationCorrectionMin, "to_min_x", None, 'SCRIPTED', [leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") * -" + eyesHandleEyesSizeFactorDriverVariable.name + " / (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") + " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocation, "influence", None, 'SCRIPTED', [eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, eyeballsTrackSpeedFactorDriverVariable], 
-    eyeballsSpeedFactorDriverVariable.name + " * (1 - " + eyeballsTrackTargetDriverVariable.name + ") + " + eyeballsTrackSpeedFactorDriverVariable.name + " * " + eyeballsTrackTargetDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "influence", None, 'SCRIPTED', [eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, leftEyeHandleSpeedCorrectionDriverVariable], 
-    leftEyeHandleSpeedCorrectionDriverVariable.name + " * (1 - " + eyeballsTrackTargetDriverVariable.name + ") * " + eyeballsSpeedFactorDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "influence", None, 'SCRIPTED', [eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, leftEyeHandleSpeedCorrectionDriverVariable], 
-    leftEyeHandleSpeedCorrectionDriverVariable.name + " * (1 - " + eyeballsTrackTargetDriverVariable.name + ") * " + eyeballsSpeedFactorDriverVariable.name)
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "to_max_z", None, 'SCRIPTED', [leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") * " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10 / (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "to_max_x", None, 'SCRIPTED', [leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") * " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10 / (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "from_max_z_rot", None, 'SCRIPTED', [leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "radians(0) if (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else radians(180)")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "from_max_x_rot", None, 'SCRIPTED', [leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "radians(0) if (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else radians(180)")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "to_min_z", None, 'SCRIPTED', [leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") * -" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10 / (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") + " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "to_min_x", None, 'SCRIPTED', [leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") * -" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10 / (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") + " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "from_min_z_rot", None, 'SCRIPTED', [leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "radians(0) if (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else radians(-180)")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "from_min_x_rot", None, 'SCRIPTED', [leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "radians(0) if (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else radians(-180)")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocation, "to_min_x", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    "-" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocation, "to_max_x", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocation, "to_min_z", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    "-" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(leftEyeHandleTransformationConstraintEyeballLocation, "to_max_z", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(rightEyeHandleLimitLocationConstraint, "min_x", None, 'AVERAGE', [rightEyeHandleMinXLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(rightEyeHandleLimitLocationConstraint, "max_x", None, 'AVERAGE', [rightEyeHandleMaxXLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(rightEyeHandleLimitLocationConstraint, "min_y", None, 'AVERAGE', [rightEyeHandleMinYLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(rightEyeHandleLimitLocationConstraint, "max_y", None, 'AVERAGE', [rightEyeHandleMaxYLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMax, "to_max_z", None, 'SCRIPTED', [rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") * " + eyesHandleEyesSizeFactorDriverVariable.name + " / (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleLimitLocationConstraint, "influence", None, 'AVERAGE', [rightEyeHandleLimitLocationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMax, "influence", None, 'AVERAGE', [rightEyeHandleSpeedCorrectionDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMax, "from_max_z", None, 'SCRIPTED', [rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMin, "from_min_z", None, 'SCRIPTED', [rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else -" + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMin, "to_min_z", None, 'SCRIPTED', [rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") * -" + eyesHandleEyesSizeFactorDriverVariable.name + " / (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") + " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMin, "influence", None, 'AVERAGE', [rightEyeHandleSpeedCorrectionDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMax, "from_max_x", None, 'SCRIPTED', [rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMax, "to_max_x", None, 'SCRIPTED', [rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") * " + eyesHandleEyesSizeFactorDriverVariable.name + " / (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMin, "from_min_x", None, 'SCRIPTED', [rightEyeHandleMinYLocationDriverVariable, leftEyeHandleMinYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else -" + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintHandleLocationCorrectionMin, "to_min_x", None, 'SCRIPTED', [rightEyeHandleMinYLocationDriverVariable, leftEyeHandleMinYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") * -" + eyesHandleEyesSizeFactorDriverVariable.name + " / (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") + " + eyesHandleEyesSizeFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocation, "influence", None, 'SCRIPTED', [eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, eyeballsTrackSpeedFactorDriverVariable], 
-    eyeballsSpeedFactorDriverVariable.name + " * (1 - " + eyeballsTrackTargetDriverVariable.name + ") + " + eyeballsTrackSpeedFactorDriverVariable.name + " * " + eyeballsTrackTargetDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "influence", None, 'SCRIPTED', [eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, rightEyeHandleSpeedCorrectionDriverVariable], 
-    rightEyeHandleSpeedCorrectionDriverVariable.name + " * (1 - " + eyeballsTrackTargetDriverVariable.name + ") * " + eyeballsSpeedFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "influence", None, 'SCRIPTED', [eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, rightEyeHandleSpeedCorrectionDriverVariable], 
-    rightEyeHandleSpeedCorrectionDriverVariable.name + " * (1 - " + eyeballsTrackTargetDriverVariable.name + ") * " + eyeballsSpeedFactorDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "to_max_z", None, 'SCRIPTED', [rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") * " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10 / (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") - " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "to_max_x", None, 'SCRIPTED', [rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") * " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10 / (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") - " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "from_max_z_rot", None, 'SCRIPTED', [rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "radians(0) if (" + rightEyeHandleMaxXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - (" + leftEyeHandleMaxXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else radians(180)")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax, "from_max_x_rot", None, 'SCRIPTED', [rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "radians(0) if (" + rightEyeHandleMaxYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - (" + leftEyeHandleMaxYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") <= 0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else radians(180)")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "to_min_z", None, 'SCRIPTED', [rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") * -" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10 / (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") + " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "to_min_x", None, 'SCRIPTED', [rightEyeHandleMinYLocationDriverVariable, leftEyeHandleMinYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "0 if (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") * -" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10 / (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") + " + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "from_min_z_rot", None, 'SCRIPTED', [rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "radians(0) if (" + rightEyeHandleMinXLocationDriverVariable.name + " + " + rightEyeHandleHeadDistanceXDriverVariable.name + ") - (" + leftEyeHandleMinXLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceXDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else radians(-180)")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin, "from_min_x_rot", None, 'SCRIPTED', [rightEyeHandleMinYLocationDriverVariable, leftEyeHandleMinYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable], 
-    "radians(0) if (" + rightEyeHandleMinYLocationDriverVariable.name + " - " + rightEyeHandleHeadDistanceYDriverVariable.name + ") - (" + leftEyeHandleMinYLocationDriverVariable.name + " - " + leftEyeHandleHeadDistanceYDriverVariable.name + ") >= -0.000001 * " + eyesHandleEyesSizeFactorDriverVariable.name + " else radians(-180)")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocation, "to_min_x", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    "-" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocation, "to_max_x", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocation, "to_min_z", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    "-" + eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(rightEyeHandleTransformationConstraintEyeballLocation, "to_max_z", None, 'SCRIPTED', [eyesHandleEyesSizeFactorDriverVariable], 
-    eyesHandleEyesSizeFactorDriverVariable.name + " / 10")
-    koikatsuCommons.addDriver(eyesTrackTargetParentArmatureConstraint.targets[0], "weight", None, 'AVERAGE', [eyesTrackTargetParentToHeadDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(eyesTrackTargetParentArmatureConstraint.targets[1], "weight", None, 'AVERAGE', [eyesTrackTargetParentToTorsoDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(eyesTrackTargetParentArmatureConstraint.targets[2], "weight", None, 'AVERAGE', [eyesTrackTargetParentToRootDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(eyeballsCopyRotationConstraintTrack, "influence", None, 'AVERAGE', [eyeballsTrackTargetDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(leftEyeballCopyRotationConstraintTrack, "influence", None, 'SCRIPTED', [eyeballsTrackTargetDriverVariable, eyeballsNearbyTargetTrackCorrectionDriverVariable], 
-    eyeballsTrackTargetDriverVariable.name + " * " + eyeballsNearbyTargetTrackCorrectionDriverVariable.name)
-    koikatsuCommons.addDriver(rightEyeballCopyRotationConstraintTrack, "influence", None, 'SCRIPTED', [eyeballsTrackTargetDriverVariable, eyeballsNearbyTargetTrackCorrectionDriverVariable], 
-    eyeballsTrackTargetDriverVariable.name + " * " + eyeballsNearbyTargetTrackCorrectionDriverVariable.name)
-    koikatsuCommons.addDriver(metarig.pose.bones[names.LEFT_EYEBALL_TRACK_CORRECTION_BONE], "rotation_quaternion", 3, 'SCRIPTED', [leftEyeballRightEyeHandleMarkerDistanceDriverVariable, leftEyeballEyesTrackTargetDistanceDriverVariable, eyeballsTrackBoneRotationZDriverVariable, leftEyeballTrackBoneRotationZDriverVariable, leftEyeHandleSpeedCorrectionDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyeballsNearbyTargetSizeFactorDriverVariable], 
-    "0 if " + leftEyeballRightEyeHandleMarkerDistanceDriverVariable.name + "-" + leftEyeballEyesTrackTargetDistanceDriverVariable.name + "<=0 else (radians(-45)+" + leftEyeballTrackBoneRotationZDriverVariable.name + ")*(" + leftEyeballRightEyeHandleMarkerDistanceDriverVariable.name + "-" + leftEyeballEyesTrackTargetDistanceDriverVariable.name + ")/" + eyeballsNearbyTargetSizeFactorDriverVariable.name + "*(" + eyeballsTrackBoneRotationZDriverVariable.name + "-" + leftEyeballTrackBoneRotationZDriverVariable.name + ")*20*(1 if (" + leftEyeHandleMaxXLocationDriverVariable.name + "-" + leftEyeHandleHeadDistanceXDriverVariable.name + ")-(" + rightEyeHandleMaxXLocationDriverVariable.name + "+" + rightEyeHandleHeadDistanceXDriverVariable.name + ")<=0.000001 else 1+" + leftEyeHandleSpeedCorrectionDriverVariable.name + "*(" + leftEyeHandleMaxXLocationDriverVariable.name + "-" + leftEyeHandleHeadDistanceXDriverVariable.name + ")/(" + rightEyeHandleMaxXLocationDriverVariable.name + "+" + rightEyeHandleHeadDistanceXDriverVariable.name + "))")
-    koikatsuCommons.addDriver(metarig.pose.bones[names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE], "rotation_quaternion", 3, 'SCRIPTED', [rightEyeballRightEyeHandleMarkerDistanceDriverVariable, rightEyeballEyesTrackTargetDistanceDriverVariable, eyeballsTrackBoneRotationZDriverVariable, rightEyeballTrackBoneRotationZDriverVariable, rightEyeHandleSpeedCorrectionDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyeballsNearbyTargetSizeFactorDriverVariable], 
-    "0 if " + rightEyeballRightEyeHandleMarkerDistanceDriverVariable.name + "-" + rightEyeballEyesTrackTargetDistanceDriverVariable.name + "<=0 else (radians(45)+" + rightEyeballTrackBoneRotationZDriverVariable.name + ")*(" + rightEyeballRightEyeHandleMarkerDistanceDriverVariable.name + "-" + rightEyeballEyesTrackTargetDistanceDriverVariable.name + ")/" + eyeballsNearbyTargetSizeFactorDriverVariable.name + "*(" + rightEyeballTrackBoneRotationZDriverVariable.name + "-" + eyeballsTrackBoneRotationZDriverVariable.name + ")*20*(1 if (" + rightEyeHandleMinXLocationDriverVariable.name + "+" + rightEyeHandleHeadDistanceXDriverVariable.name + ")-(" + leftEyeHandleMinXLocationDriverVariable.name + "-" + leftEyeHandleHeadDistanceXDriverVariable.name + ")>=-0.000001 else 1+" + rightEyeHandleSpeedCorrectionDriverVariable.name + "*(" + rightEyeHandleMinXLocationDriverVariable.name + "+" + rightEyeHandleHeadDistanceXDriverVariable.name + ")/(" + leftEyeHandleMinXLocationDriverVariable.name + "-" + leftEyeHandleHeadDistanceXDriverVariable.name + "))")
-    koikatsuCommons.addDriver(headTransformationConstraintHeadRotation, "influence", None, 'AVERAGE', [headTrackTargetDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(headLimitRotationConstraint, "influence", None, 'AVERAGE', [headTrackTargetLimitRotationDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(headLimitRotationConstraint, "min_x", None, 'SCRIPTED', [headTrackTargetMinXRotationDriverVariable], 
-    "radians(" + headTrackTargetMinXRotationDriverVariable.name + ")")
-    koikatsuCommons.addDriver(headLimitRotationConstraint, "max_x", None, 'SCRIPTED', [headTrackTargetMaxXRotationDriverVariable], 
-    "radians(" + headTrackTargetMaxXRotationDriverVariable.name + ")")
-    koikatsuCommons.addDriver(headLimitRotationConstraint, "min_y", None, 'SCRIPTED', [headTrackTargetMinYRotationDriverVariable], 
-    "radians(" + headTrackTargetMinYRotationDriverVariable.name + ")")
-    koikatsuCommons.addDriver(headLimitRotationConstraint, "max_y", None, 'SCRIPTED', [headTrackTargetMaxYRotationDriverVariable], 
-    "radians(" + headTrackTargetMaxYRotationDriverVariable.name + ")")
-    koikatsuCommons.addDriver(headLimitRotationConstraint, "min_z", None, 'SCRIPTED', [headTrackTargetMinZRotationDriverVariable], 
-    "radians(" + headTrackTargetMinZRotationDriverVariable.name + ")")
-    koikatsuCommons.addDriver(headLimitRotationConstraint, "max_z", None, 'SCRIPTED', [headTrackTargetMaxZRotationDriverVariable], 
-    "radians(" + headTrackTargetMaxZRotationDriverVariable.name + ")")    
-    koikatsuCommons.addDriver(headTrackTargetParentArmatureConstraint.targets[0], "weight", None, 'AVERAGE', [headTrackTargetParentToHeadDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(headTrackTargetParentArmatureConstraint.targets[1], "weight", None, 'AVERAGE', [headTrackTargetParentToTorsoDriverVariable], 
-    None)
-    koikatsuCommons.addDriver(headTrackTargetParentArmatureConstraint.targets[2], "weight", None, 'AVERAGE', [headTrackTargetParentToRootDriverVariable], 
-    None)
+    drivers.add(
+        eyelidsShapeKeyCopy,
+        'value',
+        type='SCRIPTED',
+        variables=[eyesHandleLocationXDriverVariable, eyesHandleDefaultEyelidsValueDriverVariable, eyesHandleMinEyelidsValueDriverVariable, eyesHandleMaxEyelidsValueDriverVariable, eyesHandleEyelidsSpeedFactorDriverVariable, eyesHandleEyelidsAutomationDriverVariable],
+        expression=eyesHandleEyelidsAutomationDriverVariable.name + ' * (' + eyesHandleMinEyelidsValueDriverVariable.name + ' if (' + eyesHandleDefaultEyelidsValueDriverVariable.name + ' + ' + eyesHandleLocationXDriverVariable.name + ' * -' + eyesHandleEyelidsSpeedFactorDriverVariable.name + ' if ' + eyesHandleLocationXDriverVariable.name + ' < 0 else ' + eyesHandleDefaultEyelidsValueDriverVariable.name + ' - ' + eyesHandleLocationXDriverVariable.name + ' * ' + eyesHandleEyelidsSpeedFactorDriverVariable.name + ') < ' + eyesHandleMinEyelidsValueDriverVariable.name + ' else ' + eyesHandleMaxEyelidsValueDriverVariable.name + ' if (' + eyesHandleDefaultEyelidsValueDriverVariable.name + ' + ' + eyesHandleLocationXDriverVariable.name + ' * -' + eyesHandleEyelidsSpeedFactorDriverVariable.name + ' if ' + eyesHandleLocationXDriverVariable.name + ' < 0 else ' + eyesHandleDefaultEyelidsValueDriverVariable.name + ' - ' + eyesHandleLocationXDriverVariable.name + ' * ' + eyesHandleEyelidsSpeedFactorDriverVariable.name + ') > ' + eyesHandleMaxEyelidsValueDriverVariable.name + ' else (' + eyesHandleDefaultEyelidsValueDriverVariable.name + ' + ' + eyesHandleLocationXDriverVariable.name + ' * -' + eyesHandleEyelidsSpeedFactorDriverVariable.name + ' if ' + eyesHandleLocationXDriverVariable.name + ' < 0 else ' + eyesHandleDefaultEyelidsValueDriverVariable.name + ' - ' + eyesHandleLocationXDriverVariable.name + ' * ' + eyesHandleEyelidsSpeedFactorDriverVariable.name + '))',
+    )
+    drivers.add(
+        eyesHandleLimitLocationConstraint,
+        'influence',
+        type='AVERAGE',
+        variables=[eyesHandleLimitLocationDriverVariable],
+    )
+    drivers.add(
+        eyesHandleLimitLocationConstraint,
+        'min_x',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleEyesHandleDistanceXDriverVariable, rightEyeHandleEyesHandleDistanceXDriverVariable],
+        expression=leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleEyesHandleDistanceXDriverVariable.name + ' if ' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleEyesHandleDistanceXDriverVariable.name + ' <= ' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleEyesHandleDistanceXDriverVariable.name + ' else ' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleEyesHandleDistanceXDriverVariable.name,
+    )
+    drivers.add(
+        eyesHandleLimitLocationConstraint,
+        'max_x',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleEyesHandleDistanceXDriverVariable, rightEyeHandleEyesHandleDistanceXDriverVariable],
+        expression=rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleEyesHandleDistanceXDriverVariable.name + ' if ' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleEyesHandleDistanceXDriverVariable.name + ' > ' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleEyesHandleDistanceXDriverVariable.name + ' else ' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleEyesHandleDistanceXDriverVariable.name,
+    )
+    drivers.add(
+        eyesHandleLimitLocationConstraint,
+        'min_y',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleEyesHandleDistanceYDriverVariable, rightEyeHandleEyesHandleDistanceYDriverVariable],
+        expression=leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleEyesHandleDistanceYDriverVariable.name + ' if ' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleEyesHandleDistanceYDriverVariable.name + ' <= ' + rightEyeHandleMinYLocationDriverVariable.name + ' + ' + rightEyeHandleEyesHandleDistanceYDriverVariable.name + ' else ' + rightEyeHandleMinYLocationDriverVariable.name + ' + ' + rightEyeHandleEyesHandleDistanceYDriverVariable.name,
+    )
+    drivers.add(
+        eyesHandleLimitLocationConstraint,
+        'max_y',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleEyesHandleDistanceYDriverVariable, rightEyeHandleEyesHandleDistanceYDriverVariable],
+        expression=rightEyeHandleMaxYLocationDriverVariable.name + ' + ' + rightEyeHandleEyesHandleDistanceYDriverVariable.name + ' if ' + rightEyeHandleMaxYLocationDriverVariable.name + ' + ' + rightEyeHandleEyesHandleDistanceYDriverVariable.name + ' > ' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleEyesHandleDistanceYDriverVariable.name + ' else ' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleEyesHandleDistanceYDriverVariable.name,
+    )
+    drivers.add(
+        eyesHandleTransformationConstraintEyeballLocation,
+        'influence',
+        type='SCRIPTED',
+        variables=[eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, eyeballsTrackSpeedFactorDriverVariable],
+        expression=eyeballsSpeedFactorDriverVariable.name + ' * (1 - ' + eyeballsTrackTargetDriverVariable.name + ') + ' + eyeballsTrackSpeedFactorDriverVariable.name + ' * ' + eyeballsTrackTargetDriverVariable.name,
+    )
+    drivers.add(
+        eyesHandleTransformationConstraintEyeballLocation,
+        'to_min_x',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression='-' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        eyesHandleTransformationConstraintEyeballLocation,
+        'to_max_x',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression=eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        eyesHandleTransformationConstraintEyeballLocation,
+        'to_min_z',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression='-' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        eyesHandleTransformationConstraintEyeballLocation,
+        'to_max_z',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression=eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        leftEyeHandleLimitLocationConstraint,
+        'min_x',
+        type='AVERAGE',
+        variables=[leftEyeHandleMinXLocationDriverVariable],
+    )
+    drivers.add(
+        leftEyeHandleLimitLocationConstraint,
+        'max_x',
+        type='AVERAGE',
+        variables=[leftEyeHandleMaxXLocationDriverVariable],
+    )
+    drivers.add(
+        leftEyeHandleLimitLocationConstraint,
+        'min_y',
+        type='AVERAGE',
+        variables=[leftEyeHandleMinYLocationDriverVariable],
+    )
+    drivers.add(
+        leftEyeHandleLimitLocationConstraint,
+        'max_y',
+        type='AVERAGE',
+        variables=[leftEyeHandleMaxYLocationDriverVariable],
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'to_max_z',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleLimitLocationConstraint,
+        'influence',
+        type='AVERAGE',
+        variables=[leftEyeHandleLimitLocationDriverVariable],
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'influence',
+        type='AVERAGE',
+        variables=[leftEyeHandleSpeedCorrectionDriverVariable],
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'from_max_z',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'from_min_z',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else -' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'to_min_z',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') * -' + eyesHandleEyesSizeFactorDriverVariable.name + ' / (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') + ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'influence',
+        type='AVERAGE',
+        variables=[leftEyeHandleSpeedCorrectionDriverVariable],
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'from_max_x',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'to_max_x',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'from_min_x',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else -' + eyesHandleEyesSizeFactorDriverVariable.name + '',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'to_min_x',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') * -' + eyesHandleEyesSizeFactorDriverVariable.name + ' / (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') + ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocation,
+        'influence',
+        type='SCRIPTED',
+        variables=[eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, eyeballsTrackSpeedFactorDriverVariable],
+        expression=eyeballsSpeedFactorDriverVariable.name + ' * (1 - ' + eyeballsTrackTargetDriverVariable.name + ') + ' + eyeballsTrackSpeedFactorDriverVariable.name + ' * ' + eyeballsTrackTargetDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'influence',
+        type='SCRIPTED',
+        variables=[eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, leftEyeHandleSpeedCorrectionDriverVariable],
+        expression=leftEyeHandleSpeedCorrectionDriverVariable.name + ' * (1 - ' + eyeballsTrackTargetDriverVariable.name + ') * ' + eyeballsSpeedFactorDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'influence',
+        type='SCRIPTED',
+        variables=[eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, leftEyeHandleSpeedCorrectionDriverVariable],
+        expression=leftEyeHandleSpeedCorrectionDriverVariable.name + ' * (1 - ' + eyeballsTrackTargetDriverVariable.name + ') * ' + eyeballsSpeedFactorDriverVariable.name,
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'to_max_z',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10 / (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'to_max_x',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10 / (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'from_max_z_rot',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='radians(0) if (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else radians(180)',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'from_max_x_rot',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='radians(0) if (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else radians(180)',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'to_min_z',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') * -' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10 / (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') + ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'to_min_x',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') * -' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10 / (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') + ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'from_min_z_rot',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinXLocationDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='radians(0) if (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else radians(-180)',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'from_min_x_rot',
+        type='SCRIPTED',
+        variables=[leftEyeHandleMinYLocationDriverVariable, rightEyeHandleMinYLocationDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='radians(0) if (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else radians(-180)',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocation,
+        'to_min_x',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression='-' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocation,
+        'to_max_x',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression=eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocation,
+        'to_min_z',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression='-' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        leftEyeHandleTransformationConstraintEyeballLocation,
+        'to_max_z',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression=eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        rightEyeHandleLimitLocationConstraint,
+        'min_x',
+        type='AVERAGE',
+        variables=[rightEyeHandleMinXLocationDriverVariable],
+    )
+    drivers.add(
+        rightEyeHandleLimitLocationConstraint,
+        'max_x',
+        type='AVERAGE',
+        variables=[rightEyeHandleMaxXLocationDriverVariable],
+    )
+    drivers.add(
+        rightEyeHandleLimitLocationConstraint,
+        'min_y',
+        type='AVERAGE',
+        variables=[rightEyeHandleMinYLocationDriverVariable],
+    )
+    drivers.add(
+        rightEyeHandleLimitLocationConstraint,
+        'max_y',
+        type='AVERAGE',
+        variables=[rightEyeHandleMaxYLocationDriverVariable],
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'to_max_z',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleLimitLocationConstraint,
+        'influence',
+        type='AVERAGE',
+        variables=[rightEyeHandleLimitLocationDriverVariable],
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'influence',
+        type='AVERAGE',
+        variables=[rightEyeHandleSpeedCorrectionDriverVariable],
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'from_max_z',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'from_min_z',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else -' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'to_min_z',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') * -' + eyesHandleEyesSizeFactorDriverVariable.name + ' / (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') + ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'influence',
+        type='AVERAGE',
+        variables=[rightEyeHandleSpeedCorrectionDriverVariable],
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'from_max_x',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMax,
+        'to_max_x',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'from_min_x',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMinYLocationDriverVariable, leftEyeHandleMinYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else -' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintHandleLocationCorrectionMin,
+        'to_min_x',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMinYLocationDriverVariable, leftEyeHandleMinYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') * -' + eyesHandleEyesSizeFactorDriverVariable.name + ' / (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') + ' + eyesHandleEyesSizeFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocation,
+        'influence',
+        type='SCRIPTED',
+        variables=[eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, eyeballsTrackSpeedFactorDriverVariable],
+        expression=eyeballsSpeedFactorDriverVariable.name + ' * (1 - ' + eyeballsTrackTargetDriverVariable.name + ') + ' + eyeballsTrackSpeedFactorDriverVariable.name + ' * ' + eyeballsTrackTargetDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'influence',
+        type='SCRIPTED',
+        variables=[eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, rightEyeHandleSpeedCorrectionDriverVariable],
+        expression=rightEyeHandleSpeedCorrectionDriverVariable.name + ' * (1 - ' + eyeballsTrackTargetDriverVariable.name + ') * ' + eyeballsSpeedFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'influence',
+        type='SCRIPTED',
+        variables=[eyeballsSpeedFactorDriverVariable, eyeballsTrackTargetDriverVariable, rightEyeHandleSpeedCorrectionDriverVariable],
+        expression=rightEyeHandleSpeedCorrectionDriverVariable.name + ' * (1 - ' + eyeballsTrackTargetDriverVariable.name + ') * ' + eyeballsSpeedFactorDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'to_max_z',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10 / (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') - ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'to_max_x',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10 / (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') - ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'from_max_z_rot',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='radians(0) if (' + rightEyeHandleMaxXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - (' + leftEyeHandleMaxXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else radians(180)',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMax,
+        'from_max_x_rot',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMaxYLocationDriverVariable, leftEyeHandleMaxYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='radians(0) if (' + rightEyeHandleMaxYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - (' + leftEyeHandleMaxYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') <= 0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else radians(180)',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'to_min_z',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') * -' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10 / (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') + ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'to_min_x',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMinYLocationDriverVariable, leftEyeHandleMinYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='0 if (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') * -' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10 / (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') + ' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'from_min_z_rot',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='radians(0) if (' + rightEyeHandleMinXLocationDriverVariable.name + ' + ' + rightEyeHandleHeadDistanceXDriverVariable.name + ') - (' + leftEyeHandleMinXLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceXDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else radians(-180)',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocationCorrectionMin,
+        'from_min_x_rot',
+        type='SCRIPTED',
+        variables=[rightEyeHandleMinYLocationDriverVariable, leftEyeHandleMinYLocationDriverVariable, rightEyeHandleHeadDistanceYDriverVariable, leftEyeHandleHeadDistanceYDriverVariable, eyesHandleEyesSizeFactorDriverVariable],
+        expression='radians(0) if (' + rightEyeHandleMinYLocationDriverVariable.name + ' - ' + rightEyeHandleHeadDistanceYDriverVariable.name + ') - (' + leftEyeHandleMinYLocationDriverVariable.name + ' - ' + leftEyeHandleHeadDistanceYDriverVariable.name + ') >= -0.000001 * ' + eyesHandleEyesSizeFactorDriverVariable.name + ' else radians(-180)',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocation,
+        'to_min_x',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression='-' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocation,
+        'to_max_x',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression=eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocation,
+        'to_min_z',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression='-' + eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        rightEyeHandleTransformationConstraintEyeballLocation,
+        'to_max_z',
+        type='SCRIPTED',
+        variables=[eyesHandleEyesSizeFactorDriverVariable],
+        expression=eyesHandleEyesSizeFactorDriverVariable.name + ' / 10',
+    )
+    drivers.add(
+        eyesTrackTargetParentArmatureConstraint.targets[0],
+        'weight',
+        type='AVERAGE',
+        variables=[eyesTrackTargetParentToHeadDriverVariable],
+    )
+    drivers.add(
+        eyesTrackTargetParentArmatureConstraint.targets[1],
+        'weight',
+        type='AVERAGE',
+        variables=[eyesTrackTargetParentToTorsoDriverVariable],
+    )
+    drivers.add(
+        eyesTrackTargetParentArmatureConstraint.targets[2],
+        'weight',
+        type='AVERAGE',
+        variables=[eyesTrackTargetParentToRootDriverVariable],
+    )
+    drivers.add(
+        eyeballsCopyRotationConstraintTrack,
+        'influence',
+        type='AVERAGE',
+        variables=[eyeballsTrackTargetDriverVariable],
+    )
+    drivers.add(
+        leftEyeballCopyRotationConstraintTrack,
+        'influence',
+        type='SCRIPTED',
+        variables=[eyeballsTrackTargetDriverVariable, eyeballsNearbyTargetTrackCorrectionDriverVariable],
+        expression=eyeballsTrackTargetDriverVariable.name + ' * ' + eyeballsNearbyTargetTrackCorrectionDriverVariable.name,
+    )
+    drivers.add(
+        rightEyeballCopyRotationConstraintTrack,
+        'influence',
+        type='SCRIPTED',
+        variables=[eyeballsTrackTargetDriverVariable, eyeballsNearbyTargetTrackCorrectionDriverVariable],
+        expression=eyeballsTrackTargetDriverVariable.name + ' * ' + eyeballsNearbyTargetTrackCorrectionDriverVariable.name,
+    )
+    drivers.add(
+        metarig.pose.bones[names.LEFT_EYEBALL_TRACK_CORRECTION_BONE],
+        'rotation_quaternion',
+        type='SCRIPTED',
+        variables=[leftEyeballRightEyeHandleMarkerDistanceDriverVariable, leftEyeballEyesTrackTargetDistanceDriverVariable, eyeballsTrackBoneRotationZDriverVariable, leftEyeballTrackBoneRotationZDriverVariable, leftEyeHandleSpeedCorrectionDriverVariable, leftEyeHandleMaxXLocationDriverVariable, rightEyeHandleMaxXLocationDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, eyeballsNearbyTargetSizeFactorDriverVariable],
+        expression='0 if ' + leftEyeballRightEyeHandleMarkerDistanceDriverVariable.name + '-' + leftEyeballEyesTrackTargetDistanceDriverVariable.name + '<=0 else (radians(-45)+' + leftEyeballTrackBoneRotationZDriverVariable.name + ')*(' + leftEyeballRightEyeHandleMarkerDistanceDriverVariable.name + '-' + leftEyeballEyesTrackTargetDistanceDriverVariable.name + ')/' + eyeballsNearbyTargetSizeFactorDriverVariable.name + '*(' + eyeballsTrackBoneRotationZDriverVariable.name + '-' + leftEyeballTrackBoneRotationZDriverVariable.name + ')*20*(1 if (' + leftEyeHandleMaxXLocationDriverVariable.name + '-' + leftEyeHandleHeadDistanceXDriverVariable.name + ')-(' + rightEyeHandleMaxXLocationDriverVariable.name + '+' + rightEyeHandleHeadDistanceXDriverVariable.name + ')<=0.000001 else 1+' + leftEyeHandleSpeedCorrectionDriverVariable.name + '*(' + leftEyeHandleMaxXLocationDriverVariable.name + '-' + leftEyeHandleHeadDistanceXDriverVariable.name + ')/(' + rightEyeHandleMaxXLocationDriverVariable.name + '+' + rightEyeHandleHeadDistanceXDriverVariable.name + '))',
+        index=3,
+    )
+    drivers.add(
+        metarig.pose.bones[names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE],
+        'rotation_quaternion',
+        type='SCRIPTED',
+        variables=[rightEyeballRightEyeHandleMarkerDistanceDriverVariable, rightEyeballEyesTrackTargetDistanceDriverVariable, eyeballsTrackBoneRotationZDriverVariable, rightEyeballTrackBoneRotationZDriverVariable, rightEyeHandleSpeedCorrectionDriverVariable, rightEyeHandleMinXLocationDriverVariable, leftEyeHandleMinXLocationDriverVariable, rightEyeHandleHeadDistanceXDriverVariable, leftEyeHandleHeadDistanceXDriverVariable, eyeballsNearbyTargetSizeFactorDriverVariable],
+        expression='0 if ' + rightEyeballRightEyeHandleMarkerDistanceDriverVariable.name + '-' + rightEyeballEyesTrackTargetDistanceDriverVariable.name + '<=0 else (radians(45)+' + rightEyeballTrackBoneRotationZDriverVariable.name + ')*(' + rightEyeballRightEyeHandleMarkerDistanceDriverVariable.name + '-' + rightEyeballEyesTrackTargetDistanceDriverVariable.name + ')/' + eyeballsNearbyTargetSizeFactorDriverVariable.name + '*(' + rightEyeballTrackBoneRotationZDriverVariable.name + '-' + eyeballsTrackBoneRotationZDriverVariable.name + ')*20*(1 if (' + rightEyeHandleMinXLocationDriverVariable.name + '+' + rightEyeHandleHeadDistanceXDriverVariable.name + ')-(' + leftEyeHandleMinXLocationDriverVariable.name + '-' + leftEyeHandleHeadDistanceXDriverVariable.name + ')>=-0.000001 else 1+' + rightEyeHandleSpeedCorrectionDriverVariable.name + '*(' + rightEyeHandleMinXLocationDriverVariable.name + '+' + rightEyeHandleHeadDistanceXDriverVariable.name + ')/(' + leftEyeHandleMinXLocationDriverVariable.name + '-' + leftEyeHandleHeadDistanceXDriverVariable.name + '))',
+        index=3,
+    )
+    drivers.add(
+        headTransformationConstraintHeadRotation,
+        'influence',
+        type='AVERAGE',
+        variables=[headTrackTargetDriverVariable],
+    )
+    drivers.add(
+        headLimitRotationConstraint,
+        'influence',
+        type='AVERAGE',
+        variables=[headTrackTargetLimitRotationDriverVariable],
+    )
+    drivers.add(
+        headLimitRotationConstraint,
+        'min_x',
+        type='SCRIPTED',
+        variables=[headTrackTargetMinXRotationDriverVariable],
+        expression='radians(' + headTrackTargetMinXRotationDriverVariable.name + ')',
+    )
+    drivers.add(
+        headLimitRotationConstraint,
+        'max_x',
+        type='SCRIPTED',
+        variables=[headTrackTargetMaxXRotationDriverVariable],
+        expression='radians(' + headTrackTargetMaxXRotationDriverVariable.name + ')',
+    )
+    drivers.add(
+        headLimitRotationConstraint,
+        'min_y',
+        type='SCRIPTED',
+        variables=[headTrackTargetMinYRotationDriverVariable],
+        expression='radians(' + headTrackTargetMinYRotationDriverVariable.name + ')',
+    )
+    drivers.add(
+        headLimitRotationConstraint,
+        'max_y',
+        type='SCRIPTED',
+        variables=[headTrackTargetMaxYRotationDriverVariable],
+        expression='radians(' + headTrackTargetMaxYRotationDriverVariable.name + ')',
+    )
+    drivers.add(
+        headLimitRotationConstraint,
+        'min_z',
+        type='SCRIPTED',
+        variables=[headTrackTargetMinZRotationDriverVariable],
+        expression='radians(' + headTrackTargetMinZRotationDriverVariable.name + ')',
+    )
+    drivers.add(
+        headLimitRotationConstraint,
+        'max_z',
+        type='SCRIPTED',
+        variables=[headTrackTargetMaxZRotationDriverVariable],
+        expression='radians(' + headTrackTargetMaxZRotationDriverVariable.name + ')',
+    )    
+    drivers.add(
+        headTrackTargetParentArmatureConstraint.targets[0],
+        'weight',
+        type='AVERAGE',
+        variables=[headTrackTargetParentToHeadDriverVariable],
+    )
+    drivers.add(
+        headTrackTargetParentArmatureConstraint.targets[1],
+        'weight',
+        type='AVERAGE',
+        variables=[headTrackTargetParentToTorsoDriverVariable],
+    )
+    drivers.add(
+        headTrackTargetParentArmatureConstraint.targets[2],
+        'weight',
+        type='AVERAGE',
+        variables=[headTrackTargetParentToRootDriverVariable],
+    )
     
         
     finalizeEyeballBone(metarig, names.EYEBALLS_BONE)
@@ -1831,7 +2965,14 @@ def finalizeHandleBone(isEyeHandleBone, rig, boneName, handleBoneName, widget):
         rig.pose.bones[handleBoneName].lock_rotation[0] = True
         rig.pose.bones[handleBoneName].lock_rotation[2] = True
         rig.pose.bones[handleBoneName].lock_scale[1] = True
-    koikatsuCommons.addCopyTransformsConstraint(rig, boneName, handleBoneName, 'REPLACE', 'LOCAL', names.COPY_TRANSFORMS_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX)
+    constraints.copy_transforms(
+        rig,
+        boneName,
+        handleBoneName,
+        name=names.COPY_TRANSFORMS_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX,
+        mix='REPLACE',
+        space='LOCAL',
+    )
 
 
 def finalizeEyeballBone(rig, boneName):
@@ -1843,7 +2984,7 @@ def finalizeEyeballBone(rig, boneName):
 def removeAllConstraints(rig, boneName):
     boneToEmpty = rig.pose.bones[boneName]
     for constraint in boneToEmpty.constraints:
-        koikatsuCommons.removeConstraint(rig, boneName, constraint.name)
+        constraints.remove(rig, boneName, constraint.name)
 
 
 def renameAllVertexGroups(build, vertexGroupNameOld, vertexGroupNameNew):

@@ -5,6 +5,7 @@ import bpy, math
 from mathutils import Vector
 from . import commons as koikatsuCommons
 from . import names
+from . import constraints, drivers
 from ...editing import switch
 from .bones import copy_tags, outfit_of
 from .finish import ground
@@ -90,11 +91,26 @@ def main(build):
     koikatsuCommons.setBoneCustomShapeScale(generatedRig, 'cf_j_kokan', 0.2)
 
     headBone = generatedRig.pose.bones[names.ORIGINAL_BONE_PREFIX + names.HEAD_BONE]
-    koikatsuCommons.changeConstraintIndex(generatedRig, headBone.name, names.TRANSFORMATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX + names.ROTATION_CONSTRAINT_SUFFIX, len(headBone.constraints) - 1)
-    koikatsuCommons.changeConstraintIndex(generatedRig, headBone.name, names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX, len(headBone.constraints) - 1)
+    constraints.move(
+        generatedRig,
+        headBone.name,
+        names.TRANSFORMATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX + names.ROTATION_CONSTRAINT_SUFFIX,
+        len(headBone.constraints) - 1,
+    )
+    constraints.move(
+        generatedRig,
+        headBone.name,
+        names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX,
+        len(headBone.constraints) - 1,
+    )
     
-    headTweakLimitRotationConstraint = koikatsuCommons.addLimitRotationConstraint(generatedRig, names.HEAD_TWEAK_BONE, None, 'LOCAL', names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX, 
-    True, math.radians(-180), math.radians(180), True, math.radians(-180), math.radians(180), True, math.radians(-180), math.radians(180))
+    headTweakLimitRotationConstraint = constraints.limit_rotation(
+        generatedRig,
+        names.HEAD_TWEAK_BONE,
+        name=names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX,
+        space='LOCAL',
+        limits=((math.radians(-180), math.radians(180)), (math.radians(-180), math.radians(180)), (math.radians(-180), math.radians(180))),
+    )
     
     for driver in generatedRig.animation_data.drivers:
         if driver.data_path.startswith("pose.bones"):
@@ -104,9 +120,20 @@ def main(build):
                 constraintName = driver.data_path.split('"')[3]
                 if constraintName == names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX:
                     variable = driver.driver.variables[0]
-                    newVariable = koikatsuCommons.DriverVariable(variable.name, variable.type, generatedRig, variable.targets[0].bone_target, None, None, None, None, variable.targets[0].data_path, None, None)																																											  
-                    koikatsuCommons.addDriver(headTweakLimitRotationConstraint, driverProperty, None, driver.driver.type, [newVariable], 
-                    driver.driver.expression)
+                    newVariable = drivers.Variable(
+                        variable.name,
+                        variable.type,
+                        generatedRig,
+                        bone=variable.targets[0].bone_target,
+                        data_path=variable.targets[0].data_path,
+                    )																																											  
+                    drivers.add(
+                        headTweakLimitRotationConstraint,
+                        driverProperty,
+                        type=driver.driver.type,
+                        variables=[newVariable],
+                        expression=driver.driver.expression,
+                    )
         
     for bone in generatedRig.pose.bones:
         for constraint in bone.constraints:
