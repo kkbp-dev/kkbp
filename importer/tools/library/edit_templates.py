@@ -55,6 +55,13 @@ def clamp(t, *slots):
         t.tree.nodes[f"tex.{slot}"].extension = "EXTEND"
 
 
+def clip(t, *slots):
+    """Nothing is drawn outside the texture (transparent), where `clamp` carries its edge pixels outward:
+    for a texture whose edge isn't transparent, like an emblem's."""
+    for slot in slots:
+        t.tree.nodes[f"tex.{slot}"].extension = "CLIP"
+
+
 def light_dark(t, node, light="Light", dark="Dark"):
     """Feeds a shader group's light and dark outputs to the grade."""
     t.link(node, light, "graded.light", "Color")

@@ -128,6 +128,20 @@ def test_each_template_gets_its_slots_and_colours(ch, id, template, slots, param
         assert tuple(value) != (0.0, 0.0, 0.0, 1.0) if hasattr(value, "__len__") else True, name
 
 
+def test_an_emblem_is_not_drawn_outside_its_texture(ch):
+    """Issue 72: the emblem's texture is clipped, so the emblem doesn't repeat over the clothes."""
+    edit = edit_material.edit(ch, ch.material("cf_m_emblem"), log=lambda *_: None)
+    assert templates.texture_node(edit, "main").extension == "CLIP"
+
+
+def test_a_baked_emblem_is_not_drawn_outside_its_texture_either(ch):
+    """Issue 72: the import clips the emblem's baked textures, and only the emblem's."""
+    def extensions(id):
+        return {templates.texture(ch.material(id), "main", variant).extension for variant in ("light", "dark")}
+    assert extensions("cf_m_emblem") == {"CLIP"}
+    assert extensions("cf_m_top_inner01") == {"REPEAT"}
+
+
 def test_nothing_saturates_by_default(ch):
     """ADR 0026: no KK Role saturates by default; the templates made from the game's shaders (the hair's
     and the clothes' since issue 30) grade in their nodes instead, and the legacy ones don't saturate."""
