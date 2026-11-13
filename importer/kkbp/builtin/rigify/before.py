@@ -12,7 +12,7 @@ from . import bones, constraints, drivers, meshes
 from ... import compat
 from ...editing import editing, switch
 from . import widgets
-from .metarig import accessories, deform, features, torso
+from .metarig import accessories, deform, features, limbs, torso
     
 def main(build):
     """Turns the Character's armature into the Rigify metarig, phase by phase. Each phase
@@ -32,7 +32,7 @@ def main(build):
         found = accessories.chains(build)
         accessories.tongue_side_bones(build)
         torso.head_and_hips(build)
-        _limbs(build)
+        limbs.limbs(build)
         accessories.skirt(build)
     _rigify_types(build)
     lists = _bone_lists(build, found)
@@ -1725,126 +1725,6 @@ def _eyes(build):
 
 
 
-def _limbs(build):
-    """The KK-only elbow, knee and wrist edits, palms and fingers, and the toes and ankles."""
-    metarig = build.metarig
-    if build.kk_extras:
-        leftShoulderJointCorrectionBone = metarig.data.edit_bones[names.LEFT_SHOULDER_JOINT_CORRECTION_BONE]
-        rightShoulderJointCorrectionBone = metarig.data.edit_bones[names.RIGHT_SHOULDER_JOINT_CORRECTION_BONE]
-        midLeftElbowJointCorrectionBone = metarig.data.edit_bones[names.MID_LEFT_ELBOW_JOINT_CORRECTION_BONE]
-        midRightElbowJointCorrectionBone = metarig.data.edit_bones[names.MID_RIGHT_ELBOW_JOINT_CORRECTION_BONE]
-        backLeftElbowJointCorrectionBone = metarig.data.edit_bones[names.BACK_LEFT_ELBOW_JOINT_CORRECTION_BONE]
-        backRightElbowJointCorrectionBone = metarig.data.edit_bones[names.BACK_RIGHT_ELBOW_JOINT_CORRECTION_BONE]
-        frontLeftElbowJointCorrectionBone = metarig.data.edit_bones[names.FRONT_LEFT_ELBOW_JOINT_CORRECTION_BONE]
-        frontRightElbowJointCorrectionBone = metarig.data.edit_bones[names.FRONT_RIGHT_ELBOW_JOINT_CORRECTION_BONE]
-    leftShoulderDeformBone = metarig.data.edit_bones[names.LEFT_SHOULDER_DEFORM_BONE]
-    rightShoulderDeformBone = metarig.data.edit_bones[names.RIGHT_SHOULDER_DEFORM_BONE]
-    leftArmBone = metarig.data.edit_bones[names.LEFT_ARM_BONE]
-    rightArmBone = metarig.data.edit_bones[names.RIGHT_ARM_BONE]
-    leftElbowBone = metarig.data.edit_bones[names.LEFT_ELBOW_BONE]
-    rightElbowBone = metarig.data.edit_bones[names.RIGHT_ELBOW_BONE]
-    if build.kk_extras:
-        leftElbowBone.head.y = midLeftElbowJointCorrectionBone.head.y + math.dist([midLeftElbowJointCorrectionBone.head.y], [frontLeftElbowJointCorrectionBone.head.y]) * 0.33
-        rightElbowBone.head.y = midRightElbowJointCorrectionBone.head.y + math.dist([midRightElbowJointCorrectionBone.head.y], [frontRightElbowJointCorrectionBone.head.y]) * 0.33
-        leftElbowBone.roll = radians(0)
-        rightElbowBone.roll = radians(0)
-        frontLeftElbowJointCorrectionBone.roll = radians(180)
-        backLeftElbowJointCorrectionBone.roll = radians(180)
-        leftShoulderJointCorrectionBone.tail = leftArmBone.tail
-        rightShoulderJointCorrectionBone.tail = rightArmBone.tail
-        leftShoulderJointCorrectionBone.roll = radians(90)
-        rightShoulderJointCorrectionBone.roll = radians(-90)
-        leftShoulderDeformBone.tail = leftArmBone.tail
-        rightShoulderDeformBone.tail = rightArmBone.tail
-        leftShoulderDeformBone.roll = radians(90)
-        rightShoulderDeformBone.roll = radians(-90)
-        leftWristBone = metarig.data.edit_bones[names.LEFT_WRIST_BONE]
-        rightWristBone = metarig.data.edit_bones[names.RIGHT_WRIST_BONE]
-        leftWristBone.head.y = midLeftElbowJointCorrectionBone.head.y - math.dist([midLeftElbowJointCorrectionBone.head.y], [backLeftElbowJointCorrectionBone.head.y]) * 0.15
-        rightWristBone.head.y = midRightElbowJointCorrectionBone.head.y - math.dist([midRightElbowJointCorrectionBone.head.y], [backRightElbowJointCorrectionBone.head.y]) * 0.15
-        if leftWristBone.tail.z != leftWristBone.head.z:
-            leftWristBone.tail.y = leftWristBone.head.y
-            leftWristBone.tail.z = leftWristBone.head.z
-            leftWristGroupExtremities = meshes.group_bounds(build.body, names.LEFT_WRIST_DEFORM_BONE)
-            leftWristBone.tail.x = leftWristGroupExtremities.min_x + math.dist([leftWristGroupExtremities.min_x], [leftWristGroupExtremities.max_x]) * 0.66
-        if rightWristBone.tail.z != rightWristBone.head.z:
-            rightWristBone.tail.y = rightWristBone.head.y
-            rightWristBone.tail.z = rightWristBone.head.z
-            rightWristGroupExtremities = meshes.group_bounds(build.body, names.RIGHT_WRIST_DEFORM_BONE)
-            rightWristBone.tail.x = rightWristGroupExtremities.max_x - math.dist([rightWristGroupExtremities.min_x], [rightWristGroupExtremities.max_x]) * 0.66
-    leftToeBone = metarig.data.edit_bones[names.LEFT_TOE_BONE]
-    rightToeBone = metarig.data.edit_bones[names.RIGHT_TOE_BONE]
-    leftToeBone.tail.z = leftToeBone.head.z
-    rightToeBone.tail.z = rightToeBone.head.z
-    leftToeBone.tail.y = meshes.group_bounds(build.body, names.LEFT_TOE_DEFORM_BONE).min_y
-    rightToeBone.tail.y = meshes.group_bounds(build.body, names.RIGHT_TOE_DEFORM_BONE).min_y
-    leftAnkleGroupExtremities = meshes.group_bounds(build.body, names.LEFT_ANKLE_DEFORM_BONE)
-    rightAnkleGroupExtremities = meshes.group_bounds(build.body, names.RIGHT_ANKLE_DEFORM_BONE)
-    if build.kk_extras:
-        midLeftKneeJointCorrectionBone = metarig.data.edit_bones[names.MID_LEFT_KNEE_JOINT_CORRECTION_BONE]
-        midRightKneeJointCorrectionBone = metarig.data.edit_bones[names.MID_RIGHT_KNEE_JOINT_CORRECTION_BONE]
-        backLeftKneeJointCorrectionBone = metarig.data.edit_bones[names.BACK_LEFT_KNEE_JOINT_CORRECTION_BONE]
-        backRightKneeJointCorrectionBone = metarig.data.edit_bones[names.BACK_RIGHT_KNEE_JOINT_CORRECTION_BONE]
-        metarig.data.edit_bones[names.LEFT_LEG_BONE].head.y = midLeftKneeJointCorrectionBone.head.y + math.dist([midLeftKneeJointCorrectionBone.head.y], [backLeftKneeJointCorrectionBone.head.y]) * 0.33
-        metarig.data.edit_bones[names.RIGHT_LEG_BONE].head.y = midRightKneeJointCorrectionBone.head.y + math.dist([midRightKneeJointCorrectionBone.head.y], [backRightKneeJointCorrectionBone.head.y]) * 0.33
-    leftHeelBone = bones.copy_bone(metarig, names.ORIGINAL_LEFT_HEEL_BONE, names.LEFT_HEEL_BONE)
-    rightHeelBone = bones.copy_bone(metarig, names.ORIGINAL_RIGHT_HEEL_BONE, names.RIGHT_HEEL_BONE)
-    leftHeelBone.head.x = leftAnkleGroupExtremities.min_x
-    rightHeelBone.head.x = rightAnkleGroupExtremities.max_x
-    leftHeelBone.head.y = leftAnkleGroupExtremities.max_y
-    rightHeelBone.head.y = rightAnkleGroupExtremities.max_y
-    leftHeelBone.head.z = leftAnkleGroupExtremities.min_z
-    rightHeelBone.head.z = rightAnkleGroupExtremities.min_z
-    leftHeelBone.tail.x = leftAnkleGroupExtremities.max_x
-    rightHeelBone.tail.x = rightAnkleGroupExtremities.min_x
-    leftHeelBone.tail.y = leftAnkleGroupExtremities.max_y
-    rightHeelBone.tail.y = rightAnkleGroupExtremities.max_y
-    leftHeelBone.tail.z = leftAnkleGroupExtremities.min_z
-    rightHeelBone.tail.z = rightAnkleGroupExtremities.min_z
-    leftHeelBone.parent = metarig.data.edit_bones[names.LEFT_ANKLE_BONE]
-    rightHeelBone.parent = metarig.data.edit_bones[names.RIGHT_ANKLE_BONE]
-    leftAnkleBone = metarig.data.edit_bones[names.LEFT_ANKLE_BONE]
-    rightAnkleBone = metarig.data.edit_bones[names.RIGHT_ANKLE_BONE]
-    originalLeftLegDeformBone3 = metarig.data.edit_bones[names.ORIGINAL_LEFT_LEG_DEFORM_BONE3]
-    originalRightLegDeformBone3 = metarig.data.edit_bones[names.ORIGINAL_RIGHT_LEG_DEFORM_BONE3]
-    leftAnkleBone.head.z = leftAnkleBone.tail.z + math.dist([leftAnkleBone.tail.z], [originalLeftLegDeformBone3.head.z]) * 0.7
-    rightAnkleBone.head.z = rightAnkleBone.tail.z + math.dist([rightAnkleBone.tail.z], [originalRightLegDeformBone3.head.z]) * 0.7
-    leftAnkleBone.head.y = originalLeftLegDeformBone3.head.y + math.dist([originalLeftLegDeformBone3.head.y], [leftHeelBone.head.y]) * 0.2
-    rightAnkleBone.head.y = originalRightLegDeformBone3.head.y + math.dist([originalRightLegDeformBone3.head.y], [rightHeelBone.head.y]) * 0.2
-    
-    
-    leftIndexFingerBone1 = metarig.data.edit_bones[names.LEFT_INDEX_FINGER_BONE1]
-    rightIndexFingerBone1 = metarig.data.edit_bones[names.RIGHT_INDEX_FINGER_BONE1]
-    leftMiddleFingerBone1 = metarig.data.edit_bones[names.LEFT_MIDDLE_FINGER_BONE1]
-    rightMiddleFingerBone1 = metarig.data.edit_bones[names.RIGHT_MIDDLE_FINGER_BONE1]
-    leftRingFingerBone1 = metarig.data.edit_bones[names.LEFT_RING_FINGER_BONE1]
-    rightRingFingerBone1 = metarig.data.edit_bones[names.RIGHT_RING_FINGER_BONE1]
-    leftLittleFingerBone1 = metarig.data.edit_bones[names.LEFT_LITTLE_FINGER_BONE1]
-    rightLittleFingerBone1 = metarig.data.edit_bones[names.RIGHT_LITTLE_FINGER_BONE1]
-    if build.kk_extras:
-        leftPalmMinX = leftWristBone.tail.x - math.dist([leftWristBone.head.x], [leftWristBone.tail.x]) * 0.85
-        rightPalmMaxX = rightWristBone.tail.x + math.dist([rightWristBone.head.x], [rightWristBone.tail.x]) * 0.85
-        createPalmVertexGroups(build, names.LEFT_WRIST_DEFORM_BONE, names.LEFT_INDEX_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftIndexFingerBone1.head.y, None, leftMiddleFingerBone1.head.y)
-        createPalmVertexGroups(build, names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_INDEX_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightIndexFingerBone1.head.y, None, rightMiddleFingerBone1.head.y)
-        createPalmVertexGroups(build, names.LEFT_WRIST_DEFORM_BONE, names.LEFT_MIDDLE_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftMiddleFingerBone1.head.y, None, leftRingFingerBone1.head.y)
-        createPalmVertexGroups(build, names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_MIDDLE_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightMiddleFingerBone1.head.y, None, rightRingFingerBone1.head.y)
-        createPalmVertexGroups(build, names.LEFT_WRIST_DEFORM_BONE, names.LEFT_RING_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftRingFingerBone1.head.y, None, leftLittleFingerBone1.head.y)
-        createPalmVertexGroups(build, names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_RING_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightRingFingerBone1.head.y, None, rightLittleFingerBone1.head.y)
-        createPalmVertexGroups(build, names.LEFT_WRIST_DEFORM_BONE, names.LEFT_LITTLE_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftLittleFingerBone1.head.y, None, None)
-        createPalmVertexGroups(build, names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_LITTLE_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightLittleFingerBone1.head.y, None, None)
-    
-    
-    if build.kk_extras:
-        finalizeFingerBones(True, metarig, names.LEFT_WRIST_BONE, names.LEFT_INDEX_FINGER_PALM_BONE, names.LEFT_INDEX_FINGER_BONE1, names.LEFT_INDEX_FINGER_BONE2, names.LEFT_INDEX_FINGER_BONE3, names.LEFT_INDEX_FINGER_DEFORM_BONE1, names.LEFT_INDEX_FINGER_DEFORM_BONE2, names.LEFT_INDEX_FINGER_DEFORM_BONE3, build.body, radians(0), radians(0), radians(5), radians(10))
-        finalizeFingerBones(False, metarig, names.RIGHT_WRIST_BONE, names.RIGHT_INDEX_FINGER_PALM_BONE, names.RIGHT_INDEX_FINGER_BONE1, names.RIGHT_INDEX_FINGER_BONE2, names.RIGHT_INDEX_FINGER_BONE3, names.RIGHT_INDEX_FINGER_DEFORM_BONE1, names.RIGHT_INDEX_FINGER_DEFORM_BONE2, names.RIGHT_INDEX_FINGER_DEFORM_BONE3, build.body, radians(0), radians(0), radians(-5), radians(-10))
-        finalizeFingerBones(True, metarig, names.LEFT_WRIST_BONE, names.LEFT_MIDDLE_FINGER_PALM_BONE, names.LEFT_MIDDLE_FINGER_BONE1, names.LEFT_MIDDLE_FINGER_BONE2, names.LEFT_MIDDLE_FINGER_BONE3, names.LEFT_MIDDLE_FINGER_DEFORM_BONE1, names.LEFT_MIDDLE_FINGER_DEFORM_BONE2, names.LEFT_MIDDLE_FINGER_DEFORM_BONE3, build.body, radians(0), radians(-10), radians(-2), radians(6), True)
-        finalizeFingerBones(False, metarig, names.RIGHT_WRIST_BONE, names.RIGHT_MIDDLE_FINGER_PALM_BONE, names.RIGHT_MIDDLE_FINGER_BONE1, names.RIGHT_MIDDLE_FINGER_BONE2, names.RIGHT_MIDDLE_FINGER_BONE3, names.RIGHT_MIDDLE_FINGER_DEFORM_BONE1, names.RIGHT_MIDDLE_FINGER_DEFORM_BONE2, names.RIGHT_MIDDLE_FINGER_DEFORM_BONE3, build.body, radians(0), radians(10), radians(2), radians(-6), True)
-        finalizeFingerBones(True, metarig, names.LEFT_WRIST_BONE, names.LEFT_RING_FINGER_PALM_BONE, names.LEFT_RING_FINGER_BONE1, names.LEFT_RING_FINGER_BONE2, names.LEFT_RING_FINGER_BONE3, names.LEFT_RING_FINGER_DEFORM_BONE1, names.LEFT_RING_FINGER_DEFORM_BONE2, names.LEFT_RING_FINGER_DEFORM_BONE3, build.body, radians(0), radians(-15), radians(-10), radians(-5))
-        finalizeFingerBones(False, metarig, names.RIGHT_WRIST_BONE, names.RIGHT_RING_FINGER_PALM_BONE, names.RIGHT_RING_FINGER_BONE1, names.RIGHT_RING_FINGER_BONE2, names.RIGHT_RING_FINGER_BONE3, names.RIGHT_RING_FINGER_DEFORM_BONE1, names.RIGHT_RING_FINGER_DEFORM_BONE2, names.RIGHT_RING_FINGER_DEFORM_BONE3, build.body, radians(0), radians(15), radians(10), radians(5))
-        finalizeFingerBones(True, metarig, names.LEFT_WRIST_BONE, names.LEFT_LITTLE_FINGER_PALM_BONE, names.LEFT_LITTLE_FINGER_BONE1, names.LEFT_LITTLE_FINGER_BONE2, names.LEFT_LITTLE_FINGER_BONE3, names.LEFT_LITTLE_FINGER_DEFORM_BONE1, names.LEFT_LITTLE_FINGER_DEFORM_BONE2, names.LEFT_LITTLE_FINGER_DEFORM_BONE3, build.body, radians(0), radians(-20), radians(-18), radians(-16))
-        finalizeFingerBones(False, metarig, names.RIGHT_WRIST_BONE, names.RIGHT_LITTLE_FINGER_PALM_BONE, names.RIGHT_LITTLE_FINGER_BONE1, names.RIGHT_LITTLE_FINGER_BONE2, names.RIGHT_LITTLE_FINGER_BONE3, names.RIGHT_LITTLE_FINGER_DEFORM_BONE1, names.RIGHT_LITTLE_FINGER_DEFORM_BONE2, names.RIGHT_LITTLE_FINGER_DEFORM_BONE3, build.body, radians(0), radians(20), radians(18), radians(16))
-        finalizeFingerBones(True, metarig, names.LEFT_WRIST_BONE, names.LEFT_INDEX_FINGER_PALM_BONE, names.LEFT_THUMB_BONE1, names.LEFT_THUMB_BONE2, names.LEFT_THUMB_BONE3, names.LEFT_THUMB_DEFORM_BONE1, names.LEFT_THUMB_DEFORM_BONE2, names.LEFT_THUMB_DEFORM_BONE3, build.body, None, radians(-257), radians(-260), radians(-263), False, True)
-        finalizeFingerBones(False, metarig, names.RIGHT_WRIST_BONE, names.RIGHT_INDEX_FINGER_PALM_BONE, names.RIGHT_THUMB_BONE1, names.RIGHT_THUMB_BONE2, names.RIGHT_THUMB_BONE3, names.RIGHT_THUMB_DEFORM_BONE1, names.RIGHT_THUMB_DEFORM_BONE2, names.RIGHT_THUMB_DEFORM_BONE3, build.body, None, radians(-103), radians(-106), radians(-109), False, True)
 
 
     
@@ -2646,77 +2526,8 @@ def finalizeEyeballBone(rig, boneName):
 
 
 
-def createPalmVertexGroups(build, wristVertexGroupName, palmVertexGroupName, rightSide, palmMinX, palmMaxX, palmMidY, lowerPalmMidY, higherPalmMidY):
-    for object in build.meshes(): 
-        if object.type == 'MESH':
-            wristVertexGroup = object.vertex_groups.get(wristVertexGroupName)
-            if wristVertexGroup is not None:
-                wristVertexGroupExtremities = meshes.group_bounds(object, wristVertexGroupName)
-                palmVertexGroup = object.vertex_groups.get(palmVertexGroupName)
-                if palmVertexGroup is None:
-                    palmVertexGroup = object.vertex_groups.new(name = palmVertexGroupName)
-                for vertex in wristVertexGroupExtremities.vertices:
-                    if (not rightSide and wristVertexGroupExtremities.coordinates[vertex.index][0] > palmMinX) or (rightSide and wristVertexGroupExtremities.coordinates[vertex.index][0] < palmMaxX):
-                        if lowerPalmMidY is None or math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [palmMidY]) < math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [lowerPalmMidY]):
-                            if higherPalmMidY is None or math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [palmMidY]) < math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [higherPalmMidY]):
-                                palmVertexGroup.add([vertex.index], wristVertexGroup.weight(vertex.index), 'REPLACE')
-                                wristVertexGroup.remove([vertex.index])
 
 
-def finalizeFingerBones(leftSide, rig, wristBoneName, fingerPalmBoneName, fingerBone1Name, fingerBone2Name, fingerBone3Name, fingerDeformBone1Name, fingerDeformBone2Name, fingerDeformBone3Name, mesh, palmBoneRoll, fingerBone1Roll, fingerBone2Roll, fingerBone3Roll, middle = False, thumb = False):
-    fingerBone1 = rig.data.edit_bones[fingerBone1Name]
-    fingerBone2 = rig.data.edit_bones[fingerBone2Name]
-    fingerBone3 = rig.data.edit_bones[fingerBone3Name]
-    fingerDeformBone1Extremities = meshes.group_bounds(mesh, fingerDeformBone1Name)
-    fingerDeformBone2Extremities = meshes.group_bounds(mesh, fingerDeformBone2Name)
-    fingerDeformBone3Extremities = meshes.group_bounds(mesh, fingerDeformBone3Name)
-    if not thumb:
-        if not middle:
-            fingerBone1.head.z = fingerDeformBone1Extremities.min_z + math.dist([fingerDeformBone1Extremities.min_z], [fingerDeformBone1Extremities.max_z]) * 0.4
-        else:
-            fingerBone1.head.z = fingerDeformBone1Extremities.min_z + math.dist([fingerDeformBone1Extremities.min_z], [fingerDeformBone1Extremities.max_z]) * 0.5
-        fingerBone2.head.z = fingerDeformBone2Extremities.min_z + math.dist([fingerDeformBone2Extremities.min_z], [fingerDeformBone2Extremities.max_z]) * 0.6
-        fingerBone3.head.z = fingerDeformBone3Extremities.min_z + math.dist([fingerDeformBone3Extremities.min_z], [fingerDeformBone3Extremities.max_z]) * 0.6
-        if leftSide:
-            fingerBone3.tail.x = fingerDeformBone3Extremities.min_x + math.dist([fingerDeformBone3Extremities.min_x], [fingerDeformBone3Extremities.max_x]) * 0.95
-        else:
-            fingerBone3.tail.x = fingerDeformBone3Extremities.max_x - math.dist([fingerDeformBone3Extremities.min_x], [fingerDeformBone3Extremities.max_x]) * 0.95
-        fingerBone3.tail.y = fingerBone3.head.y + (fingerBone2.tail.y - fingerBone2.head.y)
-        fingerBone3.tail.z = fingerDeformBone3Extremities.min_z + math.dist([fingerDeformBone3Extremities.min_z], [fingerDeformBone3Extremities.max_z]) * 0.4
-        wristBone = rig.data.edit_bones[wristBoneName]
-        fingerPalmBone = bones.copy_bone(rig, fingerBone1Name, fingerPalmBoneName)
-        fingerPalmBone.parent = rig.data.edit_bones[wristBoneName]
-        accessories.connect(rig, fingerBone1Name, fingerPalmBoneName, False)            
-        fingerPalmBone.head.z = fingerPalmBone.tail.z
-        if leftSide:
-            fingerPalmBone.head.x = wristBone.tail.x - math.dist([wristBone.tail.x], [wristBone.head.x]) * 0.6
-        else:
-            fingerPalmBone.head.x = wristBone.tail.x + math.dist([wristBone.tail.x], [wristBone.head.x]) * 0.6
-        fingerPalmBone.head.y = fingerPalmBone.head.y + (fingerBone1.head.y - fingerBone1.tail.y)
-        fingerPalmBone.roll = palmBoneRoll
-    else:
-        if leftSide:
-            fingerBone1.head.x = fingerDeformBone1Extremities.min_x + math.dist([fingerDeformBone1Extremities.min_x], [fingerDeformBone1Extremities.max_x]) * 0.2
-            fingerBone2.head.x = fingerDeformBone2Extremities.min_x + math.dist([fingerDeformBone2Extremities.min_x], [fingerDeformBone2Extremities.max_x]) * 0.5
-            fingerBone3.head.x = fingerDeformBone3Extremities.min_x + math.dist([fingerDeformBone3Extremities.min_x], [fingerDeformBone3Extremities.max_x]) * 0.4
-            fingerBone3.tail.x = fingerDeformBone3Extremities.min_x + math.dist([fingerDeformBone3Extremities.min_x], [fingerDeformBone3Extremities.max_x]) * 0.95
-        else:
-            fingerBone1.head.x = fingerDeformBone1Extremities.max_x - math.dist([fingerDeformBone1Extremities.min_x], [fingerDeformBone1Extremities.max_x]) * 0.2
-            fingerBone2.head.x = fingerDeformBone2Extremities.max_x - math.dist([fingerDeformBone2Extremities.min_x], [fingerDeformBone2Extremities.max_x]) * 0.5
-            fingerBone3.head.x = fingerDeformBone3Extremities.max_x - math.dist([fingerDeformBone3Extremities.min_x], [fingerDeformBone3Extremities.max_x]) * 0.4
-            fingerBone3.tail.x = fingerDeformBone3Extremities.max_x - math.dist([fingerDeformBone3Extremities.min_x], [fingerDeformBone3Extremities.max_x]) * 0.95
-        fingerBone1.head.y = fingerDeformBone1Extremities.min_y + math.dist([fingerDeformBone1Extremities.min_y], [fingerDeformBone1Extremities.max_y]) * 0.45
-        fingerBone1.head.z = fingerDeformBone1Extremities.min_z + math.dist([fingerDeformBone1Extremities.min_z], [fingerDeformBone1Extremities.max_z]) * 0.35
-        fingerBone2.head.y = fingerDeformBone2Extremities.min_y + math.dist([fingerDeformBone2Extremities.min_y], [fingerDeformBone2Extremities.max_y]) * 0.35
-        fingerBone2.head.z = fingerDeformBone2Extremities.min_z + math.dist([fingerDeformBone2Extremities.min_z], [fingerDeformBone2Extremities.max_z]) * 0.3
-        fingerBone3.head.y = fingerDeformBone3Extremities.min_y + math.dist([fingerDeformBone3Extremities.min_y], [fingerDeformBone3Extremities.max_y]) * 0.4
-        fingerBone3.head.z = fingerDeformBone3Extremities.min_z + math.dist([fingerDeformBone3Extremities.min_z], [fingerDeformBone3Extremities.max_z]) * 0.45
-        fingerBone3.tail.y = fingerDeformBone3Extremities.min_y + math.dist([fingerDeformBone3Extremities.min_y], [fingerDeformBone3Extremities.max_y]) * 0.1
-        fingerBone3.tail.z = fingerDeformBone3Extremities.min_z + math.dist([fingerDeformBone3Extremities.min_z], [fingerDeformBone3Extremities.max_z]) * 0.25
-        fingerBone1.parent = rig.data.edit_bones[fingerPalmBoneName]
-    fingerBone1.roll = fingerBone1Roll
-    fingerBone2.roll = fingerBone2Roll
-    fingerBone3.roll = fingerBone3Roll
 
 
 def finalizeFingerBoneParameters(build, rig, fingerBone1Name, fingerBone2Name, fingerBone3Name):
