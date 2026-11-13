@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # Runs the importer's tests: the host tests (bundle/, profiles/, library/ and source rules) and the
 # harness's own unit tests on importer/.venv's Python, which is Blender's own interpreter; then the
-# in-Blender tests on every harness build in an isolated profile; then the Core Import of every
-# Golden Sample on every build, the same with every built-in Hook, and each Hook on its own (each
-# fails if an import or a Hook fails, or a Hook changes what it doesn't own). Needs
+# in-Blender tests on every harness build in an isolated profile, the builds at the same time; then,
+# in one queue, the Core Import of every Golden Sample on every build, the same with every built-in
+# Hook, and each Hook on its own (run.py all: each fails if an import or a Hook fails, a summary
+# differs from its snapshot, or a Hook changes what it doesn't own). Needs
 # scripts/setup-importer-dev.sh to have run once, and the Golden Samples from
 # scripts/export-sample.sh; tests of a Game with no Golden Sample are skipped, with a notice.
 #
@@ -31,11 +32,7 @@ fi
 if (( blender )); then
   "$python" "$repo/importer/tests/blender/launch.py" "$@"
   if (( $# == 0 )); then
-    echo "== Golden samples, Core Import"
-    "$python" "$repo/importer/tests/harness/run.py" core
-    echo "== Golden samples, built-in Hooks"
-    "$python" "$repo/importer/tests/harness/run.py" hooks
-    echo "== Golden samples, each built-in Hook on its own"
-    "$python" "$repo/importer/tests/harness/run.py" hooks --each
+    echo "== Golden samples: the Core Import, every built-in Hook, and each built-in Hook on its own"
+    "$python" "$repo/importer/tests/harness/run.py" all
   fi
 fi
