@@ -53,9 +53,12 @@ def apply(ch, blender_material, bundle_material, *, pack: bool = True, warn=None
             bpy.data.materials.remove(blender_material)
             mat.name = bundle_material.id  # the placeholder had the name until now
 
+    emblem = "emblem" in (bundle_material.shader or "").rpartition("/")[2]
     for texture, slot in textures:
         if texture.pattern is None and slot in template.textures:
             set_texture(ch, mat, slot, texture, owner=bundle_material.id, pack=pack)
+            if emblem:  # drawn once: it doesn't repeat over the clothes (issue 72)
+                texture_node(mat, slot).extension = "CLIP"
     if template.patterns:
         _set_patterns(ch, mat, template, [t for t, slot in textures if t.pattern and slot == template.patterns.slot],
                       bundle_material.id, pack, warn)
