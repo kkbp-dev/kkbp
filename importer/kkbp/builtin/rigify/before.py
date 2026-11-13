@@ -11,8 +11,31 @@ from . import names
 from ... import compat
 from ...editing import switch
 from . import widgets
+from .build import Features
     
 def main(build):
+    """Turns the Character's armature into the Rigify metarig, phase by phase. Each phase
+    leaves Blender in the mode the next expects, as the one long function did."""
+    _reserved_names(build)
+    _features(build)
+    _eye_and_body_bones(build)
+    _widgets_and_handles(build)
+    _eyes(build)
+    _rigify_layers(build)
+    _deform_vertex_groups(build)
+    accessories = _accessories(build)
+    _tongue_side_bones(build)
+    _head_and_hips(build)
+    _limbs(build)
+    _skirt(build)
+    _rigify_types(build)
+    lists = _bone_lists(build, accessories)
+    _bone_collections(build, lists)
+    _rigify_ui(build)
+
+
+def _reserved_names(build):
+    """Accessory bones can be called anything; ones named like the rig's own bones give way."""
     metarig = build.metarig
     switch(metarig, 'OBJECT')
 
@@ -26,20 +49,20 @@ def main(build):
         if bone := metarig.pose.bones.get(boneName):
             bone.name = bone.name + names.RENAMED_NAME_SUFFIX
                 
-    def fixDuplicateBoneName(boneName, childBoneName):
-        childBone = metarig.pose.bones.get(childBoneName)
-        if childBone.parent.name != boneName:
-            metarig.pose.bones.get(boneName).name = boneName + names.RENAMED_NAME_SUFFIX
-            metarig.pose.bones.get(childBone.parent.name).name = boneName
     
-    fixDuplicateBoneName(names.HEAD_BONE, names.ORIGINAL_EYES_BONE)
-    fixDuplicateBoneName(names.NECK_BONE, names.HEAD_BONE)
-    fixDuplicateBoneName(names.UPPER_CHEST_BONE, names.NECK_BONE)
-    fixDuplicateBoneName(names.CHEST_BONE, names.UPPER_CHEST_BONE)
-    fixDuplicateBoneName(names.SPINE_BONE, names.CHEST_BONE)
-    fixDuplicateBoneName(names.HIPS_BONE, names.SPINE_BONE)
+    fixDuplicateBoneName(build, names.HEAD_BONE, names.ORIGINAL_EYES_BONE)
+    fixDuplicateBoneName(build, names.NECK_BONE, names.HEAD_BONE)
+    fixDuplicateBoneName(build, names.UPPER_CHEST_BONE, names.NECK_BONE)
+    fixDuplicateBoneName(build, names.CHEST_BONE, names.UPPER_CHEST_BONE)
+    fixDuplicateBoneName(build, names.SPINE_BONE, names.CHEST_BONE)
+    fixDuplicateBoneName(build, names.HIPS_BONE, names.SPINE_BONE)
         
     # Check for optional features
+
+
+def _features(build):
+    """What this Character has: skirt, rigged tongue, Better Penetration bones, head mod, male."""
+    metarig = build.metarig
     hasSkirt = True    
     if names.SKIRT_PARENT_BONE not in metarig.pose.bones:
         hasSkirt = False
@@ -59,66 +82,12 @@ def main(build):
     hasBetterPenetrationMod = metarig.pose.bones.get(names.BETTER_PENETRATION_ROOT_CROTCH_BONE)
     hasHeadMod = koikatsuCommons.isVertexGroupEmpty(names.ORIGINAL_FACE_UP_DEFORM_BONE, build.body)
     isMale = koikatsuCommons.isVertexGroupEmpty(names.LEFT_NIPPLE_DEFORM_BONE1, build.body)
+    build.features = Features(skirt=bool(hasSkirt), rigged_tongue=bool(hasRiggedTongue), better_penetration=bool(hasBetterPenetrationMod), head_mod=bool(hasHeadMod), male=bool(isMale))
 
-    def objToBone(obj, rig, boneName):
-        """ 
-        Places an object at the location/rotation/scale of the given bone.
-        """
-        assert bpy.context.mode != 'EDIT_ARMATURE', "assert bpy.context.mode != 'EDIT_ARMATURE'"
 
-        bone = rig.pose.bones[boneName]
-        loc = bone.custom_shape_translation
-        rot = bone.custom_shape_rotation_euler
-        scale = Vector(bone.custom_shape_scale_xyz)
-
-        if bone.use_custom_shape_bone_size:
-            scale *= bone.length
-
-        obj.rotation_mode = 'XYZ'
-        
-        shape_mat = Matrix.LocRotScale(loc, Euler(rot), scale)
-        obj.matrix_basis = rig.matrix_world @ bone.bone.matrix_local @ shape_mat
-
-    def createWidget(objName, collectionName, rig, boneName):
-        """ 
-        Creates an empty widget object and returns the object.
-        """
-        # Ported: the widget goes into the Character's own widget collection, and another
-        # Character's widget of the same name is left alone (Blender adds .001).
-        mesh = bpy.data.meshes.new(objName)
-        obj = bpy.data.objects.new(objName, mesh)
-        build.widgets.objects.link(obj)
-        objToBone(obj, rig, boneName)
-        return obj
-        
-    def createEyeWidget(objName, collectionName, rig, boneName, size = 1.0):
-        obj = createWidget(objName, collectionName, rig, boneName)
-        if obj is not None:
-            verts = [(1.1920928955078125e-07*size, 0.5000000596046448*size, 0.0*size), (-0.12940943241119385*size, 0.482962965965271*size, 0.0*size), (-0.24999988079071045*size, 0.4330127537250519*size, 0.0*size), (-0.35355329513549805*size, 0.35355344414711*size, 0.0*size), (-0.43301260471343994*size, 0.2500000596046448*size, 0.0*size), (-0.4829627275466919*size, 0.12940959632396698*size, 0.0*size), (-0.49999988079071045*size, 1.0094120739267964e-07*size, 0.0*size), (-0.482962965965271*size, -0.12940940260887146*size, 0.0*size), (-0.43301260471343994*size, -0.24999986588954926*size, 0.0*size), (-0.3535534143447876*size, -0.35355323553085327*size, 0.0*size), (-0.25*size, -0.43301257491111755*size, 0.0*size), (-0.1294095516204834*size, -0.48296281695365906*size, 0.0*size), (-1.1920928955078125e-07*size, -0.4999999403953552*size, 0.0*size), (0.12940943241119385*size, -0.4829629063606262*size, 0.0*size), (0.24999988079071045*size, -0.4330127537250519*size, 0.0*size), (0.35355329513549805*size, -0.35355353355407715*size, 0.0*size), (0.4330127239227295*size, -0.25000008940696716*size, 0.0*size), (0.482962965965271*size, -0.12940965592861176*size, 0.0*size), (0.5000001192092896*size, -1.6926388468618825e-07*size, 0.0*size), (0.48296308517456055*size, 0.1294093281030655*size, 0.0*size), (0.4330129623413086*size, 0.24999980628490448*size, 0.0*size), (0.35355377197265625*size, 0.35355323553085327*size, 0.0*size), (0.25000035762786865*size, 0.43301260471343994*size, 0.0*size), (0.1294100284576416*size, 0.48296287655830383*size, 0.0*size), ]
-            edges = [(1, 0), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (10, 9), (11, 10), (12, 11), (13, 12), (14, 13), (15, 14), (16, 15), (17, 16), (18, 17), (19, 18), (20, 19), (21, 20), (22, 21), (23, 22), (0, 23), ]
-            faces = []
-
-            mesh = obj.data
-            mesh.from_pydata(verts, edges, faces)
-            mesh.update()
-            return obj
-        else:
-            return None
-        
-    def createEyesWidget(objName, collectionName, rig, boneName, size = 1.0):
-        obj = createWidget(objName, collectionName, rig, boneName)
-        if obj is not None:
-            verts = [(0.8928930759429932*size, -0.7071065902709961*size, 0.0*size), (0.8928932547569275*size, 0.7071067690849304*size, 0.0*size), (-1.8588197231292725*size, -0.9659252762794495*size, 0.0*size), (-2.100001096725464*size, -0.8660248517990112*size, 0.0*size), (-2.3071072101593018*size, -0.7071059942245483*size, 0.0*size), (-2.4660258293151855*size, -0.49999913573265076*size, 0.0*size), (-2.5659260749816895*size, -0.258818119764328*size, 0.0*size), (-2.5999999046325684*size, 8.575012770961621e-07*size, 0.0*size), (-2.5659255981445312*size, 0.2588198482990265*size, 0.0*size), (-2.4660253524780273*size, 0.5000006556510925*size, 0.0*size), (-2.3071064949035645*size, 0.7071075439453125*size, 0.0*size), (-2.099999189376831*size, 0.866025984287262*size, 0.0*size), (-1.8588184118270874*size, 0.9659261703491211*size, 0.0*size), (-1.5999996662139893*size, 1.000000238418579*size, 0.0*size), (-1.341180443763733*size, 0.9659258723258972*size, 0.0*size), (-1.0999995470046997*size, 0.8660253882408142*size, 0.0*size), (-0.8928929567337036*size, 0.7071067094802856*size, 0.0*size), (-0.892893373966217*size, -0.7071066498756409*size, 0.0*size), (-1.100000262260437*size, -0.8660252690315247*size, 0.0*size), (-1.3411810398101807*size, -0.9659255743026733*size, 0.0*size), (1.600000023841858*size, 1.0*size, 0.0*size), (1.3411810398101807*size, 0.9659258127212524*size, 0.0*size), (1.100000023841858*size, 0.8660253882408142*size, 0.0*size), (-1.600000262260437*size, -0.9999997615814209*size, 0.0*size), (1.0999997854232788*size, -0.8660252690315247*size, 0.0*size), (1.341180682182312*size, -0.9659257531166077*size, 0.0*size), (1.5999996662139893*size, -1.0*size, 0.0*size), (1.8588186502456665*size, -0.965925931930542*size, 0.0*size), (2.0999996662139893*size, -0.8660256266593933*size, 0.0*size), (2.3071064949035645*size, -0.7071071863174438*size, 0.0*size), (2.4660253524780273*size, -0.5000002980232239*size, 0.0*size), (2.5659255981445312*size, -0.25881943106651306*size, 0.0*size), (2.5999999046325684*size, -4.649122899991198e-07*size, 0.0*size), (2.5659260749816895*size, 0.25881853699684143*size, 0.0*size), (2.4660258293151855*size, 0.4999994933605194*size, 0.0*size), (2.3071072101593018*size, 0.707106351852417*size, 0.0*size), (2.1000006198883057*size, 0.8660250902175903*size, 0.0*size), (1.8588197231292725*size, 0.9659256339073181*size, 0.0*size), (-1.8070557117462158*size, -0.7727401852607727*size, 0.0*size), (-2.0000009536743164*size, -0.6928198337554932*size, 0.0*size), (-2.1656856536865234*size, -0.5656847357749939*size, 0.0*size), (-2.292820692062378*size, -0.3999992609024048*size, 0.0*size), (-2.3727407455444336*size, -0.20705445110797882*size, 0.0*size), (-2.3999998569488525*size, 7.336847716032935e-07*size, 0.0*size), (-2.3727405071258545*size, 0.207055926322937*size, 0.0*size), (-2.2928202152252197*size, 0.40000057220458984*size, 0.0*size), (-2.1656851768493652*size, 0.5656861066818237*size, 0.0*size), (-1.9999992847442627*size, 0.6928208470344543*size, 0.0*size), (-1.8070547580718994*size, 0.7727410197257996*size, 0.0*size), (-1.5999996662139893*size, 0.8000002503395081*size, 0.0*size), (-1.3929443359375*size, 0.7727407813072205*size, 0.0*size), (-1.1999995708465576*size, 0.6928203701972961*size, 0.0*size), (-1.0343143939971924*size, 0.5656854510307312*size, 0.0*size), (-1.0343146324157715*size, -0.5656852722167969*size, 0.0*size), (-1.2000001668930054*size, -0.6928201913833618*size, 0.0*size), (-1.3929448127746582*size, -0.7727404236793518*size, 0.0*size), (-1.6000001430511475*size, -0.7999997735023499*size, 0.0*size), (1.8070557117462158*size, 0.772739827632904*size, 0.0*size), (2.0000009536743164*size, 0.6928195953369141*size, 0.0*size), (2.1656856536865234*size, 0.5656843781471252*size, 0.0*size), (2.292820692062378*size, 0.39999890327453613*size, 0.0*size), (2.3727407455444336*size, 0.20705409348011017*size, 0.0*size), (2.3999998569488525*size, -1.0960745839838637e-06*size, 0.0*size), (2.3727405071258545*size, -0.20705628395080566*size, 0.0*size), (2.2928202152252197*size, -0.4000009298324585*size, 0.0*size), (2.1656851768493652*size, -0.5656863451004028*size, 0.0*size), (1.9999992847442627*size, -0.692821204662323*size, 0.0*size), (1.8070547580718994*size, -0.7727413773536682*size, 0.0*size), (1.5999996662139893*size, -0.8000004887580872*size, 0.0*size), (1.3929443359375*size, -0.7727410197257996*size, 0.0*size), (1.1999995708465576*size, -0.6928204894065857*size, 0.0*size), (1.0343143939971924*size, -0.5656855702400208*size, 0.0*size), (1.0343146324157715*size, 0.5656850337982178*size, 0.0*size), (1.2000004053115845*size, 0.6928199529647827*size, 0.0*size), (1.3929448127746582*size, 0.7727401852607727*size, 0.0*size), (1.6000001430511475*size, 0.7999995350837708*size, 0.0*size), ]
-            edges = [(24, 0), (1, 22), (16, 1), (17, 0), (23, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (11, 12), (12, 13), (21, 20), (22, 21), (13, 14), (14, 15), (15, 16), (17, 18), (18, 19), (19, 23), (25, 24), (26, 25), (27, 26), (28, 27), (29, 28), (30, 29), (31, 30), (32, 31), (33, 32), (34, 33), (35, 34), (36, 35), (37, 36), (20, 37), (56, 38), (38, 39), (39, 40), (40, 41), (41, 42), (42, 43), (43, 44), (44, 45), (45, 46), (46, 47), (47, 48), (48, 49), (49, 50), (50, 51), (51, 52), (53, 54), (54, 55), (55, 56), (75, 57), (57, 58), (58, 59), (59, 60), (60, 61), (61, 62), (62, 63), (63, 64), (64, 65), (65, 66), (66, 67), (67, 68), (68, 69), (69, 70), (70, 71), (72, 73), (73, 74), (74, 75), (52, 72), (53, 71), ]
-            faces = []
-
-            mesh = obj.data
-            mesh.from_pydata(verts, edges, faces)
-            mesh.update()
-            return obj
-        else:
-            return None
-
+def _eye_and_body_bones(build):
+    """The eye bones, and the breasts and buttocks bones the handles move."""
+    metarig = build.metarig
     switch(metarig, 'EDIT')
     
     #get the metagrig ID bone
@@ -157,103 +126,19 @@ def main(build):
     buttocksBone.tail.y = statistics.mean([leftButtockBone.tail.y, rightButtockBone.tail.y])
     
     switch(metarig, 'OBJECT')
-    
-    def arrangeTripleWidgetSet(widgetCollectionName, parentWidget, leftChildWidget, rightChildWidget, snapGeometryToOrigin, 
-    vertexGroupObject, leftVertexGroupName, rightVertexGroupName, 
-    rotate, rotateXRadians, rotateYRadians, rotateZRadians, 
-    translate, vertexGroupMidXFactor, vertexGroupMinYFactor, parentWidgetTranslateZFactor, 
-    resize, parentWidgetResizeXFactor, parentWidgetResizeYFactor, parentWidgetResizeZFactor, 
-    createHandleBones, rig, parentBoneName, parentHandleBoneName, leftChildBoneName, leftChildHandleBoneName, rightChildBoneName, rightChildHandleBoneName):
-        # Ported: the legacy script shaped the widgets in Edit Mode with transform operators around
-        # each widget's bounding-box centre in global space; widgets.py does the same on the data API.
-        bpy.context.view_layer.update()
-        def shape(widget):
-            if snapGeometryToOrigin:
-                widgets.geometry_to_origin(widget)
-            if rotate:
-                for axis, degrees in (('X', rotateXRadians), ('Y', rotateYRadians), ('Z', rotateZRadians)):
-                    if degrees:
-                        widgets.rotate(widget, axis, math.radians(degrees))
-        shape(parentWidget)
-        leftVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(leftVertexGroupName, vertexGroupObject)
-        rightVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(rightVertexGroupName, vertexGroupObject)
-        if not leftVertexGroupExtremities.maxZ or not rightVertexGroupExtremities.maxZ:
-            leftVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities('cf_J_Eye07_s_L', vertexGroupObject)
-            rightVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities('cf_J_Eye07_s_R', vertexGroupObject)
+    build.metarig_id_bone = metarigIdBoneName
 
-        leftVertexGroupMidZ = (leftVertexGroupExtremities.maxZ + leftVertexGroupExtremities.minZ) / 2
-        rightVertexGroupMidZ = (rightVertexGroupExtremities.maxZ + rightVertexGroupExtremities.minZ) / 2
-        averageVertexGroupMidZ = statistics.mean([leftVertexGroupMidZ, rightVertexGroupMidZ])
-        averageVertexGroupMinY = statistics.mean([leftVertexGroupExtremities.minY, rightVertexGroupExtremities.minY])
-        if translate and not createHandleBones:
-            widgets.translate(parentWidget, (0, averageVertexGroupMinY * vertexGroupMinYFactor, -(parentWidget.location[2] - averageVertexGroupMidZ * parentWidgetTranslateZFactor)))
-        leftVertexGroupMidX = (leftVertexGroupExtremities.maxX + leftVertexGroupExtremities.minX) / 2
-        rightVertexGroupMidX = (rightVertexGroupExtremities.maxX + rightVertexGroupExtremities.minX) / 2
-        if resize:
-            widgets.resize(parentWidget, (parentWidgetResizeXFactor, parentWidgetResizeYFactor, parentWidgetResizeZFactor))
 
-        shape(leftChildWidget)
-        if translate and not createHandleBones:
-            widgets.translate(leftChildWidget, (leftVertexGroupMidX * vertexGroupMidXFactor, leftVertexGroupExtremities.minY * vertexGroupMinYFactor, -(leftChildWidget.location[2] - leftVertexGroupMidZ * parentWidgetTranslateZFactor)))
-        leftVertexGroupLengthX = leftVertexGroupExtremities.maxX - leftVertexGroupExtremities.minX
-        rightVertexGroupLengthX = rightVertexGroupExtremities.maxX - rightVertexGroupExtremities.minX
-        averageVertexGroupLengthX = statistics.mean([leftVertexGroupLengthX, rightVertexGroupLengthX])
-        leftVertexGroupLengthY = leftVertexGroupExtremities.maxY - leftVertexGroupExtremities.minY
-        rightVertexGroupLengthY = rightVertexGroupExtremities.maxY - rightVertexGroupExtremities.minY
-        averageVertexGroupLengthY = statistics.mean([leftVertexGroupLengthY, rightVertexGroupLengthY])
-        leftVertexGroupLengthZ = leftVertexGroupExtremities.maxZ - leftVertexGroupExtremities.minZ
-        rightVertexGroupLengthZ = rightVertexGroupExtremities.maxZ - rightVertexGroupExtremities.minZ
-        averageVertexGroupLengthZ = statistics.mean([leftVertexGroupLengthZ, rightVertexGroupLengthZ])
-        leftChildWidgetResizeXFactor = statistics.mean([parentWidgetResizeXFactor, parentWidgetResizeXFactor * (leftVertexGroupLengthX / averageVertexGroupLengthX)])
-        leftChildWidgetResizeYFactor = statistics.mean([parentWidgetResizeYFactor, parentWidgetResizeYFactor * (leftVertexGroupLengthY / averageVertexGroupLengthY)])
-        leftChildWidgetResizeZFactor = statistics.mean([parentWidgetResizeZFactor, parentWidgetResizeZFactor * (leftVertexGroupLengthZ / averageVertexGroupLengthZ)])
-        if resize:
-            widgets.resize(leftChildWidget, (leftChildWidgetResizeXFactor, leftChildWidgetResizeYFactor, leftChildWidgetResizeZFactor))
-
-        shape(rightChildWidget)
-        if translate and not createHandleBones:
-            widgets.translate(rightChildWidget, (rightVertexGroupMidX * vertexGroupMidXFactor, rightVertexGroupExtremities.minY * vertexGroupMinYFactor, -(rightChildWidget.location[2] - rightVertexGroupMidZ * parentWidgetTranslateZFactor)))
-        rightChildWidgetResizeXFactor = statistics.mean([parentWidgetResizeXFactor, parentWidgetResizeXFactor * (rightVertexGroupLengthX / averageVertexGroupLengthX)])
-        rightChildWidgetResizeYFactor = statistics.mean([parentWidgetResizeYFactor, parentWidgetResizeYFactor * (rightVertexGroupLengthY / averageVertexGroupLengthY)])
-        rightChildWidgetResizeZFactor = statistics.mean([parentWidgetResizeZFactor, parentWidgetResizeZFactor * (rightVertexGroupLengthZ / averageVertexGroupLengthZ)])
-        if resize:
-            widgets.resize(rightChildWidget, (rightChildWidgetResizeXFactor, rightChildWidgetResizeYFactor, rightChildWidgetResizeZFactor))
-
-        if createHandleBones:
-            
-            switch(rig, 'EDIT')
-            parentHandleBone = koikatsuCommons.copyBone(rig, parentBoneName, parentHandleBoneName)
-            if translate:
-                parentHandleBone.tail.y = parentHandleBone.tail.y + averageVertexGroupMinY * vertexGroupMinYFactor
-                parentHandleBone.head.y = parentHandleBone.head.y + averageVertexGroupMinY * vertexGroupMinYFactor
-                parentHandleBone.tail.z = parentHandleBone.tail.z - (parentWidget.location[2] - averageVertexGroupMidZ * parentWidgetTranslateZFactor)
-                parentHandleBone.head.z = parentHandleBone.head.z - (parentWidget.location[2] - averageVertexGroupMidZ * parentWidgetTranslateZFactor)
-            leftChildHandleBone = koikatsuCommons.copyBone(rig, leftChildBoneName, leftChildHandleBoneName)
-            if translate:
-                leftChildHandleBone.tail.x = leftChildHandleBone.tail.x + leftVertexGroupMidX * vertexGroupMidXFactor
-                leftChildHandleBone.head.x = leftChildHandleBone.head.x + leftVertexGroupMidX * vertexGroupMidXFactor
-                leftChildHandleBone.tail.y = leftChildHandleBone.tail.y + leftVertexGroupExtremities.minY * vertexGroupMinYFactor
-                leftChildHandleBone.head.y = leftChildHandleBone.head.y + leftVertexGroupExtremities.minY * vertexGroupMinYFactor
-                leftChildHandleBone.tail.z = leftChildHandleBone.tail.z - (leftChildWidget.location[2] - leftVertexGroupMidZ * parentWidgetTranslateZFactor)
-                leftChildHandleBone.head.z = leftChildHandleBone.head.z - (leftChildWidget.location[2] - leftVertexGroupMidZ * parentWidgetTranslateZFactor)
-            leftChildHandleBone.parent = parentHandleBone
-            rightChildHandleBone = koikatsuCommons.copyBone(rig, rightChildBoneName, rightChildHandleBoneName)
-            if translate:
-                rightChildHandleBone.tail.x = rightChildHandleBone.tail.x + rightVertexGroupMidX * vertexGroupMidXFactor
-                rightChildHandleBone.head.x = rightChildHandleBone.head.x + rightVertexGroupMidX * vertexGroupMidXFactor
-                rightChildHandleBone.tail.y = rightChildHandleBone.tail.y + rightVertexGroupExtremities.minY * vertexGroupMinYFactor
-                rightChildHandleBone.head.y = rightChildHandleBone.head.y + rightVertexGroupExtremities.minY * vertexGroupMinYFactor
-                rightChildHandleBone.tail.z = rightChildHandleBone.tail.z - (rightChildWidget.location[2] - rightVertexGroupMidZ * parentWidgetTranslateZFactor)
-                rightChildHandleBone.head.z = rightChildHandleBone.head.z - (rightChildWidget.location[2] - rightVertexGroupMidZ * parentWidgetTranslateZFactor)
-            rightChildHandleBone.parent = parentHandleBone
-            
-            switch(rig, 'OBJECT')
+def _widgets_and_handles(build):
+    """The eye, breast and buttock widgets and the handle bones they draw."""
+    metarig = build.metarig
+    isMale = build.features.male
     
     #Import custom bone shapes
     widgets.append_library(build)
-    widgetEyes = createEyesWidget(names.WIDGET_EYES, names.WIDGET_COLLECTION, metarig, names.EYES_BONE)
-    widgetEyeLeft = createEyeWidget(names.WIDGET_EYE_LEFT, names.WIDGET_COLLECTION, metarig, names.LEFT_EYE_BONE)
-    widgetEyeRight = createEyeWidget(names.WIDGET_EYE_RIGHT, names.WIDGET_COLLECTION, metarig, names.RIGHT_EYE_BONE)
+    widgetEyes = createEyesWidget(build, names.WIDGET_EYES, names.WIDGET_COLLECTION, metarig, names.EYES_BONE)
+    widgetEyeLeft = createEyeWidget(build, names.WIDGET_EYE_LEFT, names.WIDGET_COLLECTION, metarig, names.LEFT_EYE_BONE)
+    widgetEyeRight = createEyeWidget(build, names.WIDGET_EYE_RIGHT, names.WIDGET_COLLECTION, metarig, names.RIGHT_EYE_BONE)
 
     arrangeTripleWidgetSet(names.WIDGET_COLLECTION, widgetEyes, widgetEyeLeft, widgetEyeRight, False, 
     build.body, names.LEFT_EYE_DEFORM_BONE, names.RIGHT_EYE_DEFORM_BONE, 
@@ -291,14 +176,6 @@ def main(build):
     True, 30, 1, 25, 
     True, metarig, names.BUTTOCKS_BONE, names.BUTTOCKS_HANDLE_BONE, names.LEFT_BUTTOCK_BONE, names.LEFT_BUTTOCK_HANDLE_BONE, names.RIGHT_BUTTOCK_BONE, names.RIGHT_BUTTOCK_HANDLE_BONE)
     
-    def finalizeHandleBone(isEyeHandleBone, rig, boneName, handleBoneName, widget):
-        rig.pose.bones[handleBoneName].custom_shape = widget
-        if isEyeHandleBone:
-            rig.pose.bones[handleBoneName].lock_location[1] = True
-            rig.pose.bones[handleBoneName].lock_rotation[0] = True
-            rig.pose.bones[handleBoneName].lock_rotation[2] = True
-            rig.pose.bones[handleBoneName].lock_scale[1] = True
-        koikatsuCommons.addCopyTransformsConstraint(rig, boneName, handleBoneName, 'REPLACE', 'LOCAL', names.COPY_TRANSFORMS_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX)
 
     finalizeHandleBone(True, metarig, names.EYES_BONE, names.EYES_HANDLE_BONE, widgetEyes)
     finalizeHandleBone(True, metarig, names.LEFT_EYE_BONE, names.LEFT_EYE_HANDLE_BONE, widgetEyeLeft)
@@ -314,6 +191,10 @@ def main(build):
     koikatsuCommons.addCopyTransformsConstraint(metarig, names.LEFT_BUTTOCK_HANDLE_BONE, names.LEFT_BUTTOCK_JOINT_CORRECTION_BONE, 'AFTER', 'LOCAL', copyTransformsConstraintName)
     koikatsuCommons.addCopyTransformsConstraint(metarig, names.RIGHT_BUTTOCK_HANDLE_BONE, names.RIGHT_BUTTOCK_JOINT_CORRECTION_BONE, 'AFTER', 'LOCAL', copyTransformsConstraintName)
 
+
+def _eyes(build):
+    """The eye and head tracking bones, and the eye mechanism's properties, constraints and drivers."""
+    metarig = build.metarig
     switch(metarig, 'EDIT')
     
     #create tracking bones
@@ -770,15 +651,15 @@ def main(build):
     koikatsuCommons.addDriver(headTrackTargetParentArmatureConstraint.targets[2], "weight", None, 'AVERAGE', [headTrackTargetParentToRootDriverVariable], 
     None)
     
-    def finalizeEyeballBone(rig, boneName):
-        rig.pose.bones[boneName].lock_location[0] = True
-        rig.pose.bones[boneName].lock_location[1] = True
-        rig.pose.bones[boneName].lock_location[2] = True
         
     finalizeEyeballBone(metarig, names.EYEBALLS_BONE)
     finalizeEyeballBone(metarig, names.LEFT_EYEBALL_BONE)
     finalizeEyeballBone(metarig, names.RIGHT_EYEBALL_BONE)
-    
+
+
+def _rigify_layers(build):
+    """Rigify's colour sets and layer table."""
+    metarig = build.metarig
     """
     Begin Rigifying
     """
@@ -791,12 +672,13 @@ def main(build):
         koikatsuCommons.setRigifyLayer(metarig, index, rigifyLayer)
     koikatsuCommons.setRootRigifyLayer(metarig, names.ROOT_BONE_GROUP_INDEX)
 
+
+def _deform_vertex_groups(build):
+    """The vertex groups take the names of the Rigify deform bones that will move them."""
+    metarig = build.metarig
+    hasSkirt = build.features.skirt
     switch(metarig, 'EDIT')
     
-    def removeAllConstraints(rig, boneName):
-        boneToEmpty = rig.pose.bones[boneName]
-        for constraint in boneToEmpty.constraints:
-            koikatsuCommons.removeConstraint(rig, boneName, constraint.name)
 
     removeAllConstraints(metarig, names.LEFT_ELBOW_BONE)
     removeAllConstraints(metarig, names.RIGHT_ELBOW_BONE)
@@ -809,100 +691,86 @@ def main(build):
     removeAllConstraints(metarig, names.LEFT_KNEE_BONE)
     removeAllConstraints(metarig, names.RIGHT_KNEE_BONE)
 
-    def renameAllVertexGroups(vertexGroupNameOld, vertexGroupNameNew):
-        for obj in build.meshes(): 
-            if obj.type == 'MESH':
-                vertexGroup = obj.vertex_groups.get(vertexGroupNameOld)
-                if vertexGroup is not None:
-                    vertexGroup.name = vertexGroupNameNew
     
-    renameAllVertexGroups(names.ORIGINAL_HEAD_DEFORM_BONE, names.HEAD_DEFORM_BONE)
-    renameAllVertexGroups(names.ORIGINAL_NECK_DEFORM_BONE, names.NECK_DEFORM_BONE)
-    renameAllVertexGroups(names.ORIGINAL_UPPER_CHEST_DEFORM_BONE, names.UPPER_CHEST_DEFORM_BONE)
-    renameAllVertexGroups(names.ORIGINAL_CHEST_DEFORM_BONE, names.CHEST_DEFORM_BONE)
-    renameAllVertexGroups(names.ORIGINAL_SPINE_DEFORM_BONE, names.SPINE_DEFORM_BONE)
-    renameAllVertexGroups(names.ORIGINAL_HIPS_DEFORM_BONE, names.HIPS_DEFORM_BONE)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_ARM_DEFORM_BONE1, names.LEFT_ARM_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_ARM_DEFORM_BONE1, names.RIGHT_ARM_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_ARM_DEFORM_BONE2, names.LEFT_ARM_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_ARM_DEFORM_BONE2, names.RIGHT_ARM_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_ARM_DEFORM_BONE3, names.LEFT_ARM_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_ARM_DEFORM_BONE3, names.RIGHT_ARM_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_ELBOW_DEFORM_BONE1, names.LEFT_ELBOW_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_ELBOW_DEFORM_BONE1, names.RIGHT_ELBOW_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_ELBOW_DEFORM_BONE2, names.LEFT_ELBOW_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_ELBOW_DEFORM_BONE2, names.RIGHT_ELBOW_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_ELBOW_DEFORM_BONE3, names.LEFT_ELBOW_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_ELBOW_DEFORM_BONE3, names.RIGHT_ELBOW_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_WRIST_DEFORM_BONE, names.LEFT_WRIST_DEFORM_BONE)    
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_WRIST_DEFORM_BONE, names.RIGHT_WRIST_DEFORM_BONE)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_THUMB_DEFORM_BONE1, names.LEFT_THUMB_DEFORM_BONE1)  
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_THUMB_DEFORM_BONE1, names.RIGHT_THUMB_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_THUMB_DEFORM_BONE2, names.LEFT_THUMB_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_THUMB_DEFORM_BONE2, names.RIGHT_THUMB_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_THUMB_DEFORM_BONE3, names.LEFT_THUMB_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_THUMB_DEFORM_BONE3, names.RIGHT_THUMB_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_INDEX_FINGER_DEFORM_BONE1, names.LEFT_INDEX_FINGER_DEFORM_BONE1)   
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_INDEX_FINGER_DEFORM_BONE1, names.RIGHT_INDEX_FINGER_DEFORM_BONE1)  
-    renameAllVertexGroups(names.ORIGINAL_LEFT_INDEX_FINGER_DEFORM_BONE2, names.LEFT_INDEX_FINGER_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_INDEX_FINGER_DEFORM_BONE2, names.RIGHT_INDEX_FINGER_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_INDEX_FINGER_DEFORM_BONE3, names.LEFT_INDEX_FINGER_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_INDEX_FINGER_DEFORM_BONE3, names.RIGHT_INDEX_FINGER_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_MIDDLE_FINGER_DEFORM_BONE1, names.LEFT_MIDDLE_FINGER_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_MIDDLE_FINGER_DEFORM_BONE1, names.RIGHT_MIDDLE_FINGER_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_MIDDLE_FINGER_DEFORM_BONE2, names.LEFT_MIDDLE_FINGER_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_MIDDLE_FINGER_DEFORM_BONE2, names.RIGHT_MIDDLE_FINGER_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_MIDDLE_FINGER_DEFORM_BONE3, names.LEFT_MIDDLE_FINGER_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_MIDDLE_FINGER_DEFORM_BONE3, names.RIGHT_MIDDLE_FINGER_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_RING_FINGER_DEFORM_BONE1, names.LEFT_RING_FINGER_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_RING_FINGER_DEFORM_BONE1, names.RIGHT_RING_FINGER_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_RING_FINGER_DEFORM_BONE2, names.LEFT_RING_FINGER_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_RING_FINGER_DEFORM_BONE2, names.RIGHT_RING_FINGER_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_RING_FINGER_DEFORM_BONE3, names.LEFT_RING_FINGER_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_RING_FINGER_DEFORM_BONE3, names.RIGHT_RING_FINGER_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_LITTLE_FINGER_DEFORM_BONE1, names.LEFT_LITTLE_FINGER_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_LITTLE_FINGER_DEFORM_BONE1, names.RIGHT_LITTLE_FINGER_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_LITTLE_FINGER_DEFORM_BONE2, names.LEFT_LITTLE_FINGER_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_LITTLE_FINGER_DEFORM_BONE2, names.RIGHT_LITTLE_FINGER_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_LITTLE_FINGER_DEFORM_BONE3, names.LEFT_LITTLE_FINGER_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_LITTLE_FINGER_DEFORM_BONE3, names.RIGHT_LITTLE_FINGER_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_THIGH_DEFORM_BONE1, names.LEFT_THIGH_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_THIGH_DEFORM_BONE1, names.RIGHT_THIGH_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_THIGH_DEFORM_BONE2, names.LEFT_THIGH_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_THIGH_DEFORM_BONE2, names.RIGHT_THIGH_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_THIGH_DEFORM_BONE3, names.LEFT_THIGH_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_THIGH_DEFORM_BONE3, names.RIGHT_THIGH_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_LEG_DEFORM_BONE1, names.LEFT_LEG_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_LEG_DEFORM_BONE1, names.RIGHT_LEG_DEFORM_BONE1)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_LEG_DEFORM_BONE2, names.LEFT_LEG_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_LEG_DEFORM_BONE2, names.RIGHT_LEG_DEFORM_BONE2)
-    renameAllVertexGroups(names.ORIGINAL_LEFT_LEG_DEFORM_BONE3, names.LEFT_LEG_DEFORM_BONE3)
-    renameAllVertexGroups(names.ORIGINAL_RIGHT_LEG_DEFORM_BONE3, names.RIGHT_LEG_DEFORM_BONE3)
-    renameAllVertexGroups(names.LEFT_ANKLE_BONE, names.LEFT_ANKLE_DEFORM_BONE)
-    renameAllVertexGroups(names.RIGHT_ANKLE_BONE, names.RIGHT_ANKLE_DEFORM_BONE)
-    renameAllVertexGroups(names.LEFT_TOE_BONE, names.LEFT_TOE_DEFORM_BONE)
-    renameAllVertexGroups(names.RIGHT_TOE_BONE, names.RIGHT_TOE_DEFORM_BONE)
+    renameAllVertexGroups(build, names.ORIGINAL_HEAD_DEFORM_BONE, names.HEAD_DEFORM_BONE)
+    renameAllVertexGroups(build, names.ORIGINAL_NECK_DEFORM_BONE, names.NECK_DEFORM_BONE)
+    renameAllVertexGroups(build, names.ORIGINAL_UPPER_CHEST_DEFORM_BONE, names.UPPER_CHEST_DEFORM_BONE)
+    renameAllVertexGroups(build, names.ORIGINAL_CHEST_DEFORM_BONE, names.CHEST_DEFORM_BONE)
+    renameAllVertexGroups(build, names.ORIGINAL_SPINE_DEFORM_BONE, names.SPINE_DEFORM_BONE)
+    renameAllVertexGroups(build, names.ORIGINAL_HIPS_DEFORM_BONE, names.HIPS_DEFORM_BONE)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_ARM_DEFORM_BONE1, names.LEFT_ARM_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_ARM_DEFORM_BONE1, names.RIGHT_ARM_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_ARM_DEFORM_BONE2, names.LEFT_ARM_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_ARM_DEFORM_BONE2, names.RIGHT_ARM_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_ARM_DEFORM_BONE3, names.LEFT_ARM_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_ARM_DEFORM_BONE3, names.RIGHT_ARM_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_ELBOW_DEFORM_BONE1, names.LEFT_ELBOW_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_ELBOW_DEFORM_BONE1, names.RIGHT_ELBOW_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_ELBOW_DEFORM_BONE2, names.LEFT_ELBOW_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_ELBOW_DEFORM_BONE2, names.RIGHT_ELBOW_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_ELBOW_DEFORM_BONE3, names.LEFT_ELBOW_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_ELBOW_DEFORM_BONE3, names.RIGHT_ELBOW_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_WRIST_DEFORM_BONE, names.LEFT_WRIST_DEFORM_BONE)    
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_WRIST_DEFORM_BONE, names.RIGHT_WRIST_DEFORM_BONE)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_THUMB_DEFORM_BONE1, names.LEFT_THUMB_DEFORM_BONE1)  
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_THUMB_DEFORM_BONE1, names.RIGHT_THUMB_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_THUMB_DEFORM_BONE2, names.LEFT_THUMB_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_THUMB_DEFORM_BONE2, names.RIGHT_THUMB_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_THUMB_DEFORM_BONE3, names.LEFT_THUMB_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_THUMB_DEFORM_BONE3, names.RIGHT_THUMB_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_INDEX_FINGER_DEFORM_BONE1, names.LEFT_INDEX_FINGER_DEFORM_BONE1)   
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_INDEX_FINGER_DEFORM_BONE1, names.RIGHT_INDEX_FINGER_DEFORM_BONE1)  
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_INDEX_FINGER_DEFORM_BONE2, names.LEFT_INDEX_FINGER_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_INDEX_FINGER_DEFORM_BONE2, names.RIGHT_INDEX_FINGER_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_INDEX_FINGER_DEFORM_BONE3, names.LEFT_INDEX_FINGER_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_INDEX_FINGER_DEFORM_BONE3, names.RIGHT_INDEX_FINGER_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_MIDDLE_FINGER_DEFORM_BONE1, names.LEFT_MIDDLE_FINGER_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_MIDDLE_FINGER_DEFORM_BONE1, names.RIGHT_MIDDLE_FINGER_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_MIDDLE_FINGER_DEFORM_BONE2, names.LEFT_MIDDLE_FINGER_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_MIDDLE_FINGER_DEFORM_BONE2, names.RIGHT_MIDDLE_FINGER_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_MIDDLE_FINGER_DEFORM_BONE3, names.LEFT_MIDDLE_FINGER_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_MIDDLE_FINGER_DEFORM_BONE3, names.RIGHT_MIDDLE_FINGER_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_RING_FINGER_DEFORM_BONE1, names.LEFT_RING_FINGER_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_RING_FINGER_DEFORM_BONE1, names.RIGHT_RING_FINGER_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_RING_FINGER_DEFORM_BONE2, names.LEFT_RING_FINGER_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_RING_FINGER_DEFORM_BONE2, names.RIGHT_RING_FINGER_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_RING_FINGER_DEFORM_BONE3, names.LEFT_RING_FINGER_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_RING_FINGER_DEFORM_BONE3, names.RIGHT_RING_FINGER_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_LITTLE_FINGER_DEFORM_BONE1, names.LEFT_LITTLE_FINGER_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_LITTLE_FINGER_DEFORM_BONE1, names.RIGHT_LITTLE_FINGER_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_LITTLE_FINGER_DEFORM_BONE2, names.LEFT_LITTLE_FINGER_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_LITTLE_FINGER_DEFORM_BONE2, names.RIGHT_LITTLE_FINGER_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_LITTLE_FINGER_DEFORM_BONE3, names.LEFT_LITTLE_FINGER_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_LITTLE_FINGER_DEFORM_BONE3, names.RIGHT_LITTLE_FINGER_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_THIGH_DEFORM_BONE1, names.LEFT_THIGH_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_THIGH_DEFORM_BONE1, names.RIGHT_THIGH_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_THIGH_DEFORM_BONE2, names.LEFT_THIGH_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_THIGH_DEFORM_BONE2, names.RIGHT_THIGH_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_THIGH_DEFORM_BONE3, names.LEFT_THIGH_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_THIGH_DEFORM_BONE3, names.RIGHT_THIGH_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_LEG_DEFORM_BONE1, names.LEFT_LEG_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_LEG_DEFORM_BONE1, names.RIGHT_LEG_DEFORM_BONE1)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_LEG_DEFORM_BONE2, names.LEFT_LEG_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_LEG_DEFORM_BONE2, names.RIGHT_LEG_DEFORM_BONE2)
+    renameAllVertexGroups(build, names.ORIGINAL_LEFT_LEG_DEFORM_BONE3, names.LEFT_LEG_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.ORIGINAL_RIGHT_LEG_DEFORM_BONE3, names.RIGHT_LEG_DEFORM_BONE3)
+    renameAllVertexGroups(build, names.LEFT_ANKLE_BONE, names.LEFT_ANKLE_DEFORM_BONE)
+    renameAllVertexGroups(build, names.RIGHT_ANKLE_BONE, names.RIGHT_ANKLE_DEFORM_BONE)
+    renameAllVertexGroups(build, names.LEFT_TOE_BONE, names.LEFT_TOE_DEFORM_BONE)
+    renameAllVertexGroups(build, names.RIGHT_TOE_BONE, names.RIGHT_TOE_DEFORM_BONE)
 
     if hasSkirt:
         for primaryIndex in range(8):
             for secondaryIndex in range(6):
-                renameAllVertexGroups(names.skirt_bone(False, primaryIndex, secondaryIndex), names.skirt_deform_bone(primaryIndex, secondaryIndex)) 
-    
-    def fix_bone_orientations(armature):
-        # Connect all bones with their children if they have exactly one
-        for bone in armature.data.edit_bones:
-            if len(bone.children) == 1 and (metarig.data.bones[bone.name].collections.get(names.ORIGINAL_ACCESSORY_LAYER_INDEX) or metarig.data.bones[bone.name].collections.get(str(names.ORIGINAL_MCH_LAYER_INDEX))):
-                p1 = bone.head
-                p2 = bone.children[0].head
-                dist = ((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2 + (p2[2] - p1[2]) ** 2) ** (1/2)
+                renameAllVertexGroups(build, names.skirt_bone(False, primaryIndex, secondaryIndex), names.skirt_deform_bone(primaryIndex, secondaryIndex))
 
-                # Only connect them if the other bone is a certain distance away, otherwise blender will delete them
-                if dist > 0.005:
-                    bone.tail = bone.children[0].head
-                    if len(bone.parent.children) == 1:  # if the bone's parent bone only has one child, connect the bones (Don't connect them all because that would mess up hand/finger bones)
-                        bone.use_connect = True
+
+def _accessories(build):
+    """Accessory bone orientations, the MCH bone lists and the connected chains."""
+    metarig = build.metarig
+    hasRiggedTongue = build.features.rigged_tongue
     
-    fix_bone_orientations(metarig)
+    fix_bone_orientations(build, metarig)
 
     '''Put all Mch bones into an array'''
 
@@ -918,29 +786,15 @@ def main(build):
             if metarig.data.bones[bone.parent.name].collections.get(str(names.ORIGINAL_MCH_LAYER_INDEX)) and not metarig.data.bones[bone.parent.name].collections.get(str(names.ORIGINAL_ACCESSORY_LAYER_INDEX)):
                 accessoryMchBoneNames.append(bone.parent.name)
     
-    def finalizeMchList(rig, mchBoneNames, sourceLayerIndex, excludedLayerIndexes, excludedList = None):
-        for childBoneName in mchBoneNames:
-            childBone = metarig.data.edit_bones[childBoneName]
-            #childBone.length = childBone.length / 4
-            if childBone.name == 'Center':
-                continue
-            if rig.data.bones[childBone.parent.name].collections.get(sourceLayerIndex) and childBone.parent.name not in mchBoneNames:
-                insideExcludedLayer = False
-                for excludedLayerIndex in excludedLayerIndexes:
-                    if rig.data.bones[childBone.parent.name].collections.get(str(excludedLayerIndex)):
-                        insideExcludedLayer = True
-                        break
-                if not insideExcludedLayer and (excludedList is None or childBone.parent.name not in excludedList):
-                    mchBoneNames.append(childBone.parent.name)
             
-    finalizeMchList(metarig, faceMchBoneNames, names.ORIGINAL_MCH_LAYER_INDEX, [names.ORIGINAL_UPPER_FACE_LAYER_INDEX, names.ORIGINAL_LOWER_FACE_LAYER_INDEX])
-    finalizeMchList(metarig, accessoryMchBoneNames, names.ORIGINAL_MCH_LAYER_INDEX, [names.ORIGINAL_ACCESSORY_LAYER_INDEX], faceMchBoneNames)    
+    finalizeMchList(build, metarig, faceMchBoneNames, names.ORIGINAL_MCH_LAYER_INDEX, [names.ORIGINAL_UPPER_FACE_LAYER_INDEX, names.ORIGINAL_LOWER_FACE_LAYER_INDEX])
+    finalizeMchList(build, metarig, accessoryMchBoneNames, names.ORIGINAL_MCH_LAYER_INDEX, [names.ORIGINAL_ACCESSORY_LAYER_INDEX], faceMchBoneNames)    
             
     accessoryBoneConnectedChildNames = [] 
     accessoryBoneConnectedParentNames = [] 
     accessoryMchConnectedParentNames = []
     for boneName in accessoryBoneNames:
-        renameAllVertexGroups(boneName, names.DEFORM_BONE_PREFIX + boneName)
+        renameAllVertexGroups(build, boneName, names.DEFORM_BONE_PREFIX + boneName)
         bone = metarig.data.edit_bones[boneName]
         if bone.use_connect == False or bone.parent.name not in accessoryBoneNames:
             for childBone in bone.children:
@@ -954,12 +808,6 @@ def main(build):
             if bone.parent.name in accessoryMchBoneNames:
                 accessoryMchConnectedParentNames.append(bone.parent.name)
     
-    def connectAndParentBones(rig, childBoneName, parentBoneName, connected):
-        childBone = rig.data.edit_bones[childBoneName]
-        parentBone = rig.data.edit_bones[parentBoneName]
-        parentBone.tail = childBone.head
-        childBone.parent = parentBone
-        childBone.use_connect = connected
     
     if hasRiggedTongue:
         connectAndParentBones(metarig, names.RIGGED_TONGUE_BONE5, names.RIGGED_TONGUE_BONE4, True)
@@ -1003,26 +851,13 @@ def main(build):
     connectAndParentBones(metarig, names.RIGHT_ANKLE_BONE, names.RIGHT_KNEE_BONE, True)
     connectAndParentBones(metarig, names.LEFT_KNEE_BONE, names.LEFT_LEG_BONE, True)
     connectAndParentBones(metarig, names.RIGHT_KNEE_BONE, names.RIGHT_LEG_BONE, True)
-    
-    #using left vertex groups as reference for right bones because of inconsistent right group values
-    def finalizeRiggedTongueSideBones(rig, leftBoneName, rightBoneName, length, factorX, factorY = None, factorZ = None):
-        leftBone = rig.data.edit_bones[leftBoneName]
-        rightBone = rig.data.edit_bones[rightBoneName]
-        riggedTongueLeftBoneVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(leftBoneName, build.body)
-        leftBone.head.x = riggedTongueLeftBoneVertexGroupExtremities.minX + math.dist([riggedTongueLeftBoneVertexGroupExtremities.minX], [riggedTongueLeftBoneVertexGroupExtremities.maxX]) * factorX
-        leftBone.tail.x = leftBone.head.x
-        rightBone.head.x = -leftBone.head.x
-        rightBone.tail.x = rightBone.head.x
-        if factorY:
-            leftBone.head.y = riggedTongueLeftBoneVertexGroupExtremities.minY + math.dist([riggedTongueLeftBoneVertexGroupExtremities.minY], [riggedTongueLeftBoneVertexGroupExtremities.maxY]) * factorY
-            leftBone.tail.y = leftBone.head.y
-            rightBone.head.y = leftBone.head.y
-            rightBone.tail.y = rightBone.head.y
-        if factorZ:
-            leftBone.head.z = riggedTongueLeftBoneVertexGroupExtremities.minZ + math.dist([riggedTongueLeftBoneVertexGroupExtremities.minZ], [riggedTongueLeftBoneVertexGroupExtremities.maxZ]) * factorZ
-            rightBone.head.z = leftBone.head.z
-        leftBone.length = length
-        rightBone.length = length
+    return (accessoryBoneNames, accessoryMchBoneNames, faceMchBoneNames, accessoryBoneConnectedChildNames, accessoryBoneConnectedParentNames, accessoryMchConnectedParentNames)
+
+
+def _tongue_side_bones(build):
+    """The rigged tongue's side bones, placed from their vertex groups."""
+    metarig = build.metarig
+    hasRiggedTongue = build.features.rigged_tongue
     
     tongueSideBones = (names.RIGGED_TONGUE_BONE2, names.RIGGED_TONGUE_BONE5,
                        names.RIGGED_TONGUE_LEFT_BONE3, names.RIGGED_TONGUE_RIGHT_BONE3,
@@ -1035,18 +870,29 @@ def main(build):
         build.log.info("The tongue lacks some side bones or their vertex groups, so its side bones keep their places")
     elif hasRiggedTongue:
         riggedTongueBone2 = metarig.data.edit_bones[names.RIGGED_TONGUE_BONE2]
-        finalizeRiggedTongueSideBones(metarig, names.RIGGED_TONGUE_LEFT_BONE3, names.RIGGED_TONGUE_RIGHT_BONE3, riggedTongueBone2.length, 0.75)
-        finalizeRiggedTongueSideBones(metarig, names.RIGGED_TONGUE_LEFT_BONE4, names.RIGGED_TONGUE_RIGHT_BONE4, riggedTongueBone2.length, 0.65, 0.5, 0.5)
-        finalizeRiggedTongueSideBones(metarig, names.RIGGED_TONGUE_LEFT_BONE5, names.RIGGED_TONGUE_RIGHT_BONE5, riggedTongueBone2.length, 0.65, 0.2, 0.3)
+        finalizeRiggedTongueSideBones(build, metarig, names.RIGGED_TONGUE_LEFT_BONE3, names.RIGGED_TONGUE_RIGHT_BONE3, riggedTongueBone2.length, 0.75)
+        finalizeRiggedTongueSideBones(build, metarig, names.RIGGED_TONGUE_LEFT_BONE4, names.RIGGED_TONGUE_RIGHT_BONE4, riggedTongueBone2.length, 0.65, 0.5, 0.5)
+        finalizeRiggedTongueSideBones(build, metarig, names.RIGGED_TONGUE_LEFT_BONE5, names.RIGGED_TONGUE_RIGHT_BONE5, riggedTongueBone2.length, 0.65, 0.2, 0.3)
         riggedTongueBone5 = metarig.data.edit_bones[names.RIGGED_TONGUE_BONE5]
         riggedTongueLeftBone5VertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(names.RIGGED_TONGUE_LEFT_BONE5, build.body)
         riggedTongueBone5.tail.z = riggedTongueLeftBone5VertexGroupExtremities.minZ + math.dist([riggedTongueLeftBone5VertexGroupExtremities.minZ], [riggedTongueLeftBone5VertexGroupExtremities.maxZ]) * 0.17
         riggedTongueBone5.tail.y = riggedTongueLeftBone5VertexGroupExtremities.minY
+
+
+def _head_and_hips(build):
+    """The head's height from its vertex groups, and the hips' head at the waist."""
+    metarig = build.metarig
+    hasHeadMod = build.features.head_mod
     if not hasHeadMod:
         metarig.data.edit_bones[names.HEAD_BONE].tail.z = koikatsuCommons.findVertexGroupExtremities(names.ORIGINAL_FACE_UP_DEFORM_BONE, build.body).maxZ
     else:
         metarig.data.edit_bones[names.HEAD_BONE].tail.z = koikatsuCommons.findVertexGroupExtremities(names.ORIGINAL_FACE_BASE_DEFORM_BONE, build.body).maxZ
     metarig.data.edit_bones[names.HIPS_BONE].head = metarig.data.edit_bones[names.WAIST_BONE].head
+
+
+def _limbs(build):
+    """The KK-only elbow, knee and wrist edits, palms and fingers, and the toes and ankles."""
+    metarig = build.metarig
     if build.kk_extras:
         leftShoulderJointCorrectionBone = metarig.data.edit_bones[names.LEFT_SHOULDER_JOINT_CORRECTION_BONE]
         rightShoulderJointCorrectionBone = metarig.data.edit_bones[names.RIGHT_SHOULDER_JOINT_CORRECTION_BONE]
@@ -1131,21 +977,6 @@ def main(build):
     leftAnkleBone.head.y = originalLeftLegDeformBone3.head.y + math.dist([originalLeftLegDeformBone3.head.y], [leftHeelBone.head.y]) * 0.2
     rightAnkleBone.head.y = originalRightLegDeformBone3.head.y + math.dist([originalRightLegDeformBone3.head.y], [rightHeelBone.head.y]) * 0.2
     
-    def createPalmVertexGroups(wristVertexGroupName, palmVertexGroupName, rightSide, palmMinX, palmMaxX, palmMidY, lowerPalmMidY, higherPalmMidY):
-        for object in build.meshes(): 
-            if object.type == 'MESH':
-                wristVertexGroup = object.vertex_groups.get(wristVertexGroupName)
-                if wristVertexGroup is not None:
-                    wristVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(wristVertexGroupName, object)
-                    palmVertexGroup = object.vertex_groups.get(palmVertexGroupName)
-                    if palmVertexGroup is None:
-                        palmVertexGroup = object.vertex_groups.new(name = palmVertexGroupName)
-                    for vertex in wristVertexGroupExtremities.vertices:
-                        if (not rightSide and wristVertexGroupExtremities.coordinates[vertex.index][0] > palmMinX) or (rightSide and wristVertexGroupExtremities.coordinates[vertex.index][0] < palmMaxX):
-                            if lowerPalmMidY is None or math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [palmMidY]) < math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [lowerPalmMidY]):
-                                if higherPalmMidY is None or math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [palmMidY]) < math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [higherPalmMidY]):
-                                    palmVertexGroup.add([vertex.index], wristVertexGroup.weight(vertex.index), 'REPLACE')
-                                    wristVertexGroup.remove([vertex.index])
     
     leftIndexFingerBone1 = metarig.data.edit_bones[names.LEFT_INDEX_FINGER_BONE1]
     rightIndexFingerBone1 = metarig.data.edit_bones[names.RIGHT_INDEX_FINGER_BONE1]
@@ -1158,69 +989,15 @@ def main(build):
     if build.kk_extras:
         leftPalmMinX = leftWristBone.tail.x - math.dist([leftWristBone.head.x], [leftWristBone.tail.x]) * 0.85
         rightPalmMaxX = rightWristBone.tail.x + math.dist([rightWristBone.head.x], [rightWristBone.tail.x]) * 0.85
-        createPalmVertexGroups(names.LEFT_WRIST_DEFORM_BONE, names.LEFT_INDEX_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftIndexFingerBone1.head.y, None, leftMiddleFingerBone1.head.y)
-        createPalmVertexGroups(names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_INDEX_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightIndexFingerBone1.head.y, None, rightMiddleFingerBone1.head.y)
-        createPalmVertexGroups(names.LEFT_WRIST_DEFORM_BONE, names.LEFT_MIDDLE_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftMiddleFingerBone1.head.y, None, leftRingFingerBone1.head.y)
-        createPalmVertexGroups(names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_MIDDLE_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightMiddleFingerBone1.head.y, None, rightRingFingerBone1.head.y)
-        createPalmVertexGroups(names.LEFT_WRIST_DEFORM_BONE, names.LEFT_RING_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftRingFingerBone1.head.y, None, leftLittleFingerBone1.head.y)
-        createPalmVertexGroups(names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_RING_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightRingFingerBone1.head.y, None, rightLittleFingerBone1.head.y)
-        createPalmVertexGroups(names.LEFT_WRIST_DEFORM_BONE, names.LEFT_LITTLE_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftLittleFingerBone1.head.y, None, None)
-        createPalmVertexGroups(names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_LITTLE_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightLittleFingerBone1.head.y, None, None)
+        createPalmVertexGroups(build, names.LEFT_WRIST_DEFORM_BONE, names.LEFT_INDEX_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftIndexFingerBone1.head.y, None, leftMiddleFingerBone1.head.y)
+        createPalmVertexGroups(build, names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_INDEX_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightIndexFingerBone1.head.y, None, rightMiddleFingerBone1.head.y)
+        createPalmVertexGroups(build, names.LEFT_WRIST_DEFORM_BONE, names.LEFT_MIDDLE_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftMiddleFingerBone1.head.y, None, leftRingFingerBone1.head.y)
+        createPalmVertexGroups(build, names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_MIDDLE_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightMiddleFingerBone1.head.y, None, rightRingFingerBone1.head.y)
+        createPalmVertexGroups(build, names.LEFT_WRIST_DEFORM_BONE, names.LEFT_RING_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftRingFingerBone1.head.y, None, leftLittleFingerBone1.head.y)
+        createPalmVertexGroups(build, names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_RING_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightRingFingerBone1.head.y, None, rightLittleFingerBone1.head.y)
+        createPalmVertexGroups(build, names.LEFT_WRIST_DEFORM_BONE, names.LEFT_LITTLE_FINGER_PALM_DEFORM_BONE, False, leftPalmMinX, None, leftLittleFingerBone1.head.y, None, None)
+        createPalmVertexGroups(build, names.RIGHT_WRIST_DEFORM_BONE, names.RIGHT_LITTLE_FINGER_PALM_DEFORM_BONE, True, None, rightPalmMaxX, rightLittleFingerBone1.head.y, None, None)
     
-    def finalizeFingerBones(leftSide, rig, wristBoneName, fingerPalmBoneName, fingerBone1Name, fingerBone2Name, fingerBone3Name, fingerDeformBone1Name, fingerDeformBone2Name, fingerDeformBone3Name, mesh, palmBoneRoll, fingerBone1Roll, fingerBone2Roll, fingerBone3Roll, middle = False, thumb = False):
-        fingerBone1 = rig.data.edit_bones[fingerBone1Name]
-        fingerBone2 = rig.data.edit_bones[fingerBone2Name]
-        fingerBone3 = rig.data.edit_bones[fingerBone3Name]
-        fingerDeformBone1Extremities = koikatsuCommons.findVertexGroupExtremities(fingerDeformBone1Name, mesh)
-        fingerDeformBone2Extremities = koikatsuCommons.findVertexGroupExtremities(fingerDeformBone2Name, mesh)
-        fingerDeformBone3Extremities = koikatsuCommons.findVertexGroupExtremities(fingerDeformBone3Name, mesh)
-        if not thumb:
-            if not middle:
-                fingerBone1.head.z = fingerDeformBone1Extremities.minZ + math.dist([fingerDeformBone1Extremities.minZ], [fingerDeformBone1Extremities.maxZ]) * 0.4
-            else:
-                fingerBone1.head.z = fingerDeformBone1Extremities.minZ + math.dist([fingerDeformBone1Extremities.minZ], [fingerDeformBone1Extremities.maxZ]) * 0.5
-            fingerBone2.head.z = fingerDeformBone2Extremities.minZ + math.dist([fingerDeformBone2Extremities.minZ], [fingerDeformBone2Extremities.maxZ]) * 0.6
-            fingerBone3.head.z = fingerDeformBone3Extremities.minZ + math.dist([fingerDeformBone3Extremities.minZ], [fingerDeformBone3Extremities.maxZ]) * 0.6
-            if leftSide:
-                fingerBone3.tail.x = fingerDeformBone3Extremities.minX + math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.95
-            else:
-                fingerBone3.tail.x = fingerDeformBone3Extremities.maxX - math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.95
-            fingerBone3.tail.y = fingerBone3.head.y + (fingerBone2.tail.y - fingerBone2.head.y)
-            fingerBone3.tail.z = fingerDeformBone3Extremities.minZ + math.dist([fingerDeformBone3Extremities.minZ], [fingerDeformBone3Extremities.maxZ]) * 0.4
-            wristBone = rig.data.edit_bones[wristBoneName]
-            fingerPalmBone = koikatsuCommons.copyBone(rig, fingerBone1Name, fingerPalmBoneName)
-            fingerPalmBone.parent = rig.data.edit_bones[wristBoneName]
-            connectAndParentBones(rig, fingerBone1Name, fingerPalmBoneName, False)            
-            fingerPalmBone.head.z = fingerPalmBone.tail.z
-            if leftSide:
-                fingerPalmBone.head.x = wristBone.tail.x - math.dist([wristBone.tail.x], [wristBone.head.x]) * 0.6
-            else:
-                fingerPalmBone.head.x = wristBone.tail.x + math.dist([wristBone.tail.x], [wristBone.head.x]) * 0.6
-            fingerPalmBone.head.y = fingerPalmBone.head.y + (fingerBone1.head.y - fingerBone1.tail.y)
-            fingerPalmBone.roll = palmBoneRoll
-        else:
-            if leftSide:
-                fingerBone1.head.x = fingerDeformBone1Extremities.minX + math.dist([fingerDeformBone1Extremities.minX], [fingerDeformBone1Extremities.maxX]) * 0.2
-                fingerBone2.head.x = fingerDeformBone2Extremities.minX + math.dist([fingerDeformBone2Extremities.minX], [fingerDeformBone2Extremities.maxX]) * 0.5
-                fingerBone3.head.x = fingerDeformBone3Extremities.minX + math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.4
-                fingerBone3.tail.x = fingerDeformBone3Extremities.minX + math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.95
-            else:
-                fingerBone1.head.x = fingerDeformBone1Extremities.maxX - math.dist([fingerDeformBone1Extremities.minX], [fingerDeformBone1Extremities.maxX]) * 0.2
-                fingerBone2.head.x = fingerDeformBone2Extremities.maxX - math.dist([fingerDeformBone2Extremities.minX], [fingerDeformBone2Extremities.maxX]) * 0.5
-                fingerBone3.head.x = fingerDeformBone3Extremities.maxX - math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.4
-                fingerBone3.tail.x = fingerDeformBone3Extremities.maxX - math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.95
-            fingerBone1.head.y = fingerDeformBone1Extremities.minY + math.dist([fingerDeformBone1Extremities.minY], [fingerDeformBone1Extremities.maxY]) * 0.45
-            fingerBone1.head.z = fingerDeformBone1Extremities.minZ + math.dist([fingerDeformBone1Extremities.minZ], [fingerDeformBone1Extremities.maxZ]) * 0.35
-            fingerBone2.head.y = fingerDeformBone2Extremities.minY + math.dist([fingerDeformBone2Extremities.minY], [fingerDeformBone2Extremities.maxY]) * 0.35
-            fingerBone2.head.z = fingerDeformBone2Extremities.minZ + math.dist([fingerDeformBone2Extremities.minZ], [fingerDeformBone2Extremities.maxZ]) * 0.3
-            fingerBone3.head.y = fingerDeformBone3Extremities.minY + math.dist([fingerDeformBone3Extremities.minY], [fingerDeformBone3Extremities.maxY]) * 0.4
-            fingerBone3.head.z = fingerDeformBone3Extremities.minZ + math.dist([fingerDeformBone3Extremities.minZ], [fingerDeformBone3Extremities.maxZ]) * 0.45
-            fingerBone3.tail.y = fingerDeformBone3Extremities.minY + math.dist([fingerDeformBone3Extremities.minY], [fingerDeformBone3Extremities.maxY]) * 0.1
-            fingerBone3.tail.z = fingerDeformBone3Extremities.minZ + math.dist([fingerDeformBone3Extremities.minZ], [fingerDeformBone3Extremities.maxZ]) * 0.25
-            fingerBone1.parent = rig.data.edit_bones[fingerPalmBoneName]
-        fingerBone1.roll = fingerBone1Roll
-        fingerBone2.roll = fingerBone2Roll
-        fingerBone3.roll = fingerBone3Roll
     
     if build.kk_extras:
         finalizeFingerBones(True, metarig, names.LEFT_WRIST_BONE, names.LEFT_INDEX_FINGER_PALM_BONE, names.LEFT_INDEX_FINGER_BONE1, names.LEFT_INDEX_FINGER_BONE2, names.LEFT_INDEX_FINGER_BONE3, names.LEFT_INDEX_FINGER_DEFORM_BONE1, names.LEFT_INDEX_FINGER_DEFORM_BONE2, names.LEFT_INDEX_FINGER_DEFORM_BONE3, build.body, radians(0), radians(0), radians(5), radians(10))
@@ -1233,7 +1010,12 @@ def main(build):
         finalizeFingerBones(False, metarig, names.RIGHT_WRIST_BONE, names.RIGHT_LITTLE_FINGER_PALM_BONE, names.RIGHT_LITTLE_FINGER_BONE1, names.RIGHT_LITTLE_FINGER_BONE2, names.RIGHT_LITTLE_FINGER_BONE3, names.RIGHT_LITTLE_FINGER_DEFORM_BONE1, names.RIGHT_LITTLE_FINGER_DEFORM_BONE2, names.RIGHT_LITTLE_FINGER_DEFORM_BONE3, build.body, radians(0), radians(20), radians(18), radians(16))
         finalizeFingerBones(True, metarig, names.LEFT_WRIST_BONE, names.LEFT_INDEX_FINGER_PALM_BONE, names.LEFT_THUMB_BONE1, names.LEFT_THUMB_BONE2, names.LEFT_THUMB_BONE3, names.LEFT_THUMB_DEFORM_BONE1, names.LEFT_THUMB_DEFORM_BONE2, names.LEFT_THUMB_DEFORM_BONE3, build.body, None, radians(-257), radians(-260), radians(-263), False, True)
         finalizeFingerBones(False, metarig, names.RIGHT_WRIST_BONE, names.RIGHT_INDEX_FINGER_PALM_BONE, names.RIGHT_THUMB_BONE1, names.RIGHT_THUMB_BONE2, names.RIGHT_THUMB_BONE3, names.RIGHT_THUMB_DEFORM_BONE1, names.RIGHT_THUMB_DEFORM_BONE2, names.RIGHT_THUMB_DEFORM_BONE3, build.body, None, radians(-103), radians(-106), radians(-109), False, True)
-        
+
+
+def _skirt(build):
+    """The skirt's parent copy and palm bones."""
+    metarig = build.metarig
+    hasSkirt = build.features.skirt
     skirtPalmBoneRatioReferences = [Vector((-0.0000, -0.0083, 0.0287)), Vector((-0.0057, -0.0080, 0.0294)), Vector((-0.0136, -0.0002, 0.0317)), Vector((-0.0094, 0.0151, 0.0360)), Vector((-0.0010, 0.0153, 0.0333)), Vector((0.0094, 0.0151, 0.0360)), Vector((0.0136, -0.0002, 0.0317)), Vector((0.0057, -0.0080, 0.0294))]
     if hasSkirt and not metarig.data.edit_bones.get(names.SKIRT_PARENT_BONE_COPY):
         koikatsuCommons.copyBone(metarig, names.SKIRT_PARENT_BONE, names.SKIRT_PARENT_BONE_COPY)
@@ -1280,17 +1062,17 @@ def main(build):
     # axes here, for its drivers on upright bones. Those drivers are gone (ADR 0038): the joint
     # corrections are taken off before these scripts and put back on the generated rig.
 
+
+def _rigify_types(build):
+    """Each bone's Rigify type and parameters."""
+    metarig = build.metarig
+    hasRiggedTongue = build.features.rigged_tongue
+    hasBetterPenetrationMod = build.features.better_penetration
     '''Apply rigify bone type to all bones'''
 
     for bone in metarig.pose.bones[:]:
         bone.rigify_type = "basic.raw_copy"
                        
-    def finalizeFingerBoneParameters(rig, fingerBone1Name, fingerBone2Name, fingerBone3Name):
-        metarig.pose.bones[fingerBone1Name].rigify_type = "limbs.super_finger"
-        metarig.pose.bones[fingerBone1Name].rigify_parameters.primary_rotation_axis = "-X"
-        metarig.pose.bones[fingerBone1Name].rigify_parameters.make_extra_ik_control = True
-        metarig.pose.bones[fingerBone2Name].rigify_type = ""
-        metarig.pose.bones[fingerBone3Name].rigify_type = ""
     
     metarig.pose.bones[names.EYES_TRACK_TARGET_BONE].rigify_parameters.optional_widget_type = "pivot_cross"
     metarig.pose.bones[names.EYEBALLS_BONE].rigify_parameters.optional_widget_type = "bone"
@@ -1402,16 +1184,16 @@ def main(build):
         metarig.pose.bones[names.RIGHT_RING_FINGER_PALM_BONE].rigify_type = ""
         metarig.pose.bones[names.LEFT_LITTLE_FINGER_PALM_BONE].rigify_type = ""
         metarig.pose.bones[names.RIGHT_LITTLE_FINGER_PALM_BONE].rigify_type = ""
-    finalizeFingerBoneParameters(metarig, names.LEFT_THUMB_BONE1, names.LEFT_THUMB_BONE2, names.LEFT_THUMB_BONE3)
-    finalizeFingerBoneParameters(metarig, names.RIGHT_THUMB_BONE1, names.RIGHT_THUMB_BONE2, names.RIGHT_THUMB_BONE3)
-    finalizeFingerBoneParameters(metarig, names.LEFT_INDEX_FINGER_BONE1, names.LEFT_INDEX_FINGER_BONE2, names.LEFT_INDEX_FINGER_BONE3)
-    finalizeFingerBoneParameters(metarig, names.RIGHT_INDEX_FINGER_BONE1, names.RIGHT_INDEX_FINGER_BONE2, names.RIGHT_INDEX_FINGER_BONE3)
-    finalizeFingerBoneParameters(metarig, names.LEFT_MIDDLE_FINGER_BONE1, names.LEFT_MIDDLE_FINGER_BONE2, names.LEFT_MIDDLE_FINGER_BONE3)
-    finalizeFingerBoneParameters(metarig, names.RIGHT_MIDDLE_FINGER_BONE1, names.RIGHT_MIDDLE_FINGER_BONE2, names.RIGHT_MIDDLE_FINGER_BONE3)
-    finalizeFingerBoneParameters(metarig, names.LEFT_RING_FINGER_BONE1, names.LEFT_RING_FINGER_BONE2, names.LEFT_RING_FINGER_BONE3)
-    finalizeFingerBoneParameters(metarig, names.RIGHT_RING_FINGER_BONE1, names.RIGHT_RING_FINGER_BONE2, names.RIGHT_RING_FINGER_BONE3)
-    finalizeFingerBoneParameters(metarig, names.LEFT_LITTLE_FINGER_BONE1, names.LEFT_LITTLE_FINGER_BONE2, names.LEFT_LITTLE_FINGER_BONE3)
-    finalizeFingerBoneParameters(metarig, names.RIGHT_LITTLE_FINGER_BONE1, names.RIGHT_LITTLE_FINGER_BONE2, names.RIGHT_LITTLE_FINGER_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.LEFT_THUMB_BONE1, names.LEFT_THUMB_BONE2, names.LEFT_THUMB_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.RIGHT_THUMB_BONE1, names.RIGHT_THUMB_BONE2, names.RIGHT_THUMB_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.LEFT_INDEX_FINGER_BONE1, names.LEFT_INDEX_FINGER_BONE2, names.LEFT_INDEX_FINGER_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.RIGHT_INDEX_FINGER_BONE1, names.RIGHT_INDEX_FINGER_BONE2, names.RIGHT_INDEX_FINGER_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.LEFT_MIDDLE_FINGER_BONE1, names.LEFT_MIDDLE_FINGER_BONE2, names.LEFT_MIDDLE_FINGER_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.RIGHT_MIDDLE_FINGER_BONE1, names.RIGHT_MIDDLE_FINGER_BONE2, names.RIGHT_MIDDLE_FINGER_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.LEFT_RING_FINGER_BONE1, names.LEFT_RING_FINGER_BONE2, names.LEFT_RING_FINGER_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.RIGHT_RING_FINGER_BONE1, names.RIGHT_RING_FINGER_BONE2, names.RIGHT_RING_FINGER_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.LEFT_LITTLE_FINGER_BONE1, names.LEFT_LITTLE_FINGER_BONE2, names.LEFT_LITTLE_FINGER_BONE3)
+    finalizeFingerBoneParameters(build, metarig, names.RIGHT_LITTLE_FINGER_BONE1, names.RIGHT_LITTLE_FINGER_BONE2, names.RIGHT_LITTLE_FINGER_BONE3)
     metarig.pose.bones[names.LEFT_LEG_BONE].rigify_type = "limbs.leg"
     metarig.pose.bones[names.RIGHT_LEG_BONE].rigify_type = "limbs.leg"
     metarig.pose.bones[names.LEFT_LEG_BONE].rigify_parameters.extra_ik_toe = True
@@ -1441,7 +1223,17 @@ def main(build):
         metarig.pose.bones[names.MID_RIGHT_KNEE_JOINT_CORRECTION_BONE].rigify_parameters.relink_constraints = True
         metarig.pose.bones[names.MID_LEFT_KNEE_JOINT_CORRECTION_BONE].rigify_parameters.parent_bone = names.LEFT_LEG_DEFORM_BONE1
         metarig.pose.bones[names.MID_RIGHT_KNEE_JOINT_CORRECTION_BONE].rigify_parameters.parent_bone = names.RIGHT_LEG_DEFORM_BONE1
-    
+
+
+def _bone_lists(build, accessories):
+    """This Character's control, useful and deform bone lists, and the types and layers they set."""
+    metarig = build.metarig
+    hasSkirt = build.features.skirt
+    hasRiggedTongue = build.features.rigged_tongue
+    hasBetterPenetrationMod = build.features.better_penetration
+    isMale = build.features.male
+    (accessoryBoneNames, accessoryMchBoneNames, faceMchBoneNames, accessoryBoneConnectedChildNames, accessoryBoneConnectedParentNames, accessoryMchConnectedParentNames) = accessories
+    metarigIdBoneName = build.metarig_id_bone
     torsoLayerBoneNames = list(names.TORSO_LAYER_BONE_NAMES)  # this Character's copy, as below
     if isMale:
         torsoLayerBoneNames.remove(names.BREASTS_HANDLE_BONE)
@@ -1659,7 +1451,13 @@ def main(build):
                             constraint.name = constraint.name[:index] + "@" + names.DEFORM_BONE_PREFIX + targetToChange
                         else:
                             constraint.name = constraint.name + "@" + names.DEFORM_BONE_PREFIX + targetToChange
-    
+    return (defBoneNames, usefulBoneNames, eyesSecondaryLayerBoneNames, torsoLayerBoneNames, torsoTweakLayerBoneNames)
+
+
+def _bone_collections(build, lists):
+    """Which bone collection each bone goes in, deform flags and locks."""
+    metarig = build.metarig
+    (defBoneNames, usefulBoneNames, eyesSecondaryLayerBoneNames, torsoLayerBoneNames, torsoTweakLayerBoneNames) = lists
     switch(metarig, 'OBJECT')
     #Move all cf_s bones to the Charamaker layer
     for bone in metarig.data.bones:
@@ -1779,12 +1577,12 @@ def main(build):
     #then assign the bone to a new "Emotions" bone collection
     metarig.data.collections.new(names.EMOTIONS_LAYER)
 
+
+def _rigify_ui(build):
+    """The Rigify UI: collection order, rows and colour sets, and the toe roll."""
+    metarig = build.metarig
     '''Set up rigify UI'''
     
-    def get_rigify_index(collection_name):
-        # Ported: a collection the Character has no bones for is made empty, as the legacy armature had it.
-        collection = metarig.data.collections_all.get(str(collection_name)) or metarig.data.collections.new(str(collection_name))
-        return collection.index
     
     #move the IK bone collections above the FK collections in the bone collection list or the UI will look weird
     for collection in [
@@ -1794,44 +1592,44 @@ def main(build):
         names.RIGHT_ARM_LAYER + names.IK_LAYER_SUFFIX,
         names.EMOTIONS_LAYER,
         ]:
-            metarig.data.collections.move(get_rigify_index(collection), 0)
+            metarig.data.collections.move(get_rigify_index(build, collection), 0)
 
-    metarig.data.collections_all[get_rigify_index(names.KOIKATSU_DEFORM_BONES_LAYER)].rigify_ui_row = 0 #remove charamaker bones from UI
-    metarig.data.collections_all[get_rigify_index(names.JUNK_LAYER)].rigify_ui_row = 0 #remove junk from UI (issue #25)
+    metarig.data.collections_all[get_rigify_index(build, names.KOIKATSU_DEFORM_BONES_LAYER)].rigify_ui_row = 0 #remove charamaker bones from UI
+    metarig.data.collections_all[get_rigify_index(build, names.JUNK_LAYER)].rigify_ui_row = 0 #remove junk from UI (issue #25)
 
-    metarig.data.collections_all[get_rigify_index(names.TORSO_LAYER)].rigify_ui_row = 1 #move torso
-    metarig.data.collections_all[get_rigify_index(names.TORSO_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 1 #move torso fk
+    metarig.data.collections_all[get_rigify_index(build, names.TORSO_LAYER)].rigify_ui_row = 1 #move torso
+    metarig.data.collections_all[get_rigify_index(build, names.TORSO_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 1 #move torso fk
 
-    metarig.data.collections_all[get_rigify_index(names.LEFT_ARM_LAYER + names.IK_LAYER_SUFFIX)].rigify_ui_row = 2 #move arm L IK
-    metarig.data.collections_all[get_rigify_index(names.LEFT_ARM_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 2 #arm L fk
+    metarig.data.collections_all[get_rigify_index(build, names.LEFT_ARM_LAYER + names.IK_LAYER_SUFFIX)].rigify_ui_row = 2 #move arm L IK
+    metarig.data.collections_all[get_rigify_index(build, names.LEFT_ARM_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 2 #arm L fk
     
-    metarig.data.collections_all[get_rigify_index(names.RIGHT_ARM_LAYER + names.IK_LAYER_SUFFIX)].rigify_ui_row = 3 #move arm R IK
-    metarig.data.collections_all[get_rigify_index(names.RIGHT_ARM_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 3 #arm R FK
+    metarig.data.collections_all[get_rigify_index(build, names.RIGHT_ARM_LAYER + names.IK_LAYER_SUFFIX)].rigify_ui_row = 3 #move arm R IK
+    metarig.data.collections_all[get_rigify_index(build, names.RIGHT_ARM_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 3 #arm R FK
 
-    metarig.data.collections_all[get_rigify_index(names.LEFT_LEG_LAYER + names.IK_LAYER_SUFFIX)].rigify_ui_row = 2 #move leg L IK
-    metarig.data.collections_all[get_rigify_index(names.LEFT_LEG_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 2 #move leg L FK
+    metarig.data.collections_all[get_rigify_index(build, names.LEFT_LEG_LAYER + names.IK_LAYER_SUFFIX)].rigify_ui_row = 2 #move leg L IK
+    metarig.data.collections_all[get_rigify_index(build, names.LEFT_LEG_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 2 #move leg L FK
 
-    metarig.data.collections_all[get_rigify_index(names.RIGHT_LEG_LAYER + names.IK_LAYER_SUFFIX)].rigify_ui_row = 3 #move leg R IK
-    metarig.data.collections_all[get_rigify_index(names.RIGHT_LEG_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 3 #move leg R FK
+    metarig.data.collections_all[get_rigify_index(build, names.RIGHT_LEG_LAYER + names.IK_LAYER_SUFFIX)].rigify_ui_row = 3 #move leg R IK
+    metarig.data.collections_all[get_rigify_index(build, names.RIGHT_LEG_LAYER + names.FK_LAYER_SUFFIX)].rigify_ui_row = 3 #move leg R FK
 
-    metarig.data.collections_all[get_rigify_index(names.FINGERS_LAYER)].rigify_ui_row = 6 #fingers
-    metarig.data.collections_all[get_rigify_index(names.EMOTIONS_LAYER)].rigify_ui_row = 6 #move emotions
-    metarig.data.collections_all[get_rigify_index(names.HAIR_LAYER)].rigify_ui_row = 6 #move hair / accessories
+    metarig.data.collections_all[get_rigify_index(build, names.FINGERS_LAYER)].rigify_ui_row = 6 #fingers
+    metarig.data.collections_all[get_rigify_index(build, names.EMOTIONS_LAYER)].rigify_ui_row = 6 #move emotions
+    metarig.data.collections_all[get_rigify_index(build, names.HAIR_LAYER)].rigify_ui_row = 6 #move hair / accessories
 
-    metarig.data.collections_all[get_rigify_index(names.TORSO_LAYER + names.TWEAK_LAYER_SUFFIX)].rigify_ui_row = 7 #move torso tweak
-    metarig.data.collections_all[get_rigify_index(names.FINGERS_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 7 #move fingers detail
+    metarig.data.collections_all[get_rigify_index(build, names.TORSO_LAYER + names.TWEAK_LAYER_SUFFIX)].rigify_ui_row = 7 #move torso tweak
+    metarig.data.collections_all[get_rigify_index(build, names.FINGERS_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 7 #move fingers detail
 
-    metarig.data.collections_all[get_rigify_index(names.HAIR_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 8 #move hair detail to same layer
+    metarig.data.collections_all[get_rigify_index(build, names.HAIR_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 8 #move hair detail to same layer
 
-    metarig.data.collections_all[get_rigify_index(names.HAIR_LAYER + names.MCH_LAYER_SUFFIX)].rigify_ui_row = 8 #move hair mch to same layer
+    metarig.data.collections_all[get_rigify_index(build, names.HAIR_LAYER + names.MCH_LAYER_SUFFIX)].rigify_ui_row = 8 #move hair mch to same layer
 
-    metarig.data.collections_all[get_rigify_index(names.SKIRT_LAYER)].rigify_ui_row = 9 #move skirt
-    metarig.data.collections_all[get_rigify_index(names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 9 #move skirt detail
-    metarig.data.collections_all[get_rigify_index(names.EYES_LAYER)].rigify_ui_row = 10 #move eyes primary
-    metarig.data.collections_all[get_rigify_index(names.FACE_LAYER)].rigify_ui_row = 10 #move face
-    metarig.data.collections_all[get_rigify_index(names.FACE_LAYER + names.MCH_LAYER_SUFFIX)].rigify_ui_row = 10 #move face mch
+    metarig.data.collections_all[get_rigify_index(build, names.SKIRT_LAYER)].rigify_ui_row = 9 #move skirt
+    metarig.data.collections_all[get_rigify_index(build, names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 9 #move skirt detail
+    metarig.data.collections_all[get_rigify_index(build, names.EYES_LAYER)].rigify_ui_row = 10 #move eyes primary
+    metarig.data.collections_all[get_rigify_index(build, names.FACE_LAYER)].rigify_ui_row = 10 #move face
+    metarig.data.collections_all[get_rigify_index(build, names.FACE_LAYER + names.MCH_LAYER_SUFFIX)].rigify_ui_row = 10 #move face mch
 
-    metarig.data.collections_all[get_rigify_index(names.NSFW_LAYER)].rigify_ui_row = 14 #move nsfw
+    metarig.data.collections_all[get_rigify_index(build, names.NSFW_LAYER)].rigify_ui_row = 14 #move nsfw
 
     #set new checkbox for the toe lock
     metarig.pose.bones[names.LEFT_LEG_BONE].rigify_parameters.extra_toe_roll  = True
@@ -1861,3 +1659,347 @@ def main(build):
     for suffix, colourSet in (("", "Special"), (names.MCH_LAYER_SUFFIX, "Tweak"), (names.DETAIL_LAYER_SUFFIX, "FK")):
         if hairCollection := metarig.data.collections_all.get(names.HAIR_LAYER + suffix):
             hairCollection.rigify_color_set_name = colourSet
+
+
+def fixDuplicateBoneName(build, boneName, childBoneName):
+    metarig = build.metarig
+    childBone = metarig.pose.bones.get(childBoneName)
+    if childBone.parent.name != boneName:
+        metarig.pose.bones.get(boneName).name = boneName + names.RENAMED_NAME_SUFFIX
+        metarig.pose.bones.get(childBone.parent.name).name = boneName
+
+
+def objToBone(obj, rig, boneName):
+    """ 
+    Places an object at the location/rotation/scale of the given bone.
+    """
+    assert bpy.context.mode != 'EDIT_ARMATURE', "assert bpy.context.mode != 'EDIT_ARMATURE'"
+
+    bone = rig.pose.bones[boneName]
+    loc = bone.custom_shape_translation
+    rot = bone.custom_shape_rotation_euler
+    scale = Vector(bone.custom_shape_scale_xyz)
+
+    if bone.use_custom_shape_bone_size:
+        scale *= bone.length
+
+    obj.rotation_mode = 'XYZ'
+    
+    shape_mat = Matrix.LocRotScale(loc, Euler(rot), scale)
+    obj.matrix_basis = rig.matrix_world @ bone.bone.matrix_local @ shape_mat
+
+
+def createWidget(build, objName, collectionName, rig, boneName):
+    """ 
+    Creates an empty widget object and returns the object.
+    """
+    # Ported: the widget goes into the Character's own widget collection, and another
+    # Character's widget of the same name is left alone (Blender adds .001).
+    mesh = bpy.data.meshes.new(objName)
+    obj = bpy.data.objects.new(objName, mesh)
+    build.widgets.objects.link(obj)
+    objToBone(obj, rig, boneName)
+    return obj
+
+
+def createEyeWidget(build, objName, collectionName, rig, boneName, size = 1.0):
+    obj = createWidget(build, objName, collectionName, rig, boneName)
+    if obj is not None:
+        verts = [(1.1920928955078125e-07*size, 0.5000000596046448*size, 0.0*size), (-0.12940943241119385*size, 0.482962965965271*size, 0.0*size), (-0.24999988079071045*size, 0.4330127537250519*size, 0.0*size), (-0.35355329513549805*size, 0.35355344414711*size, 0.0*size), (-0.43301260471343994*size, 0.2500000596046448*size, 0.0*size), (-0.4829627275466919*size, 0.12940959632396698*size, 0.0*size), (-0.49999988079071045*size, 1.0094120739267964e-07*size, 0.0*size), (-0.482962965965271*size, -0.12940940260887146*size, 0.0*size), (-0.43301260471343994*size, -0.24999986588954926*size, 0.0*size), (-0.3535534143447876*size, -0.35355323553085327*size, 0.0*size), (-0.25*size, -0.43301257491111755*size, 0.0*size), (-0.1294095516204834*size, -0.48296281695365906*size, 0.0*size), (-1.1920928955078125e-07*size, -0.4999999403953552*size, 0.0*size), (0.12940943241119385*size, -0.4829629063606262*size, 0.0*size), (0.24999988079071045*size, -0.4330127537250519*size, 0.0*size), (0.35355329513549805*size, -0.35355353355407715*size, 0.0*size), (0.4330127239227295*size, -0.25000008940696716*size, 0.0*size), (0.482962965965271*size, -0.12940965592861176*size, 0.0*size), (0.5000001192092896*size, -1.6926388468618825e-07*size, 0.0*size), (0.48296308517456055*size, 0.1294093281030655*size, 0.0*size), (0.4330129623413086*size, 0.24999980628490448*size, 0.0*size), (0.35355377197265625*size, 0.35355323553085327*size, 0.0*size), (0.25000035762786865*size, 0.43301260471343994*size, 0.0*size), (0.1294100284576416*size, 0.48296287655830383*size, 0.0*size), ]
+        edges = [(1, 0), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (7, 6), (8, 7), (9, 8), (10, 9), (11, 10), (12, 11), (13, 12), (14, 13), (15, 14), (16, 15), (17, 16), (18, 17), (19, 18), (20, 19), (21, 20), (22, 21), (23, 22), (0, 23), ]
+        faces = []
+
+        mesh = obj.data
+        mesh.from_pydata(verts, edges, faces)
+        mesh.update()
+        return obj
+    else:
+        return None
+
+
+def createEyesWidget(build, objName, collectionName, rig, boneName, size = 1.0):
+    obj = createWidget(build, objName, collectionName, rig, boneName)
+    if obj is not None:
+        verts = [(0.8928930759429932*size, -0.7071065902709961*size, 0.0*size), (0.8928932547569275*size, 0.7071067690849304*size, 0.0*size), (-1.8588197231292725*size, -0.9659252762794495*size, 0.0*size), (-2.100001096725464*size, -0.8660248517990112*size, 0.0*size), (-2.3071072101593018*size, -0.7071059942245483*size, 0.0*size), (-2.4660258293151855*size, -0.49999913573265076*size, 0.0*size), (-2.5659260749816895*size, -0.258818119764328*size, 0.0*size), (-2.5999999046325684*size, 8.575012770961621e-07*size, 0.0*size), (-2.5659255981445312*size, 0.2588198482990265*size, 0.0*size), (-2.4660253524780273*size, 0.5000006556510925*size, 0.0*size), (-2.3071064949035645*size, 0.7071075439453125*size, 0.0*size), (-2.099999189376831*size, 0.866025984287262*size, 0.0*size), (-1.8588184118270874*size, 0.9659261703491211*size, 0.0*size), (-1.5999996662139893*size, 1.000000238418579*size, 0.0*size), (-1.341180443763733*size, 0.9659258723258972*size, 0.0*size), (-1.0999995470046997*size, 0.8660253882408142*size, 0.0*size), (-0.8928929567337036*size, 0.7071067094802856*size, 0.0*size), (-0.892893373966217*size, -0.7071066498756409*size, 0.0*size), (-1.100000262260437*size, -0.8660252690315247*size, 0.0*size), (-1.3411810398101807*size, -0.9659255743026733*size, 0.0*size), (1.600000023841858*size, 1.0*size, 0.0*size), (1.3411810398101807*size, 0.9659258127212524*size, 0.0*size), (1.100000023841858*size, 0.8660253882408142*size, 0.0*size), (-1.600000262260437*size, -0.9999997615814209*size, 0.0*size), (1.0999997854232788*size, -0.8660252690315247*size, 0.0*size), (1.341180682182312*size, -0.9659257531166077*size, 0.0*size), (1.5999996662139893*size, -1.0*size, 0.0*size), (1.8588186502456665*size, -0.965925931930542*size, 0.0*size), (2.0999996662139893*size, -0.8660256266593933*size, 0.0*size), (2.3071064949035645*size, -0.7071071863174438*size, 0.0*size), (2.4660253524780273*size, -0.5000002980232239*size, 0.0*size), (2.5659255981445312*size, -0.25881943106651306*size, 0.0*size), (2.5999999046325684*size, -4.649122899991198e-07*size, 0.0*size), (2.5659260749816895*size, 0.25881853699684143*size, 0.0*size), (2.4660258293151855*size, 0.4999994933605194*size, 0.0*size), (2.3071072101593018*size, 0.707106351852417*size, 0.0*size), (2.1000006198883057*size, 0.8660250902175903*size, 0.0*size), (1.8588197231292725*size, 0.9659256339073181*size, 0.0*size), (-1.8070557117462158*size, -0.7727401852607727*size, 0.0*size), (-2.0000009536743164*size, -0.6928198337554932*size, 0.0*size), (-2.1656856536865234*size, -0.5656847357749939*size, 0.0*size), (-2.292820692062378*size, -0.3999992609024048*size, 0.0*size), (-2.3727407455444336*size, -0.20705445110797882*size, 0.0*size), (-2.3999998569488525*size, 7.336847716032935e-07*size, 0.0*size), (-2.3727405071258545*size, 0.207055926322937*size, 0.0*size), (-2.2928202152252197*size, 0.40000057220458984*size, 0.0*size), (-2.1656851768493652*size, 0.5656861066818237*size, 0.0*size), (-1.9999992847442627*size, 0.6928208470344543*size, 0.0*size), (-1.8070547580718994*size, 0.7727410197257996*size, 0.0*size), (-1.5999996662139893*size, 0.8000002503395081*size, 0.0*size), (-1.3929443359375*size, 0.7727407813072205*size, 0.0*size), (-1.1999995708465576*size, 0.6928203701972961*size, 0.0*size), (-1.0343143939971924*size, 0.5656854510307312*size, 0.0*size), (-1.0343146324157715*size, -0.5656852722167969*size, 0.0*size), (-1.2000001668930054*size, -0.6928201913833618*size, 0.0*size), (-1.3929448127746582*size, -0.7727404236793518*size, 0.0*size), (-1.6000001430511475*size, -0.7999997735023499*size, 0.0*size), (1.8070557117462158*size, 0.772739827632904*size, 0.0*size), (2.0000009536743164*size, 0.6928195953369141*size, 0.0*size), (2.1656856536865234*size, 0.5656843781471252*size, 0.0*size), (2.292820692062378*size, 0.39999890327453613*size, 0.0*size), (2.3727407455444336*size, 0.20705409348011017*size, 0.0*size), (2.3999998569488525*size, -1.0960745839838637e-06*size, 0.0*size), (2.3727405071258545*size, -0.20705628395080566*size, 0.0*size), (2.2928202152252197*size, -0.4000009298324585*size, 0.0*size), (2.1656851768493652*size, -0.5656863451004028*size, 0.0*size), (1.9999992847442627*size, -0.692821204662323*size, 0.0*size), (1.8070547580718994*size, -0.7727413773536682*size, 0.0*size), (1.5999996662139893*size, -0.8000004887580872*size, 0.0*size), (1.3929443359375*size, -0.7727410197257996*size, 0.0*size), (1.1999995708465576*size, -0.6928204894065857*size, 0.0*size), (1.0343143939971924*size, -0.5656855702400208*size, 0.0*size), (1.0343146324157715*size, 0.5656850337982178*size, 0.0*size), (1.2000004053115845*size, 0.6928199529647827*size, 0.0*size), (1.3929448127746582*size, 0.7727401852607727*size, 0.0*size), (1.6000001430511475*size, 0.7999995350837708*size, 0.0*size), ]
+        edges = [(24, 0), (1, 22), (16, 1), (17, 0), (23, 2), (2, 3), (3, 4), (4, 5), (5, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (11, 12), (12, 13), (21, 20), (22, 21), (13, 14), (14, 15), (15, 16), (17, 18), (18, 19), (19, 23), (25, 24), (26, 25), (27, 26), (28, 27), (29, 28), (30, 29), (31, 30), (32, 31), (33, 32), (34, 33), (35, 34), (36, 35), (37, 36), (20, 37), (56, 38), (38, 39), (39, 40), (40, 41), (41, 42), (42, 43), (43, 44), (44, 45), (45, 46), (46, 47), (47, 48), (48, 49), (49, 50), (50, 51), (51, 52), (53, 54), (54, 55), (55, 56), (75, 57), (57, 58), (58, 59), (59, 60), (60, 61), (61, 62), (62, 63), (63, 64), (64, 65), (65, 66), (66, 67), (67, 68), (68, 69), (69, 70), (70, 71), (72, 73), (73, 74), (74, 75), (52, 72), (53, 71), ]
+        faces = []
+
+        mesh = obj.data
+        mesh.from_pydata(verts, edges, faces)
+        mesh.update()
+        return obj
+    else:
+        return None
+
+
+def arrangeTripleWidgetSet(widgetCollectionName, parentWidget, leftChildWidget, rightChildWidget, snapGeometryToOrigin, 
+vertexGroupObject, leftVertexGroupName, rightVertexGroupName, 
+rotate, rotateXRadians, rotateYRadians, rotateZRadians, 
+translate, vertexGroupMidXFactor, vertexGroupMinYFactor, parentWidgetTranslateZFactor, 
+resize, parentWidgetResizeXFactor, parentWidgetResizeYFactor, parentWidgetResizeZFactor, 
+createHandleBones, rig, parentBoneName, parentHandleBoneName, leftChildBoneName, leftChildHandleBoneName, rightChildBoneName, rightChildHandleBoneName):
+    # Ported: the legacy script shaped the widgets in Edit Mode with transform operators around
+    # each widget's bounding-box centre in global space; widgets.py does the same on the data API.
+    bpy.context.view_layer.update()
+    def shape(widget):
+        if snapGeometryToOrigin:
+            widgets.geometry_to_origin(widget)
+        if rotate:
+            for axis, degrees in (('X', rotateXRadians), ('Y', rotateYRadians), ('Z', rotateZRadians)):
+                if degrees:
+                    widgets.rotate(widget, axis, math.radians(degrees))
+    shape(parentWidget)
+    leftVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(leftVertexGroupName, vertexGroupObject)
+    rightVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(rightVertexGroupName, vertexGroupObject)
+    if not leftVertexGroupExtremities.maxZ or not rightVertexGroupExtremities.maxZ:
+        leftVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities('cf_J_Eye07_s_L', vertexGroupObject)
+        rightVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities('cf_J_Eye07_s_R', vertexGroupObject)
+
+    leftVertexGroupMidZ = (leftVertexGroupExtremities.maxZ + leftVertexGroupExtremities.minZ) / 2
+    rightVertexGroupMidZ = (rightVertexGroupExtremities.maxZ + rightVertexGroupExtremities.minZ) / 2
+    averageVertexGroupMidZ = statistics.mean([leftVertexGroupMidZ, rightVertexGroupMidZ])
+    averageVertexGroupMinY = statistics.mean([leftVertexGroupExtremities.minY, rightVertexGroupExtremities.minY])
+    if translate and not createHandleBones:
+        widgets.translate(parentWidget, (0, averageVertexGroupMinY * vertexGroupMinYFactor, -(parentWidget.location[2] - averageVertexGroupMidZ * parentWidgetTranslateZFactor)))
+    leftVertexGroupMidX = (leftVertexGroupExtremities.maxX + leftVertexGroupExtremities.minX) / 2
+    rightVertexGroupMidX = (rightVertexGroupExtremities.maxX + rightVertexGroupExtremities.minX) / 2
+    if resize:
+        widgets.resize(parentWidget, (parentWidgetResizeXFactor, parentWidgetResizeYFactor, parentWidgetResizeZFactor))
+
+    shape(leftChildWidget)
+    if translate and not createHandleBones:
+        widgets.translate(leftChildWidget, (leftVertexGroupMidX * vertexGroupMidXFactor, leftVertexGroupExtremities.minY * vertexGroupMinYFactor, -(leftChildWidget.location[2] - leftVertexGroupMidZ * parentWidgetTranslateZFactor)))
+    leftVertexGroupLengthX = leftVertexGroupExtremities.maxX - leftVertexGroupExtremities.minX
+    rightVertexGroupLengthX = rightVertexGroupExtremities.maxX - rightVertexGroupExtremities.minX
+    averageVertexGroupLengthX = statistics.mean([leftVertexGroupLengthX, rightVertexGroupLengthX])
+    leftVertexGroupLengthY = leftVertexGroupExtremities.maxY - leftVertexGroupExtremities.minY
+    rightVertexGroupLengthY = rightVertexGroupExtremities.maxY - rightVertexGroupExtremities.minY
+    averageVertexGroupLengthY = statistics.mean([leftVertexGroupLengthY, rightVertexGroupLengthY])
+    leftVertexGroupLengthZ = leftVertexGroupExtremities.maxZ - leftVertexGroupExtremities.minZ
+    rightVertexGroupLengthZ = rightVertexGroupExtremities.maxZ - rightVertexGroupExtremities.minZ
+    averageVertexGroupLengthZ = statistics.mean([leftVertexGroupLengthZ, rightVertexGroupLengthZ])
+    leftChildWidgetResizeXFactor = statistics.mean([parentWidgetResizeXFactor, parentWidgetResizeXFactor * (leftVertexGroupLengthX / averageVertexGroupLengthX)])
+    leftChildWidgetResizeYFactor = statistics.mean([parentWidgetResizeYFactor, parentWidgetResizeYFactor * (leftVertexGroupLengthY / averageVertexGroupLengthY)])
+    leftChildWidgetResizeZFactor = statistics.mean([parentWidgetResizeZFactor, parentWidgetResizeZFactor * (leftVertexGroupLengthZ / averageVertexGroupLengthZ)])
+    if resize:
+        widgets.resize(leftChildWidget, (leftChildWidgetResizeXFactor, leftChildWidgetResizeYFactor, leftChildWidgetResizeZFactor))
+
+    shape(rightChildWidget)
+    if translate and not createHandleBones:
+        widgets.translate(rightChildWidget, (rightVertexGroupMidX * vertexGroupMidXFactor, rightVertexGroupExtremities.minY * vertexGroupMinYFactor, -(rightChildWidget.location[2] - rightVertexGroupMidZ * parentWidgetTranslateZFactor)))
+    rightChildWidgetResizeXFactor = statistics.mean([parentWidgetResizeXFactor, parentWidgetResizeXFactor * (rightVertexGroupLengthX / averageVertexGroupLengthX)])
+    rightChildWidgetResizeYFactor = statistics.mean([parentWidgetResizeYFactor, parentWidgetResizeYFactor * (rightVertexGroupLengthY / averageVertexGroupLengthY)])
+    rightChildWidgetResizeZFactor = statistics.mean([parentWidgetResizeZFactor, parentWidgetResizeZFactor * (rightVertexGroupLengthZ / averageVertexGroupLengthZ)])
+    if resize:
+        widgets.resize(rightChildWidget, (rightChildWidgetResizeXFactor, rightChildWidgetResizeYFactor, rightChildWidgetResizeZFactor))
+
+    if createHandleBones:
+        
+        switch(rig, 'EDIT')
+        parentHandleBone = koikatsuCommons.copyBone(rig, parentBoneName, parentHandleBoneName)
+        if translate:
+            parentHandleBone.tail.y = parentHandleBone.tail.y + averageVertexGroupMinY * vertexGroupMinYFactor
+            parentHandleBone.head.y = parentHandleBone.head.y + averageVertexGroupMinY * vertexGroupMinYFactor
+            parentHandleBone.tail.z = parentHandleBone.tail.z - (parentWidget.location[2] - averageVertexGroupMidZ * parentWidgetTranslateZFactor)
+            parentHandleBone.head.z = parentHandleBone.head.z - (parentWidget.location[2] - averageVertexGroupMidZ * parentWidgetTranslateZFactor)
+        leftChildHandleBone = koikatsuCommons.copyBone(rig, leftChildBoneName, leftChildHandleBoneName)
+        if translate:
+            leftChildHandleBone.tail.x = leftChildHandleBone.tail.x + leftVertexGroupMidX * vertexGroupMidXFactor
+            leftChildHandleBone.head.x = leftChildHandleBone.head.x + leftVertexGroupMidX * vertexGroupMidXFactor
+            leftChildHandleBone.tail.y = leftChildHandleBone.tail.y + leftVertexGroupExtremities.minY * vertexGroupMinYFactor
+            leftChildHandleBone.head.y = leftChildHandleBone.head.y + leftVertexGroupExtremities.minY * vertexGroupMinYFactor
+            leftChildHandleBone.tail.z = leftChildHandleBone.tail.z - (leftChildWidget.location[2] - leftVertexGroupMidZ * parentWidgetTranslateZFactor)
+            leftChildHandleBone.head.z = leftChildHandleBone.head.z - (leftChildWidget.location[2] - leftVertexGroupMidZ * parentWidgetTranslateZFactor)
+        leftChildHandleBone.parent = parentHandleBone
+        rightChildHandleBone = koikatsuCommons.copyBone(rig, rightChildBoneName, rightChildHandleBoneName)
+        if translate:
+            rightChildHandleBone.tail.x = rightChildHandleBone.tail.x + rightVertexGroupMidX * vertexGroupMidXFactor
+            rightChildHandleBone.head.x = rightChildHandleBone.head.x + rightVertexGroupMidX * vertexGroupMidXFactor
+            rightChildHandleBone.tail.y = rightChildHandleBone.tail.y + rightVertexGroupExtremities.minY * vertexGroupMinYFactor
+            rightChildHandleBone.head.y = rightChildHandleBone.head.y + rightVertexGroupExtremities.minY * vertexGroupMinYFactor
+            rightChildHandleBone.tail.z = rightChildHandleBone.tail.z - (rightChildWidget.location[2] - rightVertexGroupMidZ * parentWidgetTranslateZFactor)
+            rightChildHandleBone.head.z = rightChildHandleBone.head.z - (rightChildWidget.location[2] - rightVertexGroupMidZ * parentWidgetTranslateZFactor)
+        rightChildHandleBone.parent = parentHandleBone
+        
+        switch(rig, 'OBJECT')
+
+
+def finalizeHandleBone(isEyeHandleBone, rig, boneName, handleBoneName, widget):
+    rig.pose.bones[handleBoneName].custom_shape = widget
+    if isEyeHandleBone:
+        rig.pose.bones[handleBoneName].lock_location[1] = True
+        rig.pose.bones[handleBoneName].lock_rotation[0] = True
+        rig.pose.bones[handleBoneName].lock_rotation[2] = True
+        rig.pose.bones[handleBoneName].lock_scale[1] = True
+    koikatsuCommons.addCopyTransformsConstraint(rig, boneName, handleBoneName, 'REPLACE', 'LOCAL', names.COPY_TRANSFORMS_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX)
+
+
+def finalizeEyeballBone(rig, boneName):
+    rig.pose.bones[boneName].lock_location[0] = True
+    rig.pose.bones[boneName].lock_location[1] = True
+    rig.pose.bones[boneName].lock_location[2] = True
+
+
+def removeAllConstraints(rig, boneName):
+    boneToEmpty = rig.pose.bones[boneName]
+    for constraint in boneToEmpty.constraints:
+        koikatsuCommons.removeConstraint(rig, boneName, constraint.name)
+
+
+def renameAllVertexGroups(build, vertexGroupNameOld, vertexGroupNameNew):
+    for obj in build.meshes(): 
+        if obj.type == 'MESH':
+            vertexGroup = obj.vertex_groups.get(vertexGroupNameOld)
+            if vertexGroup is not None:
+                vertexGroup.name = vertexGroupNameNew
+
+
+def fix_bone_orientations(build, armature):
+    # Connect all bones with their children if they have exactly one
+    metarig = build.metarig
+    for bone in armature.data.edit_bones:
+        if len(bone.children) == 1 and (metarig.data.bones[bone.name].collections.get(names.ORIGINAL_ACCESSORY_LAYER_INDEX) or metarig.data.bones[bone.name].collections.get(str(names.ORIGINAL_MCH_LAYER_INDEX))):
+            p1 = bone.head
+            p2 = bone.children[0].head
+            dist = ((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2 + (p2[2] - p1[2]) ** 2) ** (1/2)
+
+            # Only connect them if the other bone is a certain distance away, otherwise blender will delete them
+            if dist > 0.005:
+                bone.tail = bone.children[0].head
+                if len(bone.parent.children) == 1:  # if the bone's parent bone only has one child, connect the bones (Don't connect them all because that would mess up hand/finger bones)
+                    bone.use_connect = True
+
+
+def finalizeMchList(build, rig, mchBoneNames, sourceLayerIndex, excludedLayerIndexes, excludedList = None):
+    metarig = build.metarig
+    for childBoneName in mchBoneNames:
+        childBone = metarig.data.edit_bones[childBoneName]
+        #childBone.length = childBone.length / 4
+        if childBone.name == 'Center':
+            continue
+        if rig.data.bones[childBone.parent.name].collections.get(sourceLayerIndex) and childBone.parent.name not in mchBoneNames:
+            insideExcludedLayer = False
+            for excludedLayerIndex in excludedLayerIndexes:
+                if rig.data.bones[childBone.parent.name].collections.get(str(excludedLayerIndex)):
+                    insideExcludedLayer = True
+                    break
+            if not insideExcludedLayer and (excludedList is None or childBone.parent.name not in excludedList):
+                mchBoneNames.append(childBone.parent.name)
+
+
+def connectAndParentBones(rig, childBoneName, parentBoneName, connected):
+    childBone = rig.data.edit_bones[childBoneName]
+    parentBone = rig.data.edit_bones[parentBoneName]
+    parentBone.tail = childBone.head
+    childBone.parent = parentBone
+    childBone.use_connect = connected
+
+
+#using left vertex groups as reference for right bones because of inconsistent right group values
+def finalizeRiggedTongueSideBones(build, rig, leftBoneName, rightBoneName, length, factorX, factorY = None, factorZ = None):
+    leftBone = rig.data.edit_bones[leftBoneName]
+    rightBone = rig.data.edit_bones[rightBoneName]
+    riggedTongueLeftBoneVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(leftBoneName, build.body)
+    leftBone.head.x = riggedTongueLeftBoneVertexGroupExtremities.minX + math.dist([riggedTongueLeftBoneVertexGroupExtremities.minX], [riggedTongueLeftBoneVertexGroupExtremities.maxX]) * factorX
+    leftBone.tail.x = leftBone.head.x
+    rightBone.head.x = -leftBone.head.x
+    rightBone.tail.x = rightBone.head.x
+    if factorY:
+        leftBone.head.y = riggedTongueLeftBoneVertexGroupExtremities.minY + math.dist([riggedTongueLeftBoneVertexGroupExtremities.minY], [riggedTongueLeftBoneVertexGroupExtremities.maxY]) * factorY
+        leftBone.tail.y = leftBone.head.y
+        rightBone.head.y = leftBone.head.y
+        rightBone.tail.y = rightBone.head.y
+    if factorZ:
+        leftBone.head.z = riggedTongueLeftBoneVertexGroupExtremities.minZ + math.dist([riggedTongueLeftBoneVertexGroupExtremities.minZ], [riggedTongueLeftBoneVertexGroupExtremities.maxZ]) * factorZ
+        rightBone.head.z = leftBone.head.z
+    leftBone.length = length
+    rightBone.length = length
+
+
+def createPalmVertexGroups(build, wristVertexGroupName, palmVertexGroupName, rightSide, palmMinX, palmMaxX, palmMidY, lowerPalmMidY, higherPalmMidY):
+    for object in build.meshes(): 
+        if object.type == 'MESH':
+            wristVertexGroup = object.vertex_groups.get(wristVertexGroupName)
+            if wristVertexGroup is not None:
+                wristVertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(wristVertexGroupName, object)
+                palmVertexGroup = object.vertex_groups.get(palmVertexGroupName)
+                if palmVertexGroup is None:
+                    palmVertexGroup = object.vertex_groups.new(name = palmVertexGroupName)
+                for vertex in wristVertexGroupExtremities.vertices:
+                    if (not rightSide and wristVertexGroupExtremities.coordinates[vertex.index][0] > palmMinX) or (rightSide and wristVertexGroupExtremities.coordinates[vertex.index][0] < palmMaxX):
+                        if lowerPalmMidY is None or math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [palmMidY]) < math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [lowerPalmMidY]):
+                            if higherPalmMidY is None or math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [palmMidY]) < math.dist([wristVertexGroupExtremities.coordinates[vertex.index][1]], [higherPalmMidY]):
+                                palmVertexGroup.add([vertex.index], wristVertexGroup.weight(vertex.index), 'REPLACE')
+                                wristVertexGroup.remove([vertex.index])
+
+
+def finalizeFingerBones(leftSide, rig, wristBoneName, fingerPalmBoneName, fingerBone1Name, fingerBone2Name, fingerBone3Name, fingerDeformBone1Name, fingerDeformBone2Name, fingerDeformBone3Name, mesh, palmBoneRoll, fingerBone1Roll, fingerBone2Roll, fingerBone3Roll, middle = False, thumb = False):
+    fingerBone1 = rig.data.edit_bones[fingerBone1Name]
+    fingerBone2 = rig.data.edit_bones[fingerBone2Name]
+    fingerBone3 = rig.data.edit_bones[fingerBone3Name]
+    fingerDeformBone1Extremities = koikatsuCommons.findVertexGroupExtremities(fingerDeformBone1Name, mesh)
+    fingerDeformBone2Extremities = koikatsuCommons.findVertexGroupExtremities(fingerDeformBone2Name, mesh)
+    fingerDeformBone3Extremities = koikatsuCommons.findVertexGroupExtremities(fingerDeformBone3Name, mesh)
+    if not thumb:
+        if not middle:
+            fingerBone1.head.z = fingerDeformBone1Extremities.minZ + math.dist([fingerDeformBone1Extremities.minZ], [fingerDeformBone1Extremities.maxZ]) * 0.4
+        else:
+            fingerBone1.head.z = fingerDeformBone1Extremities.minZ + math.dist([fingerDeformBone1Extremities.minZ], [fingerDeformBone1Extremities.maxZ]) * 0.5
+        fingerBone2.head.z = fingerDeformBone2Extremities.minZ + math.dist([fingerDeformBone2Extremities.minZ], [fingerDeformBone2Extremities.maxZ]) * 0.6
+        fingerBone3.head.z = fingerDeformBone3Extremities.minZ + math.dist([fingerDeformBone3Extremities.minZ], [fingerDeformBone3Extremities.maxZ]) * 0.6
+        if leftSide:
+            fingerBone3.tail.x = fingerDeformBone3Extremities.minX + math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.95
+        else:
+            fingerBone3.tail.x = fingerDeformBone3Extremities.maxX - math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.95
+        fingerBone3.tail.y = fingerBone3.head.y + (fingerBone2.tail.y - fingerBone2.head.y)
+        fingerBone3.tail.z = fingerDeformBone3Extremities.minZ + math.dist([fingerDeformBone3Extremities.minZ], [fingerDeformBone3Extremities.maxZ]) * 0.4
+        wristBone = rig.data.edit_bones[wristBoneName]
+        fingerPalmBone = koikatsuCommons.copyBone(rig, fingerBone1Name, fingerPalmBoneName)
+        fingerPalmBone.parent = rig.data.edit_bones[wristBoneName]
+        connectAndParentBones(rig, fingerBone1Name, fingerPalmBoneName, False)            
+        fingerPalmBone.head.z = fingerPalmBone.tail.z
+        if leftSide:
+            fingerPalmBone.head.x = wristBone.tail.x - math.dist([wristBone.tail.x], [wristBone.head.x]) * 0.6
+        else:
+            fingerPalmBone.head.x = wristBone.tail.x + math.dist([wristBone.tail.x], [wristBone.head.x]) * 0.6
+        fingerPalmBone.head.y = fingerPalmBone.head.y + (fingerBone1.head.y - fingerBone1.tail.y)
+        fingerPalmBone.roll = palmBoneRoll
+    else:
+        if leftSide:
+            fingerBone1.head.x = fingerDeformBone1Extremities.minX + math.dist([fingerDeformBone1Extremities.minX], [fingerDeformBone1Extremities.maxX]) * 0.2
+            fingerBone2.head.x = fingerDeformBone2Extremities.minX + math.dist([fingerDeformBone2Extremities.minX], [fingerDeformBone2Extremities.maxX]) * 0.5
+            fingerBone3.head.x = fingerDeformBone3Extremities.minX + math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.4
+            fingerBone3.tail.x = fingerDeformBone3Extremities.minX + math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.95
+        else:
+            fingerBone1.head.x = fingerDeformBone1Extremities.maxX - math.dist([fingerDeformBone1Extremities.minX], [fingerDeformBone1Extremities.maxX]) * 0.2
+            fingerBone2.head.x = fingerDeformBone2Extremities.maxX - math.dist([fingerDeformBone2Extremities.minX], [fingerDeformBone2Extremities.maxX]) * 0.5
+            fingerBone3.head.x = fingerDeformBone3Extremities.maxX - math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.4
+            fingerBone3.tail.x = fingerDeformBone3Extremities.maxX - math.dist([fingerDeformBone3Extremities.minX], [fingerDeformBone3Extremities.maxX]) * 0.95
+        fingerBone1.head.y = fingerDeformBone1Extremities.minY + math.dist([fingerDeformBone1Extremities.minY], [fingerDeformBone1Extremities.maxY]) * 0.45
+        fingerBone1.head.z = fingerDeformBone1Extremities.minZ + math.dist([fingerDeformBone1Extremities.minZ], [fingerDeformBone1Extremities.maxZ]) * 0.35
+        fingerBone2.head.y = fingerDeformBone2Extremities.minY + math.dist([fingerDeformBone2Extremities.minY], [fingerDeformBone2Extremities.maxY]) * 0.35
+        fingerBone2.head.z = fingerDeformBone2Extremities.minZ + math.dist([fingerDeformBone2Extremities.minZ], [fingerDeformBone2Extremities.maxZ]) * 0.3
+        fingerBone3.head.y = fingerDeformBone3Extremities.minY + math.dist([fingerDeformBone3Extremities.minY], [fingerDeformBone3Extremities.maxY]) * 0.4
+        fingerBone3.head.z = fingerDeformBone3Extremities.minZ + math.dist([fingerDeformBone3Extremities.minZ], [fingerDeformBone3Extremities.maxZ]) * 0.45
+        fingerBone3.tail.y = fingerDeformBone3Extremities.minY + math.dist([fingerDeformBone3Extremities.minY], [fingerDeformBone3Extremities.maxY]) * 0.1
+        fingerBone3.tail.z = fingerDeformBone3Extremities.minZ + math.dist([fingerDeformBone3Extremities.minZ], [fingerDeformBone3Extremities.maxZ]) * 0.25
+        fingerBone1.parent = rig.data.edit_bones[fingerPalmBoneName]
+    fingerBone1.roll = fingerBone1Roll
+    fingerBone2.roll = fingerBone2Roll
+    fingerBone3.roll = fingerBone3Roll
+
+
+def finalizeFingerBoneParameters(build, rig, fingerBone1Name, fingerBone2Name, fingerBone3Name):
+    metarig = build.metarig
+    metarig.pose.bones[fingerBone1Name].rigify_type = "limbs.super_finger"
+    metarig.pose.bones[fingerBone1Name].rigify_parameters.primary_rotation_axis = "-X"
+    metarig.pose.bones[fingerBone1Name].rigify_parameters.make_extra_ik_control = True
+    metarig.pose.bones[fingerBone2Name].rigify_type = ""
+    metarig.pose.bones[fingerBone3Name].rigify_type = ""
+
+
+def get_rigify_index(build, collection_name):
+    # Ported: a collection the Character has no bones for is made empty, as the legacy armature had it.
+    metarig = build.metarig
+    collection = metarig.data.collections_all.get(str(collection_name)) or metarig.data.collections.new(str(collection_name))
+    return collection.index

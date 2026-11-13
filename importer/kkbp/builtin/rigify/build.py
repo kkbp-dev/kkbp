@@ -12,11 +12,23 @@ from dataclasses import dataclass
 from ... import appending
 
 
+@dataclass(frozen=True)
+class Features:
+    """What the Character has that parts of the rig depend on, found on the metarig and Body."""
+    skirt: bool  # cf_d_sk_top and all 48 skirt bones (names.skirt_bone)
+    rigged_tongue: bool  # the tongue bones, with Body weighted to them (ADR 0039)
+    better_penetration: bool  # the Better Penetration mod's bones
+    head_mod: bool  # True when cf_J_FaceUp_ty weighs nothing: the head's height comes from cf_J_FaceBase
+    male: bool  # True when the nipple vertex group weighs nothing
+
+
 @dataclass
 class RigBuild:
     ctx: object
     metarig: object
     kk_extras: bool
+    features: Features = None  # set by the first phases, from the metarig and Body
+    metarig_id_bone: str = None  # the metarig's "Metarig_ID:..." bone
     rig: object = None  # the generated rig, once Rigify has made it
     widgets: object = None  # the Character's copy of rigify.blend's Bone Widgets collection
 
