@@ -1,77 +1,11 @@
-import bpy
-import bmesh
 from ...editing import switch
 from . import names
 
 
-def duplicateShapeKey(obj, shapeKeyName, shapeKeyCopyName):
-    object = obj
-    for shapeKey in object.data.shape_keys.key_blocks:
-        if shapeKey.name == shapeKeyName:
-            shapeKey.mute = False
-            oldShapeKeyValue = shapeKey.value
-            shapeKey.value = 1
-        elif shapeKey.name == shapeKeyCopyName:
-            if object.data.shape_keys.animation_data:
-                for driver in object.data.shape_keys.animation_data.drivers:
-                    if driver.data_path.startswith("key_blocks"):
-                        ownerName = driver.data_path.split('"')[1]
-                        if ownerName == shapeKey.name:
-                            object.data.shape_keys.animation_data.drivers.remove(driver)
-            object.shape_key_remove(key = shapeKey)
-        else:
-            shapeKey.mute = True
-    shapeKeyCopy = object.shape_key_add(name = shapeKeyCopyName, from_mix = True)
-    shapeKeyCopy.value = 0
-    for shapeKey in object.data.shape_keys.key_blocks:
-        shapeKey.mute = False
-        if shapeKey.name == shapeKeyName:
-            shapeKey.value = oldShapeKeyValue
-    return shapeKeyCopy
-
-def isVertexGroupEmpty(vertexGroupName, obj):
-    object = obj
-    if not object.vertex_groups.get(vertexGroupName):
-        return True
-    vertexGroup = object.vertex_groups[vertexGroupName]
-    return not any(vertexGroup.index in [g.group for g in v.groups] for v in object.data.vertices)
                 
-class Extremities:
-    vertices = None
-    coordinates = None
-    minX = None
-    minY = None
-    minZ = None
-    maxX = None
-    maxY = None
-    maxZ = None
     
-def returnLower(value1, value2):
-    if value1 is None or value2 < value1:
-        return value2
-    return value1
 
-def returnHigher(value1, value2):
-    if value1 is None or value2 > value1:
-        return value2
-    return value1
     
-def findVertexGroupExtremities(vertexGroupName, obj):
-    extremities = Extremities()
-    object = obj
-    coordinates = [(object.matrix_world @ v.co) for v in object.data.vertices]
-    vertexGroupIndex = object.vertex_groups[vertexGroupName].index
-    vertices = [ v for v in object.data.vertices if vertexGroupIndex in [ vg.group for vg in v.groups ] ]
-    extremities.vertices = vertices
-    extremities.coordinates = coordinates
-    for vertex in vertices:
-        extremities.minX = returnLower(extremities.minX, coordinates[vertex.index][0])
-        extremities.minY = returnLower(extremities.minY, coordinates[vertex.index][1])
-        extremities.minZ = returnLower(extremities.minZ, coordinates[vertex.index][2])
-        extremities.maxX = returnHigher(extremities.maxX, coordinates[vertex.index][0])
-        extremities.maxY = returnHigher(extremities.maxY, coordinates[vertex.index][1])
-        extremities.maxZ = returnHigher(extremities.maxZ, coordinates[vertex.index][2])
-    return extremities
 
 
         
@@ -139,27 +73,6 @@ def setFKLayer(rig, boneName, fkLayerName):
             rig.data.collections.new(fkLayerName)
         rig.pose.bones[boneName].rigify_parameters.fk_coll_refs[0].name = fkLayerName
 
-
-def getDeformBoneNames(rig, meshes):
-    deformBoneNames = []
-    for obj in meshes:
-        if obj.type == 'MESH':
-            me = obj.data
-            bm = bmesh.new()
-            bm.from_mesh(me)
-            #groupIndex = obj.vertex_groups.active_index
-            dvertLay = bm.verts.layers.deform.active
-            vgIndexes = []
-            if dvertLay is not None:
-                for vert in bm.verts:
-                    dvert = vert[dvertLay]
-                    for tuple in dvert.items():
-                        if tuple[1] != 0 and tuple[0] not in vgIndexes:
-                            vgIndexes.append(tuple[0])
-                            indexBone = rig.pose.bones.get(obj.vertex_groups[tuple[0]].name)
-                            if indexBone is not None and indexBone.name not in deformBoneNames:
-                                deformBoneNames.append(indexBone.name)
-    return deformBoneNames
 
 def getRelatedBoneNames(rig, boneName):
     relatedBoneNames = []

@@ -12,6 +12,13 @@ def remove(rig, bone, name):
         rig.pose.bones[bone].constraints.remove(constraint)
 
 
+def clear(rig, bone):
+    """Removes every constraint of the bone."""
+    stack = rig.pose.bones[bone].constraints
+    while len(stack):
+        stack.remove(stack[0])
+
+
 def move(rig, bone, name, index):
     """Moves the constraint `name` to `index` in the bone's stack."""
     constraints = rig.pose.bones[bone].constraints

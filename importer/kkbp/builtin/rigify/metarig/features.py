@@ -3,7 +3,7 @@ In Object Mode, except `id_bone`."""
 
 from __future__ import annotations
 
-from .. import bones, commons, names
+from .. import bones, meshes, names
 from ..build import Features
 
 # Accessory bones can be called anything; one named like a bone Rigify makes gives way.
@@ -44,8 +44,8 @@ def detect(build):
         rigged_tongue=(bones_.get(names.RIGGED_TONGUE_BONE1) is not None and body is not None
                        and names.RIGGED_TONGUE_BONE1 in body.vertex_groups),
         better_penetration=names.BETTER_PENETRATION_ROOT_CROTCH_BONE in bones_,
-        head_mod=commons.isVertexGroupEmpty(names.ORIGINAL_FACE_UP_DEFORM_BONE, body),
-        male=commons.isVertexGroupEmpty(names.LEFT_NIPPLE_DEFORM_BONE1, body),
+        head_mod=meshes.is_group_empty(body, names.ORIGINAL_FACE_UP_DEFORM_BONE),
+        male=meshes.is_group_empty(body, names.LEFT_NIPPLE_DEFORM_BONE1),
     )
 
 

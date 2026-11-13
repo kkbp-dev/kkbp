@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import statistics
 
-from .. import bones, commons, names
+from .. import bones, meshes, names
 
 
 def breasts_and_buttocks(build):
@@ -32,5 +32,5 @@ def head_and_hips(build):
     head mod. The hips start at the waist."""
     edit = build.metarig.data.edit_bones
     top = names.ORIGINAL_FACE_BASE_DEFORM_BONE if build.features.head_mod else names.ORIGINAL_FACE_UP_DEFORM_BONE
-    edit[names.HEAD_BONE].tail.z = commons.findVertexGroupExtremities(top, build.body).maxZ
+    edit[names.HEAD_BONE].tail.z = meshes.group_bounds(build.body, top).max_z
     edit[names.HIPS_BONE].head = edit[names.WAIST_BONE].head
