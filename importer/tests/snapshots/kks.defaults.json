@@ -471,7 +471,7 @@
   "images": 77,
   "materials": 48,
   "meshes": 378,
-  "node_groups": 16,
+  "node_groups": 17,
   "objects": 423
  },
  "images": [
@@ -1037,7 +1037,8 @@
    "node_groups": [
     ".Gag UV",
     ".Gag output",
-    ".Gag pick"
+    ".Gag pick",
+    "Gag expression {character}"
    ],
    "roles": [
     "gag_eyes"
@@ -1488,19 +1489,10 @@
      "Outline cf_m_face_00",
      "Outline cf_m_body"
     ],
-    "shape_key_drivers": 19,
+    "shape_key_drivers": 21,
     "shape_keys": [
      "Basis",
-     "Gag Circle Eyes 1",
-     "Gag Circle Eyes 2",
-     "Gag Spiral Eyes",
-     "Gag Heart Eyes",
-     "Gag Fiery Eyes",
-     "Gag Cartoony Wink",
-     "Gag Vertical Line",
-     "Gag Deformed Tsumuri",
-     "Gag Horizontal Line",
-     "Gag Cartoony Crying",
+     "Gag eyes",
      "Eye Angry",
      "Eye Awkward",
      "Eye Bashful",
@@ -1623,6 +1615,7 @@
      "Eyebrow Winking L",
      "Eyebrow Winking R",
      "Eyebrow Worried",
+     "Gag eyes (Fiery Eyes)",
      "Eye Closed copy",
      "Mouth Big A (Copy)",
      "Mouth Big E (Copy)",
@@ -31684,19 +31677,10 @@
      "cf_m_namida_00_2",
      "cf_m_namida_00_3"
     ],
-    "shape_key_drivers": 82,
+    "shape_key_drivers": 66,
     "shape_keys": [
      "Basis",
-     "Gag Circle Eyes 1",
-     "Gag Circle Eyes 2",
-     "Gag Spiral Eyes",
-     "Gag Heart Eyes",
-     "Gag Fiery Eyes",
-     "Gag Cartoony Wink",
-     "Gag Vertical Line",
-     "Gag Deformed Tsumuri",
-     "Gag Horizontal Line",
-     "Gag Cartoony Crying",
+     "Gag eyes",
      "Eye Angry",
      "Eye Awkward",
      "Eye Bashful",
@@ -31730,7 +31714,8 @@
      "Eye Worried",
      "Tears big",
      "Tears med",
-     "Tears small"
+     "Tears small",
+     "Gag eyes (Fiery Eyes)"
     ],
     "uv_maps": [
      "uv_main"
@@ -43621,6 +43606,8 @@
    "arrange_collections": "ran",
    "bend_limbs_for_ik": "ran",
    "build_parts": "ran",
+   "combine_gag_keys": "ran",
+   "drive_gag_eyes": "ran",
    "drive_material_changes": "ran",
    "drive_showing_keys": "ran",
    "join_armatures": "ran",

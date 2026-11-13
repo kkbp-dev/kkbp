@@ -48,7 +48,21 @@ class Chain:
         "previous_color": "Previous color", "previous_alpha": "Previous alpha",
         "picked_color": "Color", "picked_alpha": "Alpha",  # pick group, out
         "output_color": "Color", "output_alpha": "Alpha",  # output node
+        "output_picked": "Expression",  # output node: the material's dropdown (Picker), for the panel
     })
+
+
+@dataclass(frozen=True)
+class Picker:
+    """A dropdown `templates.add_picker` makes in one material of a chained slot, as a group node of
+    its own listing the Character's expressions: its `output` is the picked item's place from 1, or
+    the `number` input while that is above 0, since Blender can't keyframe a dropdown (ADR 0042)."""
+
+    node: str
+    group: str  # the group's name, followed by the Character's
+    menu: str  # input: the dropdown
+    number: str  # input: an integer
+    output: str
 
 
 @dataclass(frozen=True)
@@ -62,6 +76,7 @@ class Patterns:
     off: int
     nodes: tuple[str, ...] = ()  # fixed image nodes, or empty when `chain` builds them
     chain: Chain | None = None
+    picker: Picker | None = None
 
 
 @dataclass(frozen=True)
@@ -340,7 +355,9 @@ TEMPLATES: Mapping[str, Template] = MappingProxyType({t.name: t for t in (
         patterns=Patterns("main", choice="choice", first=1, off=0, chain=Chain(
             uv_group=".Gag UV", pick_group=".Gag pick", output="gag.output", frame="frame",
             pattern_params={"angle_speed": "Angle speed", "size_speed": "Size speed", "size_width": "Size width",
-                            "tile_x": "Tile X", "tile_y": "Tile Y"})),
+                            "tile_x": "Tile X", "tile_y": "Tile Y"}),
+            picker=Picker("gag.expression", "Gag expression", menu="Gag expression", number="Number",
+                          output="Expression")),
         groups=(".Gag UV", ".Gag pick"),
     ),
     Template("Transparent"),

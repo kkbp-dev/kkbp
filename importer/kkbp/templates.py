@@ -276,6 +276,120 @@ def choice_value(material, pattern_index: int | None) -> int:
     return p.off if pattern_index is None else p.first + pattern_index
 
 
+def add_picker(ch, material, labels: list[str]):
+    """Adds the pattern slot's dropdown to `material`, listing `labels`: its output is the picked
+    label's place in the list, from 1, or its number input while that is above 0, since Blender
+    can't keyframe a dropdown (ADR 0042). Returns the group node."""
+    patterns = template_of(material).patterns
+    picker = patterns.picker
+    group = bpy.data.node_groups.new(f"{picker.group} {ch.name}", "ShaderNodeTree")
+    group[KEY] = ch.key
+    group.interface.new_socket(picker.menu, in_out="INPUT", socket_type="NodeSocketMenu")
+    number = group.interface.new_socket(picker.number, in_out="INPUT", socket_type="NodeSocketInt")
+    number.min_value, number.max_value = 0, len(labels)
+    number.description = "Picks by place in the list while above 0, for keyframes; at 0 the dropdown picks"
+    group.interface.new_socket(picker.output, in_out="OUTPUT", socket_type="NodeSocketFloat")
+    nodes, links = group.nodes, group.links
+    inputs, outputs = nodes.new("NodeGroupInput"), nodes.new("NodeGroupOutput")
+    inputs.location, outputs.location = (-700.0, 0.0), (300.0, 0.0)
+    menu = nodes.new("GeometryNodeMenuSwitch")
+    menu.data_type = "FLOAT"
+    menu.location = (-400.0, 150.0)
+    # Drivers read a dropdown as its item's number, given in the order the items were made, from 0.
+    # The node comes with two items; renaming them keeps the numbers in the list's order (ADR 0042).
+    items = menu.enum_items
+    while len(items) > len(labels):
+        items.remove(items[len(items) - 1])
+    for i, name in enumerate(labels):
+        if i < len(items):
+            items[i].name = name
+        else:
+            items.new(name)
+    for i in range(len(labels)):
+        menu.inputs[i + 1].default_value = i + 1
+    unset = nodes.new("ShaderNodeMath")
+    unset.operation = "LESS_THAN"
+    unset.location = (-400.0, -150.0)
+    unset.inputs[1].default_value = 0.5
+    pick = nodes.new("ShaderNodeMath")
+    pick.operation = "MULTIPLY_ADD"  # menu * (number is 0) + number
+    pick.location = (0.0, 0.0)
+    links.new(inputs.outputs[picker.menu], menu.inputs[0])
+    links.new(inputs.outputs[picker.number], unset.inputs[0])
+    links.new(menu.outputs[0], pick.inputs[0])
+    links.new(unset.outputs[0], pick.inputs[1])
+    links.new(inputs.outputs[picker.number], pick.inputs[2])
+    links.new(pick.outputs[0], outputs.inputs[picker.output])
+
+    node = material.node_tree.nodes.new("ShaderNodeGroup")
+    node.node_tree = group
+    node.name = picker.node
+    node.label = picker.group
+    output = material.node_tree.nodes[patterns.chain.output]
+    node.location = (output.location.x - 1600.0, output.location.y + 300.0)
+    node.width = 220.0
+    node.inputs[picker.menu].default_value = labels[0]
+    return node
+
+
+def picker(material):
+    """The material's dropdown (`add_picker`), or None."""
+    if material.get(TEMPLATE) is None:
+        return None
+    p = template_of(material).patterns
+    if p is None or p.picker is None:
+        return None
+    node = material.node_tree.nodes.get(p.picker.node)
+    return node if node is not None and node.type == "GROUP" else None
+
+
+def picker_paths(material) -> tuple[str, str]:
+    """Data paths from the material to its dropdown's menu and number values, for drivers."""
+    p = template_of(material).patterns.picker
+    node = f'node_tree.nodes["{p.node}"]'
+    return (f'{node}.inputs["{p.menu}"].default_value', f'{node}.inputs["{p.number}"].default_value')
+
+
+def pick_by(material, picks, *, from_picker: bool):
+    """Replaces the chained pattern slot's pick nodes with one per (pattern index, choice) in
+    `picks`, which shows that pattern while the choice is that number, so patterns can repeat. The
+    choice comes from the material's dropdown if `from_picker`, else from its choice param. With no
+    picks the slot draws nothing."""
+    patterns = template_of(material).patterns
+    chain, sockets = patterns.chain, patterns.chain.sockets
+    tree = material.node_tree
+    for node in [n for n in tree.nodes if n.name.startswith(f"{patterns.slot}.pick.")]:
+        tree.nodes.remove(node)
+    output = tree.nodes[chain.output]
+    if from_picker:
+        choice = tree.nodes[patterns.picker.node].outputs[patterns.picker.output]
+        # Linked into the output only so the material panel lists the dropdown under Surface.
+        tree.links.new(choice, output.inputs[sockets["output_picked"]])
+    else:
+        choice = param(material, patterns.choice)
+    pick_group = _library_group(chain.pick_group)
+    previous = None
+    for i, (pattern, number) in enumerate(picks):
+        image = tree.nodes[f"tex.{patterns.slot}.{pattern}"]
+        pick = tree.nodes.new("ShaderNodeGroup")
+        pick.node_tree = pick_group
+        pick.name = pick.label = f"{patterns.slot}.pick.{i}"
+        pick.location = (image.location.x + 300.0, -250.0 * i)
+        tree.links.new(choice, pick.inputs[sockets["choice"]])
+        pick.inputs[sockets["index"]].default_value = number
+        tree.links.new(image.outputs["Color"], pick.inputs[sockets["color"]])
+        tree.links.new(image.outputs["Alpha"], pick.inputs[sockets["alpha"]])
+        if previous is not None:
+            tree.links.new(previous.outputs[sockets["picked_color"]], pick.inputs[sockets["previous_color"]])
+            tree.links.new(previous.outputs[sockets["picked_alpha"]], pick.inputs[sockets["previous_alpha"]])
+        previous = pick
+    if previous is not None:
+        tree.links.new(previous.outputs[sockets["picked_color"]], output.inputs[sockets["output_color"]])
+        tree.links.new(previous.outputs[sockets["picked_alpha"]], output.inputs[sockets["output_alpha"]])
+    else:
+        output.inputs[sockets["output_alpha"]].default_value = 0.0
+
+
 def pattern_param(material, pattern_index: int, name: str):
     """The socket for a per-pattern parameter (such as `angle_speed`) of a chained pattern slot."""
     p = template_of(material).patterns
