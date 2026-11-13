@@ -1,8 +1,23 @@
 """Shaping widget meshes on the data API, as the legacy Rigify script did in Edit Mode with Blender's
 transform operators: each transform acts on all the widget's vertices in global space, around the
-centre of their bounding box (the legacy pivot point, BOUNDING_BOX_CENTER)."""
+centre of their bounding box (the legacy pivot point, BOUNDING_BOX_CENTER). Also where the widgets
+come from: rigify.blend's Bone Widgets collection, appended into the Character's Collection."""
 
 from mathutils import Matrix, Vector
+
+from ... import appending
+from ...library import hook_assets
+
+
+def append_library(build):
+    """Appends the Bone Widgets collection from rigify.blend into the Character's Collection and
+    keeps it as `build.widgets`."""
+    added = appending.append(hook_assets.RIGIFY.path, "collections", hook_assets.RIGIFY.collection,
+                             hook_assets.VERSION_PROP)
+    widgets = next(c for c in added if appending.base_name(c.name) == hook_assets.RIGIFY.collection)
+    build.character.collection.children.link(widgets)
+    build.widgets = widgets
+    return widgets
 
 
 def _world(obj):

@@ -5,14 +5,16 @@ import bpy, math
 from mathutils import Vector
 from . import commons as koikatsuCommons
 from . import names
-from . import legacy as c
+from ...editing import switch
+from .bones import copy_tags, outfit_of
+from .finish import ground
     
-def main():		   
+def main(build):		   
     # Ported: the Hook names the metarig and the rig and moves the Character's meshes onto the rig
     # (hook.py); the legacy script found the metarig by its random id bone among every armature.
-    generatedRig = c.get_rig()
-    metarig = c.get_armature()
-    c.switch(generatedRig, 'OBJECT')
+    generatedRig = build.rig
+    metarig = build.metarig
+    switch(generatedRig, 'OBJECT')
 
     generatedRig.show_in_front = True
     generatedRig.display_type = 'TEXTURED'
@@ -82,7 +84,7 @@ def main():
         bone.custom_shape_rotation_euler[0] = math.pi/4
         bone.custom_shape_rotation_euler[1] = 0.436 if 'Right' in bone.name else -0.436
 
-    for bone_name in c.face_bone_names():
+    for bone_name in build.face_bone_names():
         if bone := generatedRig.pose.bones.get(bone_name):
             bone.custom_shape_rotation_euler[0] = math.pi/2
     koikatsuCommons.setBoneCustomShapeScale(generatedRig, 'cf_j_kokan', 0.2)
@@ -115,7 +117,7 @@ def main():
                         if target.subtarget.endswith(names.PLACEHOLDER_BONE_SUFFIX):
                             target.subtarget = target.subtarget[:-len(names.PLACEHOLDER_BONE_SUFFIX)]
     
-    for driver in bpy.data.objects[koikatsuCommons.bodyName()].data.shape_keys.animation_data.drivers:
+    for driver in build.body.data.shape_keys.animation_data.drivers:
         if driver.data_path.startswith("key_blocks"):
             ownerName = driver.data_path.split('"')[1]
             if ownerName == names.EYELIDS_SHAPE_KEY_COPY:
@@ -135,7 +137,7 @@ def main():
                             if target.bone_target == names.ORIGINAL_BONE_PREFIX + targetToChange:
                                 target.bone_target = names.DEFORM_BONE_PREFIX + targetToChange
                                 
-    c.switch(generatedRig, 'EDIT')
+    switch(generatedRig, 'EDIT')
 
     for bone in generatedRig.data.edit_bones:
         if bone.collections.get(koikatsuCommons.getRigifyLayerIndexByName(names.JUNK_LAYER)):
@@ -183,7 +185,7 @@ def main():
     generatedRig.data.edit_bones[names.EYES_TRACK_TARGET_PARENT_BONE].parent = None
     generatedRig.data.edit_bones[names.HEAD_TRACK_TARGET_PARENT_BONE].parent = None
 
-    c.switch(generatedRig, 'OBJECT')
+    switch(generatedRig, 'OBJECT')
         
     generatedRig.pose.bones["root"].color.palette = 'CUSTOM'
     #needs to be done for data and pose
@@ -203,7 +205,7 @@ def main():
 
     #Take the IDs from all org bones and copy them over to the generated / helper bones
     for bone in generatedRig.data.bones:
-        if (bone.get('id') or c.outfit_of(bone) is not None) and bone.name.startswith('ORG-'):
+        if (bone.get('id') or outfit_of(bone) is not None) and bone.name.startswith('ORG-'):
             bone_base_name = bone.name[4:]  # Remove 'ORG-' prefix
             for bone_name in [
                 bone_base_name,
@@ -215,22 +217,22 @@ def main():
                 'MCH-' + bone_base_name + '_drv',
                 ]:
                 if generatedRig.data.bones.get(bone_name):
-                    c.copy_tags(bone, generatedRig.data.bones[bone_name])
+                    copy_tags(bone, generatedRig.data.bones[bone_name])
                     #also add the id to the .001 tail bone that appears sometimes
                     if 'MCH-' in bone_name and '_drv' in bone_name:
                         if first_child := generatedRig.data.bones[bone_name].children:
                             if second_child := first_child[0].children:
-                                c.copy_tags(bone, second_child[0])
+                                copy_tags(bone, second_child[0])
 
-    if not c.is_kk():
+    if not build.kk_extras:
         #rotate the hand bones since a lot of things are missing right now
         for bone in ['Left wrist_ik', 'Right wrist_ik']:
-            if b := c.get_rig().pose.bones.get(bone):
+            if b := build.rig.pose.bones.get(bone):
                 b.custom_shape_rotation_euler[0] = 1.0472 if 'Left' in bone else 2.0944
                 b.custom_shape_rotation_euler[2] = -1.5708
                 b.custom_shape_scale_xyz = (.6, .6, .6)
         for bone in ['Right wrist_ik_wrist', 'Left wrist_ik_wrist']:
-            if b := c.get_rig().pose.bones.get(bone):
+            if b := build.rig.pose.bones.get(bone):
                 b.custom_shape_scale_xyz = (.6, .6, .6)
                 b.custom_shape_translation = (0, -0.04, 0)
 
@@ -238,9 +240,9 @@ def main():
     #I won't put these in the Rigify UI, but they'll still be accessible in the bone collection section
     # Ported: the legacy objects and bones carried their Outfit as an 'id' string; Parts and bones
     # carry it as kkbp_outfit (D29).
-    outfit_ids = sorted({c.outfit_of(o) for o in c.get_outfits() + c.get_hairs() if c.outfit_of(o) is not None})
+    outfit_ids = sorted({outfit_of(o) for o in list(build.character.outfits) + list(build.character.hairs) if outfit_of(o) is not None})
     for bone in generatedRig.data.bones:
-        outfit = c.outfit_of(bone)
+        outfit = outfit_of(bone)
         if outfit is None or not outfit_ids or outfit == min(outfit_ids) or not bone.collections:
             continue
         if names.HAIR_LAYER in bone.collections[0].name:
@@ -254,7 +256,7 @@ def main():
     generatedRig.pose.bones["Right leg_parent"]["IK_Stretch"] = 0
 
     #####################################################
-    c.switch(generatedRig, 'EDIT')
+    switch(generatedRig, 'EDIT')
     try:
         # setup emotion bones
         #create the mouth shape key controller bone on the face layer
@@ -319,17 +321,17 @@ def main():
         bone.parent = generatedRig.data.edit_bones[names.HEAD_TWEAK_BONE]
         bone.use_deform = False
 
-        c.switch(generatedRig, 'OBJECT')
+        switch(generatedRig, 'OBJECT')
         
         #put the mouth guide into the Bone Widgets scene collection
         def setup_widget_guide(controller_name, guide_name, shape_name, lock_2d):
             generatedRig.pose.bones[controller_name].lock_location = [lock_2d, True, False]
             generatedRig.pose.bones[controller_name].custom_shape_scale_xyz = [2, 2, 2]
-            generatedRig.pose.bones[controller_name].custom_shape = c.widget('WidgetSpine')
+            generatedRig.pose.bones[controller_name].custom_shape = build.widget('WidgetSpine')
             generatedRig.pose.bones[guide_name].lock_location = [True, True, True]
             generatedRig.pose.bones[guide_name].lock_rotation = [True, True, True]
             generatedRig.pose.bones[guide_name].lock_scale = [True, True, True]
-            generatedRig.pose.bones[guide_name].custom_shape = c.widget(shape_name)
+            generatedRig.pose.bones[guide_name].custom_shape = build.widget(shape_name)
 
         setup_widget_guide(names.MOUTH_WIDGET_CONTROLLER_BONE, names.FACE_WIDGET_MOUTH_GUIDE_BONE, 'Mouth Grid', lock_2d = False)
         setup_widget_guide(names.EYE_WIDGET_CONTROLLER_BONE, names.FACE_WIDGET_EYES_GUIDE_BONE, 'Eye Grid', lock_2d = True)
@@ -471,20 +473,20 @@ def main():
                         f'{crossfade}*{angle}',
                     )
 
-        if c.get_body().data.shape_keys:
-            rig_mouth(c.get_body())
+        if build.body.data.shape_keys:
+            rig_mouth(build.body)
 
         ##########################################################################################
         #first, create copies of each eye shape key
-        for shapekey in [shapekey for shapekey in c.get_body().data.shape_keys.key_blocks if shapekey.name in names.EYE_SHAPEKEYS_TO_COPY]:
-            new_shapekey = c.get_body().data.shape_keys.key_blocks.get(shapekey.name + names.EYE_SHAPEKEYS_COPY_SUFFIX)
+        for shapekey in [shapekey for shapekey in build.body.data.shape_keys.key_blocks if shapekey.name in names.EYE_SHAPEKEYS_TO_COPY]:
+            new_shapekey = build.body.data.shape_keys.key_blocks.get(shapekey.name + names.EYE_SHAPEKEYS_COPY_SUFFIX)
             if not new_shapekey:
-                new_shapekey = c.get_body().shape_key_add(name=shapekey.name + names.EYE_SHAPEKEYS_COPY_SUFFIX)
+                new_shapekey = build.body.shape_key_add(name=shapekey.name + names.EYE_SHAPEKEYS_COPY_SUFFIX)
             new_shapekey.value = 0
             for i in range(len(shapekey.data)):
                 new_shapekey.data[i].co = shapekey.data[i].co
 
-        shape_keys = c.get_body().data.shape_keys
+        shape_keys = build.body.data.shape_keys
         controller_name = names.EYE_WIDGET_CONTROLLER_BONE
 
         # Distance at which the expression reaches 1.0.
@@ -527,10 +529,10 @@ def main():
         ##########################################################################################
         #first, create drivers for each custom shape key
         for shapekey_name in names.CUSTOM_SHAPEKEYS_TO_CREATE:
-            new_shapekey = c.get_body().shape_key_add(name=shapekey_name)
+            new_shapekey = build.body.shape_key_add(name=shapekey_name)
             new_shapekey.value = 0
 
-        shape_keys = c.get_body().data.shape_keys
+        shape_keys = build.body.data.shape_keys
 
         # Distance at which the expression reaches 1.0.
         activation_distance = 0.09
@@ -547,23 +549,23 @@ def main():
         add_eye_driver(names.CUSTOM_SHAPEKEYS_TO_CREATE[2], f'max(0,min(1,z/{activation_distance}))')
 
     except Exception as ex:
-        c.switch(generatedRig, 'object')
-        c.kklog(f'Failed to generate emotion grid bones: {type(ex).__name__}: {ex}', 'error')
+        switch(generatedRig, 'OBJECT')
+        build.log.warning(f'Failed to generate emotion grid bones: {type(ex).__name__}: {ex}')
 
     #always put the feet on the ground
     # Ported: the legacy script put the root bone 4 cm under the left ankle IK bone, which sank the
     # KK sample's shoes 1.9 cm under the floor. The root goes to the lowest vertex of the visible
     # Parts instead, so whatever the Character stands on touches the floor (ADR 0027).
-    floor = c.lowest_point(generatedRig)
-    c.switch(generatedRig, 'edit')
+    floor = ground.lowest_point(generatedRig)
+    switch(generatedRig, 'EDIT')
     rootBone = generatedRig.data.edit_bones[names.ROOT_BONE]
     root = generatedRig.matrix_world @ rootBone.head
     root.z = floor
     rootLength = rootBone.tail - rootBone.head
     rootBone.head = generatedRig.matrix_world.inverted() @ root
     rootBone.tail = rootBone.head + rootLength
-    c.switch(generatedRig, 'object')
+    switch(generatedRig, 'OBJECT')
     # Ported: the legacy script put the rig's origin at the root bone (origin_set to the 3D cursor)
     # and then the rig at the world origin, which moves the rig and everything on it by the root's
     # position. The same, on the data API:
-    c.move_rig(generatedRig, -root)
+    ground.move_rig(generatedRig, -root)

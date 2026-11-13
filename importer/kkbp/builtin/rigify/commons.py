@@ -4,7 +4,7 @@ import bmesh
 from rna_prop_ui import rna_idprop_ui_create
 import random
 import string
-from . import legacy as c
+from ...editing import switch
 from . import names
 
 def generateRandomAlphanumericString():
@@ -12,17 +12,8 @@ def generateRandomAlphanumericString():
     return randomString
 
 
-def bodyName():
-    return c.get_body().name
-def riggedTongueName():
-    """The mesh the tongue rig reads: Body, which holds the tongue (ADR 0039), when the tongue is
-    weighted to the tongue bones; else ''."""
-    body = c.get_body()
-    return body.name if body is not None and names.RIGGED_TONGUE_BONE1 in body.vertex_groups else ''
-
-
-def duplicateShapeKey(objectName, shapeKeyName, shapeKeyCopyName):
-    object = bpy.data.objects[objectName]
+def duplicateShapeKey(obj, shapeKeyName, shapeKeyCopyName):
+    object = obj
     for shapeKey in object.data.shape_keys.key_blocks:
         if shapeKey.name == shapeKeyName:
             shapeKey.mute = False
@@ -46,8 +37,8 @@ def duplicateShapeKey(objectName, shapeKeyName, shapeKeyCopyName):
             shapeKey.value = oldShapeKeyValue
     return shapeKeyCopy
 
-def isVertexGroupEmpty(vertexGroupName, objectName):
-    object = bpy.data.objects[objectName]
+def isVertexGroupEmpty(vertexGroupName, obj):
+    object = obj
     if not object.vertex_groups.get(vertexGroupName):
         return True
     vertexGroup = object.vertex_groups[vertexGroupName]
@@ -73,9 +64,9 @@ def returnHigher(value1, value2):
         return value2
     return value1
     
-def findVertexGroupExtremities(vertexGroupName, objectName):
+def findVertexGroupExtremities(vertexGroupName, obj):
     extremities = Extremities()
-    object = bpy.data.objects[objectName]
+    object = obj
     coordinates = [(object.matrix_world @ v.co) for v in object.data.vertices]
     vertexGroupIndex = object.vertex_groups[vertexGroupName].index
     vertices = [ v for v in object.data.vertices if vertexGroupIndex in [ vg.group for vg in v.groups ] ]
@@ -345,14 +336,14 @@ def addBoneCustomProperty(rig, boneName, propertyName, propertyTooltip, property
     rna_idprop_ui_create(rig.pose.bones[boneName], propertyName, default = propertyValue, min = propertyMinValue, max = propertyMaxValue, soft_min = None, soft_max = None, description = propertyTooltip)
     return 'pose.bones["' + boneName + '"]["' + propertyName + '"]'
         
-def copyObject(collectionName, sourceObjectName, newObjectName):
+def copyObject(build, sourceObjectName, newObjectName):
     # Ported: the copy goes into the Character's own widget collection, and another Character's
     # widget of the same name is left alone (Blender adds .001).
-    sourceObject = c.widget(sourceObjectName)
+    sourceObject = build.widget(sourceObjectName)
     newObject = sourceObject.copy()
     newObject.data = sourceObject.data.copy()
     newObject.name = newObjectName
-    c.widget_collection().objects.link(newObject)
+    build.widgets.objects.link(newObject)
     return newObject
 
 
@@ -410,14 +401,14 @@ def setRootRigifyLayer(rig, boneGroupIndex):
 def assignSingleBoneLayer(rig, boneName: str, layerName: str):
     if bone := rig.data.bones.get(boneName):
         original_mode = rig.mode
-        c.switch(rig, 'OBJECT')
+        switch(rig, 'OBJECT')
         bone.collections.clear()
         if rig.data.collections.get(layerName):
             rig.data.collections[layerName].assign(bone)
         else:
             rig.data.collections.new(layerName)
             rig.data.collections[layerName].assign(bone)
-        c.switch(rig, original_mode)
+        switch(rig, original_mode)
 
 def setTweakLayer(rig, boneName, tweakLayerName):
     if boneName in rig.pose.bones:
@@ -436,9 +427,9 @@ def setFKLayer(rig, boneName, fkLayerName):
         rig.pose.bones[boneName].rigify_parameters.fk_coll_refs[0].name = fkLayerName
 
 
-def getDeformBoneNames(rig):
+def getDeformBoneNames(rig, meshes):
     deformBoneNames = []
-    for obj in c.mesh_objects(): 
+    for obj in meshes:
         if obj.type == 'MESH':
             me = obj.data
             bm = bmesh.new()

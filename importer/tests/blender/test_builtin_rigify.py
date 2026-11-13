@@ -9,7 +9,7 @@ from conftest import submodule
 rigify = submodule("builtin.rigify")
 prepare = submodule("builtin.rigify.prepare")
 names = submodule("builtin.rigify.names")
-legacy = submodule("builtin.rigify.legacy")
+ground = submodule("builtin.rigify.finish.ground")
 
 
 @pytest.fixture(scope="module")
@@ -49,7 +49,7 @@ def test_the_eye_uv_warps_move_only_the_eyes(ch):
 
 def test_the_lowest_visible_vertex_stands_on_the_floor(ch):
     """ADR 0027: legacy's root 4 cm under the ankle sank the KK sample's shoes 1.9 cm."""
-    assert legacy.lowest_point(ch.rig) == pytest.approx(0.0, abs=1e-5)
+    assert ground.lowest_point(ch.rig) == pytest.approx(0.0, abs=1e-5)
     assert ch.rig.data.bones["root"].head_local.z == pytest.approx(0.0, abs=1e-5)
 
 
