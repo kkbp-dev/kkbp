@@ -4,10 +4,8 @@ must keep (bugs found by hand in the UI)."""
 import bpy
 import pytest
 
-from bundle_copy import copy_bundle
-from conftest import golden, kkbp, submodule
+from conftest import submodule
 
-character = submodule("character")
 rigify = submodule("builtin.rigify")
 prepare = submodule("builtin.rigify.prepare")
 commons = submodule("builtin.rigify.commons")
@@ -15,13 +13,8 @@ legacy = submodule("builtin.rigify.legacy")
 
 
 @pytest.fixture(scope="module")
-def ch(tmp_path_factory):
-    copy = tmp_path_factory.mktemp("rigify") / "kk"
-    copy_bundle(golden("kk"), copy)
-    bpy.ops.wm.read_homefile(use_empty=True)
-    result = kkbp.api.import_bundle(copy, hooks=["Rigify"], options={"use_rigify": True})
-    assert result.ok
-    return character.Character(result.character_key)
+def ch(golden_import):
+    return golden_import("kk", hooks=["Rigify"])[1]
 
 
 @pytest.fixture(autouse=True)

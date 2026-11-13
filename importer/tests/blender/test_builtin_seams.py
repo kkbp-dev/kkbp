@@ -4,8 +4,7 @@ import bmesh
 import bpy
 import numpy as np
 
-from bundle_copy import copy_bundle
-from conftest import golden, kkbp, submodule
+from conftest import submodule
 from hook_ctx import fake_ctx
 
 character = submodule("character")
@@ -62,17 +61,10 @@ def _corners(mesh):
     return co.reshape(-1, 3)[vi], n.reshape(-1, 3)
 
 
-def _kk(tmp_path, name):
-    copy = tmp_path / name
-    copy_bundle(golden("kk"), copy)
-    bpy.ops.wm.read_homefile(use_empty=True)
-    return character.Character(kkbp.api.import_bundle(copy, hooks=[]).character_key)
-
-
-def test_it_does_what_merge_by_distance_with_centroid_merge_does(tmp_path):
+def test_it_does_what_merge_by_distance_with_centroid_merge_does(golden_import):
     """On the KK body: Merge by Distance at 0.00001, Centroid Merge, on the face and body faces only,
     and the custom normals the operator keeps."""
-    ch = _kk(tmp_path, "operator")
+    ch = golden_import("kk")[1]  # for the operator
     body = ch.body
     slots = {i for i, s in enumerate(body.material_slots) if s.material.get("kkbp_role") in seams.ROLES}
     selected = {v for p in body.data.polygons if p.material_index in slots for v in p.vertices}
@@ -90,7 +82,7 @@ def test_it_does_what_merge_by_distance_with_centroid_merge_does(tmp_path):
         bpy.ops.object.mode_set(mode="OBJECT")
     want_count, (want_co, want_n) = len(body.data.vertices), _corners(body.data)
 
-    ch = _kk(tmp_path, "hook")
+    ch = golden_import("kk")[1]  # a fresh one, for the Hook
     eyes_before = len([p for p in ch.body.data.polygons
                        if ch.body.material_slots[p.material_index].material.get("kkbp_role") == "eye_l"])
     before_co, before_n = _corners(ch.body.data)

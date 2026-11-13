@@ -3,8 +3,7 @@
 import bpy
 import pytest
 
-from bundle_copy import copy_bundle
-from conftest import golden, kkbp, submodule
+from conftest import submodule
 
 character = submodule("character")
 export_prep = submodule("tools.export_prep")
@@ -17,12 +16,9 @@ def no_preferences(monkeypatch):
     monkeypatch.setattr(settings, "option_defaults", lambda: {})
 
 
-def _kk(tmp_path):
-    copy = tmp_path / "kk"
-    copy_bundle(golden("kk"), copy)
-    result = kkbp.api.import_bundle(copy, hooks=["Outlines"])
-    assert result.ok
-    return character.Character(result.character_key)
+@pytest.fixture
+def ch(golden_import):
+    return golden_import("kk", hooks=["Outlines"])[1]
 
 
 @pytest.mark.parametrize("target, bones", [
@@ -30,15 +26,13 @@ def _kk(tmp_path):
     ("unreal", {"pelvis", "spine_01", "upperarm_l", "calf_l", "foot_l"}),
     ("koikatsu", {"cf_j_hips", "cf_j_arm00_L", "cf_n_height"}),
 ])
-def test_targets_name_the_bones(tmp_path, target, bones):
-    ch = _kk(tmp_path)
+def test_targets_name_the_bones(ch, target, bones):
     export_prep.prep(ch, target, "simple", "none", log=lambda m: None)
     assert bones <= set(ch.armature.data.bones.keys())
     assert ch.collection.exporters and ch.collection.exporters[0].export_properties.filepath.endswith(".fbx")
 
 
-def test_very_simple_merges_the_face_and_vrm_drops_the_hips(tmp_path):
-    ch = _kk(tmp_path)
+def test_very_simple_merges_the_face_and_vrm_drops_the_hips(ch):
     before = len(ch.armature.data.bones)
     export_prep.prep(ch, "vrm", "very_simple", "none", log=lambda m: None)
     bones = ch.armature.data.bones
@@ -46,8 +40,7 @@ def test_very_simple_merges_the_face_and_vrm_drops_the_hips(tmp_path):
     assert bones["Hips"].parent is None and bones["Spine"].parent.name == "Hips"
 
 
-def test_the_atlas_copy_uses_one_atlas_per_object(tmp_path):
-    ch = _kk(tmp_path)
+def test_the_atlas_copy_uses_one_atlas_per_object(ch):
     collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
     outfit = next(o for o in collection.objects if o.type == "MESH" and o.name.startswith("Outfit 00"))
     lights = {s.material.node_tree.nodes["tex.main.light"].image for s in outfit.material_slots
@@ -62,8 +55,7 @@ def test_the_atlas_copy_uses_one_atlas_per_object(tmp_path):
     assert ch.rig is None and "Outfit 00" in ch.outfits[0].name  # the original is untouched
 
 
-def test_a_rigged_character_is_refused(tmp_path):
-    ch = _kk(tmp_path)
+def test_a_rigged_character_is_refused(ch):
     ch.add_part(bpy.data.objects.new("Rig", bpy.data.armatures.new("Rig")), "rig")
     bpy.context.scene.collection.objects.link(bpy.data.objects["Rig"])
     with pytest.raises(character.CharacterError, match="needs a Character imported without Rigify"):

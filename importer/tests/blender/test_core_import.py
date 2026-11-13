@@ -4,8 +4,7 @@ import bpy
 import pytest
 
 from bundle_builder import BundleBuilder
-from bundle_copy import copy_bundle
-from conftest import golden, kkbp, submodule
+from conftest import kkbp, submodule
 
 character = submodule("character")
 templates = submodule("templates")
@@ -41,10 +40,8 @@ def test_the_builder_bundle_imports(build):
 
 
 @pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
-def test_the_golden_samples_import(sample, tmp_path):
-    copy = tmp_path / sample  # an import writes its log into the bundle's kkbp_cache/
-    copy_bundle(golden(sample), copy)
-    result, ch = _import(copy)
+def test_the_golden_samples_import(sample, golden_import):
+    result, ch = golden_import(sample)
     assert ch.body is not None and ch.armature is not None
     assert ch.tears is not None and ch.gag_eyes is not None
     assert len(ch.outfits) == 1 and len(ch.hairs) == 1
@@ -71,12 +68,10 @@ def test_the_golden_samples_import(sample, tmp_path):
     assert result.warnings == [], result.warnings
 
 
-def test_expressions_drive_the_face(tmp_path):
+def test_expressions_drive_the_face(golden_import):
     """A gag expression on Body shows its gag mesh, picks its pattern and hides the pupils; an eye
     expression picks the eye overlay; the tears follow Body's keys."""
-    copy = tmp_path / "kk"
-    copy_bundle(golden("kk"), copy)
-    _, ch = _import(copy)
+    _, ch = golden_import("kk")
     body_keys = ch.body.data.shape_keys.key_blocks
     gag_keys = ch.gag_eyes.data.shape_keys.key_blocks
     scene = bpy.context.scene
@@ -111,11 +106,9 @@ def test_expressions_drive_the_face(tmp_path):
     ("kks", "cf_m_gageye_02", "cf_t_gageye_08"),
     ("svs", "cf_m_gageye_00", "cf_t_gageye_10"),
 ])
-def test_fiery_eyes_step_through_their_sheet(sample, material, pattern, tmp_path):
+def test_fiery_eyes_step_through_their_sheet(sample, material, pattern, golden_import):
     """The fiery eyes' texture is a 1 x 6 sheet of flames the game flips through (issue #15)."""
-    copy = tmp_path / sample
-    copy_bundle(golden(sample), copy)
-    _, ch = _import(copy)
+    _, ch = golden_import(sample)
     gag = ch.material(material)
     index = templates.patterns(gag).index(pattern)
     assert templates.pattern_param(gag, index, "tile_x").default_value == 1

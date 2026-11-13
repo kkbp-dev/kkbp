@@ -7,8 +7,7 @@ import bpy
 import pytest
 
 from bundle_builder import BundleBuilder
-from bundle_copy import copy_bundle
-from conftest import golden, kkbp, submodule
+from conftest import kkbp, submodule
 
 character = submodule("character")
 templates = submodule("templates")
@@ -16,18 +15,9 @@ edit_material = submodule("tools.edit_material")
 link_hair = submodule("tools.link_hair")
 
 
-@pytest.fixture(scope="module")
-def kk_copy(tmp_path_factory):
-    copy = tmp_path_factory.mktemp("edit") / "kk"
-    copy_bundle(golden("kk"), copy)
-    return copy
-
-
 @pytest.fixture
-def ch(kk_copy):
-    result = kkbp.api.import_bundle(kk_copy, hooks=[])
-    assert result.ok
-    return character.Character(result.character_key)
+def ch(golden_import):
+    return golden_import("kk")[1]
 
 
 @pytest.fixture
