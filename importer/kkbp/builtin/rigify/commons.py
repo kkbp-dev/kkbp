@@ -1,11 +1,5 @@
 import bpy
 from typing import NamedTuple
-import mathutils
-from mathutils import Matrix
-import os
-import collections
-import json
-import re
 import bmesh
 from rna_prop_ui import rna_idprop_ui_create
 import random
@@ -67,10 +61,8 @@ markerBoneSuffix = " marker"
 parentBoneSuffix = " parent"
 placeholderBoneSuffix = " placeholder"
 xBoneSuffix = " x"
-yBoneSuffix = " y"
 zBoneSuffix = " z"
 
-originalRootBoneName = "Center"
 originalRootUpperBoneName = "cf_pv_root_upper"
 rootBoneName = "root"
 eyesXBoneName = "Eyesx"
@@ -170,10 +162,6 @@ leftArmBoneName = "Left arm"
 rightArmBoneName = leftNameToRightName(leftArmBoneName)
 leftElbowBoneName = "Left elbow"
 rightElbowBoneName = leftNameToRightName(leftElbowBoneName)
-originalLeftElbowPoleBoneName = "cf_pv_elbo_L"
-originalRightElbowPoleBoneName = leftNameToRightName(originalLeftElbowPoleBoneName)
-originalLeftWristBoneName = "cf_pv_hand_L"
-originalRightWristBoneName = leftNameToRightName(originalLeftWristBoneName)
 leftWristBoneName = "Left wrist"
 rightWristBoneName = leftNameToRightName(leftWristBoneName)
 leftThumbBone1Name = "Thumb0_L"
@@ -218,18 +206,10 @@ leftLegBoneName = "Left leg"
 rightLegBoneName = leftNameToRightName(leftLegBoneName)
 leftKneeBoneName = "Left knee"
 rightKneeBoneName = leftNameToRightName(leftKneeBoneName)
-originalLeftKneePoleBoneName = "cf_pv_knee_L"
-originalRightKneePoleBoneName = leftNameToRightName(originalLeftKneePoleBoneName)
-originalLeftAnkleBoneName = "MasterFootIK.L"
-originalRightAnkleBoneName = leftNameToRightName(originalLeftAnkleBoneName)
 leftAnkleBoneName = "Left ankle"
 rightAnkleBoneName = leftNameToRightName(leftAnkleBoneName)
-originalLeftToeBoneName = "ToeRotator.L"
-originalRightToeBoneName = leftNameToRightName(originalLeftToeBoneName)
 leftToeBoneName = "Left toe"
 rightToeBoneName = leftNameToRightName(leftToeBoneName)
-originalLeftHeelIkBoneName = "HeelIK.L"
-originalRightHeelIkBoneName = leftNameToRightName(originalLeftHeelIkBoneName)
 originalLeftHeelBoneName = "a_n_heel_L"
 originalRightHeelBoneName = leftNameToRightName(originalLeftHeelBoneName)
 leftHeelBoneName = "Left heel"
@@ -352,8 +332,6 @@ originalUpperChestDeformBoneName = "cf_s_spine03"
 originalChestDeformBoneName = "cf_s_spine02"
 originalSpineDeformBoneName = "cf_s_spine01"
 originalHipsDeformBoneName = "cf_s_waist01"
-originalLeftShoulderDeformBoneName = "cf_s_shoulder02_L"
-originalRightShoulderDeformBoneName = leftNameToRightName(originalLeftShoulderDeformBoneName)
 originalLeftArmDeformBone1Name = "cf_s_arm01_L"
 originalRightArmDeformBone1Name = leftNameToRightName(originalLeftArmDeformBone1Name)
 originalLeftArmDeformBone2Name = "cf_s_arm02_L"
@@ -411,76 +389,11 @@ originalRightLegDeformBone2Name = leftNameToRightName(originalLeftLegDeformBone2
 originalLeftLegDeformBone3Name = "cf_s_leg03_L"
 originalRightLegDeformBone3Name = leftNameToRightName(originalLeftLegDeformBone3Name)
 
-tweakBoneSuffix = "_tweak"
 parentBoneSuffix = "_parent"
 fkBoneSuffix = "_fk"
-ikBoneSuffix = "_ik"
-masterBoneSuffix = "_master"
 headTweakBoneName = "head"
-leftArmTweakBone1Name = leftArmBoneName + tweakBoneSuffix
-rightArmTweakBone1Name = leftNameToRightName(leftArmTweakBone1Name)
-leftArmParentBoneName = leftArmBoneName + parentBoneSuffix
-rightArmParentBoneName = leftNameToRightName(leftArmParentBoneName)
-leftArmIkBoneName = leftArmBoneName + ikBoneSuffix
-rightArmArmIkBoneName = leftNameToRightName(leftArmIkBoneName)
-leftWristFkBoneName = leftWristBoneName + fkBoneSuffix
-rightWristFkBoneName = leftNameToRightName(leftWristFkBoneName)
-leftWristIkBoneName = leftWristBoneName + ikBoneSuffix
-rightWristIkBoneName = leftNameToRightName(leftWristIkBoneName)
-leftWristTweakBoneName = leftWristBoneName + tweakBoneSuffix
-rightWristTweakBoneName = leftNameToRightName(leftWristTweakBoneName)
-leftThumbTweakBoneName = leftThumbBone1Name + ".001"
-rightThumbTweakBoneName = leftNameToRightName(leftThumbTweakBoneName)
-leftThumbIkBoneName = leftThumbBone1Name[:leftThumbBone1Name.index(leftNameSuffix1)] + ikBoneSuffix + leftNameSuffix1
-rightThumbIkBoneName = leftNameToRightName(leftThumbIkBoneName)
-leftThumbMasterBoneName = leftThumbBone1Name[:leftThumbBone1Name.index(leftNameSuffix1)] + masterBoneSuffix + leftNameSuffix1
-rightThumbMasterBoneName = leftNameToRightName(leftThumbMasterBoneName)
-leftIndexFingerTweakBoneName = leftIndexFingerBone1Name + ".001"
-rightIndexFingerTweakBoneName = leftNameToRightName(leftIndexFingerTweakBoneName)
-leftIndexFingerIkBoneName = leftIndexFingerBone1Name[:leftIndexFingerBone1Name.index(leftNameSuffix1)] + ikBoneSuffix + leftNameSuffix1
-rightIndexFingerIkBoneName = leftNameToRightName(leftIndexFingerIkBoneName)
-leftIndexFingerMasterBoneName = leftIndexFingerBone1Name[:leftIndexFingerBone1Name.index(leftNameSuffix1)] + masterBoneSuffix + leftNameSuffix1
-rightIndexFingerMasterBoneName = leftNameToRightName(leftIndexFingerMasterBoneName)
-leftMiddleFingerTweakBoneName = leftMiddleFingerBone1Name + ".001"
-rightMiddleFingerTweakBoneName = leftNameToRightName(leftMiddleFingerTweakBoneName)
-leftMiddleFingerIkBoneName = leftMiddleFingerBone1Name[:leftMiddleFingerBone1Name.index(leftNameSuffix1)] + ikBoneSuffix + leftNameSuffix1
-rightMiddleFingerIkBoneName = leftNameToRightName(leftMiddleFingerIkBoneName)
-leftMiddleFingerMasterBoneName = leftMiddleFingerBone1Name[:leftMiddleFingerBone1Name.index(leftNameSuffix1)] + masterBoneSuffix + leftNameSuffix1
-rightMiddleFingerMasterBoneName = leftNameToRightName(leftMiddleFingerMasterBoneName)
-leftRingFingerTweakBoneName = leftRingFingerBone1Name + ".001"
-rightRingFingerTweakBoneName = leftNameToRightName(leftRingFingerTweakBoneName)
-leftRingFingerIkBoneName = leftRingFingerBone1Name[:leftRingFingerBone1Name.index(leftNameSuffix1)] + ikBoneSuffix + leftNameSuffix1
-rightRingFingerIkBoneName = leftNameToRightName(leftRingFingerIkBoneName)
-leftRingFingerMasterBoneName = leftRingFingerBone1Name[:leftRingFingerBone1Name.index(leftNameSuffix1)] + masterBoneSuffix + leftNameSuffix1
-rightingFingerMasterBoneName = leftNameToRightName(leftRingFingerMasterBoneName)
 leftLittleFingerPalmFkBoneName = leftLittleFingerPalmBoneName[:leftLittleFingerPalmBoneName.index(leftNameSuffix1)] + fkBoneSuffix + leftNameSuffix1
 rightLittleFingerPalmFkBoneName = leftNameToRightName(leftLittleFingerPalmFkBoneName)
-leftLittleFingerTweakBoneName = leftLittleFingerBone1Name + ".001"
-rightLittleFingerTweakBoneName = leftNameToRightName(leftLittleFingerTweakBoneName)
-leftLittleFingerIkBoneName = leftLittleFingerBone1Name[:leftLittleFingerBone1Name.index(leftNameSuffix1)] + ikBoneSuffix + leftNameSuffix1
-rightLittleFingerIkBoneName = leftNameToRightName(leftLittleFingerIkBoneName)
-leftLittleFingerMasterBoneName = leftLittleFingerBone1Name[:leftLittleFingerBone1Name.index(leftNameSuffix1)] + masterBoneSuffix + leftNameSuffix1
-rightLittleFingerMasterBoneName = leftNameToRightName(leftLittleFingerMasterBoneName)
-leftLegTweakBone1Name = leftLegBoneName + tweakBoneSuffix
-rightLegTweakBone1Name = leftNameToRightName(leftLegTweakBone1Name)
-leftLegTweakBone2Name = leftLegBoneName + tweakBoneSuffix + ".001"
-rightLegTweakBone2Name = leftNameToRightName(leftLegTweakBone2Name)
-leftLegTweakBone3Name = leftLegBoneName + tweakBoneSuffix + ".002"
-rightLegTweakBone3Name = leftNameToRightName(leftLegTweakBone3Name)
-leftLegParentBoneName = leftLegBoneName + parentBoneSuffix
-rightLegParentBoneName = leftNameToRightName(leftLegParentBoneName)
-leftLegIkBoneName = leftLegBoneName + ikBoneSuffix
-rightLegIkBoneName = leftNameToRightName(leftLegIkBoneName)
-leftLegFkBoneName = leftLegBoneName + fkBoneSuffix
-rightLegFkBoneName = leftNameToRightName(leftLegFkBoneName)
-leftKneeTweakBone1Name = leftKneeBoneName + tweakBoneSuffix
-rightKneeTweakBone1Name = leftNameToRightName(leftKneeTweakBone1Name)
-leftKneeTweakBone2Name = leftKneeBoneName + tweakBoneSuffix + ".001"
-rightKneeTweakBone2Name = leftNameToRightName(leftKneeTweakBone2Name)
-leftKneeTweakBone3Name = leftKneeBoneName + tweakBoneSuffix + ".002"
-rightKneeTweakBone3Name = leftNameToRightName(leftKneeTweakBone3Name)
-leftKneeFkBoneName = leftKneeBoneName + fkBoneSuffix
-rightKneeFkBoneName = leftNameToRightName(leftKneeFkBoneName)
 
 waistJointCorrectionBoneName = "cf_s_waist02"
 leftButtockJointCorrectionBoneName = "cf_d_siri_L"
@@ -634,19 +547,6 @@ useX, invertX, useY, invertY, useZ, invertZ):
     copyRotationConstraint.invert_z = invertZ
     return copyRotationConstraint
 
-def addCopyScaleConstraint(rig, boneName, targetRig, subTargetBoneName, space, constraintName, 
-useX, useY, useZ):
-    removeConstraint(rig, boneName, constraintName)
-    copyRotationConstraint = rig.pose.bones[boneName].constraints.new('COPY_SCALE')
-    copyRotationConstraint.name = constraintName
-    copyRotationConstraint.target = targetRig
-    copyRotationConstraint.subtarget = subTargetBoneName
-    copyRotationConstraint.owner_space = space
-    copyRotationConstraint.target_space = space
-    copyRotationConstraint.use_x = useX
-    copyRotationConstraint.use_y = useY
-    copyRotationConstraint.use_z = useZ
-    return copyRotationConstraint
         
 def addTransformationConstraint(rig, boneName, subTargetBoneName, mixMode, space, constraintName, 
 mapFrom, fromRotationMode, fromMinX, fromMaxX, fromMinY, fromMaxY, fromMinZ, fromMaxZ, 
@@ -870,26 +770,7 @@ def copyObject(collectionName, sourceObjectName, newObjectName):
     c.widget_collection().objects.link(newObject)
     return newObject
 
-def moveObjectOriginToBoneHead(objectName, rig, boneName): #doesn't work after transform changes
-    bpy.context.view_layer.update() #updates matrices
-    object = bpy.data.objects[objectName]
-    globalBoneHeadLocation = rig.location + rig.pose.bones[boneName].head
-    localBoneHeadLocation = object.matrix_world.inverted() @ globalBoneHeadLocation
-    object.data.transform(Matrix.Translation(-localBoneHeadLocation))
-    object.matrix_world.translation = object.matrix_world @ localBoneHeadLocation
-    
-def lockUnlockAllObjectTransforms(objectName, lock):
-    object = bpy.data.objects[objectName]
-    object.lock_location[0] = lock
-    object.lock_location[1] = lock
-    object.lock_location[2] = lock
-    object.lock_rotation[0] = lock
-    object.lock_rotation[1] = lock
-    object.lock_rotation[2] = lock
-    object.lock_scale[0] = lock
-    object.lock_scale[1] = lock
-    object.lock_scale[2] = lock
-    
+
 eyesPrimaryLayerBoneNames = [eyesHandleBoneName, leftEyeHandleBoneName, rightEyeHandleBoneName, riggedTongueBone1Name, riggedTongueBone2Name, 
 riggedTongueBone3Name, riggedTongueBone4Name, riggedTongueBone5Name]
 eyesSecondaryLayerBoneNames = [eyesTrackTargetBoneName, eyeballsBoneName, leftEyeballBoneName, rightEyeballBoneName, riggedTongueLeftBone3Name, 
@@ -917,23 +798,12 @@ rightRingFingerBone1Name, leftRingFingerBone2Name, rightRingFingerBone2Name, lef
 leftLittleFingerPalmBoneName, rightLittleFingerPalmBoneName, leftLittleFingerBone1Name, rightLittleFingerBone1Name, leftLittleFingerBone2Name,
 rightLittleFingerBone2Name, leftLittleFingerBone3Name, rightLittleFingerBone3Name]
 
-originalIkLayerIndex = 0
 originalFkLayerIndex = 'Torso'
-originalPrimaryJointCorrectionLayerIndex = 2
-originalSecondaryJointCorrectionLayerIndex = 3
-originalBetterPenetrationLayerIndex = 4
-originalSkirtLayerIndex = 8
 originalAccessoryLayerIndex = 'Hair/Accessories'
 originalMchLayerIndex = 'Junk'
-originalPhysicsLayerIndex = 11
-originalExtraLayerIndex = 12
 originalUpperFaceLayerIndex = 'Face'
 originalLowerFaceLayerIndex = 'Face (MCH)'
-originalRiggedTongueLayerIndex = 18
 
-temporaryAccessoryMchLayerIndex = 7
-temporaryFaceMchLayerIndex = 19
-temporaryOriginalDeformLayerIndex = 26
 
 detailLayerSuffix =  " (Detail)"
 primaryLayerSuffix =  " (Primary)"
@@ -956,10 +826,6 @@ leftLegLayerName = "Leg.L"
 rightLegLayerName = leftNameToRightName(leftLegLayerName)
 skirtLayerName = "Skirt"
 junkLayerName = "Junk"
-rootLayerName = "Root"
-defLayerName = "DEF"
-mchLayerName = "MCH"
-orgLayerName = "ORG"
 charamakerLayerName = "Charamaker bones"
 deformLayerName = "Deform bones"
 nsfwLayerName = "NSFW"
@@ -1009,13 +875,8 @@ RigifyLayer(junkLayerName, 29, noneBoneGroupIndex)
 ]
 
 rootLayerIndex = 'Root'
-rootLayerRow = 30
 defLayerIndex = 'DEF'
-defLayerRow = 31
 mchLayerIndex = 'MCH'
-mchLayerRow = 31
-orgLayerIndex = 'ORG'
-orgLayerRow = 31
 
 def getRigifyLayerIndexByName(rigifyLayerName):
     return rigifyLayerName
@@ -1030,131 +891,9 @@ def setRootRigifyLayer(rig, boneGroupIndex):
     if rig.data.collections_all.get(str(rootLayerIndex)):
         rig.data.collections_all[str(rootLayerIndex)].rigify_color_set_id = boneGroupIndex
 
-mmdOriginalBoneLayerName = "Original bones"        
-mmdRenamedRequiredDictionaryLayerName = "Renamed required dictionary"
-mmdRenamedWordDictionaryLayerName = "Renamed word dictionary"
-mmdRenamedExtraDictionaryLayerName = "Renamed extra dictionary"
-mmdRenamedMmdBoneLayerName = "Renamed mmd_bone"
-mmdNotRenamedLayerName = "Not renamed"
-mmdOriginalShadowLayerName = "Original shadow"
-mmdOriginalDummyLayerName = "Original dummy"
-mmdShadowLayerName = "Shadow"
-mmdDummyLayerName = "Dummy"
-mmdHiddenBonesLayerName = "Hidden bones"
-mmdDeformBonesLayerName = "Deform bones"
-mmdUsefulBonesLayerName = "Useful bones"
-mmdUselessBonesLayerName = "Useless bones"
-    
-class BoneManagerLayer(NamedTuple):
-        name: str
-        row: int
-        
-mmdBoneManagerLayers = [
-BoneManagerLayer(mmdOriginalBoneLayerName, 0),
-BoneManagerLayer(mmdRenamedRequiredDictionaryLayerName, 1),
-BoneManagerLayer(mmdRenamedWordDictionaryLayerName, 2),
-BoneManagerLayer(mmdRenamedExtraDictionaryLayerName, 3),
-BoneManagerLayer(mmdRenamedMmdBoneLayerName, 4),
-BoneManagerLayer(mmdNotRenamedLayerName, 5),
-BoneManagerLayer(mmdShadowLayerName, 6),
-BoneManagerLayer(mmdDummyLayerName, 7),
-BoneManagerLayer(mmdOriginalShadowLayerName, 8),
-BoneManagerLayer(mmdOriginalDummyLayerName, 9),
-BoneManagerLayer(mmdHiddenBonesLayerName, 10),
-BoneManagerLayer(mmdDeformBonesLayerName, 11),
-BoneManagerLayer(mmdUsefulBonesLayerName, 12),
-BoneManagerLayer(mmdUselessBonesLayerName, 13),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28)
-]
 
-def getMmdBoneManagerLayerIndexByName(mmdBoneManagerLayerName):
-    for index, mmdBoneManagerLayer in enumerate(mmdBoneManagerLayers):
-        if mmdBoneManagerLayer.name == mmdBoneManagerLayerName:
-            return index
-        
-koikatsuOriginalBoneLayerName = "Original bones"
-koikatsuRetargetingBonesLayerName = "Retargeting bones"
-koikatsuNonRetargetingBonesLayerName = "Non-retargeting bones"
-koikatsuHiddenBonesLayerName = "Hidden bones"
 koikatsuDeformBonesLayerName = "Deform bones"
-koikatsuUsefulBonesLayerName = "Useful bones"
-koikatsuUselessBonesLayerName = "Useless bones"
 
-koikatsuBoneManagerLayers = [
-BoneManagerLayer(koikatsuOriginalBoneLayerName, 0),
-BoneManagerLayer(koikatsuRetargetingBonesLayerName, 1),
-BoneManagerLayer(koikatsuNonRetargetingBonesLayerName, 2),
-BoneManagerLayer(koikatsuHiddenBonesLayerName, 3),
-BoneManagerLayer(koikatsuDeformBonesLayerName, 4),
-BoneManagerLayer(koikatsuUsefulBonesLayerName, 5),
-BoneManagerLayer(koikatsuUselessBonesLayerName, 6),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28),
-BoneManagerLayer("", 28)
-]
-
-def getKoikatsuBoneManagerLayerIndexByName(koikatsuBoneManagerLayerName):
-    for index, koikatsuBoneManagerLayer in enumerate(koikatsuBoneManagerLayers):
-        if koikatsuBoneManagerLayer.name == koikatsuBoneManagerLayerName:
-            return index
-    
-def setBoneManagerLayer(rig, layer, boneManagerLayer):
-    bpy.data.armatures[rig.data.name]["layer_name_" + str(layer)] = boneManagerLayer.name
-    bpy.data.armatures[rig.data.name]["rigui_id_" + str(layer)] = boneManagerLayer.row
-    
-def setBoneManagerLayersFromRigifyLayers(rig):
-    for index, rigifyLayer in enumerate(rigifyLayers):
-        if rigifyLayer.name != "":
-            setBoneManagerLayer(rig, index, BoneManagerLayer(rigifyLayer.name, rigifyLayer.row))
-    setBoneManagerLayer(rig, rootLayerIndex, BoneManagerLayer(rootLayerName, rootLayerRow))
-    setBoneManagerLayer(rig, defLayerIndex, BoneManagerLayer(defLayerName, defLayerRow))
-    setBoneManagerLayer(rig, mchLayerIndex, BoneManagerLayer(mchLayerName, mchLayerRow))
-    setBoneManagerLayer(rig, orgLayerIndex, BoneManagerLayer(orgLayerName, orgLayerRow))
-    
-def assignSingleBoneLayer_except(rig, boneName, layerIndex):
-    try:
-        assignSingleBoneLayer(rig, boneName, layerIndex)
-    except:
-        pass
-        #bone didn't exist
 
 def assignSingleBoneLayer(rig, boneName: str, layerName: str):
     if bone := rig.data.bones.get(boneName):
@@ -1184,32 +923,7 @@ def setFKLayer(rig, boneName, fkLayerName):
             rig.data.collections.new(fkLayerName)
         rig.pose.bones[boneName].rigify_parameters.fk_coll_refs[0].name = fkLayerName
 
-def setExtraIKLayer(rig, boneName, ikLayerName):
-    if boneName in rig.pose.bones:
-        if not len(rig.pose.bones[boneName].rigify_parameters.extra_ik_coll_refs):
-            rig.pose.bones[boneName].rigify_parameters.extra_ik_coll_refs.add()
-        if not rig.data.collections.get(ikLayerName):
-            rig.data.collections.new(ikLayerName)
-        rig.pose.bones[boneName].rigify_parameters.extra_ik_coll_refs[0].name = ikLayerName
 
-def assignMultipleBoneLayer(rig, boneName, layerIndexes):
-    original_mode = rig.mode
-    c.switch(rig, 'OBJECT')
-    bone = rig.data.bones[boneName]
-    bone.collections.clear()
-    for layerIndex in layerIndexes:
-        if rig.data.collections.get(str(layerIndex)):
-            rig.data.collections[str(layerIndex)].assign(bone)
-        else:
-            rig.data.collections.new(str(layerIndex))
-            rig.data.collections[str(layerIndex)].assign(bone)
-    c.switch(rig, original_mode)
-
-            
-def assignSingleBoneLayerToList(rig, boneNamesList, layerIndex):
-    for boneName in boneNamesList:
-        assignSingleBoneLayer(rig, boneName, layerIndex)
-        
 def getDeformBoneNames(rig):
     deformBoneNames = []
     for obj in c.mesh_objects(): 
@@ -1299,7 +1013,6 @@ frontLeftKneeJointCorrectionBoneName,
 frontRightKneeJointCorrectionBoneName
 ]
 
-driverTargets = [leftKneeBoneName, rightKneeBoneName, leftLegBoneName, rightLegBoneName, leftWristBoneName, rightWristBoneName, leftElbowBoneName, rightElbowBoneName, leftArmBoneName, rightArmBoneName, waistBoneName]
 
 targetsToChange = [leftArmBoneName, rightArmBoneName, leftElbowBoneName, rightElbowBoneName, leftLegBoneName, rightLegBoneName, leftKneeBoneName, rightKneeBoneName]
 
@@ -1307,187 +1020,7 @@ def setBoneCustomShapeScale(rig, boneName, scale):
     if rig.pose.bones.get(boneName):
         rig.pose.bones[boneName].custom_shape_scale_xyz = [scale, scale, scale]
 
-japHalfToFullTuples = (
-('ｳﾞ', 'ヴ'), ('ｶﾞ', 'ガ'), ('ｷﾞ', 'ギ'), ('ｸﾞ', 'グ'), ('ｹﾞ', 'ゲ'),
-('ｺﾞ', 'ゴ'), ('ｻﾞ', 'ザ'), ('ｼﾞ', 'ジ'), ('ｽﾞ', 'ズ'), ('ｾﾞ', 'ゼ'),
-('ｿﾞ', 'ゾ'), ('ﾀﾞ', 'ダ'), ('ﾁﾞ', 'ヂ'), ('ﾂﾞ', 'ヅ'), ('ﾃﾞ', 'デ'),
-('ﾄﾞ', 'ド'), ('ﾊﾞ', 'バ'), ('ﾊﾟ', 'パ'), ('ﾋﾞ', 'ビ'), ('ﾋﾟ', 'ピ'),
-('ﾌﾞ', 'ブ'), ('ﾌﾟ', 'プ'), ('ﾍﾞ', 'ベ'), ('ﾍﾟ', 'ペ'), ('ﾎﾞ', 'ボ'),
-('ﾎﾟ', 'ポ'), ('｡', '。'), ('｢', '「'), ('｣', '」'), ('､', '、'),
-('･', '・'), ('ｦ', 'ヲ'), ('ｧ', 'ァ'), ('ｨ', 'ィ'), ('ｩ', 'ゥ'),
-('ｪ', 'ェ'), ('ｫ', 'ォ'), ('ｬ', 'ャ'), ('ｭ', 'ュ'), ('ｮ', 'ョ'),
-('ｯ', 'ッ'), ('ｰ', 'ー'), ('ｱ', 'ア'), ('ｲ', 'イ'), ('ｳ', 'ウ'),
-('ｴ', 'エ'), ('ｵ', 'オ'), ('ｶ', 'カ'), ('ｷ', 'キ'), ('ｸ', 'ク'),
-('ｹ', 'ケ'), ('ｺ', 'コ'), ('ｻ', 'サ'), ('ｼ', 'シ'), ('ｽ', 'ス'),
-('ｾ', 'セ'), ('ｿ', 'ソ'), ('ﾀ', 'タ'), ('ﾁ', 'チ'), ('ﾂ', 'ツ'),
-('ﾃ', 'テ'), ('ﾄ', 'ト'), ('ﾅ', 'ナ'), ('ﾆ', 'ニ'), ('ﾇ', 'ヌ'),
-('ﾈ', 'ネ'), ('ﾉ', 'ノ'), ('ﾊ', 'ハ'), ('ﾋ', 'ヒ'), ('ﾌ', 'フ'),
-('ﾍ', 'ヘ'), ('ﾎ', 'ホ'), ('ﾏ', 'マ'), ('ﾐ', 'ミ'), ('ﾑ', 'ム'),
-('ﾒ', 'メ'), ('ﾓ', 'モ'), ('ﾔ', 'ヤ'), ('ﾕ', 'ユ'), ('ﾖ', 'ヨ'),
-('ﾗ', 'ラ'), ('ﾘ', 'リ'), ('ﾙ', 'ル'), ('ﾚ', 'レ'), ('ﾛ', 'ロ'),
-('ﾜ', 'ワ'), ('ﾝ', 'ン')
-)
 
-def fixJapChars(name):
-    for values in japHalfToFullTuples:
-        if values[0] in name:
-            name = name.replace(values[0], values[1])
-    return name
-
-japEngRequiredBoneNamesDictionary = {
-'全ての親':'mother',
-'グルーブ':'groove',
-'センター':'center',
-'上半身':'upper body',
-'上半身2':'upper body 2',
-'首':'neck',
-'頭':'head',
-'左目':'eye L',
-'下半身':'lower body',
-'左肩':'shoulder L',
-'左腕':'arm L',
-'左ひじ':'elbow L',
-'左手首':'wrist L',
-'左親指０':'thumb0L',
-'左親指１':'thumb1L',
-'左親指２':'thumb2L',
-'左人指１':'fore1L',
-'左人指２':'fore2L',
-'左人指３':'fore3L',
-'左中指１':'middle1L',
-'左中指２':'middle2L',
-'左中指３':'middle3L',
-'左薬指１':'third1L',
-'左薬指２':'third2L',
-'左薬指３':'third3L',
-'左小指１':'little1L',
-'左小指２':'little2L',
-'左小指３':'little3L',
-'左足':'legL',
-'左ひざ':'kneeL',
-'左足首':'ankleL',
-'両目':'eyes',
-'右目':'eye R',
-'右肩':'shoulderR',
-'右腕':'armR',
-'右ひじ':'elbowR',
-'右手首':'wristR',
-'右親指０':'thumb0R',
-'右親指１':'thumb1R',
-'右親指２':'thumb2R',
-'右人指１':'fore1R',
-'右人指２':'fore2R',
-'右人指３':'fore3R',
-'右中指１':'middle1R',
-'右中指２':'middle2R',
-'右中指３':'middle3R',
-'右薬指１':'third1R',
-'右薬指２':'third2R',
-'右薬指３':'third3R',
-'右小指１':'little1R',
-'右小指２':'little2R',
-'右小指３':'little3R',
-'右足':'legR',
-'右ひざ':'kneeR',
-'右足首':'ankleR',
-'左足ＩＫ':'leg IK L',
-'左つま先ＩＫ':'toe IK L',
-'右足ＩＫ':'leg IK R',
-'右つま先ＩＫ':'toe IK R'
-}
-
-japEngWordsDictionaryFileName = "dictionary.json"
-
-def loadJsonDictionaryFile(filePath, fileName):
-    dictionaryFile = os.path.join(filePath, fileName)
-    with open(dictionaryFile, encoding="utf8") as file:
-        return json.load(file, object_pairs_hook=collections.OrderedDict)
-
-japEngExtraBoneNamesDictionary = {
-'テール1':'tail 1',
-'テール2':'tail 2'
-}
-
-japCharactersRegex = u'[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]+'  # Regex to look for japanese chars
-
-def getContainedJapCharacters(string):
-    return re.findall(japCharactersRegex, string)
-
-koikatsuRetargetingBoneNames = [
-"cf_j_hips",
-"cf_j_spine01",
-"cf_j_spine02",
-"cf_j_spine03",
-"cf_j_arm00_L",
-"cf_j_forearm01_L",
-"cf_j_hand_L",
-"cf_j_index01_L",
-"cf_j_index02_L",
-"cf_j_index03_L",
-"cf_j_little01_L",
-"cf_j_little02_L",
-"cf_j_little03_L",
-"cf_j_middle01_L",
-"cf_j_middle02_L",
-"cf_j_middle03_L",
-"cf_j_ring01_L",
-"cf_j_ring02_L",
-"cf_j_ring03_L",
-"cf_j_thumb01_L",
-"cf_j_thumb02_L",
-"cf_j_thumb03_L",
-"cf_j_arm00_R",
-"cf_j_forearm01_R",
-"cf_j_hand_R",
-"cf_j_index01_R",
-"cf_j_index02_R",
-"cf_j_index03_R",
-"cf_j_little01_R",
-"cf_j_little02_R",
-"cf_j_little03_R",
-"cf_j_middle01_R",
-"cf_j_middle02_R",
-"cf_j_middle03_R",
-"cf_j_ring01_R",
-"cf_j_ring02_R",
-"cf_j_ring03_R",
-"cf_j_thumb01_R",
-"cf_j_thumb02_R",
-"cf_j_thumb03_R",
-"cf_j_neck",
-"cf_j_head",
-"cf_j_waist01",
-"cf_j_thigh00_L",
-"cf_j_leg01_L",
-"cf_j_foot_L",
-"cf_j_toes_L",
-"cf_j_thigh00_R",
-"cf_j_leg01_R",
-"cf_j_foot_R",
-"cf_j_toes_R",
-"cf_j_shoulder_L",
-"cf_j_shoulder_R",
-"cf_j_kokan",
-"cf_j_ana",
-"cf_j_waist02",
-"cf_j_siri_L",
-"cf_j_siri_R",
-"cf_j_bust01_L",
-"cf_j_bust01_R",
-"cf_j_bust02_L",
-"cf_j_bust02_R",
-"cf_j_bust03_L",
-"cf_j_bust03_R",
-"cf_j_bnip02root_L",
-"cf_j_bnip02root_R",
-"cf_j_bnip02_L",
-"cf_j_bnip02_R"
-]
-
-autoRigProCopyRotationConstraintName = "Copy RotationREMAP"
-autoRigProCopyScaleConstraintName = "Copy ScaleREMAP"
-
-faceWidgetMouthBoneName = "Face Widget Mouth"
 faceWidgetMouthGuideBoneName = "Face Widget Mouth Guide"
 mouthWidgetControllerBoneName = "Mouth Widget Controller"
 mouthShapekeyA = "Mouth Big A"
@@ -1518,7 +1051,6 @@ mouthShapekeysToCopy = [
 ]
 
 
-faceWidgetEyesBoneName = "Face Widget Eyes"
 faceWidgetEyesGuideBoneName = "Face Widget Eye Guide"
 eyeWidgetControllerBoneName = "Eye Widget Controller"
 eyeShapekeyClosed1 =   "Eye Closed"
