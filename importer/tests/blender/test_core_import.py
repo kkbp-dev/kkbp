@@ -61,16 +61,19 @@ def test_the_golden_samples_import(sample, golden_import):
     assert len(moved) >= 5, moved  # the mouth keys move the tongue (fewer in SVS, ADR 0035)
     for mat in ch.materials():
         assert mat.get(templates.TEMPLATE) in kkbp.library.TEMPLATES
-    for gag in ch.materials(roles="gag_eyes"):
+    gags = ch.materials(roles="gag_eyes")
+    assert len([g for g in gags if templates.picker(g) is not None]) == 1  # one dropdown (ADR 0042)
+    for gag in gags:
         assert gag.name == gag[character.ID]
-        paths = [fc.data_path for fc in gag.node_tree.animation_data.drivers]
-        assert 'nodes["gag.choice"].outputs[0].default_value' in paths, paths  # an expression picks the pattern
+        if templates.picker(gag) is None:  # the others follow the dropdown
+            paths = [fc.data_path for fc in gag.node_tree.animation_data.drivers]
+            assert 'nodes["gag.choice"].outputs[0].default_value' in paths, paths
     assert result.warnings == [], result.warnings
 
 
 def test_expressions_drive_the_face(golden_import):
-    """A gag expression on Body shows its gag mesh, picks its pattern and hides the pupils; an eye
-    expression picks the eye overlay; the tears follow Body's keys."""
+    """Gag eyes, with Spiral Eyes picked on the dropdown, shows its gag mesh, picks its pattern and
+    hides the pupils; an eye expression picks the eye overlay; the tears follow Body's keys."""
     _, ch = golden_import("kk")
     body_keys = ch.body.data.shape_keys.key_blocks
     gag_keys = ch.gag_eyes.data.shape_keys.key_blocks
@@ -81,15 +84,19 @@ def test_expressions_drive_the_face(golden_import):
 
     evaluate()
     assert gag_keys["Gag eye 01"].value == 0
-    body_keys["Gag Spiral Eyes"].value = 1.0  # shows cf_O_gag_eye_01 with pattern cf_t_gageye_01
+    menu = ch.material("cf_m_gageye_00")
+    picker = templates.template_of(menu).patterns.picker
+    templates.picker(menu).inputs[picker.menu].default_value = "Spiral Eyes"  # the 3rd gag expression
+    menu.node_tree.update_tag()  # as kkbp.dropdowns does on the message bus, which tests don't run
+    body_keys["Gag eyes"].value = 1.0  # shows cf_O_gag_eye_01 with pattern cf_t_gageye_01
     evaluate()
     assert gag_keys["Gag eye 01"].value == 1 and gag_keys["Gag eye 00"].value == 0
     gag = ch.material("cf_m_gageye_01")
     index = templates.patterns(gag).index("cf_t_gageye_01")
-    assert templates.param(gag, "choice").default_value == templates.choice_value(gag, index)
+    assert templates.param(gag, "choice").default_value == 3
     assert templates.pattern_param(gag, index, "angle_speed").default_value == pytest.approx(-0.5)
     assert templates.param(ch.material("cf_m_hitomi_00"), "hidden").default_value == 1
-    body_keys["Gag Spiral Eyes"].value = 0.0
+    body_keys["Gag eyes"].value = 0.0
     body_keys["Eye Star Pupils"].value = 1.0  # the eyes' cf_t_expression_01 overlay
     evaluate()
     eye = ch.material("cf_m_hitomi_00")

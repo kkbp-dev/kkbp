@@ -27,7 +27,7 @@ EXTRAS = {
     "light_rotation": ("node_groups", ".Light Rotation Catcher"),  # Eevee Mod: geometry nodes the SDF reads
     "lut": ("images", "Lut_TimeDay.png"),  # edit materials: the game's colour grade (D42)
 }
-TEMPLATE_VERSION = 1  # the kkbp_template_version every template and group in library.blend carries
+TEMPLATE_VERSION = 2  # the kkbp_template_version every template and group in library.blend carries
 VERSION_PROP = "kkbp_template_version"
 
 

@@ -9,6 +9,7 @@ from collections import defaultdict
 import bpy
 
 from .. import templates
+from . import gag
 from .mesh import FACE_PARTS, add_driver, material_id
 
 # Every nth pixel in each direction is sampled for a material's viewport colour.
@@ -58,7 +59,17 @@ def drive_material_changes(ctx):
     ch, bundle, profile = ctx.character, ctx.bundle, ctx.profile
     picks = defaultdict(list)  # material -> [(expression key owner, target, pattern index)]
     hides = defaultdict(list)  # material -> [(owner, target)]
+    # Once the gag keys are one key, its dropdown picks the gag expression (ADR 0042): drive_gag_eyes
+    # picks their patterns, and the meshes they hide are hidden while it picks one of them.
+    picked = gag.selection(ch, bundle)
+    gag_targets = set(picked.expressions) if picked else set()
+    gag_hides = defaultdict(list)  # material -> [gag expression]
     for effect in bundle.expressions.effects:
+        if effect.target in gag_targets:
+            for mesh_id in effect.hides:
+                for mat in _hideable(ch, bundle, mesh_id):
+                    gag_hides[mat].append(effect.target)
+            continue
         owner = _expression_owner(ch, effect.target)
         if owner is None:
             ctx.log.warning(f"Expression {effect.target} has effects but no shape key")
@@ -74,13 +85,10 @@ def drive_material_changes(ctx):
                     continue
                 index = names.index(texture.pattern)
                 picks[mat].append((owner, effect.target, index))
-                _set_pattern_values(ctx, mat, index, change, profile)
+                gag.set_pattern_values(mat, index, change, profile)
         for mesh_id in effect.hides:
-            mesh = bundle.mesh(mesh_id)
-            for material in (mesh.materials if mesh else ()):
-                mat = ch.material(material)
-                if mat is not None and "hidden" in templates.template_of(mat).params:
-                    hides[mat].append((owner, effect.target))
+            for mat in _hideable(ch, bundle, mesh_id):
+                hides[mat].append((owner, effect.target))
 
     for mat, chosen in picks.items():
         off = templates.choice_value(mat, None)
@@ -91,10 +99,18 @@ def drive_material_changes(ctx):
             # One expression is on at a time: off + (its value - off).
             return f"{off}" + "".join(f"{delta:+d}*({name}>0)" for name, (_, _, delta) in zip(names, terms))
 
-        _drive(ctx, socket, [(o, t) for o, t, _ in terms], expression)
-    for mat, sources in hides.items():
-        socket = templates.param(mat, "hidden")
-        _drive(ctx, socket, sources, lambda names: f"1 if {' + '.join(names)} > 0 else 0")
+        _drive(ctx, socket, _key_targets([(o, t) for o, t, _ in terms]), expression)
+    for mat in list(hides) + [m for m in gag_hides if m not in hides]:
+        sources, gags = hides.get(mat, []), gag_hides.get(mat, [])
+        targets = _key_targets(sources) + (picked.targets if gags else [])
+
+        def expression(names, count=len(sources), gags=gags):
+            tests = [f"{' + '.join(names[:count])} > 0"] if count else []
+            if gags:
+                tests.append(picked.on(names[count:], gags))
+            return f"1 if {' or '.join(tests)} else 0"
+
+        _drive(ctx, templates.param(mat, "hidden"), targets, expression)
 
 
 def set_viewport_colors(ctx):
@@ -116,26 +132,22 @@ def set_view_transform(ctx):
 
 # --- helpers ------------------------------------------------------------------------------
 
-def _set_pattern_values(ctx, mat, index, change, profile):
-    values = {}
-    for raw, value in change.floats.items():
-        if raw in profile.pattern_values:
-            values[profile.pattern_values[raw]] = value
-    for raw, vector in change.vectors.items():
-        for component, value in zip("xyzw", vector):
-            name = profile.pattern_values.get(f"{raw}.{component}")
-            if name:
-                values[name] = value
-    patterns = templates.template_of(mat).patterns
-    if not values or patterns.chain is None:
-        return
-    for name, value in values.items():
-        socket = templates.pattern_param(mat, index, name)
-        socket.default_value = value
+def _hideable(ch, bundle, mesh_id):
+    """The materials of bundle mesh `mesh_id` whose templates can be hidden."""
+    mesh = bundle.mesh(mesh_id)
+    found = []
+    for material in (mesh.materials if mesh else ()):
+        mat = ch.material(material)
+        if mat is not None and "hidden" in templates.template_of(mat).params:
+            found.append(mat)
+    return found
 
 
-def _drive(ctx, socket, sources, expression):
-    targets = [(owner.data.shape_keys, f'key_blocks["{_quote(target)}"].value') for owner, target in sources]
+def _key_targets(sources):
+    return [(owner.data.shape_keys, f'key_blocks["{_quote(target)}"].value') for owner, target in sources]
+
+
+def _drive(ctx, socket, targets, expression):
     fcurve = add_driver(socket, "default_value", targets, expression)
     if len(fcurve.driver.expression) > 255:
         ctx.log.warning(f"{socket.node.id_data.name}: the driver for {socket.name} is too long for Blender "

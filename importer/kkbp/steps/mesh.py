@@ -166,10 +166,13 @@ def order_material_slots(ctx):
 
 
 def order_shape_keys(ctx):
-    """Orders each Part's shape keys as the legacy importer did: the basis, the gag-eye expressions,
-    the rest (tears, untranslated keys), then the Eye, Mouth and Eyebrow expressions each in
-    alphabetical order, and the meshes' showing keys last."""
-    category = {}
+    """Orders each Part's shape keys as the legacy importer did: the basis, the gag-eye expressions
+    (`Gag eyes`, ADR 0042), the rest (tears, untranslated keys), then the Eye, Mouth and Eyebrow
+    expressions each in alphabetical order, and the driven keys last: the meshes' showing keys and
+    the gag correction keys."""
+    from . import gag
+
+    category = {gag.GAG_KEY: "gag"}
     showing = set()
     for e in ctx.bundle.expressions.records:
         category.setdefault(e.target, e.category)
@@ -181,10 +184,11 @@ def order_shape_keys(ctx):
         if keys is None:
             continue
         names = [k.name for k in keys.key_blocks][1:]
+        driven = showing | set(gag.corrections(obj))
 
         def rank(item):
             position, name = item
-            if name in showing:
+            if name in driven:
                 return (5, position, "")
             group = order.get(category.get(name), 1)
             return (group, position if group <= 1 else 0, name if group > 1 else "")
@@ -214,12 +218,18 @@ def link_expression_keys(ctx):
 
 
 def drive_showing_keys(ctx):
-    """Shows each tear and gag-eye mesh while an expression that `shows` it is on (ADR 0010)."""
+    """Shows each tear and gag-eye mesh while an expression that `shows` it is on (ADR 0010). Once
+    the gag keys are one key, `drive_gag_eyes` drives what the gag expressions show (ADR 0042)."""
+    from . import gag
+
     ch, bundle = ctx.character, ctx.bundle
     showing_key = {e.mesh: e.target for e in bundle.expressions.records
                    if e.category in ("tears", "gag") and e.game_name is None}
+    combined = set(gag.gag_expressions(bundle)) if _part_with_key(ch, _meshes(ch), gag.GAG_KEY) else set()
     by_mesh = defaultdict(list)
     for effect in bundle.expressions.effects:
+        if effect.target in combined:
+            continue
         for mesh in effect.shows:
             by_mesh[mesh].append(effect.target)
     for mesh, targets in by_mesh.items():
@@ -287,7 +297,8 @@ def add_driver(owner, prop, targets, expression):
         var = driver.variables.new()
         var.name = name
         var.type = "SINGLE_PROP"
-        var.targets[0].id_type = "KEY" if isinstance(id_block, bpy.types.Key) else "OBJECT"
+        var.targets[0].id_type = ("KEY" if isinstance(id_block, bpy.types.Key)
+                                  else "MATERIAL" if isinstance(id_block, bpy.types.Material) else "OBJECT")
         var.targets[0].id = id_block
         var.targets[0].data_path = path
     driver.expression = expression(names)

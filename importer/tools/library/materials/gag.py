@@ -14,9 +14,13 @@ def build(lib):
         'location': (350.0, 0.0),
         'label': 'gag.output',
     })
-    t.node('ShaderNodeValue', 'gag.frame', props={
+    # The frame, from a property each object with this material gets (`steps/gag.py`, ADR 0042): a
+    # driver here would update the material on every frame.
+    t.node('ShaderNodeAttribute', 'gag.frame', props={
         'location': (-900.0, 200.0),
         'label': 'gag.frame',
+        'attribute_type': 'OBJECT',
+        'attribute_name': 'kkbp_gag_frame',
     })
     t.node('ShaderNodeValue', 'gag.choice', props={
         'location': (-900.0, 0.0),
@@ -24,6 +28,4 @@ def build(lib):
     })
 
     t.link('gag.output', 'Shader', 'Material Output', 'Surface')
-
-    t.driver('nodes["gag.frame"].outputs[0].default_value', 'frame')
     return t

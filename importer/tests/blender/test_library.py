@@ -37,7 +37,7 @@ def _outputs(group):
 
 
 def _socket(node, name):
-    if node.type == "VALUE":
+    if node.type in ("VALUE", "ATTRIBUTE"):
         return node.outputs.get(name)
     return node.inputs.get(name)
 
@@ -82,6 +82,9 @@ def test_every_description_matches_the_library(blend, name):
         uv, pick = groups[chain.uv_group], groups[chain.pick_group]
         assert set(chain.pattern_params.values()) | {sockets["frame"]} <= set(_inputs(uv))
         assert sockets["vector"] in _outputs(uv)
+        if chain.frame_property:
+            frame = at(template.params[chain.frame][0])
+            assert (frame.type, frame.attribute_type, frame.attribute_name) == ("ATTRIBUTE", "OBJECT", chain.frame_property)
         assert {sockets[k] for k in ("choice", "index", "color", "alpha", "previous_color", "previous_alpha")} \
             <= set(_inputs(pick))
         assert {sockets["picked_color"], sockets["picked_alpha"]} <= set(_outputs(pick))

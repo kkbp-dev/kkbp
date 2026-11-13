@@ -32,7 +32,7 @@
   "images": 65,
   "materials": 27,
   "meshes": 24,
-  "node_groups": 11,
+  "node_groups": 12,
   "objects": 6
  },
  "images": [
@@ -235,7 +235,8 @@
    "node_groups": [
     ".Gag UV",
     ".Gag output",
-    ".Gag pick"
+    ".Gag pick",
+    "Gag expression {character}"
    ],
    "roles": [
     "gag_eyes"
@@ -15877,22 +15878,10 @@
      "cf_m_nail_def_00",
      "cf_m_nail_def_01"
     ],
-    "shape_key_drivers": 0,
+    "shape_key_drivers": 2,
     "shape_keys": [
      "Basis",
-     "Gag > <",
-     "Gag Horizontal Line",
-     "Gag Cartoony Crying",
-     "Gag Staring",
-     "Gag Dazed",
-     "Gag Circle Eyes",
-     "Gag Spiral Eyes",
-     "Gag Oval Eyes",
-     "Gag Sparkle Eyes",
-     "Gag Heart Eyes",
-     "Gag Fiery Eyes",
-     "Gag Cartoony Wink",
-     "Gag Cartoony Wink 2",
+     "Gag eyes",
      "Eye Angry",
      "Eye Closed",
      "Eye Default",
@@ -15963,7 +15952,8 @@
      "Eyebrow Smiling",
      "Eyebrow Winking L",
      "Eyebrow Winking R",
-     "Eyebrow Worried"
+     "Eyebrow Worried",
+     "Gag eyes (Fiery Eyes)"
     ],
     "uv_maps": [
      "uv_main",
@@ -16145,21 +16135,10 @@
      "cf_m_namida_2",
      "cf_m_namida_3"
     ],
-    "shape_key_drivers": 48,
+    "shape_key_drivers": 28,
     "shape_keys": [
      "Basis",
-     "Gag > <",
-     "Gag Horizontal Line",
-     "Gag Cartoony Crying",
-     "Gag Staring",
-     "Gag Dazed",
-     "Gag Circle Eyes",
-     "Gag Spiral Eyes",
-     "Gag Oval Eyes",
-     "Gag Sparkle Eyes",
-     "Gag Heart Eyes",
-     "Gag Cartoony Wink",
-     "Gag Cartoony Wink 2",
+     "Gag eyes",
      "Eye Angry",
      "Eye Closed",
      "Eye Default",
@@ -16174,7 +16153,8 @@
      "Eye Winking R",
      "Tears big",
      "Tears med",
-     "Tears small"
+     "Tears small",
+     "Gag eyes (Fiery Eyes)"
     ],
     "uv_maps": [
      "uv_main"
@@ -16208,6 +16188,9 @@
    "arrange_collections": "ran",
    "bend_limbs_for_ik": "ran",
    "build_parts": "ran",
+   "combine_gag_keys": "ran",
+   "drive_frames": "ran",
+   "drive_gag_eyes": "ran",
    "drive_material_changes": "ran",
    "drive_showing_keys": "ran",
    "join_armatures": "ran",

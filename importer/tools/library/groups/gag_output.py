@@ -8,6 +8,9 @@ def build(lib):
     t = lib.new_group(NAME, KIND, props={})
 
     t.socket('OUTPUT', 'Shader', 'NodeSocketShader')
+    # The gag dropdown is linked here, so the material panel shows it at the top (ADR 0042).
+    t.socket('INPUT', 'Expression', 'NodeSocketFloat', default_value=1.0,
+             description='The picked gag expression, from the Gag expression dropdown; 0 draws nothing')
     t.socket('INPUT', 'Color', 'NodeSocketColor', default_value=(1.0, 1.0, 1.0, 1.0))
     t.socket('INPUT', 'Alpha', 'NodeSocketFloat')
 
@@ -26,9 +29,21 @@ def build(lib):
     t.node('ShaderNodeMixShader', 'Mix Shader', props={
         'location': (0.0, 0.0),
     })
+    t.node('ShaderNodeMath', 'Math', inputs={'Value_001': 0.5}, props={
+        'location': (-600.0, -250.0),
+        'label': 'Picked',
+        'operation': 'GREATER_THAN',
+    })
+    t.node('ShaderNodeMath', 'Math.001', props={
+        'location': (-300.0, -250.0),
+        'operation': 'MULTIPLY',
+    })
 
     t.link('Group Input', 'Color', 'Emission', 'Color')
-    t.link('Group Input', 'Alpha', 'Mix Shader', 'Fac')
+    t.link('Group Input', 'Expression', 'Math', 'Value')
+    t.link('Group Input', 'Alpha', 'Math.001', 'Value')
+    t.link('Math', 'Value', 'Math.001', 'Value_001')
+    t.link('Math.001', 'Value', 'Mix Shader', 'Fac')
     t.link('Transparent BSDF', 'BSDF', 'Mix Shader', 'Shader')
     t.link('Emission', 'Emission', 'Mix Shader', 'Shader_001')
     t.link('Mix Shader', 'Shader', 'Group Output', 'Shader')
