@@ -1024,18 +1024,24 @@ def main(build):
         leftBone.length = length
         rightBone.length = length
     
-    if hasRiggedTongue:
-        try:
-            riggedTongueBone2 = metarig.data.edit_bones[names.RIGGED_TONGUE_BONE2]
-            finalizeRiggedTongueSideBones(metarig, names.RIGGED_TONGUE_LEFT_BONE3, names.RIGGED_TONGUE_RIGHT_BONE3, riggedTongueBone2.length, 0.75)
-            finalizeRiggedTongueSideBones(metarig, names.RIGGED_TONGUE_LEFT_BONE4, names.RIGGED_TONGUE_RIGHT_BONE4, riggedTongueBone2.length, 0.65, 0.5, 0.5)
-            finalizeRiggedTongueSideBones(metarig, names.RIGGED_TONGUE_LEFT_BONE5, names.RIGGED_TONGUE_RIGHT_BONE5, riggedTongueBone2.length, 0.65, 0.2, 0.3)
-            riggedTongueBone5 = metarig.data.edit_bones[names.RIGGED_TONGUE_BONE5]
-            riggedTongueLeftBone5VertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(names.RIGGED_TONGUE_LEFT_BONE5, build.body)
-            riggedTongueBone5.tail.z = riggedTongueLeftBone5VertexGroupExtremities.minZ + math.dist([riggedTongueLeftBone5VertexGroupExtremities.minZ], [riggedTongueLeftBone5VertexGroupExtremities.maxZ]) * 0.17
-            riggedTongueBone5.tail.y = riggedTongueLeftBone5VertexGroupExtremities.minY
-        except:
-            pass
+    tongueSideBones = (names.RIGGED_TONGUE_BONE2, names.RIGGED_TONGUE_BONE5,
+                       names.RIGGED_TONGUE_LEFT_BONE3, names.RIGGED_TONGUE_RIGHT_BONE3,
+                       names.RIGGED_TONGUE_LEFT_BONE4, names.RIGGED_TONGUE_RIGHT_BONE4,
+                       names.RIGGED_TONGUE_LEFT_BONE5, names.RIGGED_TONGUE_RIGHT_BONE5)
+    # The side bones are placed from the left ones' vertex groups on Body.
+    tongueSideGroups = (names.RIGGED_TONGUE_LEFT_BONE3, names.RIGGED_TONGUE_LEFT_BONE4, names.RIGGED_TONGUE_LEFT_BONE5)
+    if hasRiggedTongue and not (all(b in metarig.data.edit_bones for b in tongueSideBones) and
+                                not any(koikatsuCommons.isVertexGroupEmpty(g, build.body) for g in tongueSideGroups)):
+        build.log.info("The tongue lacks some side bones or their vertex groups, so its side bones keep their places")
+    elif hasRiggedTongue:
+        riggedTongueBone2 = metarig.data.edit_bones[names.RIGGED_TONGUE_BONE2]
+        finalizeRiggedTongueSideBones(metarig, names.RIGGED_TONGUE_LEFT_BONE3, names.RIGGED_TONGUE_RIGHT_BONE3, riggedTongueBone2.length, 0.75)
+        finalizeRiggedTongueSideBones(metarig, names.RIGGED_TONGUE_LEFT_BONE4, names.RIGGED_TONGUE_RIGHT_BONE4, riggedTongueBone2.length, 0.65, 0.5, 0.5)
+        finalizeRiggedTongueSideBones(metarig, names.RIGGED_TONGUE_LEFT_BONE5, names.RIGGED_TONGUE_RIGHT_BONE5, riggedTongueBone2.length, 0.65, 0.2, 0.3)
+        riggedTongueBone5 = metarig.data.edit_bones[names.RIGGED_TONGUE_BONE5]
+        riggedTongueLeftBone5VertexGroupExtremities = koikatsuCommons.findVertexGroupExtremities(names.RIGGED_TONGUE_LEFT_BONE5, build.body)
+        riggedTongueBone5.tail.z = riggedTongueLeftBone5VertexGroupExtremities.minZ + math.dist([riggedTongueLeftBone5VertexGroupExtremities.minZ], [riggedTongueLeftBone5VertexGroupExtremities.maxZ]) * 0.17
+        riggedTongueBone5.tail.y = riggedTongueLeftBone5VertexGroupExtremities.minY
     if not hasHeadMod:
         metarig.data.edit_bones[names.HEAD_BONE].tail.z = koikatsuCommons.findVertexGroupExtremities(names.ORIGINAL_FACE_UP_DEFORM_BONE, build.body).maxZ
     else:
@@ -1436,50 +1442,50 @@ def main(build):
         metarig.pose.bones[names.MID_LEFT_KNEE_JOINT_CORRECTION_BONE].rigify_parameters.parent_bone = names.LEFT_LEG_DEFORM_BONE1
         metarig.pose.bones[names.MID_RIGHT_KNEE_JOINT_CORRECTION_BONE].rigify_parameters.parent_bone = names.RIGHT_LEG_DEFORM_BONE1
     
+    torsoLayerBoneNames = list(names.TORSO_LAYER_BONE_NAMES)  # this Character's copy, as below
     if isMale:
-        names.TORSO_LAYER_BONE_NAMES.remove(names.BREASTS_HANDLE_BONE)
-        names.TORSO_LAYER_BONE_NAMES.remove(names.LEFT_BREAST_HANDLE_BONE)
-        names.TORSO_LAYER_BONE_NAMES.remove(names.RIGHT_BREAST_HANDLE_BONE) 
+        torsoLayerBoneNames.remove(names.BREASTS_HANDLE_BONE)
+        torsoLayerBoneNames.remove(names.LEFT_BREAST_HANDLE_BONE)
+        torsoLayerBoneNames.remove(names.RIGHT_BREAST_HANDLE_BONE)
         
+    # This Character's copies: the legacy scripts removed these names from the module's own lists,
+    # which then stayed short for the next Character imported in the session.
+    eyesPrimaryLayerBoneNames = list(names.EYES_PRIMARY_LAYER_BONE_NAMES)
+    eyesSecondaryLayerBoneNames = list(names.EYES_SECONDARY_LAYER_BONE_NAMES)
+    torsoTweakLayerBoneNames = list(names.TORSO_TWEAK_LAYER_BONE_NAMES)
     if not hasRiggedTongue:
-        try:
-            names.EYES_PRIMARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_BONE1)
-            names.EYES_PRIMARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_BONE2)
-            names.EYES_PRIMARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_BONE3)
-            names.EYES_PRIMARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_BONE4)
-            names.EYES_PRIMARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_BONE5)
-            names.EYES_SECONDARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_LEFT_BONE3)
-            names.EYES_SECONDARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_RIGHT_BONE3)
-            names.EYES_SECONDARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_LEFT_BONE4)
-            names.EYES_SECONDARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_RIGHT_BONE4)
-            names.EYES_SECONDARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_LEFT_BONE5)
-            names.EYES_SECONDARY_LAYER_BONE_NAMES.remove(names.RIGGED_TONGUE_RIGHT_BONE5)
-        except:
-            pass
+        eyesPrimaryLayerBoneNames.remove(names.RIGGED_TONGUE_BONE1)
+        eyesPrimaryLayerBoneNames.remove(names.RIGGED_TONGUE_BONE2)
+        eyesPrimaryLayerBoneNames.remove(names.RIGGED_TONGUE_BONE3)
+        eyesPrimaryLayerBoneNames.remove(names.RIGGED_TONGUE_BONE4)
+        eyesPrimaryLayerBoneNames.remove(names.RIGGED_TONGUE_BONE5)
+        eyesSecondaryLayerBoneNames.remove(names.RIGGED_TONGUE_LEFT_BONE3)
+        eyesSecondaryLayerBoneNames.remove(names.RIGGED_TONGUE_RIGHT_BONE3)
+        eyesSecondaryLayerBoneNames.remove(names.RIGGED_TONGUE_LEFT_BONE4)
+        eyesSecondaryLayerBoneNames.remove(names.RIGGED_TONGUE_RIGHT_BONE4)
+        eyesSecondaryLayerBoneNames.remove(names.RIGGED_TONGUE_LEFT_BONE5)
+        eyesSecondaryLayerBoneNames.remove(names.RIGGED_TONGUE_RIGHT_BONE5)
                
     if not hasBetterPenetrationMod:
-        try:
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_ROOT_CROTCH_BONE)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_FRONT_CROTCH_BONE)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE1)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE1)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE2)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE2)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE3)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE3)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE4)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE4)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE5)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE5)
-            names.TORSO_TWEAK_LAYER_BONE_NAMES.remove(names.BETTER_PENETRATION_BACK_CROTCH_BONE)
-        except:
-            pass
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_ROOT_CROTCH_BONE)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_FRONT_CROTCH_BONE)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE1)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE1)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE2)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE2)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE3)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE3)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE4)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE4)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_LEFT_CROTCH_BONE5)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_RIGHT_CROTCH_BONE5)
+        torsoTweakLayerBoneNames.remove(names.BETTER_PENETRATION_BACK_CROTCH_BONE)
                 
     ctrlBoneNames = []
-    ctrlBoneNames.extend(names.EYES_PRIMARY_LAYER_BONE_NAMES)
-    ctrlBoneNames.extend(names.EYES_SECONDARY_LAYER_BONE_NAMES)
-    ctrlBoneNames.extend(names.TORSO_LAYER_BONE_NAMES)
-    ctrlBoneNames.extend(names.TORSO_TWEAK_LAYER_BONE_NAMES)
+    ctrlBoneNames.extend(eyesPrimaryLayerBoneNames)
+    ctrlBoneNames.extend(eyesSecondaryLayerBoneNames)
+    ctrlBoneNames.extend(torsoLayerBoneNames)
+    ctrlBoneNames.extend(torsoTweakLayerBoneNames)
     ctrlBoneNames.extend(names.LEFT_ARM_IK_LAYER_BONE_NAMES)
     ctrlBoneNames.extend(names.RIGHT_ARM_IK_LAYER_BONE_NAMES)
     ctrlBoneNames.extend(names.FINGERS_LAYER_BONE_NAMES)
@@ -1645,16 +1651,14 @@ def main(build):
                     bone.rigify_parameters.parent_bone = names.DEFORM_BONE_PREFIX + targetToChange
             for constraint in bone.constraints:
                 for targetToChange in names.TARGETS_TO_CHANGE:
-                    try:
-                        if constraint.subtarget == targetToChange:
-                            bone.rigify_parameters.relink_constraints = True
-                            try:
-                                index = constraint.name.index("@")
-                                constraint.name = constraint.name[:index] + "@" + names.DEFORM_BONE_PREFIX + targetToChange
-                            except ValueError as ex:
-                                constraint.name = constraint.name + "@" + names.DEFORM_BONE_PREFIX + targetToChange
-                    except AttributeError as ex:
-                        pass
+                    # Armature and Limit constraints have no subtarget.
+                    if getattr(constraint, "subtarget", None) == targetToChange:
+                        bone.rigify_parameters.relink_constraints = True
+                        if "@" in constraint.name:
+                            index = constraint.name.index("@")
+                            constraint.name = constraint.name[:index] + "@" + names.DEFORM_BONE_PREFIX + targetToChange
+                        else:
+                            constraint.name = constraint.name + "@" + names.DEFORM_BONE_PREFIX + targetToChange
     
     switch(metarig, 'OBJECT')
     #Move all cf_s bones to the Charamaker layer
@@ -1668,11 +1672,11 @@ def main(build):
             koikatsuCommons.assignSingleBoneLayer(metarig, bone.name, names.DEFORM_LAYER)
     
     #Move torso bones to the torso layer
-    for boneName in names.TORSO_LAYER_BONE_NAMES:
+    for boneName in torsoLayerBoneNames:
         koikatsuCommons.assignSingleBoneLayer(metarig, boneName, names.TORSO_LAYER)
 
     #Move torso tweak bones to the nsfw layer
-    for boneName in names.TORSO_TWEAK_LAYER_BONE_NAMES:
+    for boneName in torsoTweakLayerBoneNames:
         koikatsuCommons.assignSingleBoneLayer(metarig, boneName, names.NSFW_LAYER)
 
     #Set FK bones to the FK layer
@@ -1705,7 +1709,7 @@ def main(build):
         koikatsuCommons.setTweakLayer(metarig, boneName, names.FINGERS_LAYER + names.DETAIL_LAYER_SUFFIX)
     
     #set eye bones to the eyes layer
-    for boneName in names.EYES_SECONDARY_LAYER_BONE_NAMES:
+    for boneName in eyesSecondaryLayerBoneNames:
         koikatsuCommons.assignSingleBoneLayer(metarig, boneName, names.EYES_LAYER)
     
     #set the eye controller to be part of the Face layer
@@ -1812,29 +1816,17 @@ def main(build):
 
     metarig.data.collections_all[get_rigify_index(names.FINGERS_LAYER)].rigify_ui_row = 6 #fingers
     metarig.data.collections_all[get_rigify_index(names.EMOTIONS_LAYER)].rigify_ui_row = 6 #move emotions
-    try:
-        metarig.data.collections_all[get_rigify_index(names.HAIR_LAYER)].rigify_ui_row = 6 #move hair / accessories
-    except:
-        pass
+    metarig.data.collections_all[get_rigify_index(names.HAIR_LAYER)].rigify_ui_row = 6 #move hair / accessories
 
     metarig.data.collections_all[get_rigify_index(names.TORSO_LAYER + names.TWEAK_LAYER_SUFFIX)].rigify_ui_row = 7 #move torso tweak
     metarig.data.collections_all[get_rigify_index(names.FINGERS_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 7 #move fingers detail
 
-    try:
-        metarig.data.collections_all[get_rigify_index(names.HAIR_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 8 #move hair detail to same layer
-    except:
-        pass
+    metarig.data.collections_all[get_rigify_index(names.HAIR_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 8 #move hair detail to same layer
 
-    try:
-        metarig.data.collections_all[get_rigify_index(names.HAIR_LAYER + names.MCH_LAYER_SUFFIX)].rigify_ui_row = 8 #move hair mch to same layer
-    except:
-        pass
+    metarig.data.collections_all[get_rigify_index(names.HAIR_LAYER + names.MCH_LAYER_SUFFIX)].rigify_ui_row = 8 #move hair mch to same layer
 
     metarig.data.collections_all[get_rigify_index(names.SKIRT_LAYER)].rigify_ui_row = 9 #move skirt
-    try:
-        metarig.data.collections_all[get_rigify_index(names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 9 #move skirt detail
-    except:
-        pass
+    metarig.data.collections_all[get_rigify_index(names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX)].rigify_ui_row = 9 #move skirt detail
     metarig.data.collections_all[get_rigify_index(names.EYES_LAYER)].rigify_ui_row = 10 #move eyes primary
     metarig.data.collections_all[get_rigify_index(names.FACE_LAYER)].rigify_ui_row = 10 #move face
     metarig.data.collections_all[get_rigify_index(names.FACE_LAYER + names.MCH_LAYER_SUFFIX)].rigify_ui_row = 10 #move face mch
@@ -1860,17 +1852,12 @@ def main(build):
     metarig.data.collections_all[names.FINGERS_LAYER].rigify_color_set_name                                  = "Special"
     metarig.data.collections_all[names.FINGERS_LAYER + names.DETAIL_LAYER_SUFFIX].rigify_color_set_name = "Special"
     metarig.data.collections_all[names.NSFW_LAYER].rigify_color_set_name = "Tweak"
-    try:
-        metarig.data.collections_all[names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX].rigify_color_set_name = "FK"
-    except:
-        pass
+    if skirtDetail := metarig.data.collections_all.get(names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX):
+        skirtDetail.rigify_color_set_name = "FK"
     metarig.data.collections_all[names.SKIRT_LAYER].rigify_color_set_name = "Special"
     metarig.data.collections_all[names.FACE_LAYER].rigify_color_set_name = "Special"
     metarig.data.collections_all[names.FACE_LAYER + names.MCH_LAYER_SUFFIX].rigify_color_set_name = "Tweak"
     metarig.data.collections_all[names.EYES_LAYER].rigify_color_set_name = "Extra"
-    try:
-        metarig.data.collections_all[names.HAIR_LAYER].rigify_color_set_name = "Special"
-        metarig.data.collections_all[names.HAIR_LAYER + names.MCH_LAYER_SUFFIX].rigify_color_set_name = "Tweak"
-        metarig.data.collections_all[names.HAIR_LAYER + names.DETAIL_LAYER_SUFFIX].rigify_color_set_name = "FK"
-    except:
-        pass
+    for suffix, colourSet in (("", "Special"), (names.MCH_LAYER_SUFFIX, "Tweak"), (names.DETAIL_LAYER_SUFFIX, "FK")):
+        if hairCollection := metarig.data.collections_all.get(names.HAIR_LAYER + suffix):
+            hairCollection.rigify_color_set_name = colourSet

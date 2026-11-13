@@ -456,11 +456,9 @@ def getRelatedBoneNames(rig, boneName):
     if bone.parent and bone.parent.name not in relatedBoneNames and rig.pose.bones.get(bone.parent.name):
         relatedBoneNames.append(bone.parent.name)
     for constraint in bone.constraints:
-        try:
-            if constraint.subtarget not in relatedBoneNames and rig.pose.bones.get(constraint.subtarget):
-                relatedBoneNames.append(constraint.subtarget)
-        except AttributeError as ex:
-            pass
+        subtarget = getattr(constraint, "subtarget", None)  # Armature and Limit constraints have none
+        if subtarget is not None and subtarget not in relatedBoneNames and rig.pose.bones.get(subtarget):
+            relatedBoneNames.append(subtarget)
     if rig.animation_data:
         for driver in rig.animation_data.drivers:
             if driver.data_path.startswith("pose.bones"):
