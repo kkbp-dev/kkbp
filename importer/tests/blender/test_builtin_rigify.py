@@ -8,8 +8,8 @@ from conftest import submodule
 
 rigify = submodule("builtin.rigify")
 prepare = submodule("builtin.rigify.prepare")
-commons = submodule("builtin.rigify.commons")
-legacy = submodule("builtin.rigify.legacy")
+names = submodule("builtin.rigify.names")
+ground = submodule("builtin.rigify.finish.ground")
 
 
 @pytest.fixture(scope="module")
@@ -32,7 +32,7 @@ def _layer(layer, collection):
 def test_the_eye_bones_point_forward_from_the_nose_bridge(ch):
     bones = ch.armature.data.bones
     nose = bones[prepare.NOSE_BRIDGE].head_local
-    for name in (prepare.EYES_X, prepare.EYE_CONTROLLER, commons.eyesHandleBoneName):
+    for name in (prepare.EYES_X, prepare.EYE_CONTROLLER, names.EYES_HANDLE_BONE):
         b = bones[name]
         assert b.tail_local.y < b.head_local.y, name  # forward is -Y
         assert b.tail_local.z == pytest.approx(b.head_local.z, abs=1e-5), name
@@ -49,7 +49,7 @@ def test_the_eye_uv_warps_move_only_the_eyes(ch):
 
 def test_the_lowest_visible_vertex_stands_on_the_floor(ch):
     """ADR 0027: legacy's root 4 cm under the ankle sank the KK sample's shoes 1.9 cm."""
-    assert legacy.lowest_point(ch.rig) == pytest.approx(0.0, abs=1e-5)
+    assert ground.lowest_point(ch.rig) == pytest.approx(0.0, abs=1e-5)
     assert ch.rig.data.bones["root"].head_local.z == pytest.approx(0.0, abs=1e-5)
 
 
@@ -85,7 +85,7 @@ def test_junk_holds_the_widgets_and_the_metarig_and_is_hidden(ch):
 def test_the_mouth_grid_drives_body_and_its_tongue(ch):
     for obj in (ch.body,):
         keys = obj.data.shape_keys
-        copies = [k.name for k in keys.key_blocks if k.name.endswith(commons.mouthShapekeysCopySuffix)]
+        copies = [k.name for k in keys.key_blocks if k.name.endswith(names.MOUTH_SHAPEKEYS_COPY_SUFFIX)]
         assert copies, obj.name
         driven = {d.data_path for d in keys.animation_data.drivers}
         assert any(f'key_blocks["{name}"].value' in driven for name in copies), obj.name
@@ -109,9 +109,9 @@ def test_junk_is_a_bone_collection_but_not_in_the_panel(ch):
     """Issue #25: legacy put whichever collection came third on row 1, which was Junk, beside Torso."""
     junk = ch.rig.data.collections_all[prepare.JUNK]
     assert junk.rigify_ui_row == 0
-    torso = ch.rig.data.collections_all[commons.torsoLayerName]
+    torso = ch.rig.data.collections_all[names.TORSO_LAYER]
     row = [c.name for c in ch.rig.data.collections_all if c.rigify_ui_row == torso.rigify_ui_row]
-    assert sorted(row) == sorted([commons.torsoLayerName, commons.torsoLayerName + commons.fkLayerSuffix])
+    assert sorted(row) == sorted([names.TORSO_LAYER, names.TORSO_LAYER + names.FK_LAYER_SUFFIX])
 
 
 def test_an_empty_hidden_custom_collection_sits_right_of_nsfw(ch):

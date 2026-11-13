@@ -177,3 +177,7 @@ _Avoid_: test card, input card
 **Golden Sample**:
 The Export Bundle of one Sample Card, made on each developer's own machine and never committed, that the tests check and import (ADR 0031).
 _Avoid_: golden copy, sample export, reference bundle
+
+**Rig Fingerprint**:
+Everything the Rigify Hook makes, recorded from one import of a Golden Sample: the metarig and the generated rig with every bone, constraint, driver and Rigify setting, the meshes' vertex groups and shape keys, and the widgets. Compared against a baseline taken before a change, to show the change leaves the rig as it was (`run.py fingerprint`, ADR 0043).
+_Avoid_: rig snapshot (the snapshots are the importer's committed scene summaries)

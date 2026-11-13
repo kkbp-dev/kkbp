@@ -2,10 +2,12 @@
 (legacy `apply_rigify` and extras/rigifyscripts, D22 to D25).
 
 The armature becomes the hidden metarig and stays `ch.armature`; the generated rig is the `rig` Part,
-and every mesh, modifier and object that used the armature moves onto it. before.py, after.py and
-commons.py are the legacy importer's own Rigify scripts, ported with as few changes as possible
-(legacy.py says what they get instead of the legacy `common` module); prepare.py does what the
-legacy armature Step did for them first.
+and every mesh, modifier and object that used the armature moves onto it.
+
+The Hook makes a RigBuild (build.py) for the Character and hands it to each phase: prepare.py does
+what the legacy armature Step did first, metarig/ turns the armature into the metarig, Rigify
+generates the rig, and finish/ fixes it up. The rig keeps the legacy importer's bone, constraint,
+property and driver names (ADR 0023, ADR 0043); names.py holds them all.
 """
 
 import bpy
@@ -13,7 +15,10 @@ import bpy
 from ... import compat, joint_corrections
 from ...pipeline.hooks import hook
 from ...pipeline.options import Option
-from . import after, before, commons, legacy, prepare
+from . import names, prepare
+from .finish import finish_rig
+from .metarig import build_metarig
+from .build import RigBuild
 
 SWITCH = Option("use_rigify", bool, True, "Use Rigify armature",
                 description="Generates a Rigify control rig, suitable for animating in Blender. Without it the "
@@ -39,24 +44,25 @@ def rigify(ctx):
     # The legacy scripts count and re-aim bones, so the joint corrections' helper bones come off
     # first and go back on the generated rig, where the deforming bones are (ADR 0038).
     joint_corrections.remove(metarig)
-    legacy.begin(ctx, kk)
+    build = RigBuild(ctx, metarig, kk_extras=kk)
     prepare.run(ctx)
-    before.main()
+    build_metarig(build)
     _add_custom_collection(metarig)
 
     generated_from = metarig.name  # Rigify names its widgets after it
     rig = compat.generate_rigify(metarig)
     ch.add_part(rig, "rig")
+    build.rig = rig
     rig.name = f"Rig {ch.name}"
     metarig.name = f"Metarig {ch.name}"
     _into(rig, ch.collection)
     _move_onto(ch, metarig, rig)
-    after.main()
+    finish_rig(build)
     if joint_corrections.has_corrections(metarig):
         count, missing = joint_corrections.refresh(rig, source=metarig)
         ctx.log.info(f"Put the joint corrections back on the rig: {count} bones"
                      + (f"; none need {', '.join(missing)}, which the rig lacks" if missing else ""))
-    _tidy(ch, metarig, generated_from)
+    _tidy(build, generated_from)
     if ctx.options.sfw_mode if "sfw_mode" in ctx.options else False:
         collection = rig.data.collections_all.get(NSFW_COLLECTION)
         if collection is not None:
@@ -98,14 +104,15 @@ def _move_onto(ch, metarig, rig):
             if modifier.type == "UV_WARP" and modifier.object_from == metarig:
                 modifier.object_from = modifier.object_to = rig
                 modifier.bone_from = prepare.EYES_X
-                modifier.bone_to = (commons.leftEyeBoneName if modifier.name == prepare.UV_WARPS["eye_l"]
-                                    else commons.rightEyeBoneName)
+                modifier.bone_to = (names.LEFT_EYE_BONE if modifier.name == prepare.UV_WARPS["eye_l"]
+                                    else names.RIGHT_EYE_BONE)
 
 
-def _tidy(ch, metarig, generated_from):
+def _tidy(build, generated_from):
     """The Bone Widgets collection becomes the Character's Junk collection, excluded from the view
     layer as legacy excluded Bone Widgets, and takes Rigify's widget collection and the metarig."""
-    junk = legacy.widget_collection()
+    ch, metarig = build.character, build.metarig
+    junk = build.widgets
     junk.name = JUNK.format(name=ch.name)
     for collection in [c for c in bpy.data.collections if c.name == f"WGTS_{generated_from}"]:
         _move_collection(collection, junk)

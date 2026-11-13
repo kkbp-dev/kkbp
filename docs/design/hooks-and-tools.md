@@ -80,7 +80,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | palm vertex groups, `finalizeFingerBones` rolls, `super_palm` (KK only) | Ported | Gated (D24) |
 | nipple widgets (KK only) | Ported | Gated (D24) |
 | `finalizeRiggedTongueSideBones` and the tongue rig | Ported | Rigs the single tongue, in Body (ADR 0020, ADR 0039) |
-| skirt rig (`getSkirtBoneName` indexes) | Ported | Chains found from Bone Group `skirt` and the bone tree |
+| skirt rig (`getSkirtBoneName` indexes) | Ported | Found by the game's indexed names, `cf_d_sk_top` and `cf_d_sk_00_00` to `cf_j_sk_07_05`, all 48 or no skirt rig (`names.skirt_bone`) |
 | layer setup (`RigifyLayer`, `BoneManagerLayer`, Charamaker, Toes, Face MCH) | Ported, changed | Rig collections built from the Core's (D7); the name-based splits D7 dropped stay dropped |
 | a `Custom` collection for the user's own bones | Added | Rigify Hook: empty and hidden, to the right of NSFW in the Rig Layers panel (issue #7) |
 | `rigify_after.main`: rename Metarig/Rig, move meshes and UV-warp modifiers to the rig | Ported | Rigify Hook, through Character (the rig gets Part Role `rig`) |
@@ -88,10 +88,10 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | `rigify_after`: SVS-only hand IK widget rotation | Ported | Gated (D24) |
 | `rigify_after`: hair/accessory bones of later Outfits in their own collections | Ported | `join_armatures` tags each bone with its Outfit, `kkbp_outfit` (D29) |
 | `rigify_after`: IK stretch off | Ported | Rigify Hook |
-| `rigify_after`: emotion grid (mouth, eye and custom key controllers and their drivers) | Ported | Built from the Expression Names present; a missing one is skipped with an info line, not a bare `except` |
+| `rigify_after`: emotion grid (mouth, eye and custom key controllers and their drivers) | Ported | `finish/emotions.py`, from the Expression Names present; at a missing eye key the grid stops, as legacy's error stopped it, with a warning naming the key (ADR 0043) |
 | `rigify_after`: feet on the ground, `origin_set` | Ported | The lowest visible vertex goes on the floor, not 4 cm under the ankle ([ADR 0027](../adr/0027-rigify-stands-the-lowest-vertex-on-the-floor.md)); the bones move as edit bones, without `origin_set` |
 | `commons.fixJapChars`, `getContainedJapCharacters`, `loadJsonDictionaryFile` | Dropped | Bone names are ASCII Ids ([ADR 0005](../adr/0005-ids-per-kind-from-adapter-keys.md)) |
-| `commons` constraint, driver and bone helpers | Ported | Small helpers inside the Rigify Hook |
+| `commons` constraint, driver and bone helpers | Replaced | `constraints.py`, `drivers.py`, `bones.py`, `bone_collections.py` and `meshes.py` in the Rigify Hook, with keyword arguments (ADR 0043) |
 | `extras/rigifywrapper.py` ("Convert for Rigify" on an imported Character) | Replaced | The Run Hook tool runs any Hook on an imported Character (D30) |
 
 ### Tools

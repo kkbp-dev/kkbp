@@ -62,6 +62,36 @@ All three at once, with every import in one queue (the Core Import once per samp
 python3 importer/tests/harness/run.py all
 ```
 
+## Rig fingerprint
+
+The snapshots record bone positions and only the *counts* of drivers and constraints, so they can't
+tell whether a constraint's settings or a driver's expression changed. For a change to the Rigify
+Hook that must leave the rig as it was, compare a rig fingerprint instead: [blender/rig_fingerprint.py](blender/rig_fingerprint.py)
+imports a Golden Sample with the Rigify Hook alone and records the metarig as the Hook hands it to
+Rigify and the finished rig: every bone collection in order, every bone's and pose bone's
+properties, custom properties with their UI data, Rigify types and the Rigify parameters that are
+set, every constraint in stack order with all its settings, every driver, the Character's modifiers,
+vertex groups (with a hash of their weights) and shape keys (with a hash of their positions), the
+widgets, Rigify's UI script, and the Hook's log lines. The names that change on every import (the
+Character's name and key, Rigify's `rig_id`, the metarig's random id bone, the order of Rigify's
+set literals) are replaced ([blender/fingerprint_names.py](blender/fingerprint_names.py)).
+
+Record the baseline on the commit before the change, then compare after each commit:
+
+```bash
+python3 importer/tests/harness/run.py fingerprint --record   # the baseline, in .work/fingerprint/base/
+python3 importer/tests/harness/run.py fingerprint            # fails if anything differs
+```
+
+Each build and Golden Sample is compared with its own baseline; the differences go to
+`importer/tests/.work/runs/<build>/<sample>.fingerprint/differences.txt`. The baseline is local, like
+the Golden Samples it comes from (ADR 0031), and is void once they or a Blender build change:
+record it again from the base commit, in a `git worktree` if the work has moved on. `--baseline NAME`
+keeps another one beside it. A fingerprint takes about 25 s per sample and build.
+
+A value a driver sets is recorded as the driver leaves it, so changing the stored value under a
+driver shows no difference; the driver itself is compared.
+
 `--jobs` sets how many Blender processes import at once (every command but `builds`). Each keeps about three CPU threads busy and needs up to about 1.3 GB, so the default is a quarter of the machine's threads, and at least 2.
 
 ## Scene summary
