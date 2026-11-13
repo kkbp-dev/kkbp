@@ -73,6 +73,9 @@ Traps met while writing the importer and its tests. The rules they led to are in
 - `Material.use_nodes` is deprecated in 5.x; new materials already have a node tree.
 - Appending from the library makes `.001` copies of node groups and images the file already has; `templates.py` and `appending.py` remap them.
 - Driver expressions are capped at 256 characters, and in background runs drivers only evaluate after `scene.frame_set(...)`.
+- A driver doesn't run again when a node socket it reads is edited, from the UI or from Python; a keyframed socket does drive it as the frame changes. `node_tree.update_tag()` makes it run, which `kkbp.dropdowns` does on the message bus for the gag dropdown (ADR 0042). Tests, which have no event loop, call `dropdowns.refresh()` themselves.
+- `obj.shape_key_add()` gives the new key a value of 1.
+- A Menu Switch node comes with two items. Drivers read a menu socket as its item's number, given in the order the items were made, so renaming the two and adding the rest numbers them from 0 in order.
 - A new driver curve on a bone's location (`driver_add`) carries two keyframes, (0, 0) and (1, 1), with an ease between: a driven value between 0 and 1 comes out squashed, so 0.0002 becomes about 0. Shape-key value drivers get a linear curve and aren't affected. The joint corrections remove the keyframes, and then the driver's value is used as it is.
 - A driver variable reading a bone's transform in `LOCAL_SPACE` includes its constraints; `TRANSFORM_SPACE` reads the channels as they are. The joint corrections keep each value in a register bone's X location and read it back in `TRANSFORM_SPACE`.
 - Blender 5.2's file browser matches an operator's `filter_glob` against each file's full path (`filelist_readjob_common.cc`), later versions against its name alone, so a bare file name such as `manifest.json` shows nothing on 5.2. `*manifest.json` matches both; each pattern is cut at 15 characters.

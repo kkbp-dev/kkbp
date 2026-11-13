@@ -92,6 +92,10 @@ _Avoid_: alpha shader, transparency type
 The canonical English name of an expression shape key, shared by every Game, alongside the Game's own name. It is the display name used in Blender, prefixed by its category, such as `Eye Happy` or `Gag Heart Eyes`.
 _Avoid_: translated name, shape key alias
 
+**Gag Eyes Key**:
+The one shape key, `Gag eyes`, that shows the gag expression picked on the gag eyes' `Gag expression` dropdown. It replaces the gag expressions' own keys; an expression whose shape differs from the shared one has a driven correction key beside it, such as `Gag eyes (Fiery Eyes)` (ADR 0042).
+_Avoid_: gag slider, combined gag key
+
 **Game Extension**:
 The part of an Export Bundle holding data only one Game has, kept apart from the shared core.
 _Avoid_: game-specific fields
