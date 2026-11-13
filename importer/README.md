@@ -81,7 +81,7 @@ Traps met while writing the importer and its tests. The rules they led to are in
 - A driver variable reading a bone's transform in `LOCAL_SPACE` includes its constraints; `TRANSFORM_SPACE` reads the channels as they are. The joint corrections keep each value in a register bone's X location and read it back in `TRANSFORM_SPACE`.
 - Blender 5.2's file browser matches an operator's `filter_glob` against each file's full path (`filelist_readjob_common.cc`), later versions against its name alone, so a bare file name such as `manifest.json` shows nothing on 5.2. `*manifest.json` matches both; each pattern is cut at 15 characters.
 - Blender's glTF importer copies vertices per primitive when primitives share an accessor (KK's and KKS's eyeline get 364 extra, an approved difference). Welding them would also merge the eyeline's doubled faces.
-- Moving an armature with `rig.data.transform()` leaves the pose stale until a mode change. Move the bones as edit bones inside `editing()`, reading every position before assigning any: setting a bone's tail moves its connected children's heads, so they would move twice (`builtin/rigify/legacy.py`, `move_rig`).
+- Moving an armature with `rig.data.transform()` leaves the pose stale until a mode change. Move the bones as edit bones inside `editing()`, reading every position before assigning any: setting a bone's tail moves its connected children's heads, so they would move twice (`builtin/rigify/finish/ground.py`, `move_rig`).
 
 ### Running Blender
 

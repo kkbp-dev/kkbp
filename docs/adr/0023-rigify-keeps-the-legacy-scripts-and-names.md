@@ -1,5 +1,7 @@
 # The Rigify Hook ports the legacy scripts and keeps their bone names
 
+Partly superseded by [ADR 0043](0043-rigify-rewritten-and-checked-by-a-rig-fingerprint.md): the scripts are rewritten in the importer's style, with the same rig. The names below still hold.
+
 The Rigify Hook is the legacy importer's own Rigify scripts (`rigify_before`, `rigify_after`, `commons`, about 4,000 lines), copied into `builtin/rigify/` and changed only where the new importer's rules require it. Their legacy `common` module becomes `legacy.py`, which answers through Character. Mode switches go through `editing`, and widget shaping uses the data API instead of transform operators. Rigify's own operators become property assignments, or Compat helpers where Rigify has no function to call. Before the scripts run, `prepare.py` gives the bones with a Bone Role the legacy importer's readable names (`Left arm`, `Thumb0_L`, `Center`; D23), as the legacy armature Step did. The names come from a table keyed by Bone Role in `bone_names.py`, shared with export prep.
 
 ## Considered Options
