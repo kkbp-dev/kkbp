@@ -25,15 +25,6 @@ from . import names
 
 
         
-def copyObject(build, sourceObjectName, newObjectName):
-    # Ported: the copy goes into the Character's own widget collection, and another Character's
-    # widget of the same name is left alone (Blender adds .001).
-    sourceObject = build.widget(sourceObjectName)
-    newObject = sourceObject.copy()
-    newObject.data = sourceObject.data.copy()
-    newObject.name = newObjectName
-    build.widgets.objects.link(newObject)
-    return newObject
 
 
         

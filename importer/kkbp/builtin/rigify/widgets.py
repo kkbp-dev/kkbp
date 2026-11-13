@@ -3,7 +3,8 @@ transform operators: each transform acts on all the widget's vertices in global 
 centre of their bounding box (the legacy pivot point, BOUNDING_BOX_CENTER). Also where the widgets
 come from: rigify.blend's Bone Widgets collection, appended into the Character's Collection."""
 
-from mathutils import Matrix, Vector
+import bpy
+from mathutils import Euler, Matrix, Vector
 
 from ... import appending
 from ...library import hook_assets
@@ -44,11 +45,6 @@ def rotate(obj, axis, radians):
     _set_world(obj, [centre + rotation @ (co - centre) for co in cos])
 
 
-def translate(obj, value):
-    offset = Vector(value)
-    _set_world(obj, [co + offset for co in _world(obj)])
-
-
 def resize(obj, factors):
     cos = _world(obj)
     centre = _centre(cos)
@@ -62,3 +58,36 @@ def geometry_to_origin(obj):
     for v in obj.data.vertices:
         v.co -= centre
     obj.data.update()
+
+
+def place(obj, rig, bone):
+    """Puts `obj` where the pose bone `bone` draws its custom shape, in Object Mode."""
+    pose_bone = rig.pose.bones[bone]
+    scale = Vector(pose_bone.custom_shape_scale_xyz)
+    if pose_bone.use_custom_shape_bone_size:
+        scale *= pose_bone.length
+    obj.rotation_mode = "XYZ"
+    shape = Matrix.LocRotScale(pose_bone.custom_shape_translation, Euler(pose_bone.custom_shape_rotation_euler), scale)
+    obj.matrix_basis = rig.matrix_world @ pose_bone.bone.matrix_local @ shape
+
+
+def make(build, name, rig, bone, vertices, edges):
+    """A new widget object `name` of `vertices` and `edges`, in the Character's widget collection,
+    placed at `bone`. Another Character's widget of the same name is left alone (Blender adds .001)."""
+    mesh = bpy.data.meshes.new(name)
+    obj = bpy.data.objects.new(name, mesh)
+    build.widgets.objects.link(obj)
+    place(obj, rig, bone)
+    mesh.from_pydata(vertices, edges, [])
+    mesh.update()
+    return obj
+
+
+def copy(build, source, name):
+    """A copy, with its own mesh, of the Character's widget `source`, as `name`."""
+    original = build.widget(source)
+    obj = original.copy()
+    obj.data = original.data.copy()
+    obj.name = name
+    build.widgets.objects.link(obj)
+    return obj

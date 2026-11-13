@@ -13,7 +13,8 @@ import bpy
 from ... import compat, joint_corrections
 from ...pipeline.hooks import hook
 from ...pipeline.options import Option
-from . import after, before, names, prepare
+from . import after, names, prepare
+from .metarig import build_metarig
 from .build import RigBuild
 
 SWITCH = Option("use_rigify", bool, True, "Use Rigify armature",
@@ -42,7 +43,7 @@ def rigify(ctx):
     joint_corrections.remove(metarig)
     build = RigBuild(ctx, metarig, kk_extras=kk)
     prepare.run(ctx)
-    before.main(build)
+    build_metarig(build)
     _add_custom_collection(metarig)
 
     generated_from = metarig.name  # Rigify names its widgets after it
