@@ -78,6 +78,7 @@ The user plays these games. Details are in "Working with the games" in [exporter
 | Only one half, or a filter | `scripts/test-importer.sh --host-only` / `--blender-only`; with pytest arguments (`-k name`) it runs only the pytest tests, not the sample imports, Hook runs or snapshot checks |
 | Only some in-Blender tests | `python3 importer/tests/blender/launch.py -k <name>` (a file path doesn't narrow it) |
 | Keep an imported scene as a `.blend` in `importer/tests/.work/runs/` | add `--keep-blend` to `run.py core` or `hooks` |
+| Check that a Rigify Hook change leaves the rig as it was: record the baseline on the base commit, then compare | `python3 importer/tests/harness/run.py fingerprint --record`, then `... fingerprint` |
 | Re-record the importer snapshots after an intended scene change (review the diff) | `python3 importer/tests/harness/run.py core --update` and `... hooks --update` |
 | Exporter Core build (net35) and tests | `scripts/check-core.sh` |
 | Build or deploy an exporter | `scripts/build-exporters.sh [kk\|kks\|svs]`, `scripts/deploy-exporter.sh <game>` |

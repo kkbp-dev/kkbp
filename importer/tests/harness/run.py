@@ -26,6 +26,13 @@ importer/tests/.work/hooks/.
 Import once per sample and build, not twice), and then all three checks. scripts/test-importer.sh
 runs it.
 
+`fingerprint` imports each Golden Sample with the Rigify Hook alone and writes a rig fingerprint
+(blender/rig_fingerprint.py): every collection, bone, constraint, driver, Rigify setting and widget
+the Hook makes. With `--record` it keeps them as the baseline, importer/tests/.work/fingerprint/base/;
+without, it compares each with the baseline of the same build and Golden Sample and fails if
+anything differs. It is the check for a rewrite of the Rigify Hook that must not change the rig. The
+baseline is local, like the Golden Samples it comes from (ADR 0031).
+
 `--jobs` is how many Blender processes import at once; each uses about three CPU threads, so the
 default is a quarter of the machine's threads, and at least 2.
 
@@ -92,6 +99,15 @@ def main():
         if name == "hooks":
             cmd.add_argument("--each", action="store_true", help="run each Hook on its own and check what it changes")
             cmd.add_argument("--hook", action="append", help="with --each: only this Hook (repeatable)")
+    cmd = sub.add_parser("fingerprint",
+                         help="the Rigify Hook's rig fingerprint, recorded or compared with the baseline")
+    cmd.add_argument("--sample", action="append", help="Golden Sample (repeatable; default: all)")
+    cmd.add_argument("--blender", action="append", help="build name (repeatable; default: all)")
+    cmd.add_argument("--jobs", type=int, default=DEFAULT_JOBS,
+                     help=f"Blender processes at once (default {DEFAULT_JOBS} on this machine)")
+    cmd.add_argument("--record", action="store_true", help="keep this run's fingerprints as the baseline")
+    cmd.add_argument("--baseline", default="base",
+                     help="the baseline's name, a folder in .work/fingerprint/ (default: base)")
     args = parser.parse_args()
 
     config = _load_config()
@@ -105,6 +121,8 @@ def main():
             return 1
     if args.command == "core":
         return _cmd_core(config, args)
+    if args.command == "fingerprint":
+        return _cmd_fingerprint(config, args)
     if args.command == "all":
         return _cmd_all(config, args)
     return _cmd_hooks_each(config, args) if args.each else _cmd_hooks(config, args)
@@ -371,6 +389,85 @@ def _run_new(build_name, build, sample, wheel, keep_blend, variant="new", hooks=
     if not keep_blend:
         shutil.rmtree(bundle, ignore_errors=True)
     return {"summary": summary, "log": log, "seconds": round(time.monotonic() - started, 1)}
+
+
+FINGERPRINTS = WORK / "fingerprint"
+# The fingerprint rounds floats to 5 places; this absorbs a value that rounds the other way.
+FINGERPRINT_TOLERANCE = 2e-5
+
+
+def _cmd_fingerprint(config, args):
+    """Fingerprints the Rigify Hook's rig on every selected sample and build, then records them as the
+    baseline (--record) or compares them with it; 1 if a run failed or anything differs."""
+    distinct = _distinct_builds(config, args.blender)
+    for name, build in distinct.items():
+        if not _version_ok(build):
+            raise SystemExit(f"Blender build '{name}' reports {build['reported']}, expected {build['version']}.x")
+    samples = args.sample or golden_samples()
+    unknown = set(samples) - set(golden_samples())
+    if unknown:
+        raise SystemExit(f"No Golden Sample for {', '.join(sorted(unknown))}; make it with scripts/export-sample.sh")
+    baseline = FINGERPRINTS / args.baseline
+    wheel = pillow_wheel()
+    runs = [(name, build, sample) for name, build in distinct.items() for sample in samples]
+    print(f"== {len(runs)} Rigify imports, {max(1, args.jobs)} at a time")
+    failed = False
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, args.jobs)) as pool:
+        futures = {pool.submit(_run_fingerprint, name, build, sample, wheel): (name, sample)
+                   for name, build, sample in runs}
+        for future in concurrent.futures.as_completed(futures):
+            name, sample = futures[future]
+            r = future.result()
+            key = f"{name}.{sample}"
+            if r["fingerprint"] is None:
+                failed = True
+                print(f"  {key}: FAILED in {r['seconds']} s  (log: {_rel(r['log'])})")
+                continue
+            if args.record:
+                baseline.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(r["path"], baseline / f"{key}.json")
+                print(f"  {key}: recorded in {r['seconds']} s -> {_rel(baseline / f'{key}.json')}")
+                continue
+            expected_path = baseline / f"{key}.json"
+            if not expected_path.exists():
+                failed = True
+                print(f"  {key}: no baseline; record one on the base commit with --record")
+                continue
+            expected = json.loads(expected_path.read_text(encoding="utf-8"))
+            diffs = compare.differences(expected, r["fingerprint"], tolerance=FINGERPRINT_TOLERANCE, limit=100000)
+            report = r["path"].with_name("differences.txt")
+            report.write_text("".join(f"{d}\n" for d in diffs), encoding="utf-8")
+            failed |= bool(diffs)
+            print(f"  {key}: " + (f"{len(diffs)} difference(s) from the baseline  ({_rel(report)})" if diffs
+                                  else "matches the baseline") + f", {r['seconds']} s")
+            for d in diffs[:40]:
+                print(f"    {d}")
+    return 1 if failed else 0
+
+
+def _run_fingerprint(build_name, build, sample, wheel):
+    folder = run_dir(build_name, sample, "fingerprint")
+    if folder.exists():
+        shutil.rmtree(folder)
+    folder.mkdir(parents=True)
+    profile = addon_profile(folder)
+    bundle = folder / "bundle"
+    copy_bundle(GOLDEN / sample, bundle)
+    out, log = folder / "fingerprint.json", folder / "blender.log"
+    command = [build["path"], "--background", "--factory-startup", "--python-exit-code", "1",
+               "--python", str(HARNESS / "blender" / "rig_fingerprint.py"), "--",
+               "--bundle", str(bundle), "--pillow", str(wheel), "--out", str(out)]
+    started = time.monotonic()
+    with open(log, "w", encoding="utf-8") as log_file:
+        try:
+            code = subprocess.run(command, env={**os.environ, "BLENDER_USER_RESOURCES": str(profile)},
+                                  stdout=log_file, stderr=subprocess.STDOUT, timeout=TIMEOUT_SECONDS).returncode
+        except subprocess.TimeoutExpired:
+            code = None
+            log_file.write(f"\n[harness] timed out after {TIMEOUT_SECONDS} s\n")
+    fingerprint = json.loads(out.read_text(encoding="utf-8")) if code == 0 and out.exists() else None
+    shutil.rmtree(bundle, ignore_errors=True)
+    return {"fingerprint": fingerprint, "path": out, "log": log, "seconds": round(time.monotonic() - started, 1)}
 
 
 def addon_profile(folder: Path) -> Path:
