@@ -1,8 +1,6 @@
 """Gag eyes: one shape key, and a dropdown on the gag eyes' first material that picks the gag
 expression (issue 35, ADR 0042)."""
 
-import shutil
-
 import bpy
 import pytest
 
@@ -165,24 +163,20 @@ def test_driver_expressions_stay_simple(build):
 
 
 @pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
-def test_the_golden_samples_have_one_gag_key(sample, tmp_path):
-    copy = tmp_path / sample
-    shutil.copytree(golden(sample), copy)
-    result, ch = _import(copy)
+def test_the_golden_samples_have_one_gag_key(sample, golden_import):
+    result, ch = golden_import(sample)
     names = [k.name for k in ch.body.data.shape_keys.key_blocks]
     assert [n for n in names if n.startswith("Gag")] == [gag.GAG_KEY, FIERY], names
     assert [n for n in ch.tears.data.shape_keys.key_blocks.keys() if n.startswith("Gag eyes")] == [gag.GAG_KEY, FIERY]
     mat, node, names = _picker(ch)
-    items = len(gag.gag_expressions(kkbp.api.open_bundle(copy)))
+    items = len(gag.gag_expressions(kkbp.api.open_bundle(golden(sample))))
     assert node.node_tree.interface.items_tree[names.number].max_value == items
     assert result.warnings == [], result.warnings
 
 
-def test_fiery_eyes_leave_the_pupils_showing(tmp_path):
+def test_fiery_eyes_leave_the_pupils_showing(golden_import):
     """Every KK gag expression hides the pupils but Fiery Eyes, which burns in front of them."""
-    copy = tmp_path / "kk"
-    shutil.copytree(golden("kk"), copy)
-    _, ch = _import(copy)
+    _, ch = golden_import("kk")
     body = ch.body.data.shape_keys.key_blocks
     pupil = templates.param(ch.material("cf_m_hitomi_00"), "hidden")
     _pick(ch, "Heart Eyes")
@@ -217,12 +211,10 @@ def test_the_gag_patterns_read_the_frame_from_their_object(build):
             assert obj[chain.frame_property] == 12
 
 
-def test_a_frame_change_updates_no_material(tmp_path):
+def test_a_frame_change_updates_no_material(golden_import):
     """Playing an animation doesn't re-evaluate the materials or the shape keys: the drivers that
     read the gag expression dropdown run only when it changes."""
-    copy = tmp_path / "kk"
-    shutil.copytree(golden("kk"), copy)
-    _import(copy)
+    golden_import("kk")
     scene = bpy.context.scene
     seen = []
 
