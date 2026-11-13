@@ -69,10 +69,12 @@ ARMS = (
 )
 # The joint-correction bones that follow a limb's deform bone on the generated rig.
 ARM_CORRECTIONS = (
-    *_both(names.FRONT_LEFT_ELBOW_JOINT_CORRECTION_BONE, names.FRONT_RIGHT_ELBOW_JOINT_CORRECTION_BONE, "relink_constraints", True),
+    *_both(names.FRONT_LEFT_ELBOW_JOINT_CORRECTION_BONE, names.FRONT_RIGHT_ELBOW_JOINT_CORRECTION_BONE,
+           "relink_constraints", True),
     (names.FRONT_LEFT_ELBOW_JOINT_CORRECTION_BONE, "parent_bone", names.LEFT_ELBOW_DEFORM_BONE1),
     (names.FRONT_RIGHT_ELBOW_JOINT_CORRECTION_BONE, "parent_bone", names.RIGHT_ELBOW_DEFORM_BONE1),
-    *_both(names.MID_LEFT_ELBOW_JOINT_CORRECTION_BONE, names.MID_RIGHT_ELBOW_JOINT_CORRECTION_BONE, "relink_constraints", True),
+    *_both(names.MID_LEFT_ELBOW_JOINT_CORRECTION_BONE, names.MID_RIGHT_ELBOW_JOINT_CORRECTION_BONE,
+           "relink_constraints", True),
     (names.MID_LEFT_ELBOW_JOINT_CORRECTION_BONE, "parent_bone", names.LEFT_ELBOW_DEFORM_BONE1),
     (names.MID_RIGHT_ELBOW_JOINT_CORRECTION_BONE, "parent_bone", names.RIGHT_ELBOW_DEFORM_BONE1),
 )
@@ -110,16 +112,20 @@ LEGS = (
     *_both(names.LEFT_HEEL_BONE, names.RIGHT_HEEL_BONE, TYPE, ""),
 )
 LEG_CORRECTIONS = (
-    *_both(names.FRONT_LEFT_KNEE_JOINT_CORRECTION_BONE, names.FRONT_RIGHT_KNEE_JOINT_CORRECTION_BONE, "relink_constraints", True),
+    *_both(names.FRONT_LEFT_KNEE_JOINT_CORRECTION_BONE, names.FRONT_RIGHT_KNEE_JOINT_CORRECTION_BONE,
+           "relink_constraints", True),
     (names.FRONT_LEFT_KNEE_JOINT_CORRECTION_BONE, "parent_bone", names.LEFT_LEG_DEFORM_BONE1),
     (names.FRONT_RIGHT_KNEE_JOINT_CORRECTION_BONE, "parent_bone", names.RIGHT_LEG_DEFORM_BONE1),
-    *_both(names.MID_LEFT_KNEE_JOINT_CORRECTION_BONE, names.MID_RIGHT_KNEE_JOINT_CORRECTION_BONE, "relink_constraints", True),
+    *_both(names.MID_LEFT_KNEE_JOINT_CORRECTION_BONE, names.MID_RIGHT_KNEE_JOINT_CORRECTION_BONE, "relink_constraints",
+           True),
     (names.MID_LEFT_KNEE_JOINT_CORRECTION_BONE, "parent_bone", names.LEFT_LEG_DEFORM_BONE1),
     (names.MID_RIGHT_KNEE_JOINT_CORRECTION_BONE, "parent_bone", names.RIGHT_LEG_DEFORM_BONE1),
 )
 # The breast and nipple control bones draw rigify.blend's face widget.
-FACE_WIDGET_BONES = (names.LEFT_BREAST_BONE2, names.RIGHT_BREAST_BONE2, names.LEFT_BREAST_BONE3, names.RIGHT_BREAST_BONE3)
-FACE_WIDGET_NIPPLES = (names.LEFT_NIPPLE_BONE1, names.RIGHT_NIPPLE_BONE1, names.LEFT_NIPPLE_BONE2, names.RIGHT_NIPPLE_BONE2)
+FACE_WIDGET_BONES = (names.LEFT_BREAST_BONE2, names.RIGHT_BREAST_BONE2, names.LEFT_BREAST_BONE3,
+                     names.RIGHT_BREAST_BONE3)
+FACE_WIDGET_NIPPLES = (names.LEFT_NIPPLE_BONE1, names.RIGHT_NIPPLE_BONE1, names.LEFT_NIPPLE_BONE2,
+                       names.RIGHT_NIPPLE_BONE2)
 
 
 def rigify_types(build):

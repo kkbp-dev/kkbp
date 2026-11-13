@@ -163,24 +163,38 @@ def _properties(build, m):
     data paths, by bone and name."""
     paths = {}
     eyes_handle = (
-        ("01A) Limit location", "Limits the maximum reachable X and Y locations based on the left and right eye handles settings", 0.0, 0.0, 1.0),
-        ("02A) Eyelids automation", "Enables eyelids shape key automation when both eyes move up and down", 0.0, 0.0, 1.0),
-        ("02B) Default eyelids value", "Eyelids shape key automation value when both eyes are at their default position", 0.05, 0.0, 1.0),
-        ("02C) Min eyelids value", "Minimum reachable eyelids shape key automation value when both eyes move down", 0.0, 0.0, 1.0),
-        ("02D) Max eyelids value", "Maximum reachable eyelids shape key automation value when both eyes move up", 0.25, 0.0, 1.0),
-        ("02E) Eyelids speed factor", "Determines how fast the eyelids shape key automation value will change when both eyes move up and down", 2.0, 0.0, SIZE * 10),
-        ("03A) Eyes size factor", "Factors into many constraints and drivers for the eyes mechanics; it's better not to change this value", SIZE, 0, SIZE * 10),
+        ("01A) Limit location", "Limits the maximum reachable X and Y locations based on the left and right eye "
+                                "handles settings", 0.0, 0.0, 1.0),
+        ("02A) Eyelids automation", "Enables eyelids shape key automation when both eyes move up and "
+                                    "down", 0.0, 0.0, 1.0),
+        ("02B) Default eyelids value", "Eyelids shape key automation value when both eyes are at their default "
+                                       "position", 0.05, 0.0, 1.0),
+        ("02C) Min eyelids value", "Minimum reachable eyelids shape key automation value when both eyes move "
+                                   "down", 0.0, 0.0, 1.0),
+        ("02D) Max eyelids value", "Maximum reachable eyelids shape key automation value when both eyes move "
+                                   "up", 0.25, 0.0, 1.0),
+        ("02E) Eyelids speed factor", "Determines how fast the eyelids shape key automation value will change when "
+                                      "both eyes move up and down", 2.0, 0.0, SIZE * 10),
+        ("03A) Eyes size factor", "Factors into many constraints and drivers for the eyes mechanics; it's better not "
+                                  "to change this value", SIZE, 0, SIZE * 10),
     )
     for name, *rest in eyes_handle:
         paths[names.EYES_HANDLE_BONE, name] = _prop(build, names.EYES_HANDLE_BONE, name, *rest)
     for eye in EYES:
         for name, description, default, low, high in (
-            ("01A) Limit location", "Limits the maximum reachable X and Y locations based on the settings below", 0.0, 0.0, 1.0),
-            ("01B) Min X location", "Minimum reachable X location limit", eye.x_limits[0] - eye.head_x_reference + m.head_x[eye], SIZE * -10, SIZE * 10),
-            ("01C) Max X location", "Maximum reachable X location limit", eye.x_limits[1] - eye.head_x_reference + m.head_x[eye], SIZE * -10, SIZE * 10),
-            ("01D) Min Y location", "Minimum reachable Y location limit", -0.1 - eye.head_z_reference + m.head_z[eye], SIZE * -10, SIZE * 10),
-            ("01E) Max Y location", "Maximum reachable Y location limit", 0.13 - eye.head_z_reference + m.head_z[eye], SIZE * -10, SIZE * 10),
-            ("02A) Speed correction", "Increases the speed at which the eye moves when not controlled directly in order to reach its maximum location limits at the same time as the other eye", 0.0, 0.0, 1.0),
+            ("01A) Limit location", "Limits the maximum reachable X and Y locations based on the settings "
+                                    "below", 0.0, 0.0, 1.0),
+            ("01B) Min X location", "Minimum reachable X location limit",
+             eye.x_limits[0] - eye.head_x_reference + m.head_x[eye], SIZE * -10, SIZE * 10),
+            ("01C) Max X location", "Maximum reachable X location limit",
+             eye.x_limits[1] - eye.head_x_reference + m.head_x[eye], SIZE * -10, SIZE * 10),
+            ("01D) Min Y location", "Minimum reachable Y location limit",
+             -0.1 - eye.head_z_reference + m.head_z[eye], SIZE * -10, SIZE * 10),
+            ("01E) Max Y location", "Maximum reachable Y location limit",
+             0.13 - eye.head_z_reference + m.head_z[eye], SIZE * -10, SIZE * 10),
+            ("02A) Speed correction", "Increases the speed at which the eye moves when not controlled directly in "
+                                      "order to reach its maximum location limits at the same time as the other "
+                                      "eye", 0.0, 0.0, 1.0),
         ):
             paths[eye.handle, name] = _prop(build, eye.handle, name, description, default, low, high)
     for name, description, default in (
@@ -188,17 +202,27 @@ def _properties(build, m):
         ("01B) Parent to torso", "The bone will act as if it was parented to the torso bone", 0),
         ("01C) Parent to root", "The bone will act as if it was parented to the root bone", 0),
     ):
-        paths[names.EYES_TRACK_TARGET_BONE, name] = _prop(build, names.EYES_TRACK_TARGET_BONE, name, description, default, 0, 1)
+        paths[names.EYES_TRACK_TARGET_BONE, name] = _prop(build, names.EYES_TRACK_TARGET_BONE, name, description,
+                                                          default, 0, 1)
     for name, description, default, low, high in (
-        ("01A) Eyeballs speed factor", "Determines how fast the eyes will move when rotating the eyeball bones manually", 0.26, 0.0, 1.0),
+        ("01A) Eyeballs speed factor", "Determines how fast the eyes will move when rotating the eyeball bones "
+                                       "manually", 0.26, 0.0, 1.0),
         ("02A) Track target", "Enables tracking of the eyeballs track target bone", 0.0, 0.0, 1.0),
-        ("02B) Eyeballs track speed factor", "Determines how fast the eyes will move when the eyeballs are tracking their target", 0.04, 0.0, 1.0),
-        ("02C) Nearby target track correction", "When tracking a target that moves closer to the middle of the face than its original location, the individual eyes will gradually point towards it instead of keeping the original distance between them", 0.0, 0.0, 1.0),
-        ("02D) Nearby target track size factor", "Factors into the nearby target track correction, if the character is scaled up or down after running the first Rigify script this value should be changed proportionally", m.track_y / TRACK_REFERENCE, SIZE * -10, SIZE * 10),
+        ("02B) Eyeballs track speed factor", "Determines how fast the eyes will move when the eyeballs are tracking "
+                                             "their target", 0.04, 0.0, 1.0),
+        ("02C) Nearby target track correction", "When tracking a target that moves closer to the middle of the face "
+                                                "than its original location, the individual eyes will gradually point "
+                                                "towards it instead of keeping the original distance between "
+                                                "them", 0.0, 0.0, 1.0),
+        ("02D) Nearby target track size factor", "Factors into the nearby target track correction, if the character is "
+                                                 "scaled up or down after running the first Rigify script this value "
+                                                 "should be changed "
+                                                 "proportionally", m.track_y / TRACK_REFERENCE, SIZE * -10, SIZE * 10),
     ):
         paths[names.EYEBALLS_BONE, name] = _prop(build, names.EYEBALLS_BONE, name, description, default, low, high)
     for name, description, default, low, high in (
-        ("01A) Limit rotation", "Limits the maximum reachable rotation of the head based on the settings below", 0.0, 0.0, 1.0),
+        ("01A) Limit rotation", "Limits the maximum reachable rotation of the head based on the settings "
+                                "below", 0.0, 0.0, 1.0),
         ("01B) Min X rotation", "Minimum reachable X angle limit", -40.0, -180.0, 0.0),
         ("01C) Max X rotation", "Maximum reachable X angle limit", 50.0, 0.0, 180.0),
         ("01D) Min Y rotation", "Minimum reachable Y angle limit", -80.0, -180.0, 0.0),
@@ -210,7 +234,8 @@ def _properties(build, m):
         ("03B) Parent to torso", "The bone will act as if it was parented to the torso bone", 0, 0, 1),
         ("03C) Parent to root", "The bone will act as if it was parented to the root bone", 0, 0, 1),
     ):
-        paths[names.HEAD_TRACK_TARGET_BONE, name] = _prop(build, names.HEAD_TRACK_TARGET_BONE, name, description, default, low, high)
+        paths[names.HEAD_TRACK_TARGET_BONE, name] = _prop(build, names.HEAD_TRACK_TARGET_BONE, name, description,
+                                                          default, low, high)
     return paths
 
 
@@ -238,15 +263,18 @@ def _handle_constraints(rig, handle, eyeball, corrections):
             out["eyeball", limit] = constraints.transformation(
                 rig, handle, eyeball, name=_EYEBALL_LOCATION + _CORRECTION[limit], mix="ADD", space="LOCAL",
                 map_from="ROTATION", from_range=_NONE, map_to="LOCATION", to_range=_ZERO, from_rotation_mode="AUTO")
-    constraints.copy_rotation(rig, handle, eyeball, name=names.COPY_ROTATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX,
+    constraints.copy_rotation(rig, handle, eyeball,
+                              name=names.COPY_ROTATION_CONSTRAINT_BASE + names.EYEBALL_CONSTRAINT_SUFFIX,
                               mix="AFTER", space="LOCAL", use=(False, True, False), invert=(False, False, False))
-    constraints.transformation(rig, handle, eyeball, name=_TRANSFORMATION + names.EYEBALL_CONSTRAINT_SUFFIX + names.SCALE_CONSTRAINT_SUFFIX,
-                               mix="MULTIPLY", space="LOCAL", map_from="SCALE", from_range=_SCALE, map_to="SCALE", to_range=_SCALE)
+    constraints.transformation(rig, handle, eyeball,
+                               name=_TRANSFORMATION + names.EYEBALL_CONSTRAINT_SUFFIX + names.SCALE_CONSTRAINT_SUFFIX,
+                               mix="MULTIPLY", space="LOCAL", map_from="SCALE", from_range=_SCALE, map_to="SCALE",
+                               to_range=_SCALE)
     if corrections:
         for limit in ("min", "max"):
             out["handle", limit] = constraints.transformation(
-                rig, handle, names.EYES_HANDLE_BONE, name=_HANDLE_LOCATION + _CORRECTION[limit], mix="ADD", space="LOCAL",
-                map_from="LOCATION", from_range=_ZERO, map_to="LOCATION", to_range=_ZERO)
+                rig, handle, names.EYES_HANDLE_BONE, name=_HANDLE_LOCATION + _CORRECTION[limit], mix="ADD",
+                space="LOCAL", map_from="LOCATION", from_range=_ZERO, map_to="LOCATION", to_range=_ZERO)
     out["limit"] = constraints.limit_location(
         rig, handle, name=names.LIMIT_LOCATION_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX, space="CUSTOM",
         space_bone=names.HEAD_BONE, min=(-SIZE, -SIZE, None), max=(SIZE, SIZE, None))
@@ -263,9 +291,12 @@ def _constraints(build, m):
     damped = names.DAMPED_TRACK_CONSTRAINT_BASE + names.TRACK_CONSTRAINT_SUFFIX
     parent = names.ARMATURE_CONSTRAINT_BASE + names.PARENT_CONSTRAINT_SUFFIX
     out = {"handles": handles}
-    out["eyes_target_parent"] = constraints.armature(rig, names.EYES_TRACK_TARGET_PARENT_BONE, [names.HEAD_BONE, torso, root], name=parent)
-    out["eyeballs_track"] = constraints.copy_rotation(rig, names.EYEBALLS_BONE, names.EYEBALLS_TRACK_BONE, name=track, mix="REPLACE",
-                                                      space="LOCAL", use=(True, False, True), invert=(False, False, False))
+    out["eyes_target_parent"] = constraints.armature(rig, names.EYES_TRACK_TARGET_PARENT_BONE, [names.HEAD_BONE, torso,
+                                                                                                root], name=parent)
+    out["eyeballs_track"] = constraints.copy_rotation(rig, names.EYEBALLS_BONE, names.EYEBALLS_TRACK_BONE, name=track,
+                                                      mix="REPLACE",
+                                                      space="LOCAL", use=(True, False, True), invert=(False, False,
+                                                                                                      False))
     for eye in EYES:
         out["eyeball_track", eye] = constraints.copy_rotation(
             rig, eye.eyeball, eye.track_correction, name=track + names.CORRECTION_CONSTRAINT_SUFFIX, mix="REPLACE",
@@ -274,15 +305,19 @@ def _constraints(build, m):
     for eye in EYES:
         constraints.damped_track(rig, eye.track, names.EYES_TRACK_TARGET_BONE, name=damped)
     out["head_rotation"] = constraints.transformation(
-        rig, names.HEAD_BONE, names.HEAD_TRACK_BONE, name=_TRANSFORMATION + names.HEAD_CONSTRAINT_SUFFIX + names.ROTATION_CONSTRAINT_SUFFIX,
+        rig, names.HEAD_BONE, names.HEAD_TRACK_BONE,
+        name=_TRANSFORMATION + names.HEAD_CONSTRAINT_SUFFIX + names.ROTATION_CONSTRAINT_SUFFIX,
         mix="REPLACE", space="LOCAL_WITH_PARENT", map_from="ROTATION",
         from_range=((math.radians(-180), math.radians(180)),) * 3, map_to="ROTATION",
-        to_range=((math.radians(180), math.radians(-180)), (math.radians(-180), math.radians(180)), (math.radians(-180), math.radians(180))),
+        # x turns the other way
+        to_range=((math.radians(180), math.radians(-180)), (math.radians(-180), math.radians(180)),
+                  (math.radians(-180), math.radians(180))),
         from_rotation_mode="QUATERNION", to_euler_order="AUTO", map_to_from=("X", "Z", "Y"))
     out["head_limit"] = constraints.limit_rotation(
         rig, names.HEAD_BONE, name=names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX, space="LOCAL",
         limits=((math.radians(-180), math.radians(180)),) * 3)
-    out["head_target_parent"] = constraints.armature(rig, names.HEAD_TRACK_TARGET_PARENT_BONE, [head_tweak, torso, root], name=parent)
+    out["head_target_parent"] = constraints.armature(rig, names.HEAD_TRACK_TARGET_PARENT_BONE, [head_tweak, torso,
+                                                                                                root], name=parent)
     constraints.damped_track(rig, names.HEAD_TRACK_BONE, names.HEAD_TRACK_TARGET_BONE, name=damped)
     return out
 
@@ -323,7 +358,8 @@ class _Vars:
                                  rotation_mode="QUATERNION"),
             }
         t = names.EYES_TRACK_TARGET_BONE
-        self.target_parent = [prop("parentHead", t, "01A) Parent to head"), prop("parentTorso", t, "01B) Parent to torso"),
+        self.target_parent = [prop("parentHead", t, "01A) Parent to head"), prop("parentTorso", t,
+                                                                                 "01B) Parent to torso"),
                               prop("parentRoot", t, "01C) Parent to root")]
         b = names.EYEBALLS_BONE
         self.rotSpeed = prop("rotSpeed", b, "01A) Eyeballs speed factor")
@@ -331,14 +367,16 @@ class _Vars:
         self.trackSpeed = prop("trackSpeed", b, "02B) Eyeballs track speed factor")
         self.trackCorr = prop("trackCorr", b, "02C) Nearby target track correction")
         self.factor = prop("factor", b, "02D) Nearby target track size factor")
-        self.rotZ = Variable("rotZ", "TRANSFORMS", rig, bone=names.EYEBALLS_TRACK_BONE, space="LOCAL_SPACE", transform="ROT_Z",
+        self.rotZ = Variable("rotZ", "TRANSFORMS", rig, bone=names.EYEBALLS_TRACK_BONE, space="LOCAL_SPACE",
+                             transform="ROT_Z",
                              rotation_mode="QUATERNION")
         ht = names.HEAD_TRACK_TARGET_BONE
         self.head_limit = prop("limit", ht, "01A) Limit rotation")
         self.head_rotation = [prop(n, ht, key) for n, key in (
             ("minX", "01B) Min X rotation"), ("maxX", "01C) Max X rotation"), ("minY", "01D) Min Y rotation"),
             ("maxY", "01E) Max Y rotation"), ("minZ", "01F) Min Z rotation"), ("maxZ", "01G) Max Z rotation"))]
-        self.head_parent = [prop("parentHead", ht, "03A) Parent to head"), prop("parentTorso", ht, "03B) Parent to torso"),
+        self.head_parent = [prop("parentHead", ht, "03A) Parent to head"), prop("parentTorso", ht,
+                                                                                "03B) Parent to torso"),
                             prop("parentRoot", ht, "03C) Parent to root")]
         self.head_track = prop("track", ht, "02A) Track target")
 
@@ -372,8 +410,10 @@ def _correction_drivers(cons, v, eye, other):
                 to = f"{own} * -{size} / {theirs} + {size}"
                 to_tenth = f"{own} * -{size} / 10 / {theirs} + {size} / 10"
                 full, turn = f"-{size}", "radians(-180)"
-            drivers.add(handle, f"to_{limit}_{channel}", type="SCRIPTED", variables=variables, expression=f"0 if {cond} else {to}")
-            drivers.add(handle, f"from_{limit}_{channel}", type="SCRIPTED", variables=variables, expression=f"0 if {cond} else {full}")
+            drivers.add(handle, f"to_{limit}_{channel}", type="SCRIPTED", variables=variables,
+                        expression=f"0 if {cond} else {to}")
+            drivers.add(handle, f"from_{limit}_{channel}", type="SCRIPTED", variables=variables,
+                        expression=f"0 if {cond} else {full}")
             drivers.add(eyeball, f"to_{limit}_{channel}", type="SCRIPTED", variables=variables,
                         expression=f"0 if {cond} else {to_tenth}")
             drivers.add(eyeball, f"from_{limit}_{channel}_rot", type="SCRIPTED", variables=variables,
@@ -395,8 +435,8 @@ def _track_correction_driver(rig, v, eye, other):
     own, theirs = _term(v, eye, eye.outward, "X", compact=True), _term(v, other, eye.outward, "X", compact=True)
     difference = f"({v.rotZ.name}-{rot})" if eye is LEFT else f"({rot}-{v.rotZ.name})"
     compare = f"<={EPSILON}" if eye.outward == "max" else f">=-{EPSILON}"
-    expression = (f"0 if {org}-{curr}<=0 else (radians({eye.turn})+{rot})*({org}-{curr})/{v.factor.name}*{difference}*20"
-                  f"*(1 if {own}-{theirs}{compare} else 1+{e['corr'].name}*{own}/{theirs})")
+    expression = (f"0 if {org}-{curr}<=0 else (radians({eye.turn})+{rot})*({org}-{curr})/{v.factor.name}"
+                  f"*{difference}*20*(1 if {own}-{theirs}{compare} else 1+{e['corr'].name}*{own}/{theirs})")
     variables = [e["orgDist"], e["currDist"], v.rotZ, e["rotZ"], e["corr"], e[f"{eye.outward}X"],
                  v.eye[other][f"{eye.outward}X"], e["headX"], v.eye[other]["headX"], v.factor]
     drivers.add(rig.pose.bones[eye.track_correction], "rotation_quaternion", type="SCRIPTED", variables=variables,
@@ -423,7 +463,8 @@ def mechanism(build, m):
     drivers.add(eyes["limit"], "influence", type="AVERAGE", variables=[v.limit])
     left, right = v.eye[LEFT], v.eye[RIGHT]
     for axis in ("X", "Y"):
-        lmin, rmin, lmax, rmax = left[f"min{axis}"].name, right[f"min{axis}"].name, left[f"max{axis}"].name, right[f"max{axis}"].name
+        lmin, rmin = left[f"min{axis}"].name, right[f"min{axis}"].name
+        lmax, rmax = left[f"max{axis}"].name, right[f"max{axis}"].name
         ld, rd = left[f"dist{axis}"].name, right[f"dist{axis}"].name
         p = axis.lower()
         drivers.add(eyes["limit"], f"min_{p}", type="SCRIPTED",
@@ -455,7 +496,8 @@ def mechanism(build, m):
     drivers.add(cons["head_rotation"], "influence", type="AVERAGE", variables=[v.head_track])
     drivers.add(cons["head_limit"], "influence", type="AVERAGE", variables=[v.head_limit])
     for variable, prop in zip(v.head_rotation, ("min_x", "max_x", "min_y", "max_y", "min_z", "max_z")):
-        drivers.add(cons["head_limit"], prop, type="SCRIPTED", variables=[variable], expression=f"radians({variable.name})")
+        drivers.add(cons["head_limit"], prop, type="SCRIPTED", variables=[variable],
+                    expression=f"radians({variable.name})")
     for i, variable in enumerate(v.head_parent):
         drivers.add(cons["head_target_parent"].targets[i], "weight", type="AVERAGE", variables=[variable])
 

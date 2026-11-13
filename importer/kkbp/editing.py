@@ -3,9 +3,9 @@
     with editing(armature, "EDIT"):
         armature.data.edit_bones.new("x")
 
-`editing` is the only place that calls `bpy.ops.object.mode_set`. `switch` is the line-by-line form,
-for the scripts ported from the legacy importer that change modes between statements (the Rigify
-Hook); new code uses `editing`.
+`editing` is the only place that calls `bpy.ops.object.mode_set`. `switch` leaves an object in a
+mode, for the few callers whose next step needs it there (the Compat helpers that run Rigify's
+operators, and the tools that pose a rig); everything else uses `editing`.
 """
 
 from __future__ import annotations

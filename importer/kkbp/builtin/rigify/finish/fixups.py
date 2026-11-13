@@ -18,7 +18,8 @@ MADE_FROM = ("{}", "DEF-{}", "{}_ik", "{}_ik.parent", "{}_master", "MCH-{}", "MC
 IK_PARENTS = ("Left arm_parent", "Left leg_parent", "Right arm_parent", "Right leg_parent")
 # The tongue's tip chain, which the rig shows with the eyes; its side bones go with the face MCH.
 TONGUE_SHOWN = ("cf_j_tang_02_master", "cf_j_tang_02", "cf_j_tang_01")
-TONGUE_SIDES = ("cf_j_tang_R_03", "cf_j_tang_R_04", "cf_j_tang_R_05", "cf_j_tang_L_03", "cf_j_tang_L_04", "cf_j_tang_L_05")
+TONGUE_SIDES = ("cf_j_tang_R_03", "cf_j_tang_R_04", "cf_j_tang_R_05", "cf_j_tang_L_03", "cf_j_tang_L_04",
+                "cf_j_tang_L_05")
 HEAD_ROTATION = names.TRANSFORMATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX + names.ROTATION_CONSTRAINT_SUFFIX
 HEAD_LIMIT = names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX
 
@@ -67,7 +68,8 @@ def retarget(build):
                         target.id = rig
     for fcurve in rig.animation_data.drivers:
         path = fcurve.data_path
-        if path.startswith("pose.bones") and path.split('"')[1] in names.BONES_WITH_DRIVERS and path.rsplit(".", 1)[1] == "location":
+        if (path.startswith("pose.bones") and path.split('"')[1] in names.BONES_WITH_DRIVERS
+                and path.rsplit(".", 1)[1] == "location"):
             for variable in fcurve.driver.variables:
                 for target in variable.targets:
                     for limb in names.TARGETS_TO_CHANGE:

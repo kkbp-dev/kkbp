@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .. import bone_collections, commons, meshes, names
+from .. import bone_collections, meshes, names
 
 
 @dataclass
@@ -101,7 +101,7 @@ def bone_lists(build, found) -> BoneLists:
         elif name not in control:
             bone_collections.move(metarig, name, names.MCH_LAYER_INDEX)
             bone_collections.lock(metarig, name)
-        for related in commons.getRelatedBoneNames(metarig, name):
+        for related in _related(metarig, name):
             _add(useful, related)
 
     for bone in metarig.pose.bones:
@@ -111,6 +111,29 @@ def bone_lists(build, found) -> BoneLists:
         if bone.rigify_type in ("basic.raw_copy", "basic.super_copy"):
             _relink(bone)
     return BoneLists(deform, useful, eyes_secondary, torso, torso_tweak)
+
+
+def _related(rig, name):
+    """The bones `name` depends on: its parent, its constraints' targets and its drivers' bones."""
+    pose = rig.pose.bones
+    if not pose.get(name):
+        return []
+    bone = pose[name]
+    found = []
+    if bone.parent and pose.get(bone.parent.name):
+        _add(found, bone.parent.name)
+    for constraint in bone.constraints:
+        subtarget = getattr(constraint, "subtarget", None)  # Armature and Limit constraints have none
+        if subtarget is not None and pose.get(subtarget):
+            _add(found, subtarget)
+    if rig.animation_data:
+        for fcurve in rig.animation_data.drivers:
+            if fcurve.data_path.startswith("pose.bones") and fcurve.data_path.split('"')[1] == name:
+                for variable in fcurve.driver.variables:
+                    for target in variable.targets:
+                        if pose.get(target.bone_target):
+                            _add(found, target.bone_target)
+    return found
 
 
 def _skirt(metarig, control, useful):

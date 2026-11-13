@@ -2,10 +2,12 @@
 (legacy `apply_rigify` and extras/rigifyscripts, D22 to D25).
 
 The armature becomes the hidden metarig and stays `ch.armature`; the generated rig is the `rig` Part,
-and every mesh, modifier and object that used the armature moves onto it. before.py, after.py and
-commons.py are the legacy importer's own Rigify scripts, ported with as few changes as possible; they
-work on a RigBuild (build.py) that the Hook makes for each Character. prepare.py does what the legacy
-armature Step did for them first.
+and every mesh, modifier and object that used the armature moves onto it.
+
+The Hook makes a RigBuild (build.py) for the Character and hands it to each phase: prepare.py does
+what the legacy armature Step did first, metarig/ turns the armature into the metarig, Rigify
+generates the rig, and finish/ fixes it up. The rig keeps the legacy importer's bone, constraint,
+property and driver names (ADR 0023, ADR 0043); names.py holds them all.
 """
 
 import bpy

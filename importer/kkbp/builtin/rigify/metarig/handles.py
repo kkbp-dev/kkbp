@@ -47,14 +47,19 @@ BREAST_WIDGETS = (names.ORIGINAL_WIDGET_BREASTS, names.ORIGINAL_WIDGET_BREAST_LE
 def widgets_and_handles(build):
     metarig = build.metarig
     widgets.append_library(build)
-    eyes = (widgets.make(build, names.WIDGET_EYES, metarig, names.EYES_BONE, widget_shapes.EYES_VERTICES, widget_shapes.EYES_EDGES),
-            widgets.make(build, names.WIDGET_EYE_LEFT, metarig, names.LEFT_EYE_BONE, widget_shapes.EYE_VERTICES, widget_shapes.EYE_EDGES),
-            widgets.make(build, names.WIDGET_EYE_RIGHT, metarig, names.RIGHT_EYE_BONE, widget_shapes.EYE_VERTICES, widget_shapes.EYE_EDGES))
+    eyes = (widgets.make(build, names.WIDGET_EYES, metarig, names.EYES_BONE, widget_shapes.EYES_VERTICES,
+                         widget_shapes.EYES_EDGES),
+            widgets.make(build, names.WIDGET_EYE_LEFT, metarig, names.LEFT_EYE_BONE, widget_shapes.EYE_VERTICES,
+                         widget_shapes.EYE_EDGES),
+            widgets.make(build, names.WIDGET_EYE_RIGHT, metarig, names.RIGHT_EYE_BONE, widget_shapes.EYE_VERTICES,
+                         widget_shapes.EYE_EDGES))
     _arrange(build, EYES, eyes)
-    breasts = _copies(build, (names.WIDGET_BREASTS, names.WIDGET_BREAST_LEFT, names.WIDGET_BREAST_RIGHT), names.BREASTS_BONE)
+    breasts = _copies(build, (names.WIDGET_BREASTS, names.WIDGET_BREAST_LEFT, names.WIDGET_BREAST_RIGHT),
+                      names.BREASTS_BONE)
     if not build.features.male:
         _arrange(build, BREASTS, breasts)
-    buttocks = _copies(build, (names.WIDGET_BUTTOCKS, names.WIDGET_BUTTOCK_LEFT, names.WIDGET_BUTTOCK_RIGHT), names.BUTTOCKS_BONE)
+    buttocks = _copies(build, (names.WIDGET_BUTTOCKS, names.WIDGET_BUTTOCK_LEFT, names.WIDGET_BUTTOCK_RIGHT),
+                       names.BUTTOCKS_BONE)
     _arrange(build, BUTTOCKS, buttocks)
 
     _finish(metarig, EYES, eyes, eye=True)
@@ -103,7 +108,8 @@ def _arrange(build, handle_set, shapes):
     sx, sy, sz = handle_set.size
     widgets.resize(middle, (sx, sy, sz))
 
-    lengths = {side: (b.max_x - b.min_x, b.max_y - b.min_y, b.max_z - b.min_z) for side, b in (("left", lb), ("right", rb))}
+    lengths = {side: (b.max_x - b.min_x, b.max_y - b.min_y, b.max_z - b.min_z) for side, b in (("left", lb), ("right",
+                                                                                                              rb))}
     averages = [statistics.mean([lengths["left"][i], lengths["right"][i]]) for i in range(3)]
     for side, widget in (("left", left), ("right", right)):
         _shape(widget, handle_set)
@@ -142,5 +148,6 @@ def _finish(rig, handle_set, shapes, eye):
             pose_bone.lock_rotation[0] = True
             pose_bone.lock_rotation[2] = True
             pose_bone.lock_scale[1] = True
-        constraints.copy_transforms(rig, bone, handle, name=names.COPY_TRANSFORMS_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX,
+        constraints.copy_transforms(rig, bone, handle,
+                                    name=names.COPY_TRANSFORMS_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX,
                                     mix="REPLACE", space="LOCAL")

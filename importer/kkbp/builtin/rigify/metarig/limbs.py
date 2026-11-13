@@ -84,7 +84,8 @@ def _finger(side, finger, rolls, **kw):
 # In the order they are made: each finger, left then right.
 FINGERS = (
     (_finger(LEFT, "INDEX_FINGER", (0, 5, 10)), _finger(RIGHT, "INDEX_FINGER", (0, -5, -10))),
-    (_finger(LEFT, "MIDDLE_FINGER", (-10, -2, 6), middle=True), _finger(RIGHT, "MIDDLE_FINGER", (10, 2, -6), middle=True)),
+    (_finger(LEFT, "MIDDLE_FINGER", (-10, -2, 6), middle=True), _finger(RIGHT, "MIDDLE_FINGER", (10, 2, -6),
+                                                                        middle=True)),
     (_finger(LEFT, "RING_FINGER", (-15, -10, -5)), _finger(RIGHT, "RING_FINGER", (15, 10, 5))),
     (_finger(LEFT, "LITTLE_FINGER", (-20, -18, -16)), _finger(RIGHT, "LITTLE_FINGER", (20, 18, 16))),
     (_finger(LEFT, "THUMB", (-257, -260, -263), thumb=True), _finger(RIGHT, "THUMB", (-103, -106, -109), thumb=True)),
@@ -124,7 +125,8 @@ def _arm(build, side):
     """The elbow between its joint-correction bones, the shoulder bones along the arm, and the wrist
     just short of the elbow's back correction, pointing across the hand."""
     edit = build.metarig.data.edit_bones
-    mid, back, front = edit[side.elbow_correction_mid], edit[side.elbow_correction_back], edit[side.elbow_correction_front]
+    mid, back = edit[side.elbow_correction_mid], edit[side.elbow_correction_back]
+    front = edit[side.elbow_correction_front]
     arm, elbow = edit[side.arm], edit[side.elbow]
     elbow.head.y = _along(mid.head.y, front.head.y, 0.33)
     elbow.roll = radians(0)
