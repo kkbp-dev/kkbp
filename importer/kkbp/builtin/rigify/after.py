@@ -7,7 +7,7 @@ from . import commons as koikatsuCommons
 from . import names
 from . import constraints, drivers
 from ...editing import switch
-from .bones import copy_tags, outfit_of
+from .bones import copy_tags, delete_bone, outfit_of
 from .finish import ground
     
 def main(build):		   
@@ -168,7 +168,7 @@ def main(build):
 
     for bone in generatedRig.data.edit_bones:
         if bone.collections.get(koikatsuCommons.getRigifyLayerIndexByName(names.JUNK_LAYER)):
-            koikatsuCommons.deleteBone(generatedRig, bone.name)
+            delete_bone(generatedRig, bone.name)
             continue
         if bone.collections.get(names.DEF_LAYER_INDEX) or bone.collections.get(names.NSFW_LAYER) or bone.name == 'cf_s_waist02':
             bone.use_deform = True

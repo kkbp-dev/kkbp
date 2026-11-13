@@ -8,25 +8,29 @@ import statistics
 from mathutils import Matrix, Vector, Euler
 from . import commons as koikatsuCommons
 from . import names
-from . import constraints, drivers
+from . import bones, constraints, drivers
 from ... import compat
-from ...editing import switch
+from ...editing import editing, switch
 from . import widgets
-from .build import Features
+from .metarig import features, torso
     
 def main(build):
     """Turns the Character's armature into the Rigify metarig, phase by phase. Each phase
     leaves Blender in the mode the next expects, as the one long function did."""
-    _reserved_names(build)
-    _features(build)
-    _eye_and_body_bones(build)
+    metarig = build.metarig
+    features.reserved_names(build)
+    features.detect(build)
+    with editing(metarig, "EDIT"):
+        features.id_bone(build)
+        _eye_bones(build)
+        torso.breasts_and_buttocks(build)
     _widgets_and_handles(build)
     _eyes(build)
-    _rigify_layers(build)
+    compat.add_rigify_color_sets(metarig)  # Rigify's standard colour sets, which the UI phase names
     _deform_vertex_groups(build)
     accessories = _accessories(build)
     _tongue_side_bones(build)
-    _head_and_hips(build)
+    torso.head_and_hips(build)
     _limbs(build)
     _skirt(build)
     _rigify_types(build)
@@ -35,99 +39,15 @@ def main(build):
     _rigify_ui(build)
 
 
-def _reserved_names(build):
-    """Accessory bones can be called anything; ones named like the rig's own bones give way."""
+def _eye_bones(build):
+    """The Eyes target bone, and the left and right eye targets under it, where the Eye Controller is.
+    In Edit Mode."""
     metarig = build.metarig
-    switch(metarig, 'OBJECT')
-
-    #set the active bone collection to the Core collection so new bones are added there
-    metarig.data.collections.active_index = metarig.data.collections[names.ORIGINAL_FK_LAYER_INDEX].index
-
-    #Accessory bones can be named anything, so if they overlap with bones used in the rig they'll cause issues
-    reservedBoneNames = [names.ROOT_BONE, names.TORSO_BONE, names.HEAD_TWEAK_BONE]
-        
-    for boneName in reservedBoneNames:
-        if bone := metarig.pose.bones.get(boneName):
-            bone.name = bone.name + names.RENAMED_NAME_SUFFIX
-                
-    
-    fixDuplicateBoneName(build, names.HEAD_BONE, names.ORIGINAL_EYES_BONE)
-    fixDuplicateBoneName(build, names.NECK_BONE, names.HEAD_BONE)
-    fixDuplicateBoneName(build, names.UPPER_CHEST_BONE, names.NECK_BONE)
-    fixDuplicateBoneName(build, names.CHEST_BONE, names.UPPER_CHEST_BONE)
-    fixDuplicateBoneName(build, names.SPINE_BONE, names.CHEST_BONE)
-    fixDuplicateBoneName(build, names.HIPS_BONE, names.SPINE_BONE)
-        
-    # Check for optional features
-
-
-def _features(build):
-    """What this Character has: skirt, rigged tongue, Better Penetration bones, head mod, male."""
-    metarig = build.metarig
-    hasSkirt = True    
-    if names.SKIRT_PARENT_BONE not in metarig.pose.bones:
-        hasSkirt = False
-    else:
-        for primaryIndex in range(8):
-            if names.skirt_bone(True, primaryIndex) not in metarig.pose.bones:
-                hasSkirt = False
-                break
-            for secondaryIndex in range(6):
-                if names.skirt_bone(False, primaryIndex, secondaryIndex) not in metarig.pose.bones:
-                    hasSkirt = False
-                    break
-    
-    # The tongue rig reads Body, which holds the tongue (ADR 0039), when it is weighted to the tongue bones.
-    hasRiggedTongue = (metarig.pose.bones.get(names.RIGGED_TONGUE_BONE1) is not None and build.body is not None
-                       and names.RIGGED_TONGUE_BONE1 in build.body.vertex_groups)
-    hasBetterPenetrationMod = metarig.pose.bones.get(names.BETTER_PENETRATION_ROOT_CROTCH_BONE)
-    hasHeadMod = koikatsuCommons.isVertexGroupEmpty(names.ORIGINAL_FACE_UP_DEFORM_BONE, build.body)
-    isMale = koikatsuCommons.isVertexGroupEmpty(names.LEFT_NIPPLE_DEFORM_BONE1, build.body)
-    build.features = Features(skirt=bool(hasSkirt), rigged_tongue=bool(hasRiggedTongue), better_penetration=bool(hasBetterPenetrationMod), head_mod=bool(hasHeadMod), male=bool(isMale))
-
-
-def _eye_and_body_bones(build):
-    """The eye bones, and the breasts and buttocks bones the handles move."""
-    metarig = build.metarig
-    switch(metarig, 'EDIT')
-    
-    #get the metagrig ID bone
-    metarigIdBoneName = None
-    for bone in metarig.data.edit_bones:
-        if bone.name.startswith(names.METARIG_ID_BONE_PREFIX):
-            metarigIdBoneName = bone.name
-    if not metarigIdBoneName:
-        metarigIdBoneName = names.METARIG_ID_BONE_PREFIX + koikatsuCommons.generateRandomAlphanumericString()
-        koikatsuCommons.createBone(metarig, metarigIdBoneName)
-    
-    #create the eye bones
-    eyesBone = koikatsuCommons.copyBone(metarig, names.ORIGINAL_EYES_BONE, names.EYES_BONE)
-    leftEyeBone = koikatsuCommons.copyBone(metarig, names.ORIGINAL_EYES_BONE, names.LEFT_EYE_BONE)
-    rightEyeBone = koikatsuCommons.copyBone(metarig, names.ORIGINAL_EYES_BONE, names.RIGHT_EYE_BONE)
+    eyesBone = bones.copy_bone(metarig, names.ORIGINAL_EYES_BONE, names.EYES_BONE)
+    leftEyeBone = bones.copy_bone(metarig, names.ORIGINAL_EYES_BONE, names.LEFT_EYE_BONE)
+    rightEyeBone = bones.copy_bone(metarig, names.ORIGINAL_EYES_BONE, names.RIGHT_EYE_BONE)
     leftEyeBone.parent = eyesBone
     rightEyeBone.parent = eyesBone
-    
-    #adjust the chest bones
-    breastsBone = metarig.data.edit_bones[names.BREASTS_BONE]
-    leftBreastBone1 = metarig.data.edit_bones[names.LEFT_BREAST_BONE1]
-    rightBreastBone1 = metarig.data.edit_bones[names.RIGHT_BREAST_BONE1]
-    breastsBone.head.y = statistics.mean([leftBreastBone1.head.y, rightBreastBone1.head.y])
-    breastsBone.tail.y = statistics.mean([leftBreastBone1.tail.y, rightBreastBone1.tail.y])
-    
-    #create the butt bones
-    buttocksBone = koikatsuCommons.copyBone(metarig, names.WAIST_BONE, names.BUTTOCKS_BONE)
-    buttocksBone.parent = metarig.data.edit_bones[names.WAIST_BONE]
-    leftButtockBone = metarig.data.edit_bones[names.LEFT_BUTTOCK_BONE]
-    leftButtockBone.parent = buttocksBone
-    leftButtockBone.length = buttocksBone.length
-    rightButtockBone = metarig.data.edit_bones[names.RIGHT_BUTTOCK_BONE]
-    rightButtockBone.parent = buttocksBone
-    rightButtockBone.length = buttocksBone.length
-    buttocksBone.head.y = statistics.mean([leftButtockBone.head.y, rightButtockBone.head.y])
-    buttocksBone.tail.y = statistics.mean([leftButtockBone.tail.y, rightButtockBone.tail.y])
-    
-    switch(metarig, 'OBJECT')
-    build.metarig_id_bone = metarigIdBoneName
 
 
 def _widgets_and_handles(build):
@@ -213,19 +133,19 @@ def _eyes(build):
     switch(metarig, 'EDIT')
     
     #create tracking bones
-    eyesTrackTargetBone = koikatsuCommons.copyBone(metarig, names.EYES_HANDLE_BONE, names.EYES_TRACK_TARGET_BONE)
-    eyesTrackTargetParentBone = koikatsuCommons.copyBone(metarig, names.EYES_HANDLE_BONE, names.EYES_TRACK_TARGET_PARENT_BONE)
-    eyesHandleMarkerBone = koikatsuCommons.copyBone(metarig, names.EYES_HANDLE_BONE, names.EYES_HANDLE_MARKER_BONE)
-    leftEyeHandleMarkerBone = koikatsuCommons.copyBone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYE_HANDLE_MARKER_BONE)
-    rightEyeHandleMarkerBone = koikatsuCommons.copyBone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYE_HANDLE_MARKER_BONE)
-    leftEyeHandleMarkerXBone = koikatsuCommons.copyBone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYE_HANDLE_MARKER_X_BONE)
-    rightEyeHandleMarkerXBone = koikatsuCommons.copyBone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYE_HANDLE_MARKER_X_BONE)
+    eyesTrackTargetBone = bones.copy_bone(metarig, names.EYES_HANDLE_BONE, names.EYES_TRACK_TARGET_BONE)
+    eyesTrackTargetParentBone = bones.copy_bone(metarig, names.EYES_HANDLE_BONE, names.EYES_TRACK_TARGET_PARENT_BONE)
+    eyesHandleMarkerBone = bones.copy_bone(metarig, names.EYES_HANDLE_BONE, names.EYES_HANDLE_MARKER_BONE)
+    leftEyeHandleMarkerBone = bones.copy_bone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYE_HANDLE_MARKER_BONE)
+    rightEyeHandleMarkerBone = bones.copy_bone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYE_HANDLE_MARKER_BONE)
+    leftEyeHandleMarkerXBone = bones.copy_bone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYE_HANDLE_MARKER_X_BONE)
+    rightEyeHandleMarkerXBone = bones.copy_bone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYE_HANDLE_MARKER_X_BONE)
     leftEyeHandleMarkerXBone.head.z = eyesHandleMarkerBone.head.z
     rightEyeHandleMarkerXBone.head.z = eyesHandleMarkerBone.head.z
     leftEyeHandleMarkerXBone.tail.z = eyesHandleMarkerBone.head.z
     rightEyeHandleMarkerXBone.tail.z = eyesHandleMarkerBone.head.z
-    leftEyeHandleMarkerZBone = koikatsuCommons.copyBone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYE_HANDLE_MARKER_Z_BONE)
-    rightEyeHandleMarkerZBone = koikatsuCommons.copyBone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYE_HANDLE_MARKER_Z_BONE)
+    leftEyeHandleMarkerZBone = bones.copy_bone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYE_HANDLE_MARKER_Z_BONE)
+    rightEyeHandleMarkerZBone = bones.copy_bone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYE_HANDLE_MARKER_Z_BONE)
     leftEyeHandleMarkerZBone.head.x = eyesHandleMarkerBone.head.x
     rightEyeHandleMarkerZBone.head.x = eyesHandleMarkerBone.head.x
     leftEyeHandleMarkerZBone.tail.x = eyesHandleMarkerBone.head.x
@@ -239,10 +159,10 @@ def _eyes(build):
     rightEyeHandleMarkerXBone.parent = headBone
     leftEyeHandleMarkerZBone.parent = headBone
     rightEyeHandleMarkerZBone.parent = headBone
-    eyeballsBone = koikatsuCommons.copyBone(metarig, names.EYES_HANDLE_BONE, names.EYEBALLS_BONE)
+    eyeballsBone = bones.copy_bone(metarig, names.EYES_HANDLE_BONE, names.EYEBALLS_BONE)
     eyeballsBone.roll = radians(0)
-    leftEyeballBone = koikatsuCommons.copyBone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYEBALL_BONE)
-    rightEyeballBone = koikatsuCommons.copyBone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYEBALL_BONE)
+    leftEyeballBone = bones.copy_bone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_EYEBALL_BONE)
+    rightEyeballBone = bones.copy_bone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_EYEBALL_BONE)
     leftEyeballBone.parent = headBone
     rightEyeballBone.parent = headBone
     leftEyeballBone.roll = radians(0)
@@ -253,13 +173,13 @@ def _eyes(build):
     eyeballsBone.length = metarig.data.edit_bones[names.EYES_HANDLE_BONE].length
     leftEyeballBone.length = metarig.data.edit_bones[names.LEFT_EYE_HANDLE_BONE].length
     rightEyeballBone.length = metarig.data.edit_bones[names.RIGHT_EYE_HANDLE_BONE].length    
-    eyeballsTrackBone = koikatsuCommons.copyBone(metarig, names.EYEBALLS_BONE, names.EYEBALLS_TRACK_BONE)
-    leftEyeballTrackBone = koikatsuCommons.copyBone(metarig, names.LEFT_EYEBALL_BONE, names.LEFT_EYEBALL_TRACK_BONE)
-    rightEyeballTrackBone = koikatsuCommons.copyBone(metarig, names.RIGHT_EYEBALL_BONE, names.RIGHT_EYEBALL_TRACK_BONE)
-    leftEyeballTrackCorrectionBone = koikatsuCommons.copyBone(metarig, names.LEFT_EYEBALL_TRACK_BONE, names.LEFT_EYEBALL_TRACK_CORRECTION_BONE)
-    rightEyeballTrackCorrectionBone = koikatsuCommons.copyBone(metarig, names.RIGHT_EYEBALL_TRACK_BONE, names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE)
-    leftHeadMarkerXBone = koikatsuCommons.copyBone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_HEAD_MARKER_X_BONE)
-    rightHeadMarkerXBone = koikatsuCommons.copyBone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_HEAD_MARKER_X_BONE)
+    eyeballsTrackBone = bones.copy_bone(metarig, names.EYEBALLS_BONE, names.EYEBALLS_TRACK_BONE)
+    leftEyeballTrackBone = bones.copy_bone(metarig, names.LEFT_EYEBALL_BONE, names.LEFT_EYEBALL_TRACK_BONE)
+    rightEyeballTrackBone = bones.copy_bone(metarig, names.RIGHT_EYEBALL_BONE, names.RIGHT_EYEBALL_TRACK_BONE)
+    leftEyeballTrackCorrectionBone = bones.copy_bone(metarig, names.LEFT_EYEBALL_TRACK_BONE, names.LEFT_EYEBALL_TRACK_CORRECTION_BONE)
+    rightEyeballTrackCorrectionBone = bones.copy_bone(metarig, names.RIGHT_EYEBALL_TRACK_BONE, names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE)
+    leftHeadMarkerXBone = bones.copy_bone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_HEAD_MARKER_X_BONE)
+    rightHeadMarkerXBone = bones.copy_bone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_HEAD_MARKER_X_BONE)
     leftHeadMarkerXBone.parent = headBone
     rightHeadMarkerXBone.parent = headBone
     leftHeadMarkerXBone.head.y = headBone.head.y
@@ -270,8 +190,8 @@ def _eyes(build):
     rightHeadMarkerXBone.head.z = headBone.head.z
     leftHeadMarkerXBone.tail.z = headBone.head.z
     rightHeadMarkerXBone.tail.z = headBone.head.z
-    leftHeadMarkerZBone = koikatsuCommons.copyBone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_HEAD_MARKER_Z_BONE)
-    rightHeadMarkerZBone = koikatsuCommons.copyBone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_HEAD_MARKER_Z_BONE)
+    leftHeadMarkerZBone = bones.copy_bone(metarig, names.LEFT_EYE_HANDLE_BONE, names.LEFT_HEAD_MARKER_Z_BONE)
+    rightHeadMarkerZBone = bones.copy_bone(metarig, names.RIGHT_EYE_HANDLE_BONE, names.RIGHT_HEAD_MARKER_Z_BONE)
     leftHeadMarkerZBone.parent = headBone
     rightHeadMarkerZBone.parent = headBone
     leftHeadMarkerZBone.head.y = headBone.head.y
@@ -282,17 +202,17 @@ def _eyes(build):
     rightHeadMarkerZBone.head.x = headBone.head.x
     leftHeadMarkerZBone.tail.x = headBone.head.x
     rightHeadMarkerZBone.tail.x = headBone.head.x
-    headTrackTargetBone = koikatsuCommons.copyBone(metarig, names.EYES_HANDLE_BONE, names.HEAD_TRACK_TARGET_BONE)
+    headTrackTargetBone = bones.copy_bone(metarig, names.EYES_HANDLE_BONE, names.HEAD_TRACK_TARGET_BONE)
     headTrackTargetBone.length = headBone.length
-    headTrackTargetParentBone = koikatsuCommons.copyBone(metarig, names.HEAD_TRACK_TARGET_BONE, names.HEAD_TRACK_TARGET_PARENT_BONE)
+    headTrackTargetParentBone = bones.copy_bone(metarig, names.HEAD_TRACK_TARGET_BONE, names.HEAD_TRACK_TARGET_PARENT_BONE)
     headTrackTargetBone.parent = headTrackTargetParentBone
     headTrackTargetParentBone.parent = None
-    headTrackBone = koikatsuCommons.copyBone(metarig, names.EYEBALLS_BONE, names.HEAD_TRACK_BONE)
+    headTrackBone = bones.copy_bone(metarig, names.EYEBALLS_BONE, names.HEAD_TRACK_BONE)
     headTrackBone.parent = None
     headTrackBone.head.y = headBone.head.y
-    placeholderHeadTweakBone = koikatsuCommons.createBone(metarig, names.HEAD_TWEAK_BONE + names.PLACEHOLDER_BONE_SUFFIX)
-    placeholderTorsoBone = koikatsuCommons.createBone(metarig, names.TORSO_BONE + names.PLACEHOLDER_BONE_SUFFIX)
-    placeholderRootBone = koikatsuCommons.createBone(metarig, names.ROOT_BONE + names.PLACEHOLDER_BONE_SUFFIX)
+    placeholderHeadTweakBone = bones.new_bone(metarig, names.HEAD_TWEAK_BONE + names.PLACEHOLDER_BONE_SUFFIX)
+    placeholderTorsoBone = bones.new_bone(metarig, names.TORSO_BONE + names.PLACEHOLDER_BONE_SUFFIX)
+    placeholderRootBone = bones.new_bone(metarig, names.ROOT_BONE + names.PLACEHOLDER_BONE_SUFFIX)
         
     placeholderHeadTweakBoneName = placeholderHeadTweakBone.name
     placeholderTorsoBoneName = placeholderTorsoBone.name
@@ -1791,20 +1711,9 @@ def _eyes(build):
     finalizeEyeballBone(metarig, names.RIGHT_EYEBALL_BONE)
 
 
-def _rigify_layers(build):
-    """Rigify's colour sets and layer table."""
-    metarig = build.metarig
-    """
-    Begin Rigifying
-    """
-    
-    compat.add_rigify_color_sets(metarig)
     # Ported: legacy put collection index 2 on panel row 1 here. The collections are now made in bone
     # order, so index 2 was whichever came third (Junk on KK, issue #25); Torso gets row 1 by name below.
 
-    for index, rigifyLayer in enumerate(koikatsuCommons.rigifyLayers):
-        koikatsuCommons.setRigifyLayer(metarig, index, rigifyLayer)
-    koikatsuCommons.setRootRigifyLayer(metarig, names.ROOT_BONE_GROUP_INDEX)
 
 
 def _deform_vertex_groups(build):
@@ -2013,15 +1922,6 @@ def _tongue_side_bones(build):
         riggedTongueBone5.tail.y = riggedTongueLeftBone5VertexGroupExtremities.minY
 
 
-def _head_and_hips(build):
-    """The head's height from its vertex groups, and the hips' head at the waist."""
-    metarig = build.metarig
-    hasHeadMod = build.features.head_mod
-    if not hasHeadMod:
-        metarig.data.edit_bones[names.HEAD_BONE].tail.z = koikatsuCommons.findVertexGroupExtremities(names.ORIGINAL_FACE_UP_DEFORM_BONE, build.body).maxZ
-    else:
-        metarig.data.edit_bones[names.HEAD_BONE].tail.z = koikatsuCommons.findVertexGroupExtremities(names.ORIGINAL_FACE_BASE_DEFORM_BONE, build.body).maxZ
-    metarig.data.edit_bones[names.HIPS_BONE].head = metarig.data.edit_bones[names.WAIST_BONE].head
 
 
 def _limbs(build):
@@ -2086,8 +1986,8 @@ def _limbs(build):
         backRightKneeJointCorrectionBone = metarig.data.edit_bones[names.BACK_RIGHT_KNEE_JOINT_CORRECTION_BONE]
         metarig.data.edit_bones[names.LEFT_LEG_BONE].head.y = midLeftKneeJointCorrectionBone.head.y + math.dist([midLeftKneeJointCorrectionBone.head.y], [backLeftKneeJointCorrectionBone.head.y]) * 0.33
         metarig.data.edit_bones[names.RIGHT_LEG_BONE].head.y = midRightKneeJointCorrectionBone.head.y + math.dist([midRightKneeJointCorrectionBone.head.y], [backRightKneeJointCorrectionBone.head.y]) * 0.33
-    leftHeelBone = koikatsuCommons.copyBone(metarig, names.ORIGINAL_LEFT_HEEL_BONE, names.LEFT_HEEL_BONE)
-    rightHeelBone = koikatsuCommons.copyBone(metarig, names.ORIGINAL_RIGHT_HEEL_BONE, names.RIGHT_HEEL_BONE)
+    leftHeelBone = bones.copy_bone(metarig, names.ORIGINAL_LEFT_HEEL_BONE, names.LEFT_HEEL_BONE)
+    rightHeelBone = bones.copy_bone(metarig, names.ORIGINAL_RIGHT_HEEL_BONE, names.RIGHT_HEEL_BONE)
     leftHeelBone.head.x = leftAnkleGroupExtremities.minX
     rightHeelBone.head.x = rightAnkleGroupExtremities.maxX
     leftHeelBone.head.y = leftAnkleGroupExtremities.maxY
@@ -2152,7 +2052,7 @@ def _skirt(build):
     hasSkirt = build.features.skirt
     skirtPalmBoneRatioReferences = [Vector((-0.0000, -0.0083, 0.0287)), Vector((-0.0057, -0.0080, 0.0294)), Vector((-0.0136, -0.0002, 0.0317)), Vector((-0.0094, 0.0151, 0.0360)), Vector((-0.0010, 0.0153, 0.0333)), Vector((0.0094, 0.0151, 0.0360)), Vector((0.0136, -0.0002, 0.0317)), Vector((0.0057, -0.0080, 0.0294))]
     if hasSkirt and not metarig.data.edit_bones.get(names.SKIRT_PARENT_BONE_COPY):
-        koikatsuCommons.copyBone(metarig, names.SKIRT_PARENT_BONE, names.SKIRT_PARENT_BONE_COPY)
+        bones.copy_bone(metarig, names.SKIRT_PARENT_BONE, names.SKIRT_PARENT_BONE_COPY)
         for primaryIndex in range(8):
             skirtPalmBone = metarig.data.edit_bones[names.skirt_bone(True, primaryIndex)]
             skirtBone0 = metarig.data.edit_bones[names.skirt_bone(False, primaryIndex, 0)]
@@ -2795,12 +2695,6 @@ def _rigify_ui(build):
             hairCollection.rigify_color_set_name = colourSet
 
 
-def fixDuplicateBoneName(build, boneName, childBoneName):
-    metarig = build.metarig
-    childBone = metarig.pose.bones.get(childBoneName)
-    if childBone.parent.name != boneName:
-        metarig.pose.bones.get(boneName).name = boneName + names.RENAMED_NAME_SUFFIX
-        metarig.pose.bones.get(childBone.parent.name).name = boneName
 
 
 def objToBone(obj, rig, boneName):
@@ -2930,13 +2824,13 @@ createHandleBones, rig, parentBoneName, parentHandleBoneName, leftChildBoneName,
     if createHandleBones:
         
         switch(rig, 'EDIT')
-        parentHandleBone = koikatsuCommons.copyBone(rig, parentBoneName, parentHandleBoneName)
+        parentHandleBone = bones.copy_bone(rig, parentBoneName, parentHandleBoneName)
         if translate:
             parentHandleBone.tail.y = parentHandleBone.tail.y + averageVertexGroupMinY * vertexGroupMinYFactor
             parentHandleBone.head.y = parentHandleBone.head.y + averageVertexGroupMinY * vertexGroupMinYFactor
             parentHandleBone.tail.z = parentHandleBone.tail.z - (parentWidget.location[2] - averageVertexGroupMidZ * parentWidgetTranslateZFactor)
             parentHandleBone.head.z = parentHandleBone.head.z - (parentWidget.location[2] - averageVertexGroupMidZ * parentWidgetTranslateZFactor)
-        leftChildHandleBone = koikatsuCommons.copyBone(rig, leftChildBoneName, leftChildHandleBoneName)
+        leftChildHandleBone = bones.copy_bone(rig, leftChildBoneName, leftChildHandleBoneName)
         if translate:
             leftChildHandleBone.tail.x = leftChildHandleBone.tail.x + leftVertexGroupMidX * vertexGroupMidXFactor
             leftChildHandleBone.head.x = leftChildHandleBone.head.x + leftVertexGroupMidX * vertexGroupMidXFactor
@@ -2945,7 +2839,7 @@ createHandleBones, rig, parentBoneName, parentHandleBoneName, leftChildBoneName,
             leftChildHandleBone.tail.z = leftChildHandleBone.tail.z - (leftChildWidget.location[2] - leftVertexGroupMidZ * parentWidgetTranslateZFactor)
             leftChildHandleBone.head.z = leftChildHandleBone.head.z - (leftChildWidget.location[2] - leftVertexGroupMidZ * parentWidgetTranslateZFactor)
         leftChildHandleBone.parent = parentHandleBone
-        rightChildHandleBone = koikatsuCommons.copyBone(rig, rightChildBoneName, rightChildHandleBoneName)
+        rightChildHandleBone = bones.copy_bone(rig, rightChildBoneName, rightChildHandleBoneName)
         if translate:
             rightChildHandleBone.tail.x = rightChildHandleBone.tail.x + rightVertexGroupMidX * vertexGroupMidXFactor
             rightChildHandleBone.head.x = rightChildHandleBone.head.x + rightVertexGroupMidX * vertexGroupMidXFactor
@@ -3095,7 +2989,7 @@ def finalizeFingerBones(leftSide, rig, wristBoneName, fingerPalmBoneName, finger
         fingerBone3.tail.y = fingerBone3.head.y + (fingerBone2.tail.y - fingerBone2.head.y)
         fingerBone3.tail.z = fingerDeformBone3Extremities.minZ + math.dist([fingerDeformBone3Extremities.minZ], [fingerDeformBone3Extremities.maxZ]) * 0.4
         wristBone = rig.data.edit_bones[wristBoneName]
-        fingerPalmBone = koikatsuCommons.copyBone(rig, fingerBone1Name, fingerPalmBoneName)
+        fingerPalmBone = bones.copy_bone(rig, fingerBone1Name, fingerPalmBoneName)
         fingerPalmBone.parent = rig.data.edit_bones[wristBoneName]
         connectAndParentBones(rig, fingerBone1Name, fingerPalmBoneName, False)            
         fingerPalmBone.head.z = fingerPalmBone.tail.z

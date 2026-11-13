@@ -1,14 +1,7 @@
 import bpy
-from typing import NamedTuple
 import bmesh
-import random
-import string
 from ...editing import switch
 from . import names
-
-def generateRandomAlphanumericString():
-    randomString = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
-    return randomString
 
 
 def duplicateShapeKey(obj, shapeKeyName, shapeKeyCopyName):
@@ -93,42 +86,9 @@ def findVertexGroupExtremities(vertexGroupName, obj):
 
     
 
-def removeAllConstraints(rig, boneName):
-        boneToMute = rig.pose.bones[boneName]
-        for constraint in boneToMute.constraints:
-            boneToMute.constraints.remove(constraint)
             
-def removeAllDrivers(rig, boneName):
-    if rig.animation_data:
-        for driver in rig.animation_data.drivers:
-            if driver.data_path.startswith("pose.bones"):
-                ownerName = driver.data_path.split('"')[1]
-                if ownerName == boneName:
-                    rig.animation_data.drivers.remove(driver)
             
-def createBone(rig, newBoneName):
-    newBone = rig.data.edit_bones.new(newBoneName)
-    newBone.head = (0, 1, 1) # if the head and tail are the same, the bone is deleted
-    newBone.tail = (0, 1, 2)
-    return newBone
 
-def deleteBone(rig, boneName):
-    bone = rig.data.edit_bones.get(boneName)
-    removeAllConstraints(rig, boneName)
-    removeAllDrivers(rig, boneName)
-    rig.data.edit_bones.remove(bone)
-
-def copyBone(rig, sourceBoneName, newBoneName):
-    newBone = rig.data.edit_bones.get(newBoneName)
-    if newBone is not None:
-        deleteBone(rig, newBoneName)	  
-    newBone = rig.data.edit_bones.new(newBoneName)
-    sourceBone = rig.data.edit_bones.get(sourceBoneName)
-    newBone.tail = sourceBone.tail
-    newBone.head = sourceBone.head
-    newBone.roll = sourceBone.roll
-    newBone.parent = sourceBone.parent
-    return newBone
 
         
 def copyObject(build, sourceObjectName, newObjectName):
@@ -142,55 +102,13 @@ def copyObject(build, sourceObjectName, newObjectName):
     return newObject
 
 
-class RigifyLayer(NamedTuple):
-        name: str
-        row: int
-        group: int
         
-rigifyLayers = [
-RigifyLayer(names.HAIR_LAYER, names.HAIR_LAYER, names.EXTRA_BONE_GROUP_INDEX),
-RigifyLayer(names.HAIR_LAYER + names.DETAIL_LAYER_SUFFIX, 2, names.FK_BONE_GROUP_INDEX),
-RigifyLayer(names.HAIR_LAYER + names.MCH_LAYER_SUFFIX, 3, names.ROOT_BONE_GROUP_INDEX),
-RigifyLayer(names.EYES_LAYER + names.PRIMARY_LAYER_SUFFIX, 4, names.EXTRA_BONE_GROUP_INDEX),
-RigifyLayer(names.EYES_LAYER + names.SECONDARY_LAYER_SUFFIX, 5, names.FK_BONE_GROUP_INDEX),
-RigifyLayer(names.FACE_LAYER, 6, names.TWEAK_BONE_GROUP_INDEX),
-RigifyLayer(names.FACE_LAYER + names.MCH_LAYER_SUFFIX, 7, names.ROOT_BONE_GROUP_INDEX),
-RigifyLayer(names.TORSO_LAYER, 8, names.SPECIAL_BONE_GROUP_INDEX),
-RigifyLayer(names.TORSO_LAYER + names.DETAIL_LAYER_SUFFIX, 9, names.TWEAK_BONE_GROUP_INDEX),
-RigifyLayer(names.LEFT_ARM_LAYER + names.IK_LAYER_SUFFIX, 10, names.IK_BONE_GROUP_INDEX),
-RigifyLayer(names.LEFT_ARM_LAYER + names.FK_LAYER_SUFFIX, 11, names.FK_BONE_GROUP_INDEX),
-RigifyLayer(names.LEFT_ARM_LAYER + names.TWEAK_LAYER_SUFFIX, 12, names.TWEAK_BONE_GROUP_INDEX),
-RigifyLayer(names.RIGHT_ARM_LAYER + names.IK_LAYER_SUFFIX, 10, names.IK_BONE_GROUP_INDEX),
-RigifyLayer(names.RIGHT_ARM_LAYER + names.FK_LAYER_SUFFIX, 11, names.FK_BONE_GROUP_INDEX),
-RigifyLayer(names.RIGHT_ARM_LAYER + names.TWEAK_LAYER_SUFFIX, 12, names.TWEAK_BONE_GROUP_INDEX),
-RigifyLayer(names.FINGERS_LAYER, 13, names.EXTRA_BONE_GROUP_INDEX),
-RigifyLayer(names.FINGERS_LAYER + names.DETAIL_LAYER_SUFFIX, 14, names.FK_BONE_GROUP_INDEX),
-RigifyLayer(names.LEFT_LEG_LAYER + names.IK_LAYER_SUFFIX, 15, names.IK_BONE_GROUP_INDEX),
-RigifyLayer(names.LEFT_LEG_LAYER + names.FK_LAYER_SUFFIX, 16, names.FK_BONE_GROUP_INDEX),
-RigifyLayer(names.LEFT_LEG_LAYER + names.TWEAK_LAYER_SUFFIX, 17, names.TWEAK_BONE_GROUP_INDEX),
-RigifyLayer(names.RIGHT_LEG_LAYER + names.IK_LAYER_SUFFIX, 15, names.IK_BONE_GROUP_INDEX),
-RigifyLayer(names.RIGHT_LEG_LAYER + names.FK_LAYER_SUFFIX, 16, names.FK_BONE_GROUP_INDEX),
-RigifyLayer(names.RIGHT_LEG_LAYER + names.TWEAK_LAYER_SUFFIX, 17, names.TWEAK_BONE_GROUP_INDEX),
-RigifyLayer(names.SKIRT_LAYER, 18, names.EXTRA_BONE_GROUP_INDEX),
-RigifyLayer(names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX, 19, names.FK_BONE_GROUP_INDEX),
-RigifyLayer("", 28, names.NONE_BONE_GROUP_INDEX),
-RigifyLayer("", 28, names.NONE_BONE_GROUP_INDEX),
-RigifyLayer(names.JUNK_LAYER, 29, names.NONE_BONE_GROUP_INDEX)
-]
 
 
 def getRigifyLayerIndexByName(rigifyLayerName):
     return rigifyLayerName
 
-def setRigifyLayer(rig, index, rigifyLayer):
-    if rig.data.collections_all.get(str(index)):
-        rig.data.collections_all[str(index)].rigify_ui_title = rigifyLayer.name
-        rig.data.collections_all[str(index)].rigify_ui_row = rigifyLayer.row
-        rig.data.collections_all[str(index)].rigify_color_set_id = rigifyLayer.group
     
-def setRootRigifyLayer(rig, boneGroupIndex):
-    if rig.data.collections_all.get(str(names.ROOT_LAYER_INDEX)):
-        rig.data.collections_all[str(names.ROOT_LAYER_INDEX)].rigify_color_set_id = boneGroupIndex
 
 
 def assignSingleBoneLayer(rig, boneName: str, layerName: str):
