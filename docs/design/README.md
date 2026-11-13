@@ -157,7 +157,7 @@ Decisions agreed at the start of Phase 5. [hooks-and-tools.md](hooks-and-tools.m
 - **D18** Convert shaders goes through `templates.swap` and the legacy rules by Material Role; the Eevee Mod inputs are per-variant template params; Principled is a `.Principled` variant group. SVS Light Dark gets the KK variants, with a warning that its bottom alpha mask is lost.
 - **D19** Outlines: the legacy Solidify modifier and black material copies, found through templates; the face outline mask is chosen by the face material's template. The unused `outline` Part Role goes.
 - **D20** Face cards take their images from Material Roles; the card meshes and card rig get a new Part Role, `face_card`.
-- **D21** SFW deletes the vertices and bones of Bone Group `nsfw` and, by exact name, the KK nipple bones, whether or not Rigify is on.
+- **D21** SFW deletes the vertices and bones of Bone Group `nsfw` and, by exact name, the KK nipple bones, whether or not Rigify is on. With both on, the rig has no crotch, anus or nipple controls.
 - **D22** Rigify: the armature becomes the hidden metarig (still `ch.armature`), the generated rig is Part Role `rig`, Rigify is enabled for the session only (preferences are never saved), and each Character gets its own widgets.
 - **D23** Rigify renames the Role bones to the legacy names from a Bone Role table before generating, so the rig's names are human-readable and match the baseline and the legacy retargeting lists.
 - **D24** The KK/KKS-only Rigify branches (joint corrections, palms, finger rolls, nipple widgets) run when the skeleton has every joint-correction bone the legacy drivers name; the SVS-only hand IK widget branch runs when it doesn't ([ADR 0022](../adr/0022-kk-rigify-extras-gated-on-their-bones.md)).

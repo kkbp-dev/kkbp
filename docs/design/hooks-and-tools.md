@@ -164,6 +164,8 @@ Every legacy lookup by a bone, material, object, node, socket or image name, and
 
 Bones with a Bone Role are found by it. Bones without one are found by Bone Group and the bone tree where that is enough, and otherwise by exact name, listed in the Hook with a note on why.
 
+The SFW Hook runs before the Rigify Hook and removes the `nsfw` Group's bones and its own list of nipple and breast bones (`cf_s_bust02`, `cf_j_bnip02root`, `cf_j_bnip02`, `cf_s_bnip01`, `cf_s_bnip025`). The Rigify Hook names some of those (`SFW_REMOVES` in `metarig/types.py`) and builds the rig without their controls when they are gone; any other named bone that is missing fails the Hook (issue 55).
+
 | Legacy name | Replacement |
 |---|---|
 | `Center` (`cf_n_height`) | Role `body_root` |
