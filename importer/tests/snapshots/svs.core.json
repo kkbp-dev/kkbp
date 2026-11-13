@@ -191,7 +191,7 @@
    "roles": [
     "eyelash"
    ],
-   "surface_render_method": "DITHERED",
+   "surface_render_method": "BLENDED",
    "template": "SVS Light Dark"
   },
   "cf_m_eyelid_00": {
@@ -287,7 +287,7 @@
    "roles": [
     "eye_l"
    ],
-   "surface_render_method": "DITHERED",
+   "surface_render_method": "BLENDED",
    "template": "SVS Light Dark"
   },
   "cf_m_hitomi_00_L_white": {
@@ -333,7 +333,7 @@
    "roles": [
     "eye_r"
    ],
-   "surface_render_method": "DITHERED",
+   "surface_render_method": "BLENDED",
    "template": "SVS Light Dark"
   },
   "cf_m_hitomi_00_R_white": {

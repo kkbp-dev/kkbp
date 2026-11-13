@@ -868,7 +868,7 @@
    "roles": [
     "eyelash"
    ],
-   "surface_render_method": "DITHERED",
+   "surface_render_method": "BLENDED",
    "template": "SVS Light Dark"
   },
   "cf_m_eyelid_00": {
@@ -964,7 +964,7 @@
    "roles": [
     "eye_l"
    ],
-   "surface_render_method": "DITHERED",
+   "surface_render_method": "BLENDED",
    "template": "SVS Light Dark"
   },
   "cf_m_hitomi_00_L_white": {
@@ -1010,7 +1010,7 @@
    "roles": [
     "eye_r"
    ],
-   "surface_render_method": "DITHERED",
+   "surface_render_method": "BLENDED",
    "template": "SVS Light Dark"
   },
   "cf_m_hitomi_00_R_white": {
@@ -42208,7 +42208,7 @@
   "importer": "10.0.0",
   "log_warnings": [
    "hook Rigify: Blender's Rigify add-on was off; it is on for this session (Preferences aren't saved)",
-   "hook Rigify: Failed to generate emotion grid bones: TypeError: bpy_struct.driver_add(): property \"key_blocks[\"Eye Both Eyes Shut Tight (Copy)\"].value\" not found"
+   "hook Rigify: Body has no 'Eye Both Eyes Shut Tight' shape key, so the emotion grid stops at the eye keys: the rest of the eye keys and the custom keys aren't made"
   ],
   "result": "ok",
   "steps": {

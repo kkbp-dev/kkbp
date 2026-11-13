@@ -66,15 +66,17 @@ SETS: Mapping[str, TemplateSet] = MappingProxyType({s.name: s for s in (
             Row("KK Light Dark"),
         ),
     ),
-    # SVS draws everything but the tears dithered, and the face like everything else.
+    # SVS draws everything dithered but the tears, the pupils and the eyelashes (dithering leaves noise in
+    # their soft edges, issue 40), and the face like everything else.
     TemplateSet(
         "SVS",
         extends="KK",
         replace={"KK Light Dark": "SVS Light Dark", "KK Eye": "SVS Light Dark"},
         rows=(
             Row("Gag", role="gag_eyes", render_method="DITHERED"),
-            Row("SVS Light Dark", role="eye_l", render_method="DITHERED"),
-            Row("SVS Light Dark", role="eye_r", render_method="DITHERED"),
+            Row("SVS Light Dark", role="eye_l", **_BLENDED),
+            Row("SVS Light Dark", role="eye_r", **_BLENDED),
+            Row("SVS Light Dark", role="eyelash", **_BLENDED),
             Row("SVS Light Dark", role="face"),
             Row("SVS Light Dark", role="eye_white", render_method="DITHERED"),
             Row("SVS Light Dark", blend_mode="alpha", render_method="DITHERED"),

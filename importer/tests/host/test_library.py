@@ -89,7 +89,7 @@ def test_svs_extends_kk_and_overrides_what_differs():
     assert _pick("SVS", "face", "opaque") == ("SVS Light Dark", None, {"force_visibility": 2})
     assert _pick("SVS", None, "cutout") == ("SVS Light Dark", None, {"force_visibility": 2})
     assert _pick("SVS", "eyebrow", "alpha") == ("SVS Light Dark", "DITHERED", {"force_visibility": 2})
-    assert _pick("SVS", "eye_r", "alpha")[:2] == ("SVS Light Dark", "DITHERED")
+    assert _pick("SVS", "eye_white", "opaque")[:2] == ("SVS Light Dark", "DITHERED")
     assert _pick("SVS", "tears", "alpha", ()) == ("KK Tears", "BLENDED", {})  # inherited from KK
     assert _pick("SVS", "gag_eyes", "cutout", ()) == ("Gag", "DITHERED", {})
 
@@ -152,3 +152,9 @@ def test_edit_tables_name_known_templates_slots_and_params(game):
                 assert value in _contract.MATERIAL_ROLES
             if kind in ("missing", "has"):
                 assert value in _edit_slots()
+
+
+def test_svs_draws_its_pupils_and_eyelashes_blended():
+    """Issue 40: dithering leaves noise in their soft edges."""
+    for role, blend_mode in (("eye_l", "alpha"), ("eye_r", "alpha"), ("eyelash", "cutout")):
+        assert _pick("SVS", role, blend_mode)[:2] == ("SVS Light Dark", "BLENDED"), role
