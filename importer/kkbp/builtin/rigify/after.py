@@ -4,6 +4,7 @@
 import bpy, math
 from mathutils import Vector
 from . import commons as koikatsuCommons
+from . import names
 from . import legacy as c
     
 def main():		   
@@ -16,58 +17,58 @@ def main():
     generatedRig.show_in_front = True
     generatedRig.display_type = 'TEXTURED'
 
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.eyesTrackTargetBoneName, 1.5)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.headTweakBoneName, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftBreastDeformBone1Name, 0.4)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightBreastDeformBone1Name, 0.4)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftBreastBone2Name, 3)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightBreastBone2Name, 3)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftBreastDeformBone2Name, 0.3)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightBreastDeformBone2Name, 0.3)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftBreastBone3Name, 2)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightBreastBone3Name, 2)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftBreastDeformBone3Name, 0.2)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightBreastDeformBone3Name, 0.2)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftNippleBone1Name, 1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightNippleBone1Name, 1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftNippleDeformBone1Name, 0.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightNippleDeformBone1Name, 0.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftNippleBone2Name, 0.5)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightNippleBone2Name, 0.5)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftNippleDeformBone2Name, 0.05)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightNippleDeformBone2Name, 0.05)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftShoulderBoneName, 1.25)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightShoulderBoneName, 1.25)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftThumbBone1Name, 1.3)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightThumbBone1Name, 1.3)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftThumbBone2Name, 1.3)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightThumbBone2Name, 1.3)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftThumbBone3Name, 1.2)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightThumbBone3Name, 1.2)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftIndexFingerBone2Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightIndexFingerBone2Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftIndexFingerBone3Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightIndexFingerBone3Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftMiddleFingerBone2Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightMiddleFingerBone2Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftMiddleFingerBone3Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightMiddleFingerBone3Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftRingFingerBone2Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightRingFingerBone2Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftRingFingerBone3Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightRingFingerBone3Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftLittleFingerPalmBoneName, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightLittleFingerPalmBoneName, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftLittleFingerPalmFkBoneName, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightLittleFingerPalmFkBoneName, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftLittleFingerBone2Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightLittleFingerBone2Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftLittleFingerBone3Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightLittleFingerBone3Name, 1.1)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rootBoneName, 0.25)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.eyesHandleBoneName, 0.72)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.leftEyeHandleBoneName, 0.72)
-    koikatsuCommons.setBoneCustomShapeScale(generatedRig, koikatsuCommons.rightEyeHandleBoneName, 0.72)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.EYES_TRACK_TARGET_BONE, 1.5)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.HEAD_TWEAK_BONE, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_BREAST_DEFORM_BONE1, 0.4)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_BREAST_DEFORM_BONE1, 0.4)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_BREAST_BONE2, 3)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_BREAST_BONE2, 3)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_BREAST_DEFORM_BONE2, 0.3)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_BREAST_DEFORM_BONE2, 0.3)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_BREAST_BONE3, 2)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_BREAST_BONE3, 2)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_BREAST_DEFORM_BONE3, 0.2)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_BREAST_DEFORM_BONE3, 0.2)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_NIPPLE_BONE1, 1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_NIPPLE_BONE1, 1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_NIPPLE_DEFORM_BONE1, 0.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_NIPPLE_DEFORM_BONE1, 0.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_NIPPLE_BONE2, 0.5)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_NIPPLE_BONE2, 0.5)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_NIPPLE_DEFORM_BONE2, 0.05)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_NIPPLE_DEFORM_BONE2, 0.05)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_SHOULDER_BONE, 1.25)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_SHOULDER_BONE, 1.25)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_THUMB_BONE1, 1.3)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_THUMB_BONE1, 1.3)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_THUMB_BONE2, 1.3)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_THUMB_BONE2, 1.3)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_THUMB_BONE3, 1.2)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_THUMB_BONE3, 1.2)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_INDEX_FINGER_BONE2, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_INDEX_FINGER_BONE2, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_INDEX_FINGER_BONE3, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_INDEX_FINGER_BONE3, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_MIDDLE_FINGER_BONE2, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_MIDDLE_FINGER_BONE2, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_MIDDLE_FINGER_BONE3, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_MIDDLE_FINGER_BONE3, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_RING_FINGER_BONE2, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_RING_FINGER_BONE2, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_RING_FINGER_BONE3, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_RING_FINGER_BONE3, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_LITTLE_FINGER_PALM_BONE, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_LITTLE_FINGER_PALM_BONE, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_LITTLE_FINGER_PALM_FK_BONE, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_LITTLE_FINGER_PALM_FK_BONE, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_LITTLE_FINGER_BONE2, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_LITTLE_FINGER_BONE2, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_LITTLE_FINGER_BONE3, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_LITTLE_FINGER_BONE3, 1.1)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.ROOT_BONE, 0.25)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.EYES_HANDLE_BONE, 0.72)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.LEFT_EYE_HANDLE_BONE, 0.72)
+    koikatsuCommons.setBoneCustomShapeScale(generatedRig, names.RIGHT_EYE_HANDLE_BONE, 0.72)
 
     for bone_name in [i.name for i in generatedRig.data.bones if i.name.startswith('cf_J_Va''gi''na_')]:
         koikatsuCommons.setBoneCustomShapeScale(generatedRig, bone_name, 0.5)
@@ -86,11 +87,11 @@ def main():
             bone.custom_shape_rotation_euler[0] = math.pi/2
     koikatsuCommons.setBoneCustomShapeScale(generatedRig, 'cf_j_kokan', 0.2)
 
-    headBone = generatedRig.pose.bones[koikatsuCommons.originalBonePrefix + koikatsuCommons.headBoneName]
-    koikatsuCommons.changeConstraintIndex(generatedRig, headBone.name, koikatsuCommons.transformationConstraintBaseName + koikatsuCommons.headConstraintSuffix + koikatsuCommons.rotationConstraintSuffix, len(headBone.constraints) - 1)
-    koikatsuCommons.changeConstraintIndex(generatedRig, headBone.name, koikatsuCommons.limitRotationConstraintBaseName + koikatsuCommons.headConstraintSuffix, len(headBone.constraints) - 1)
+    headBone = generatedRig.pose.bones[names.ORIGINAL_BONE_PREFIX + names.HEAD_BONE]
+    koikatsuCommons.changeConstraintIndex(generatedRig, headBone.name, names.TRANSFORMATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX + names.ROTATION_CONSTRAINT_SUFFIX, len(headBone.constraints) - 1)
+    koikatsuCommons.changeConstraintIndex(generatedRig, headBone.name, names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX, len(headBone.constraints) - 1)
     
-    headTweakLimitRotationConstraint = koikatsuCommons.addLimitRotationConstraint(generatedRig, koikatsuCommons.headTweakBoneName, None, 'LOCAL', koikatsuCommons.limitRotationConstraintBaseName + koikatsuCommons.headConstraintSuffix, 
+    headTweakLimitRotationConstraint = koikatsuCommons.addLimitRotationConstraint(generatedRig, names.HEAD_TWEAK_BONE, None, 'LOCAL', names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX, 
     True, math.radians(-180), math.radians(180), True, math.radians(-180), math.radians(180), True, math.radians(-180), math.radians(180))
     
     for driver in generatedRig.animation_data.drivers:
@@ -99,7 +100,7 @@ def main():
             driverProperty = driver.data_path.rsplit('.', 1)[1]
             if driverOwnerName == headBone.name:
                 constraintName = driver.data_path.split('"')[3]
-                if constraintName == koikatsuCommons.limitRotationConstraintBaseName + koikatsuCommons.headConstraintSuffix:
+                if constraintName == names.LIMIT_ROTATION_CONSTRAINT_BASE + names.HEAD_CONSTRAINT_SUFFIX:
                     variable = driver.driver.variables[0]
                     newVariable = koikatsuCommons.DriverVariable(variable.name, variable.type, generatedRig, variable.targets[0].bone_target, None, None, None, None, variable.targets[0].data_path, None, None)																																											  
                     koikatsuCommons.addDriver(headTweakLimitRotationConstraint, driverProperty, None, driver.driver.type, [newVariable], 
@@ -111,13 +112,13 @@ def main():
                 for target in constraint.targets:
                     if target.subtarget:
                         target.target = generatedRig
-                        if target.subtarget.endswith(koikatsuCommons.placeholderBoneSuffix):
-                            target.subtarget = target.subtarget[:-len(koikatsuCommons.placeholderBoneSuffix)]
+                        if target.subtarget.endswith(names.PLACEHOLDER_BONE_SUFFIX):
+                            target.subtarget = target.subtarget[:-len(names.PLACEHOLDER_BONE_SUFFIX)]
     
     for driver in bpy.data.objects[koikatsuCommons.bodyName()].data.shape_keys.animation_data.drivers:
         if driver.data_path.startswith("key_blocks"):
             ownerName = driver.data_path.split('"')[1]
-            if ownerName == koikatsuCommons.eyelidsShapeKeyCopyName:
+            if ownerName == names.EYELIDS_SHAPE_KEY_COPY:
                 for variable in driver.driver.variables:
                     for target in variable.targets:
                         if target.id == metarig:
@@ -127,30 +128,30 @@ def main():
         if driver.data_path.startswith("pose.bones"):
             driverOwnerName = driver.data_path.split('"')[1]
             driverProperty = driver.data_path.rsplit('.', 1)[1]
-            if driverOwnerName in koikatsuCommons.bonesWithDrivers and driverProperty == "location":
+            if driverOwnerName in names.BONES_WITH_DRIVERS and driverProperty == "location":
                 for variable in driver.driver.variables:
                     for target in variable.targets:
-                        for targetToChange in koikatsuCommons.targetsToChange:
-                            if target.bone_target == koikatsuCommons.originalBonePrefix + targetToChange:
-                                target.bone_target = koikatsuCommons.deformBonePrefix + targetToChange
+                        for targetToChange in names.TARGETS_TO_CHANGE:
+                            if target.bone_target == names.ORIGINAL_BONE_PREFIX + targetToChange:
+                                target.bone_target = names.DEFORM_BONE_PREFIX + targetToChange
                                 
     c.switch(generatedRig, 'EDIT')
 
     for bone in generatedRig.data.edit_bones:
-        if bone.collections.get(koikatsuCommons.getRigifyLayerIndexByName(koikatsuCommons.junkLayerName)):
+        if bone.collections.get(koikatsuCommons.getRigifyLayerIndexByName(names.JUNK_LAYER)):
             koikatsuCommons.deleteBone(generatedRig, bone.name)
             continue
-        if bone.collections.get(koikatsuCommons.defLayerIndex) or bone.collections.get(koikatsuCommons.nsfwLayerName) or bone.name == 'cf_s_waist02':
+        if bone.collections.get(names.DEF_LAYER_INDEX) or bone.collections.get(names.NSFW_LAYER) or bone.name == 'cf_s_waist02':
             bone.use_deform = True
 
     #move the rigged tongue bones back to the rigged tongue layer
     for bone in generatedRig.data.edit_bones:
-        if bone.collections.get(koikatsuCommons.riggedTongueLayerName) or bone.name in ['cf_j_tang_02_master', 'cf_j_tang_02', 'cf_j_tang_01']:
-            generatedRig.data.collections[koikatsuCommons.eyesLayerName].assign(bone)
+        if bone.collections.get(names.RIGGED_TONGUE_LAYER) or bone.name in ['cf_j_tang_02_master', 'cf_j_tang_02', 'cf_j_tang_01']:
+            generatedRig.data.collections[names.EYES_LAYER].assign(bone)
 
     #face bones deform and unlock bones
     for bone in generatedRig.data.edit_bones:
-        if bone.collections.get(koikatsuCommons.faceLayerName) or bone.collections.get(koikatsuCommons.eyesLayerName):
+        if bone.collections.get(names.FACE_LAYER) or bone.collections.get(names.EYES_LAYER):
             bone.use_deform = True
             generatedRig.pose.bones[bone.name].lock_location = [False, False, False]
             generatedRig.pose.bones[bone.name].lock_rotation_w = False
@@ -163,15 +164,15 @@ def main():
             'cf_j_tang_R_03', 'cf_j_tang_R_04', 'cf_j_tang_R_05',
             'cf_j_tang_L_03', 'cf_j_tang_L_04', 'cf_j_tang_L_05',
             ]:
-            generatedRig.data.collections[koikatsuCommons.eyesLayerName].unassign(bone)
-            generatedRig.data.collections[koikatsuCommons.faceLayerName + koikatsuCommons.mchLayerSuffix].assign(bone)
+            generatedRig.data.collections[names.EYES_LAYER].unassign(bone)
+            generatedRig.data.collections[names.FACE_LAYER + names.MCH_LAYER_SUFFIX].assign(bone)
     
     #other bones deform
     for bone in generatedRig.data.edit_bones:
-        if (bone.collections.get(koikatsuCommons.faceLayerName + koikatsuCommons.mchLayerSuffix) or 
-            bone.collections.get(koikatsuCommons.nsfwLayerName) or
-            bone.collections.get(koikatsuCommons.deformLayerName) or
-            bone.collections.get(koikatsuCommons.charamakerLayerName)):
+        if (bone.collections.get(names.FACE_LAYER + names.MCH_LAYER_SUFFIX) or 
+            bone.collections.get(names.NSFW_LAYER) or
+            bone.collections.get(names.DEFORM_LAYER) or
+            bone.collections.get(names.CHARAMAKER_LAYER)):
             koikatsuCommons.unlockAllPoseTransforms(generatedRig, bone.name)
             bone.use_deform = True
     
@@ -179,8 +180,8 @@ def main():
         generatedRig.data.edit_bones['cf_s_siri_R'].use_deform = True
         generatedRig.data.edit_bones['cf_s_siri_L'].use_deform = True
 
-    generatedRig.data.edit_bones[koikatsuCommons.eyesTrackTargetParentBoneName].parent = None
-    generatedRig.data.edit_bones[koikatsuCommons.headTrackTargetParentBoneName].parent = None
+    generatedRig.data.edit_bones[names.EYES_TRACK_TARGET_PARENT_BONE].parent = None
+    generatedRig.data.edit_bones[names.HEAD_TRACK_TARGET_PARENT_BONE].parent = None
 
     c.switch(generatedRig, 'OBJECT')
         
@@ -242,7 +243,7 @@ def main():
         outfit = c.outfit_of(bone)
         if outfit is None or not outfit_ids or outfit == min(outfit_ids) or not bone.collections:
             continue
-        if koikatsuCommons.hairLayerName in bone.collections[0].name:
+        if names.HAIR_LAYER in bone.collections[0].name:
             koikatsuCommons.assignSingleBoneLayer(generatedRig, bone.name, bone.collections[0].name + f' {outfit:02d}')
             bone.collections[0].is_visible = False
 
@@ -257,65 +258,65 @@ def main():
     try:
         # setup emotion bones
         #create the mouth shape key controller bone on the face layer
-        mouth_location = generatedRig.data.edit_bones[koikatsuCommons.eyesHandleBoneName].head + Vector((0.2, 0.1, 0))
-        bone = generatedRig.data.edit_bones.new(koikatsuCommons.mouthWidgetControllerBoneName)
+        mouth_location = generatedRig.data.edit_bones[names.EYES_HANDLE_BONE].head + Vector((0.2, 0.1, 0))
+        bone = generatedRig.data.edit_bones.new(names.MOUTH_WIDGET_CONTROLLER_BONE)
         #then put it to the right of the Eyes handle bone
         bone.head = mouth_location
         bone.tail = bone.head + Vector((0,0.1,0))
-        bone.parent = generatedRig.data.edit_bones[koikatsuCommons.headTweakBoneName]
+        bone.parent = generatedRig.data.edit_bones[names.HEAD_TWEAK_BONE]
         bone.use_deform = False
 
         #create the mouth guide bone
-        bone = generatedRig.data.edit_bones.new(koikatsuCommons.faceWidgetMouthGuideBoneName)
+        bone = generatedRig.data.edit_bones.new(names.FACE_WIDGET_MOUTH_GUIDE_BONE)
         #then put it to the right of the Eyes handle bone
         bone.head = mouth_location
         bone.tail = bone.head + Vector((0,0.1,0))
-        bone.parent = generatedRig.data.edit_bones[koikatsuCommons.headTweakBoneName]
+        bone.parent = generatedRig.data.edit_bones[names.HEAD_TWEAK_BONE]
         bone.use_deform = False
 
         #create the eye/eyebrow shape key controller bone on the face layer
-        eye_location = generatedRig.data.edit_bones[koikatsuCommons.eyesHandleBoneName].head + Vector((-0.2, 0.1, 0)) 
-        bone = generatedRig.data.edit_bones.new(koikatsuCommons.eyeWidgetControllerBoneName)
+        eye_location = generatedRig.data.edit_bones[names.EYES_HANDLE_BONE].head + Vector((-0.2, 0.1, 0)) 
+        bone = generatedRig.data.edit_bones.new(names.EYE_WIDGET_CONTROLLER_BONE)
         bone.head = eye_location
         bone.tail = bone.head + Vector((0, 0.1, 0))
-        bone.parent = generatedRig.data.edit_bones[koikatsuCommons.headTweakBoneName]
+        bone.parent = generatedRig.data.edit_bones[names.HEAD_TWEAK_BONE]
         bone.use_deform = False
 
         #create the eye guide bone
-        bone = generatedRig.data.edit_bones.new(koikatsuCommons.faceWidgetEyesGuideBoneName)
+        bone = generatedRig.data.edit_bones.new(names.FACE_WIDGET_EYES_GUIDE_BONE)
         bone.head = eye_location
         bone.tail = bone.head + Vector((0, 0.1, 0))
-        bone.parent = generatedRig.data.edit_bones[koikatsuCommons.headTweakBoneName]
+        bone.parent = generatedRig.data.edit_bones[names.HEAD_TWEAK_BONE]
         bone.use_deform = False
 
         #create custom key bone #1
-        eye_location = generatedRig.data.edit_bones[koikatsuCommons.eyesHandleBoneName].head + Vector((-0.25, 0.1, 0)) 
-        bone = generatedRig.data.edit_bones.new(koikatsuCommons.custom1WidgetControllerBoneName)
+        eye_location = generatedRig.data.edit_bones[names.EYES_HANDLE_BONE].head + Vector((-0.25, 0.1, 0)) 
+        bone = generatedRig.data.edit_bones.new(names.CUSTOM1_WIDGET_CONTROLLER_BONE)
         bone.head = eye_location
         bone.tail = bone.head + Vector((0, 0.1, 0))
-        bone.parent = generatedRig.data.edit_bones[koikatsuCommons.headTweakBoneName]
+        bone.parent = generatedRig.data.edit_bones[names.HEAD_TWEAK_BONE]
         bone.use_deform = False
 
         #create custom key guide bone #1
-        bone = generatedRig.data.edit_bones.new(koikatsuCommons.custom1GuideBoneName)
+        bone = generatedRig.data.edit_bones.new(names.CUSTOM1_GUIDE_BONE)
         bone.head = eye_location
         bone.tail = bone.head + Vector((0, 0.1, 0))
-        bone.parent = generatedRig.data.edit_bones[koikatsuCommons.headTweakBoneName]
+        bone.parent = generatedRig.data.edit_bones[names.HEAD_TWEAK_BONE]
         bone.use_deform = False
 
         #create custom key bone #2
-        eye_location = generatedRig.data.edit_bones[koikatsuCommons.eyesHandleBoneName].head + Vector((-0.3, 0.1, 0)) 
-        bone = generatedRig.data.edit_bones.new(koikatsuCommons.custom2WidgetControllerBoneName)
+        eye_location = generatedRig.data.edit_bones[names.EYES_HANDLE_BONE].head + Vector((-0.3, 0.1, 0)) 
+        bone = generatedRig.data.edit_bones.new(names.CUSTOM2_WIDGET_CONTROLLER_BONE)
         bone.head = eye_location
         bone.tail = bone.head + Vector((0, 0.1, 0))
-        bone.parent = generatedRig.data.edit_bones[koikatsuCommons.headTweakBoneName]
+        bone.parent = generatedRig.data.edit_bones[names.HEAD_TWEAK_BONE]
         bone.use_deform = False
 
         #create custom key guide bone #2
-        bone = generatedRig.data.edit_bones.new(koikatsuCommons.custom2GuideBoneName)
+        bone = generatedRig.data.edit_bones.new(names.CUSTOM2_GUIDE_BONE)
         bone.head = eye_location
         bone.tail = bone.head + Vector((0, 0.1, 0))
-        bone.parent = generatedRig.data.edit_bones[koikatsuCommons.headTweakBoneName]
+        bone.parent = generatedRig.data.edit_bones[names.HEAD_TWEAK_BONE]
         bone.use_deform = False
 
         c.switch(generatedRig, 'OBJECT')
@@ -330,25 +331,25 @@ def main():
             generatedRig.pose.bones[guide_name].lock_scale = [True, True, True]
             generatedRig.pose.bones[guide_name].custom_shape = c.widget(shape_name)
 
-        setup_widget_guide(koikatsuCommons.mouthWidgetControllerBoneName, koikatsuCommons.faceWidgetMouthGuideBoneName, 'Mouth Grid', lock_2d = False)
-        setup_widget_guide(koikatsuCommons.eyeWidgetControllerBoneName, koikatsuCommons.faceWidgetEyesGuideBoneName, 'Eye Grid', lock_2d = True)
-        setup_widget_guide(koikatsuCommons.custom1WidgetControllerBoneName, koikatsuCommons.custom1GuideBoneName, 'Custom1 Grid', lock_2d = True)
-        setup_widget_guide(koikatsuCommons.custom2WidgetControllerBoneName, koikatsuCommons.custom2GuideBoneName, 'Custom2 Grid', lock_2d = True)
+        setup_widget_guide(names.MOUTH_WIDGET_CONTROLLER_BONE, names.FACE_WIDGET_MOUTH_GUIDE_BONE, 'Mouth Grid', lock_2d = False)
+        setup_widget_guide(names.EYE_WIDGET_CONTROLLER_BONE, names.FACE_WIDGET_EYES_GUIDE_BONE, 'Eye Grid', lock_2d = True)
+        setup_widget_guide(names.CUSTOM1_WIDGET_CONTROLLER_BONE, names.CUSTOM1_GUIDE_BONE, 'Custom1 Grid', lock_2d = True)
+        setup_widget_guide(names.CUSTOM2_WIDGET_CONTROLLER_BONE, names.CUSTOM2_GUIDE_BONE, 'Custom2 Grid', lock_2d = True)
 
         #move to correct layer
         bones = [
-            koikatsuCommons.mouthWidgetControllerBoneName,
-            koikatsuCommons.faceWidgetMouthGuideBoneName,
-            koikatsuCommons.eyeWidgetControllerBoneName,
-            koikatsuCommons.faceWidgetEyesGuideBoneName,
-            koikatsuCommons.custom1GuideBoneName,
-            koikatsuCommons.custom1WidgetControllerBoneName,
-            koikatsuCommons.custom2GuideBoneName,
-            koikatsuCommons.custom2WidgetControllerBoneName,
+            names.MOUTH_WIDGET_CONTROLLER_BONE,
+            names.FACE_WIDGET_MOUTH_GUIDE_BONE,
+            names.EYE_WIDGET_CONTROLLER_BONE,
+            names.FACE_WIDGET_EYES_GUIDE_BONE,
+            names.CUSTOM1_GUIDE_BONE,
+            names.CUSTOM1_WIDGET_CONTROLLER_BONE,
+            names.CUSTOM2_GUIDE_BONE,
+            names.CUSTOM2_WIDGET_CONTROLLER_BONE,
 
-            koikatsuCommons.eyesHandleBoneName,
-            koikatsuCommons.leftEyeHandleBoneName,
-            koikatsuCommons.rightEyeHandleBoneName,
+            names.EYES_HANDLE_BONE,
+            names.LEFT_EYE_HANDLE_BONE,
+            names.RIGHT_EYE_HANDLE_BONE,
 
             'cf_J_Mayu_R',
             'cf_J_MayuTip_s_R',
@@ -360,7 +361,7 @@ def main():
         for bone_name in bones:
             if bone := generatedRig.data.bones.get(bone_name):
                 bone.collections.clear()
-                generatedRig.data.collections[koikatsuCommons.emotionsLayerName].assign(bone)
+                generatedRig.data.collections[names.EMOTIONS_LAYER].assign(bone)
 
 
         # Ported: the mouth grid drives the copies of the mouth shape keys on Body, which holds the
@@ -368,10 +369,10 @@ def main():
         def rig_mouth(mesh):
             ############################################################################################################
             #first, create copies of each mouth shape key
-            for shapekey in [shapekey for shapekey in mesh.data.shape_keys.key_blocks if shapekey.name in koikatsuCommons.mouthShapekeysToCopy]:
-                new_shapekey = mesh.data.shape_keys.key_blocks.get(shapekey.name + koikatsuCommons.mouthShapekeysCopySuffix)
+            for shapekey in [shapekey for shapekey in mesh.data.shape_keys.key_blocks if shapekey.name in names.MOUTH_SHAPEKEYS_TO_COPY]:
+                new_shapekey = mesh.data.shape_keys.key_blocks.get(shapekey.name + names.MOUTH_SHAPEKEYS_COPY_SUFFIX)
                 if not new_shapekey:
-                    new_shapekey = mesh.shape_key_add(name=shapekey.name + koikatsuCommons.mouthShapekeysCopySuffix)
+                    new_shapekey = mesh.shape_key_add(name=shapekey.name + names.MOUTH_SHAPEKEYS_COPY_SUFFIX)
                 new_shapekey.value = 0
                 for i in range(len(shapekey.data)):
                     new_shapekey.data[i].co = shapekey.data[i].co
@@ -393,22 +394,22 @@ def main():
 
             copied_mouth_keys = [
                 mesh.data.shape_keys.key_blocks.get(
-                    name + koikatsuCommons.mouthShapekeysCopySuffix
+                    name + names.MOUTH_SHAPEKEYS_COPY_SUFFIX
                 )
-                for name in koikatsuCommons.mouthShapekeysToCopy
+                for name in names.MOUTH_SHAPEKEYS_TO_COPY
             ]
             copied_mouth_keys = [key for key in copied_mouth_keys if key]
 
             mouth_pairs = [
-                (koikatsuCommons.mouthShapekeyA, koikatsuCommons.mouthShapekeyA2),
-                (koikatsuCommons.mouthShapekeyI, koikatsuCommons.mouthShapekeyI2),
-                (koikatsuCommons.mouthShapekeyU, koikatsuCommons.mouthShapekeyU2),
-                (koikatsuCommons.mouthShapekeyE, koikatsuCommons.mouthShapekeyE2),
-                (koikatsuCommons.mouthShapekeyO, koikatsuCommons.mouthShapekeyO2),
+                (names.MOUTH_SHAPEKEY_A, names.MOUTH_SHAPEKEY_A2),
+                (names.MOUTH_SHAPEKEY_I, names.MOUTH_SHAPEKEY_I2),
+                (names.MOUTH_SHAPEKEY_U, names.MOUTH_SHAPEKEY_U2),
+                (names.MOUTH_SHAPEKEY_E, names.MOUTH_SHAPEKEY_E2),
+                (names.MOUTH_SHAPEKEY_O, names.MOUTH_SHAPEKEY_O2),
             ]
 
             shape_keys = mesh.data.shape_keys
-            controller_name = koikatsuCommons.mouthWidgetControllerBoneName
+            controller_name = names.MOUTH_WIDGET_CONTROLLER_BONE
             radius = f'sqrt(x*x+z*z)'
 
             # thresholds: 0 -> r1 ramps shape key #1 up, r1 -> r2 crossfades to #2
@@ -452,10 +453,10 @@ def main():
                 crossfade = f'max(0,min(1,({radius}-{r1})/{r2 - r1}))'
 
                 base_key = shape_keys.key_blocks.get(
-                    base_name + koikatsuCommons.mouthShapekeysCopySuffix
+                    base_name + names.MOUTH_SHAPEKEYS_COPY_SUFFIX
                 )
                 secondary_key = shape_keys.key_blocks.get(
-                    secondary_name + koikatsuCommons.mouthShapekeysCopySuffix
+                    secondary_name + names.MOUTH_SHAPEKEYS_COPY_SUFFIX
                 )
 
                 if base_key:
@@ -475,16 +476,16 @@ def main():
 
         ##########################################################################################
         #first, create copies of each eye shape key
-        for shapekey in [shapekey for shapekey in c.get_body().data.shape_keys.key_blocks if shapekey.name in koikatsuCommons.eyeShapekeysToCopy]:
-            new_shapekey = c.get_body().data.shape_keys.key_blocks.get(shapekey.name + koikatsuCommons.eyeShapekeysCopySuffix)
+        for shapekey in [shapekey for shapekey in c.get_body().data.shape_keys.key_blocks if shapekey.name in names.EYE_SHAPEKEYS_TO_COPY]:
+            new_shapekey = c.get_body().data.shape_keys.key_blocks.get(shapekey.name + names.EYE_SHAPEKEYS_COPY_SUFFIX)
             if not new_shapekey:
-                new_shapekey = c.get_body().shape_key_add(name=shapekey.name + koikatsuCommons.eyeShapekeysCopySuffix)
+                new_shapekey = c.get_body().shape_key_add(name=shapekey.name + names.EYE_SHAPEKEYS_COPY_SUFFIX)
             new_shapekey.value = 0
             for i in range(len(shapekey.data)):
                 new_shapekey.data[i].co = shapekey.data[i].co
 
         shape_keys = c.get_body().data.shape_keys
-        controller_name = koikatsuCommons.eyeWidgetControllerBoneName
+        controller_name = names.EYE_WIDGET_CONTROLLER_BONE
 
         # Distance at which the expression reaches 1.0.
         activation_distance = 0.09
@@ -516,16 +517,16 @@ def main():
             driver.expression = expression
 
         # Negative Z activates DOWN.
-        add_eye_driver(koikatsuCommons.eyeShapekeyClosed1 + koikatsuCommons.eyeShapekeysCopySuffix, f'max(0,min(0.35,-z/{activation_distance}))')
-        add_eye_driver(koikatsuCommons.eyeShapekeyClosed2 + koikatsuCommons.eyeShapekeysCopySuffix, f'max(0,min(0.7,-z/{activation_distance}))')
+        add_eye_driver(names.EYE_SHAPEKEY_CLOSED1 + names.EYE_SHAPEKEYS_COPY_SUFFIX, f'max(0,min(0.35,-z/{activation_distance}))')
+        add_eye_driver(names.EYE_SHAPEKEY_CLOSED2 + names.EYE_SHAPEKEYS_COPY_SUFFIX, f'max(0,min(0.7,-z/{activation_distance}))')
         # Positive Z activates UP.
-        add_eye_driver(koikatsuCommons.eyeShapekeyClosed3 + koikatsuCommons.eyeShapekeysCopySuffix, f'max(0,min(1,z/{activation_distance}))')
-        add_eye_driver(koikatsuCommons.eyeShapekeyClosed4 + koikatsuCommons.eyeShapekeysCopySuffix, f'max(0,min(0.5,z/{(activation_distance*2)}))')
+        add_eye_driver(names.EYE_SHAPEKEY_CLOSED3 + names.EYE_SHAPEKEYS_COPY_SUFFIX, f'max(0,min(1,z/{activation_distance}))')
+        add_eye_driver(names.EYE_SHAPEKEY_CLOSED4 + names.EYE_SHAPEKEYS_COPY_SUFFIX, f'max(0,min(0.5,z/{(activation_distance*2)}))')
 
 
         ##########################################################################################
         #first, create drivers for each custom shape key
-        for shapekey_name in koikatsuCommons.customShapekeysToCreate:
+        for shapekey_name in names.CUSTOM_SHAPEKEYS_TO_CREATE:
             new_shapekey = c.get_body().shape_key_add(name=shapekey_name)
             new_shapekey.value = 0
 
@@ -535,15 +536,15 @@ def main():
         activation_distance = 0.09
 
         # Negative Z activates DOWN.
-        controller_name = koikatsuCommons.custom1WidgetControllerBoneName
-        add_eye_driver(koikatsuCommons.customShapekeysToCreate[1], f'max(0,min(1,-z/{activation_distance}))')
-        controller_name = koikatsuCommons.custom2WidgetControllerBoneName
-        add_eye_driver(koikatsuCommons.customShapekeysToCreate[3], f'max(0,min(1,-z/{activation_distance}))')
+        controller_name = names.CUSTOM1_WIDGET_CONTROLLER_BONE
+        add_eye_driver(names.CUSTOM_SHAPEKEYS_TO_CREATE[1], f'max(0,min(1,-z/{activation_distance}))')
+        controller_name = names.CUSTOM2_WIDGET_CONTROLLER_BONE
+        add_eye_driver(names.CUSTOM_SHAPEKEYS_TO_CREATE[3], f'max(0,min(1,-z/{activation_distance}))')
         # Positive Z activates UP.
-        controller_name = koikatsuCommons.custom1WidgetControllerBoneName
-        add_eye_driver(koikatsuCommons.customShapekeysToCreate[0], f'max(0,min(1,z/{activation_distance}))')
-        controller_name = koikatsuCommons.custom2WidgetControllerBoneName
-        add_eye_driver(koikatsuCommons.customShapekeysToCreate[2], f'max(0,min(1,z/{activation_distance}))')
+        controller_name = names.CUSTOM1_WIDGET_CONTROLLER_BONE
+        add_eye_driver(names.CUSTOM_SHAPEKEYS_TO_CREATE[0], f'max(0,min(1,z/{activation_distance}))')
+        controller_name = names.CUSTOM2_WIDGET_CONTROLLER_BONE
+        add_eye_driver(names.CUSTOM_SHAPEKEYS_TO_CREATE[2], f'max(0,min(1,z/{activation_distance}))')
 
     except Exception as ex:
         c.switch(generatedRig, 'object')
@@ -555,7 +556,7 @@ def main():
     # Parts instead, so whatever the Character stands on touches the floor (ADR 0027).
     floor = c.lowest_point(generatedRig)
     c.switch(generatedRig, 'edit')
-    rootBone = generatedRig.data.edit_bones[koikatsuCommons.rootBoneName]
+    rootBone = generatedRig.data.edit_bones[names.ROOT_BONE]
     root = generatedRig.matrix_world @ rootBone.head
     root.z = floor
     rootLength = rootBone.tail - rootBone.head

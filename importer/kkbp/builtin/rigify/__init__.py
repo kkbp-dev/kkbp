@@ -13,7 +13,7 @@ import bpy
 from ... import compat, joint_corrections
 from ...pipeline.hooks import hook
 from ...pipeline.options import Option
-from . import after, before, commons, legacy, prepare
+from . import after, before, legacy, names, prepare
 
 SWITCH = Option("use_rigify", bool, True, "Use Rigify armature",
                 description="Generates a Rigify control rig, suitable for animating in Blender. Without it the "
@@ -98,8 +98,8 @@ def _move_onto(ch, metarig, rig):
             if modifier.type == "UV_WARP" and modifier.object_from == metarig:
                 modifier.object_from = modifier.object_to = rig
                 modifier.bone_from = prepare.EYES_X
-                modifier.bone_to = (commons.leftEyeBoneName if modifier.name == prepare.UV_WARPS["eye_l"]
-                                    else commons.rightEyeBoneName)
+                modifier.bone_to = (names.LEFT_EYE_BONE if modifier.name == prepare.UV_WARPS["eye_l"]
+                                    else names.RIGHT_EYE_BONE)
 
 
 def _tidy(ch, metarig, generated_from):
