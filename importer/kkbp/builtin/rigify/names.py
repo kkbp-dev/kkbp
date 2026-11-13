@@ -222,6 +222,20 @@ ORIGINAL_RIGHT_HEEL_BONE = right_name(ORIGINAL_LEFT_HEEL_BONE)
 LEFT_HEEL_BONE = "Left heel"
 RIGHT_HEEL_BONE = right_name(LEFT_HEEL_BONE)
 
+# The legacy armature's face bones (KK's), which the rig puts in its Face collection, unlocked and
+# deforming. By name: the face Bone Groups also hold bones the rig leaves out.
+FACE_BONES = (
+    'cf_J_CheekUp_s_L', 'cf_J_CheekUp_s_R', 'cf_J_CheekLow_s_L', 'cf_J_CheekLow_s_R', 'cf_J_Chin_s',
+    'cf_J_ChinTip_Base', 'cf_J_ChinLow', 'cf_J_MouthCavity', 'cf_J_MouthMove', 'cf_J_Mouth_L', 'cf_J_Mouth_R',
+    'cf_J_MouthLow', 'cf_J_Mouthup', 'cf_J_EarBase_ry_L', 'cf_J_EarLow_L', 'cf_J_EarUp_L', 'cf_J_EarBase_ry_R',
+    'cf_J_EarLow_R', 'cf_J_EarUp_R', 'cf_J_Eye_rz_L', 'cf_J_CheekUp2_L', 'cf_J_Eye01_s_L', 'cf_J_Eye02_s_L',
+    'cf_J_Eye03_s_L', 'cf_J_Eye04_s_L', 'cf_J_Eye05_s_L', 'cf_J_Eye06_s_L', 'cf_J_Eye07_s_L', 'cf_J_Eye08_s_L',
+    'cf_J_Eye_rz_R', 'cf_J_CheekUp2_R', 'cf_J_Eye01_s_R', 'cf_J_Eye02_s_R', 'cf_J_Eye03_s_R', 'cf_J_Eye04_s_R',
+    'cf_J_Eye05_s_R', 'cf_J_Eye06_s_R', 'cf_J_Eye07_s_R', 'cf_J_Eye08_s_R', 'cf_J_Mayu_L', 'cf_J_MayuMid_s_L',
+    'cf_J_MayuTip_s_L', 'cf_J_Mayu_R', 'cf_J_MayuMid_s_R', 'cf_J_MayuTip_s_R', 'cf_J_NoseBase', 'cf_J_Nose_tip',
+    'cf_J_NoseBridge_rx',
+)
+
 # --- Skirt: the game's 8 chains of 6 bones, cf_d_sk_00_00 to cf_j_sk_07_05, by index -------
 # The skirt rig runs only when all 48 are there, found by these names (docs/design/hooks-and-tools.md
 # says Bone Group `skirt`; the code never did).

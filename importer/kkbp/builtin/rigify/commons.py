@@ -57,22 +57,6 @@ def assignSingleBoneLayer(rig, boneName: str, layerName: str):
             rig.data.collections[layerName].assign(bone)
         switch(rig, original_mode)
 
-def setTweakLayer(rig, boneName, tweakLayerName):
-    if boneName in rig.pose.bones:
-        if not len(rig.pose.bones[boneName].rigify_parameters.tweak_coll_refs):
-            rig.pose.bones[boneName].rigify_parameters.tweak_coll_refs.add()
-        if not rig.data.collections.get(tweakLayerName):
-            rig.data.collections.new(tweakLayerName)
-        rig.pose.bones[boneName].rigify_parameters.tweak_coll_refs[0].name = tweakLayerName
-
-def setFKLayer(rig, boneName, fkLayerName):
-    if boneName in rig.pose.bones:
-        if not len(rig.pose.bones[boneName].rigify_parameters.fk_coll_refs):
-            rig.pose.bones[boneName].rigify_parameters.fk_coll_refs.add()
-        if not rig.data.collections.get(fkLayerName):
-            rig.data.collections.new(fkLayerName)
-        rig.pose.bones[boneName].rigify_parameters.fk_coll_refs[0].name = fkLayerName
-
 
 def getRelatedBoneNames(rig, boneName):
     relatedBoneNames = []
@@ -96,17 +80,6 @@ def getRelatedBoneNames(rig, boneName):
                                 relatedBoneNames.append(target.bone_target)
     return relatedBoneNames
         
-def lockAllPoseTransforms(rig, boneName):
-    rig.pose.bones[boneName].lock_location[0] = True
-    rig.pose.bones[boneName].lock_location[1] = True
-    rig.pose.bones[boneName].lock_location[2] = True
-    rig.pose.bones[boneName].lock_rotation[0] = True
-    rig.pose.bones[boneName].lock_rotation[1] = True
-    rig.pose.bones[boneName].lock_rotation[2] = True
-    rig.pose.bones[boneName].lock_rotation_w = True
-    rig.pose.bones[boneName].lock_scale[0] = True
-    rig.pose.bones[boneName].lock_scale[1] = True
-    rig.pose.bones[boneName].lock_scale[2] = True
 
 def unlockAllPoseTransforms(rig, boneName):
     rig.pose.bones[boneName].lock_location[0] = False
