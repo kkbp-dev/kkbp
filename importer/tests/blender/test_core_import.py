@@ -1,11 +1,10 @@
 """The Core Import's Steps on the golden samples and the builder's bundles, with no Hooks."""
 
-import shutil
-
 import bpy
 import pytest
 
 from bundle_builder import BundleBuilder
+from bundle_copy import copy_bundle
 from conftest import golden, kkbp, submodule
 
 character = submodule("character")
@@ -44,7 +43,7 @@ def test_the_builder_bundle_imports(build):
 @pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
 def test_the_golden_samples_import(sample, tmp_path):
     copy = tmp_path / sample  # an import writes its log into the bundle's kkbp_cache/
-    shutil.copytree(golden(sample), copy)
+    copy_bundle(golden(sample), copy)
     result, ch = _import(copy)
     assert ch.body is not None and ch.armature is not None
     assert ch.tears is not None and ch.gag_eyes is not None
@@ -76,7 +75,7 @@ def test_expressions_drive_the_face(tmp_path):
     """A gag expression on Body shows its gag mesh, picks its pattern and hides the pupils; an eye
     expression picks the eye overlay; the tears follow Body's keys."""
     copy = tmp_path / "kk"
-    shutil.copytree(golden("kk"), copy)
+    copy_bundle(golden("kk"), copy)
     _, ch = _import(copy)
     body_keys = ch.body.data.shape_keys.key_blocks
     gag_keys = ch.gag_eyes.data.shape_keys.key_blocks
@@ -115,7 +114,7 @@ def test_expressions_drive_the_face(tmp_path):
 def test_fiery_eyes_step_through_their_sheet(sample, material, pattern, tmp_path):
     """The fiery eyes' texture is a 1 x 6 sheet of flames the game flips through (issue #15)."""
     copy = tmp_path / sample
-    shutil.copytree(golden(sample), copy)
+    copy_bundle(golden(sample), copy)
     _, ch = _import(copy)
     gag = ch.material(material)
     index = templates.patterns(gag).index(pattern)

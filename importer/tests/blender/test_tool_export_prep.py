@@ -1,10 +1,9 @@
 """Export prep on a copy of the KK golden sample, imported without Rigify."""
 
-import shutil
-
 import bpy
 import pytest
 
+from bundle_copy import copy_bundle
 from conftest import golden, kkbp, submodule
 
 character = submodule("character")
@@ -20,7 +19,7 @@ def no_preferences(monkeypatch):
 
 def _kk(tmp_path):
     copy = tmp_path / "kk"
-    shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
+    copy_bundle(golden("kk"), copy)
     result = kkbp.api.import_bundle(copy, hooks=["Outlines"])
     assert result.ok
     return character.Character(result.character_key)

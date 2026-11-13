@@ -39,8 +39,10 @@ import tomllib
 from pathlib import Path
 
 sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(1, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # importer/tests: bundle_copy
 import compare  # noqa: E402
 import physics  # noqa: E402
+from bundle_copy import copy_bundle  # noqa: E402
 
 HARNESS = Path(__file__).resolve().parent
 REPO = HARNESS.parents[2]
@@ -300,7 +302,7 @@ def _run_new(build_name, build, sample, wheel, keep_blend, variant="new", hooks=
     folder.mkdir(parents=True)
     profile = addon_profile(folder)
     bundle = folder / "bundle"
-    shutil.copytree(GOLDEN / sample, bundle, ignore=shutil.ignore_patterns("kkbp_cache"))
+    copy_bundle(GOLDEN / sample, bundle)  # hard links: the import writes only into kkbp_cache/
     out, log = folder / "summary.json", folder / "blender.log"
     command = [build["path"], "--background", "--factory-startup", "--python-exit-code", "1",
                "--python", str(HARNESS / "blender" / "new_import.py"), "--",

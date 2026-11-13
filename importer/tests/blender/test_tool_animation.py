@@ -6,12 +6,12 @@ legs, written with Blender's FBX exporter at 1/FBX_SCALE, the scale the game's o
 """
 
 import math
-import shutil
 
 import bpy
 import pytest
 from mathutils import Vector
 
+from bundle_copy import copy_bundle
 from conftest import golden, kkbp, submodule
 
 character = submodule("character")
@@ -35,7 +35,7 @@ def no_preferences(monkeypatch):
 @pytest.fixture
 def rigged(tmp_path):
     copy = tmp_path / "kk"
-    shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
+    copy_bundle(golden("kk"), copy)
     result = kkbp.api.import_bundle(copy, hooks=["Rigify"])
     assert result.ok and result.hooks[0].status == "ran", result.hooks
     return character.Character(result.character_key)

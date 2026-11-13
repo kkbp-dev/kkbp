@@ -1,11 +1,10 @@
 """The Rigify Hook on a copy of the KK golden sample: what the legacy scripts left that the port
 must keep (bugs found by hand in the UI)."""
 
-import shutil
-
 import bpy
 import pytest
 
+from bundle_copy import copy_bundle
 from conftest import golden, kkbp, submodule
 
 character = submodule("character")
@@ -18,7 +17,7 @@ legacy = submodule("builtin.rigify.legacy")
 @pytest.fixture(scope="module")
 def ch(tmp_path_factory):
     copy = tmp_path_factory.mktemp("rigify") / "kk"
-    shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
+    copy_bundle(golden("kk"), copy)
     bpy.ops.wm.read_homefile(use_empty=True)
     result = kkbp.api.import_bundle(copy, hooks=["Rigify"], options={"use_rigify": True})
     assert result.ok

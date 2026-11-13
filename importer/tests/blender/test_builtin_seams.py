@@ -1,11 +1,10 @@
 """Fix body seams on a hand-built Body (golden samples: run.py hooks --each)."""
 
-import shutil
-
 import bmesh
 import bpy
 import numpy as np
 
+from bundle_copy import copy_bundle
 from conftest import golden, kkbp, submodule
 from hook_ctx import fake_ctx
 
@@ -65,7 +64,7 @@ def _corners(mesh):
 
 def _kk(tmp_path, name):
     copy = tmp_path / name
-    shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
+    copy_bundle(golden("kk"), copy)
     bpy.ops.wm.read_homefile(use_empty=True)
     return character.Character(kkbp.api.import_bundle(copy, hooks=[]).character_key)
 

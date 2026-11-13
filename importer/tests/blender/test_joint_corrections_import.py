@@ -5,12 +5,12 @@ is in."""
 
 import json
 import math
-import shutil
 
 import bpy
 import pytest
 from mathutils import Euler, Quaternion
 
+from bundle_copy import copy_bundle
 from conftest import golden, kkbp, submodule
 
 character = submodule("character")
@@ -28,7 +28,7 @@ RIG_FK = {"upper_arm": "arm_fk", "lower_arm": "elbow_fk", "hand": "wrist_fk",
 
 def _import(tmp_path_factory, game, rigify):
     copy = tmp_path_factory.mktemp(f"jc-{game}") / game
-    shutil.copytree(golden(game), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
+    copy_bundle(golden(game), copy)
     bpy.ops.wm.read_homefile(use_empty=True)
     hooks = ["Rigify"] if rigify else []
     result = kkbp.api.import_bundle(copy, hooks=hooks, options={"use_rigify": rigify})
@@ -129,7 +129,7 @@ def test_bent_limbs_move_the_correction_bones_by_the_rules(tmp_path_factory, gam
 
 def test_the_option_off_leaves_no_corrections(tmp_path_factory):
     copy = tmp_path_factory.mktemp("jc-off") / "kk"
-    shutil.copytree(golden("kk"), copy, ignore=shutil.ignore_patterns("kkbp_cache"))
+    copy_bundle(golden("kk"), copy)
     bpy.ops.wm.read_homefile(use_empty=True)
     result = kkbp.api.import_bundle(copy, hooks=[], options={"joint_corrections": False})
     assert result.ok
