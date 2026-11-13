@@ -126,6 +126,15 @@ FACE_WIDGET_BONES = (names.LEFT_BREAST_BONE2, names.RIGHT_BREAST_BONE2, names.LE
                      names.RIGHT_BREAST_BONE3)
 FACE_WIDGET_NIPPLES = (names.LEFT_NIPPLE_BONE1, names.RIGHT_NIPPLE_BONE1, names.LEFT_NIPPLE_BONE2,
                        names.RIGHT_NIPPLE_BONE2)
+# The bones above that the SFW Hook removes before this Hook runs (Bone Group nsfw, and its own list
+# of nipple and breast bones): a Character without them gets a rig without their controls (D21).
+# Any other bone missing is an error.
+SFW_REMOVES = frozenset((
+    names.CROTCH_BONE, names.ANUS_BONE,
+    names.LEFT_BREAST_DEFORM_BONE2, names.RIGHT_BREAST_DEFORM_BONE2,
+    names.LEFT_NIPPLE_BONE1, names.RIGHT_NIPPLE_BONE1, names.LEFT_NIPPLE_BONE2, names.RIGHT_NIPPLE_BONE2,
+    names.LEFT_NIPPLE_DEFORM_BONE1, names.RIGHT_NIPPLE_DEFORM_BONE1,
+    names.LEFT_NIPPLE_DEFORM_BONE2, names.RIGHT_NIPPLE_DEFORM_BONE2))
 
 
 def rigify_types(build):
@@ -138,6 +147,8 @@ def rigify_types(build):
             + (NIPPLES if build.kk_extras else ()) + ARMS + (ARM_CORRECTIONS + PALMS if build.kk_extras else ())
             + FINGERS + LEGS + (LEG_CORRECTIONS if build.kk_extras else ()))
     for bone, attribute, value in rows:
+        if bone in SFW_REMOVES and bone not in metarig.pose.bones:
+            continue
         pose_bone = metarig.pose.bones[bone]
         if attribute == TYPE:
             pose_bone.rigify_type = value
@@ -145,6 +156,8 @@ def rigify_types(build):
             setattr(pose_bone.rigify_parameters, attribute, value)
     face = build.widget(names.WIDGET_FACE)
     for bone in FACE_WIDGET_BONES + (FACE_WIDGET_NIPPLES if build.kk_extras else ()):
+        if bone in SFW_REMOVES and bone not in metarig.pose.bones:
+            continue
         metarig.pose.bones[bone].custom_shape = face
     for bone in (names.LEFT_BREAST_BONE2, names.RIGHT_BREAST_BONE2, names.LEFT_HEEL_BONE, names.RIGHT_HEEL_BONE):
         bone_collections.move(metarig, bone, names.ORIGINAL_FK_LAYER_INDEX)
