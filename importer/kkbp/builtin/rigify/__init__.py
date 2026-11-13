@@ -13,7 +13,8 @@ import bpy
 from ... import compat, joint_corrections
 from ...pipeline.hooks import hook
 from ...pipeline.options import Option
-from . import after, names, prepare
+from . import names, prepare
+from .finish import finish_rig
 from .metarig import build_metarig
 from .build import RigBuild
 
@@ -54,7 +55,7 @@ def rigify(ctx):
     metarig.name = f"Metarig {ch.name}"
     _into(rig, ch.collection)
     _move_onto(ch, metarig, rig)
-    after.main(build)
+    finish_rig(build)
     if joint_corrections.has_corrections(metarig):
         count, missing = joint_corrections.refresh(rig, source=metarig)
         ctx.log.info(f"Put the joint corrections back on the rig: {count} bones"

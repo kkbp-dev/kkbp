@@ -128,6 +128,7 @@ PELVIS_BONE = "Pelvis"
 WAIST_BONE = "cf_j_waist02"
 CROTCH_BONE = "cf_j_kokan"
 ANUS_BONE = "cf_j_ana"
+BETTER_PENETRATION_BONE_PREFIX = "cf_J_Va""gi""na_"  # the Better Penetration mod's bones
 BETTER_PENETRATION_ROOT_CROTCH_BONE = "cf_J_V""agi""na_root"
 BETTER_PENETRATION_FRONT_CROTCH_BONE = "cf_J_Va""gi""na_F"
 BETTER_PENETRATION_LEFT_CROTCH_BONE_BASE = "cf_J_Va""gin""a_L"

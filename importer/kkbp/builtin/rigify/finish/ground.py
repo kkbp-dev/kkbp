@@ -8,6 +8,7 @@ import bpy
 import numpy as np
 from mathutils import Matrix
 
+from .. import names
 from ....editing import editing
 
 
@@ -43,3 +44,18 @@ def move_rig(rig, offset):
     for child in rig.children:
         if child.parent_type == "OBJECT":
             child.matrix_parent_inverse = Matrix.Translation(local) @ child.matrix_parent_inverse
+
+
+def ground(build):
+    """The root bone goes down to the floor (the lowest visible vertex), and the rig moves so the
+    root is at the world origin, as the legacy origin_set and location reset did."""
+    rig = build.rig
+    floor = lowest_point(rig)
+    with editing(rig):
+        root_bone = rig.data.edit_bones[names.ROOT_BONE]
+        root = rig.matrix_world @ root_bone.head
+        root.z = floor
+        length = root_bone.tail - root_bone.head
+        root_bone.head = rig.matrix_world.inverted() @ root
+        root_bone.tail = root_bone.head + length
+    move_rig(rig, -root)
