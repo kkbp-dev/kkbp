@@ -14,7 +14,7 @@ Status: implemented in Phase 5 (decisions D14 to D47 in the [roadmap](README.md#
 | 4 | Outlines | `use_outlines` (bool) | on | `outlines.blend` |
 | 5 | Face cards | `use_face_cards` (bool) | on | `face_cards.blend` |
 | 6 | SFW | `sfw_mode` (bool) | off | none |
-| 7 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
+| 7 | Rigify | `use_rigify` (bool); `teeth_bones` (bool, off): five controls for each row of teeth | on | `rigify.blend` |
 | 8 | Separate Eyes | `separate_eyes` (bool) | off | none |
 | 9 | Delete default scene | `delete_default_scene` (bool) | on | none |
 
@@ -83,6 +83,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | skirt rig (`getSkirtBoneName` indexes) | Ported | Found by the game's indexed names, `cf_d_sk_top` and `cf_d_sk_00_00` to `cf_j_sk_07_05`, all 48 or no skirt rig (`names.skirt_bone`) |
 | layer setup (`RigifyLayer`, `BoneManagerLayer`, Charamaker, Toes, Face MCH) | Ported, changed | Rig collections built from the Core's (D7); the name-based splits D7 dropped stay dropped |
 | a `Custom` collection for the user's own bones | Added | Rigify Hook: empty and hidden, to the right of NSFW in the Rig Layers panel (issue #7) |
+| teeth bones (`teeth_bones`, issue #42) | Added | Rigify Hook, `metarig/teeth.py`: the faces with the `teeth` Material Role split into an upper and a lower row by connected piece; each row gets the controls `Teeth <row> L2`, `L1`, `C`, `R1`, `R2` (ends, halfway, middle) in the `Face (MCH)` collection. Under each mouth bone the teeth were weighted to, a control has a hidden bone that copies it and takes those weights, so the teeth follow the mouth bones exactly as before |
 | `rigify_after.main`: rename Metarig/Rig, move meshes and UV-warp modifiers to the rig | Ported | Rigify Hook, through Character (the rig gets Part Role `rig`) |
 | `rigify_after`: copy bone `id`s to generated bones | Ported | Bones keep their Id in their `id` property |
 | `rigify_after`: SVS-only hand IK widget rotation | Removed | The wrist it compensated for is aimed (ADR 0045) |

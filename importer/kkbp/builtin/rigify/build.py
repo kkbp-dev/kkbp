@@ -28,6 +28,7 @@ class RigBuild:
     ctx: object
     metarig: object
     kk_extras: bool
+    teeth_bones: bool = False  # the Hook's option: five controls for each row of teeth (metarig/teeth.py)
     features: Features = None  # set by the first phases, from the metarig and Body
     metarig_id_bone: str = None  # the metarig's "Metarig_ID:..." bone
     rig: object = None  # the generated rig, once Rigify has made it
