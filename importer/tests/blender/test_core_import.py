@@ -108,6 +108,36 @@ def test_expressions_drive_the_face(golden_import):
     assert ch.tears.data.shape_keys.key_blocks["Eye Crying"].value == pytest.approx(0.7)
 
 
+@pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
+def test_the_tears_are_moved_from_bodys_shape_keys(sample, golden_import):
+    """Issue 69: Body has the tear meshes' showing keys, which move nothing on Body and drive the Tears
+    object's keys of the same name, so the tears are keyed with the rest of the face."""
+    _, ch = golden_import(sample)
+    body_keys, tear_keys = ch.body.data.shape_keys.key_blocks, ch.tears.data.shape_keys.key_blocks
+    scene = bpy.context.scene
+    names = [k.name for k in body_keys]
+    tears = ["Tears big", "Tears med", "Tears small"]
+    assert [n for n in names if n in tears] == tears
+    last_expression = max(i for i, n in enumerate(names) if n.startswith(("Eye ", "Mouth ", "Eyebrow ")))
+    assert names.index("Tears big") > last_expression  # with the driven keys, as on the Tears object
+    basis = [tuple(v.co) for v in body_keys[0].data]
+    assert [tuple(v.co) for v in body_keys["Tears big"].data] == basis
+
+    def tear_mesh():
+        return [tuple(v.co) for v in ch.tears.evaluated_get(bpy.context.evaluated_depsgraph_get()).data.vertices]
+
+    scene.frame_set(scene.frame_current)
+    assert tear_keys["Tears big"].value == 0
+    hidden = tear_mesh()
+    body_keys["Tears big"].value = 1.0
+    scene.frame_set(scene.frame_current)
+    assert tear_keys["Tears big"].value == pytest.approx(1.0) and tear_keys["Tears med"].value == 0
+    assert tear_mesh() != hidden
+    body_keys["Tears big"].mute = True
+    scene.frame_set(scene.frame_current)
+    assert tear_keys["Tears big"].mute
+
+
 @pytest.mark.parametrize("sample, material, pattern", [
     ("kk", "cf_m_gageye_02", "cf_t_gageye_08"),
     ("kks", "cf_m_gageye_02", "cf_t_gageye_08"),
