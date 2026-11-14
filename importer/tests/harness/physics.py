@@ -25,6 +25,8 @@ HANDLE_WIDGETS = {"WidgetButtocks": ("cf_j_siri_L", "cf_j_siri_R"), "WidgetButto
                   "WidgetBreastLeft": ("cf_j_bust01_L",), "WidgetBreastRight": ("cf_j_bust01_R",)}
 WIDGET_PREFIX = "WGT-RIG-Armature {character}_"  # a Rigify widget object, named after its bone
 _RIG_PREFIXES = (WIDGET_PREFIX, "ORG-", "DEF-", "MCH-", "VIS_", "ROT-", "STR-", "tweak_")
+# A joint correction's helper bone is named after the bones it is placed from ("JC-T cf_d_bust00").
+JOINT_CORRECTION_PREFIX = "JC-"
 _SIDES = ("_L", "_R", ".L", ".R")
 
 
@@ -54,6 +56,8 @@ def tolerance_for(skeleton, summary):
     metarig = summary.get("objects", {}).get(METARIG, {}).get("armature", {}).get("bones", {})
 
     def from_physics(name):
+        if name.startswith(JOINT_CORRECTION_PREFIX):
+            return any(word in moved for word in name.split()[1:])
         return name in moved or rig_base(name, metarig) in moved
 
     def tolerance(path):

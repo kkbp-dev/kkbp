@@ -71,6 +71,10 @@ class ToleranceTest(unittest.TestCase):
                      "/objects/WGT-RIG-Armature {character}_Left arm_fk/location", "/objects/WidgetHips/location"):
             self.assertEqual(self.tolerance(path), compare.DEFAULT_TOLERANCE, path)
 
+    def test_joint_correction_helpers_of_physics_bones(self):
+        self.assertEqual(self.tolerance(f"{RIG}/JC-T cf_j_bust01_L/head"), physics.PHYSICS_TOLERANCE)
+        self.assertEqual(self.tolerance(f"{RIG}/JC-T cf_j_waist01/head"), compare.DEFAULT_TOLERANCE)
+
 
 class DifferencesWithPhysicsTest(unittest.TestCase):
     def summary(self, skirt, waist):
