@@ -2,6 +2,8 @@
 
 The light and dark bakes of the face have the eyeshadow drawn into them, so its colour around the eyes can't be faded or removed in Blender (issue 38). When a face has eyeshadow, the exporter bakes it a second time without it and writes the results as two more Texture Variants of the face's `_MainTex`: `light_no_eyeshadow` and `dark_no_eyeshadow` (Schema Version 1.2). The importer gives such a face the `KK Light Dark Face` template (`SVS Light Dark Face` on SVS), whose **Eyeshadow** parameter fades between the two pairs: 1, the default, is the game's own bake, and 0 is the face without eyeshadow.
 
+The template has a second parameter, **Hide with gag eyes**, which takes the eyeshadow away as it rises whatever Eyeshadow is. The importer drives it from the `Gag eyes` shape key, because the eyeshadow is painted around eyes the gag expressions close or cover; like the other things expressions change on a material it is driven on the objects, not the material (issue 70). Its own value on the material still hides the eyeshadow by hand: the material shows the larger of the two.
+
 ## What the exporter leaves out
 
 KK and KKS: the eyeshadow is the face material's third overlay, `_overtex3`; the other two overlays are the cheeks and the lips and stay in both bakes. The overlays are drawn in the bake's mesh pass, so the second bake is that pass again with `_overtex3` cleared, laid over the same quad pass. A face with no eyeshadow texture gets no second bake, and neither does a tessellated face shader, whose bake has no quad pass to share.

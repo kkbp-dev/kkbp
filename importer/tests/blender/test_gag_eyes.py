@@ -245,3 +245,32 @@ def test_a_frame_change_updates_no_material(sample, keyed, golden_import):
         assert not {u for u in updated if u.startswith("Material")}, sorted(updated)
         if keyed is None:
             assert not {u for u in updated if u.startswith("Key")}, sorted(updated)
+
+
+@pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
+def test_the_gag_eyes_take_the_eyeshadow_away(sample, golden_import):
+    """Issue 38: the face's eyeshadow fades out as Gag eyes rises, whatever its own slider says, and
+    can still be hidden by hand while Gag eyes is down."""
+    _, ch = golden_import(sample)
+    face = next(m for m in ch.materials(roles="face"))
+    assert templates.param(face, "eyeshadow").default_value == 1
+    key = ch.body.data.shape_keys.key_blocks[gag.GAG_KEY]
+
+    def hidden():
+        return templates.value_on(ch.body, face, "eyeshadow_hidden")
+
+    _evaluate()
+    assert hidden() == 0
+    key.value = 1.0
+    _evaluate()
+    assert hidden() == 1
+    key.value = 0.25
+    _evaluate()
+    assert hidden() == pytest.approx(0.25)
+    key.value = 0.0
+    templates.param(face, "eyeshadow_hidden").default_value = 1.0  # by hand
+    _evaluate()
+    assert hidden() == 1
+    drivers = [fc for o in ch.parts() if o.animation_data for fc in o.animation_data.drivers
+               if "eyeshadow_hidden" in fc.data_path]
+    assert drivers and all(fc.driver.is_simple_expression for fc in drivers)
