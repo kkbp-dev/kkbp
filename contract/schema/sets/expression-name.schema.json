@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.1/sets/expression-name.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.2/sets/expression-name.schema.json",
   "title": "Expression Name",
   "description": "The canonical English display name of an expression shape key. It starts with its category (Eye, Gag, Eyebrow, Mouth, Tears); a closed version ends with ', Closed'.",
   "type": "string",

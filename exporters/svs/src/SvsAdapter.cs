@@ -324,6 +324,39 @@ namespace KKBP.Exporter
             return renderer;
         }
 
+        /// <summary>
+        /// Bakes the face again without its eyeshadow (ADR 0046). The game draws the eyeshadow into the
+        /// head's texture with the face's create material, so its colour is made clear there and the
+        /// texture drawn again for the bake, then both are put back.
+        /// </summary>
+        private void BakeWithoutEyeshadow(Bake bake, Renderer renderer, Material source, int slot, MaterialData data)
+        {
+            var control = cha.face.customTexCtrlFace;
+            var create = control != null ? control._matCreate : null;
+            int texture = ChaShader.Face.CreateShader.sEyeshadowTextureID;
+            int colorId = ChaShader.Face.CreateShader.sEyeshadowColorID;
+            if (create == null || !create.HasProperty(texture) || !create.HasProperty(colorId) || create.GetTexture(texture) == null)
+            {
+                return;
+            }
+            var color = create.GetColor(colorId);
+            if (color.a <= 0)
+            {
+                return;
+            }
+            try
+            {
+                control.SetColor(colorId, new UnityEngine.Color(color.r, color.g, color.b, 0));
+                control.SetNewCreateTexture();
+                bake.Add(renderer, source, slot, data, true, TextureVariant.LightNoEyeshadow, TextureVariant.DarkNoEyeshadow);
+            }
+            finally
+            {
+                control.SetColor(colorId, color);
+                control.SetNewCreateTexture();
+            }
+        }
+
         /// <summary>Adds the baked light and dark Variants to every captured material but the tears' and gag eyes'.</summary>
         private void BakeLightAndDark(PassSink sink, List<CapturedMesh> captured)
         {
@@ -347,6 +380,10 @@ namespace KKBP.Exporter
                         try
                         {
                             bake.Add(m.Renderer, m.Slots[slot], slot, data, skin);
+                            if (data.Role == MaterialRole.Face)
+                            {
+                                BakeWithoutEyeshadow(bake, m.Renderer, m.Slots[slot], slot, data);
+                            }
                         }
                         catch (Exception e)
                         {

@@ -64,6 +64,7 @@ ADRs:
 - [0043 The Rigify Hook is rewritten in the importer's style, and a rig fingerprint shows the rig is unchanged](../adr/0043-rigify-rewritten-and-checked-by-a-rig-fingerprint.md)
 - [0044 Bakes have their main texture's size and shape; the body and face stay 4096 square](../adr/0044-bakes-keep-the-main-textures-shape-and-skin-stays-4096.md)
 - [0045 The Rigify Hook aims the hands and makes palms on every skeleton](../adr/0045-every-skeleton-gets-aimed-hands-and-palms.md)
+- [0046 The face is also baked without its eyeshadow](../adr/0046-the-face-is-also-baked-without-its-eyeshadow.md)
 
 Folded or dropped from the original review: candidate 6 (Exporter Naming) is replaced by Ids; candidate 9 (import options declared once) is part of the import pipeline.
 

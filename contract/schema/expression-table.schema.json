@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.1/expression-table.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.2/expression-table.schema.json",
   "title": "contract/expressions/<game>.json",
   "description": "A Game's translation table, embedded into its exporter (ADR 0004). Not part of a bundle.",
   "type": "object",

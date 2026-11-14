@@ -62,6 +62,7 @@ namespace KKBP.Exporter.Core.Tests
             yield return new object[] { "a mesh using a material nobody captured", (Action<PassSink>)(s => s.Meshes[0].SubMeshes[0].MaterialKey = "mat:missing"), 0 };
             yield return new object[] { "two bones with the same unique role", (Action<PassSink>)(s => s.Bones[2].Role = BoneRole.Hips), 0 };
             yield return new object[] { "two textures in one slot", (Action<PassSink>)(s => s.Materials[0].Textures.Add(new TextureData { Raw = "_NormalMap", Png = FakeAdapter.Png })), 0 };
+            yield return new object[] { "a bake without eyeshadow with no dark one beside it", (Action<PassSink>)(s => s.Materials[0].Textures.Add(new TextureData { Raw = "_MainTex", Role = TextureRole.Main, Variant = TextureVariant.LightNoEyeshadow, Png = FakeAdapter.Png })), 0 };
             yield return new object[] { "an expression in the wrong category", (Action<PassSink>)(s => s.Meshes[1].Morphs[0].Category = ExpressionCategory.Mouth), 0 };
             yield return new object[] { "a texture that isn't a PNG", (Action<PassSink>)(s => s.Materials[0].Textures[0].Png = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }), 0 };
             yield return new object[] { "a vertex with no weight", (Action<PassSink>)(s => Array.Clear(s.Meshes[0].Weights, 0, s.Meshes[0].InfluencesPerVertex)), 0 };

@@ -334,7 +334,7 @@ namespace KKBP.Exporter
                         }
                         try
                         {
-                            bake.Add(m.Renderer, m.Slots[slot], slot, data, skin);
+                            bake.Add(m.Renderer, m.Slots[slot], slot, data, skin, m.Renderer == cha.rendFace);
                         }
                         catch (Exception e)
                         {

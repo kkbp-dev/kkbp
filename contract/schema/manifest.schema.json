@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.1/manifest.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.2/manifest.schema.json",
   "title": "manifest.json",
   "description": "Identifies an Export Bundle. Written last; a bundle without one is an unfinished export.",
   "type": "object",

@@ -330,6 +330,26 @@ TEMPLATES: Mapping[str, Template] = MappingProxyType({t.name: t for t in (
         params={**_LIGHT_DARK_PARAMS, "disable_permalight_mask": ("shader", "Disable permalight mask")},
         shader="shader", variants=_KK_VARIANTS, variant_params=_KK_VARIANT_PARAMS, requires=("main.light",),
     ),
+    # The face when the bundle has its bakes without eyeshadow (issue 38, ADR 0046).
+    Template(
+        "KK Light Dark Face",
+        textures={**_LIGHT_DARK_TEXTURES, "main.light_no_eyeshadow": "tex.main.light_no_eyeshadow",
+                  "main.dark_no_eyeshadow": "tex.main.dark_no_eyeshadow"},
+        params={**_LIGHT_DARK_PARAMS, "disable_permalight_mask": ("shader", "Disable permalight mask"),
+                "eyeshadow": ("eyeshadow", "Eyeshadow"),
+                "eyeshadow_hidden": ("eyeshadow", "Hide with gag eyes")},
+        shader="shader", variants=_KK_VARIANTS, variant_params=_KK_VARIANT_PARAMS, requires=("main.light",),
+    ),
+    Template(
+        "SVS Light Dark Face",
+        textures={**_LIGHT_DARK_TEXTURES, "alpha_mask_bottom": "tex.alpha_mask_bottom",
+                  "main.light_no_eyeshadow": "tex.main.light_no_eyeshadow",
+                  "main.dark_no_eyeshadow": "tex.main.dark_no_eyeshadow"},
+        params={**_LIGHT_DARK_PARAMS, "eyeshadow": ("eyeshadow", "Eyeshadow"),
+                "eyeshadow_hidden": ("eyeshadow", "Hide with gag eyes")},
+        shader="shader", variants=_KK_VARIANTS, variant_params=_KK_VARIANT_PARAMS, requires=("main.light",),
+        variant_drops=("Alpha mask bottom", "Alpha mask bottom alpha"),
+    ),
     Template(
         "KK Eye",
         textures=_LIGHT_DARK_TEXTURES,

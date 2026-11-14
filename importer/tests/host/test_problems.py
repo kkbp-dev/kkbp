@@ -87,6 +87,9 @@ CASES = [
      "material Id c_m_namida appears twice"),
     ("texture slot twice", lambda f: _material(f, "cf_m_body")["textures"].append(
         dict(_material(f, "cf_m_body")["textures"][4])), "material cf_m_body repeats texture slot _liquidmask"),
+    ("bake without eyeshadow alone", lambda f: _material(f, "cf_m_body")["textures"].append(
+        {**_material(f, "cf_m_body")["textures"][0], "variant": "light_no_eyeshadow"}),
+     "has _MainTex without eyeshadow but no dark_no_eyeshadow Variant of it"),
     ("Texture Role twice", lambda f: _material(f, "cf_m_body")["textures"][3].update(role="main"),
      "material cf_m_body repeats Texture Role main"),
     ("create texture slot twice", lambda f: _create(f, "cf_m_body")["textures"].append(

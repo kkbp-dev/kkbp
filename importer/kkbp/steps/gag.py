@@ -194,6 +194,7 @@ def drive_gag_eyes(ctx):
     owner = _owner(ch)
     if not targets or owner is None:
         return
+    _hide_eyeshadow(ch, owner)
     materials = _gag_materials(ch)
     if not materials:
         ctx.log.warning(f"No gag eye material can show a pattern, so {GAG_KEY} has no dropdown")
@@ -229,6 +230,16 @@ def drive_gag_eyes(ctx):
             add_driver(key, "value", chosen.targets,
                        lambda names, group=group: f"{names[0]} if {chosen.picked(names, group)} else 0")
             _single_prop_driver(key, "mute", owner.data.shape_keys, f'key_blocks["{_quote(GAG_KEY)}"].mute')
+
+
+def _hide_eyeshadow(ch, owner):
+    """Takes the face's eyeshadow away as `Gag eyes` rises, where the face can fade it (ADR 0046):
+    the eyeshadow is painted around eyes the gag expressions close or cover. The material's own
+    `eyeshadow_hidden` value still hides it by hand."""
+    key = [(owner.data.shape_keys, f'key_blocks["{_quote(GAG_KEY)}"].value')]
+    for mat in ch.materials(roles="face"):
+        if "eyeshadow_hidden" in templates.params(mat):
+            drive_param(ch, mat, "eyeshadow_hidden", key, lambda names: names[0], keep=True)
 
 
 def _drive_showing_keys(ctx, chosen, targets):

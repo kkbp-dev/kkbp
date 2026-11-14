@@ -14,6 +14,7 @@ from . import model
 
 # Expression Name prefix -> category (contract/README.md, "Expression categories").
 CATEGORY_BY_PREFIX = {"Eye": "eye", "Mouth": "mouth", "Eyebrow": "eyebrow", "Gag": "gag", "Tears": "tears"}
+NO_EYESHADOW = ("light_no_eyeshadow", "dark_no_eyeshadow")  # they come as a pair, beside light and dark
 
 
 def check(root: Path, manifest: model.Manifest, skeleton: model.Skeleton, materials: tuple[model.Material, ...],
@@ -87,6 +88,11 @@ def _textures(problems, what, textures, rel):
             roles.add(key)
         if not t.file.is_file():
             problems.append(f"{what} texture file {rel(t.file)} is missing")
+    for raw, variant, pattern in sorted(own, key=str):
+        if variant in NO_EYESHADOW:
+            for needed in ("light", "dark", *NO_EYESHADOW):
+                if (raw, needed, pattern) not in own:
+                    problems.append(f"{what} has {raw} without eyeshadow but no {needed} Variant of it")
     return own
 
 

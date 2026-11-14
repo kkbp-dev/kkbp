@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.1/expressions.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.2/expressions.schema.json",
   "title": "expressions.json",
   "description": "Every expression shape key the exporter baked (ADR 0003), one record per morph target, and what each expression does besides moving vertices.",
   "type": "object",

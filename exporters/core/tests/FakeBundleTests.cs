@@ -101,7 +101,7 @@ namespace KKBP.Exporter.Core.Tests
             using var manifest = f.Json("manifest.json");
             var root = manifest.RootElement;
             Assert.Equal("KK", root.GetProperty("game").GetString());
-            Assert.Equal("1.1", root.GetProperty("schema_version").GetString());
+            Assert.Equal("1.2", root.GetProperty("schema_version").GetString());
             Assert.Equal("2026-11-01T06:26:05Z", root.GetProperty("exported_at").GetString());
             Assert.Equal("card.png", root.GetProperty("card").GetString());
             Assert.True(root.GetProperty("options").GetProperty("all_outfits").GetBoolean());

@@ -55,6 +55,17 @@ def test_the_atlas_copy_uses_one_atlas_per_object(ch):
     assert ch.rig is None and "Outfit 00" in ch.outfits[0].name  # the original is untouched
 
 
+def test_the_face_atlas_holds_one_of_its_two_bakes(ch):
+    """ADR 0046: the atlas copy of the face shows the atlas whatever its eyeshadow inputs say, so no
+    bake in the face's own UV layout is left in it."""
+    collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
+    face = next(s.material for o in collection.objects for s in o.material_slots
+                if s.material and s.material.get("kkbp_atlas_of") == ch.materials(roles="face")[0][character.ID])
+    for variant in ("light", "dark"):
+        atlas = templates.texture(face, "main", variant).image
+        assert templates.texture(face, "main", f"{variant}_no_eyeshadow").image == atlas
+
+
 def test_an_atlas_over_the_cap_is_split_into_several(ch):
     """Issue 12: Body's atlas would be 8192 px, so under a 4096 px limit its materials go into several
     atlases, none scaled down, and the UVs land inside them."""

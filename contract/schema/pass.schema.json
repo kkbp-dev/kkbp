@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.1/pass.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.2/pass.schema.json",
   "title": "body.json and outfits/NN/outfit.json",
   "description": "A Pass's data file: the meshes in its .glb.",
   "type": "object",
