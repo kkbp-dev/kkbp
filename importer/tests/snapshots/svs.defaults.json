@@ -1356,7 +1356,7 @@
      "Outline cf_m_head_00",
      "Outline cf_m_body_00"
     ],
-    "shape_key_drivers": 7,
+    "shape_key_drivers": 17,
     "shape_keys": [
      "Basis",
      "Gag eyes",
@@ -1430,11 +1430,20 @@
      "Tears small",
      "Gag eyes (Fiery Eyes)",
      "Eye Closed copy",
+     "Mouth A (Copy)",
+     "Mouth E (Copy)",
+     "Mouth I (Copy)",
      "Mouth Impatient (Copy)",
+     "Mouth O (Copy)",
      "Mouth Triangle (Copy)",
+     "Mouth U (Copy)",
      "Eye Closed (Copy)",
      "Eye Default (Copy)",
-     "Eye Happy, Closed (Copy)"
+     "Eye Happy, Closed (Copy)",
+     "Custom Key 1 Up",
+     "Custom Key 2 Down",
+     "Custom Key 3 Up",
+     "Custom Key 4 Down"
     ],
     "uv_maps": [
      "uv_main",
@@ -43206,8 +43215,7 @@
   },
   "importer": "10.0.0",
   "log_warnings": [
-   "hook Rigify: Blender's Rigify add-on was off; it is on for this session (Preferences aren't saved)",
-   "hook Rigify: Body has no 'Eye Both Eyes Shut Tight' shape key, so the emotion grid stops at the eye keys: the rest of the eye keys and the custom keys aren't made"
+   "hook Rigify: Blender's Rigify add-on was off; it is on for this session (Preferences aren't saved)"
   ],
   "result": "ok",
   "steps": {
