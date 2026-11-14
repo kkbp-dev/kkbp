@@ -144,7 +144,7 @@ def rigify_types(build):
         bone.rigify_type = "basic.raw_copy"
     rows = (EYES + (TONGUE if features.rigged_tongue else ()) + SPINE
             + (BETTER_PENETRATION if features.better_penetration else ()) + BREASTS
-            + (NIPPLES if build.kk_extras else ()) + ARMS + (ARM_CORRECTIONS + PALMS if build.kk_extras else ())
+            + (NIPPLES if build.kk_extras else ()) + ARMS + (ARM_CORRECTIONS if build.kk_extras else ()) + PALMS
             + FINGERS + LEGS + (LEG_CORRECTIONS if build.kk_extras else ()))
     for bone, attribute, value in rows:
         if bone in SFW_REMOVES and bone not in metarig.pose.bones:

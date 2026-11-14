@@ -20,8 +20,6 @@ def finish_rig(build):
     fixups.root_colour(build)
     fixups.visible_collections(build)
     fixups.tags(build)
-    if not build.kk_extras:
-        shapes.hand_ik(build)
     outfits.outfit_collections(build)
     fixups.ik_stretch_off(build)
     emotions.emotion_grid(build)

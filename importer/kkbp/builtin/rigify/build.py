@@ -2,7 +2,8 @@
 phase, instead of module state.
 
 `kk_extras` says whether the KK-only parts run. It is not a Game check: it is whether the skeleton
-has every joint-correction bone those parts need (ADR 0022, `prepare.kk_extras`).
+has every joint-correction bone those parts need (ADR 0022, `prepare.kk_extras`). Without them the
+hands are still aimed and given palms (ADR 0045).
 """
 
 from __future__ import annotations

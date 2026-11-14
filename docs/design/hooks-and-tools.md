@@ -77,7 +77,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | `fix_bone_orientations`, `connectAndParentBones` | Ported | Rigify Hook, after it re-aims its bones (ADR 0017) |
 | KK-only joint-correction bone edits, `relink_constraints` | Ported | Gated (D24) |
 | The legacy drivers' axis swaps and `invert_y/z` | Dropped | Those drivers are gone (ADR 0038) |
-| palm vertex groups, `finalizeFingerBones` rolls, `super_palm` (KK only) | Ported | Gated (D24) |
+| palm vertex groups, `finalizeFingerBones` rolls, `super_palm` (KK only) | Ported | Rolls gated (D24); palms on every skeleton, and SVS's fingertips and thumbs aimed (ADR 0045) |
 | nipple widgets (KK only) | Ported | Gated (D24) |
 | `finalizeRiggedTongueSideBones` and the tongue rig | Ported | Rigs the single tongue, in Body (ADR 0020, ADR 0039) |
 | skirt rig (`getSkirtBoneName` indexes) | Ported | Found by the game's indexed names, `cf_d_sk_top` and `cf_d_sk_00_00` to `cf_j_sk_07_05`, all 48 or no skirt rig (`names.skirt_bone`) |
@@ -85,7 +85,7 @@ Ported means the behaviour comes over, rewritten onto `ctx`, the data API and th
 | a `Custom` collection for the user's own bones | Added | Rigify Hook: empty and hidden, to the right of NSFW in the Rig Layers panel (issue #7) |
 | `rigify_after.main`: rename Metarig/Rig, move meshes and UV-warp modifiers to the rig | Ported | Rigify Hook, through Character (the rig gets Part Role `rig`) |
 | `rigify_after`: copy bone `id`s to generated bones | Ported | Bones keep their Id in their `id` property |
-| `rigify_after`: SVS-only hand IK widget rotation | Ported | Gated (D24) |
+| `rigify_after`: SVS-only hand IK widget rotation | Removed | The wrist it compensated for is aimed (ADR 0045) |
 | `rigify_after`: hair/accessory bones of later Outfits in their own collections | Ported | `join_armatures` tags each bone with its Outfit, `kkbp_outfit` (D29) |
 | `rigify_after`: IK stretch off | Ported | Rigify Hook |
 | `rigify_after`: emotion grid (mouth, eye and custom key controllers and their drivers) | Ported | `finish/emotions.py`, from the Expression Names present; at a missing eye key the grid stops, as legacy's error stopped it, with a warning naming the key (ADR 0043) |
@@ -182,6 +182,7 @@ The SFW Hook runs before the Rigify Hook and removes the `nsfw` Group's bones an
 | `cf_j_bnip02root_L`, `cf_j_bnip02_L`, `cf_s_bnip01_L`, `cf_s_bnip025_L` | by name: the `breast` Group also holds the bust, and no Role marks a nipple |
 | `cf_j_siri_L`, `cf_s_siri_L`, `cf_d_siri_L` (butt) | by name: no Role or Group marks them |
 | `cf_j_waist01` (`Pelvis`), `cf_j_waist02`, `cf_s_waist01`, `cf_s_waist02` | by name: no Role |
+| `cf_s_index01_L`…`cf_s_little03_L`, `cf_s_thumb01_L`…`03` (SVS's finger weights) | by name (`names.game_finger_group`): no Role; their vertex groups give the fingertips (ADR 0045) |
 | joint-correction set: `cf_d_shoulder02`, `cf_d_arm01`…`03`, `cf_d_forearm02`, `cf_d_wrist`, `cf_d_hand`, `cf_s_elbo`, `cf_s_elboback`, `cf_s_forearm01`, `cf_d_siri`, `cf_d_thigh02`, `03`, `cf_s_leg`, `cf_d_kneeF`, `cf_s_kneeB`, `cf_s_leg01`, `cf_d_leg02`, `03`, `cf_s_waist02` (each side) | by name: they are what the game's own correction components move, and no Role or Group marks them |
 | `cf_s_shoulder02`, `cf_s_arm01`…`03`, `cf_s_forearm01`, `02`, `cf_s_wrist`, `cf_s_hand`, `cf_s_thigh01`…`03`, `cf_s_leg01`…`03`, `cf_s_head`, `cf_s_neck`, `cf_s_spine01`…`03`, `cf_s_waist01` (Rigify deform bones) | by name |
 | `cf_J_FaceUp_ty`, `cf_J_FaceBase` (head height, head mod) | by name |

@@ -40,7 +40,8 @@ def rigify(ctx):
     metarig = ch.armature
     kk = prepare.kk_extras(ctx.bundle.skeleton)
     ctx.log.info("The skeleton has the joint-correction bones, so the KK-only Rigify parts run" if kk else
-                 "The skeleton lacks some joint-correction bones, so the KK-only Rigify parts don't run (ADR 0022)")
+                 "The skeleton lacks some joint-correction bones, so the KK-only Rigify parts don't run (ADR 0022); "
+                 "the hands are aimed from the meshes (ADR 0045)")
     # The legacy scripts count and re-aim bones, so the joint corrections' helper bones come off
     # first and go back on the generated rig, where the deforming bones are (ADR 0038).
     joint_corrections.remove(metarig)

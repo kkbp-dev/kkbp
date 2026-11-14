@@ -63,6 +63,7 @@ ADRs:
 - [0042 One Gag eyes key, with a dropdown that picks the gag expression](../adr/0042-one-gag-eyes-key-with-a-dropdown.md)
 - [0043 The Rigify Hook is rewritten in the importer's style, and a rig fingerprint shows the rig is unchanged](../adr/0043-rigify-rewritten-and-checked-by-a-rig-fingerprint.md)
 - [0044 Bakes have their main texture's size and shape; the body and face stay 4096 square](../adr/0044-bakes-keep-the-main-textures-shape-and-skin-stays-4096.md)
+- [0045 The Rigify Hook aims the hands and makes palms on every skeleton](../adr/0045-every-skeleton-gets-aimed-hands-and-palms.md)
 
 Folded or dropped from the original review: candidate 6 (Exporter Naming) is replaced by Ids; candidate 9 (import options declared once) is part of the import pipeline.
 
@@ -161,7 +162,7 @@ Decisions agreed at the start of Phase 5. [hooks-and-tools.md](hooks-and-tools.m
 - **D21** SFW deletes the vertices and bones of Bone Group `nsfw` and, by exact name, the KK nipple bones, whether or not Rigify is on. With both on, the rig has no crotch, anus or nipple controls.
 - **D22** Rigify: the armature becomes the hidden metarig (still `ch.armature`), the generated rig is Part Role `rig`, Rigify is enabled for the session only (preferences are never saved), and each Character gets its own widgets.
 - **D23** Rigify renames the Role bones to the legacy names from a Bone Role table before generating, so the rig's names are human-readable and match the baseline and the legacy retargeting lists.
-- **D24** The KK/KKS-only Rigify branches (joint corrections, palms, finger rolls, nipple widgets) run when the skeleton has every joint-correction bone the legacy drivers name; the SVS-only hand IK widget branch runs when it doesn't ([ADR 0022](../adr/0022-kk-rigify-extras-gated-on-their-bones.md)).
+- **D24** The KK/KKS-only Rigify branches (joint corrections, palms, finger rolls, nipple widgets) run when the skeleton has every joint-correction bone the legacy drivers name; the SVS-only hand IK widget branch runs when it doesn't ([ADR 0022](../adr/0022-kk-rigify-extras-gated-on-their-bones.md)). Since ADR 0045 the wrists are aimed and the palms made on every skeleton, and the SVS-only hand IK widget branch is gone.
 - **D25** Rigify re-aims the joint-correction bones upright before driving them (ADR 0017), builds the eye controller and the Left and Right Eye vertex groups from Bone and Material Roles, rigs the single tongue (ADR 0020), on Body since D65, and builds the emotion grid from the Expression Names present.
 - **D26** Tools go through Character, `ch.bundle()` and templates, and write into the Cache. Export prep refuses a Character with a rig.
 - **D27** The legacy edit templates move into `library.blend` with descriptions and "edit" rows chosen by Material Role; a profile field `EDIT_COLORS` maps colours; the dark-texture code has no `bpy`. SVS has no edit rows yet. Bake renders with Eevee through an orthographic camera.
