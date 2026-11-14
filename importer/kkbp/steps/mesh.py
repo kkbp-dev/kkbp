@@ -11,7 +11,7 @@ from collections import defaultdict
 
 import bpy
 
-from .. import compat, mesh_loader
+from .. import compat, mesh_loader, templates
 from ..editing import editing
 from ..character import ID, KEY, OUTFIT, ROLE, SUB_COLLECTION
 
@@ -324,6 +324,19 @@ def add_driver(owner, prop, targets, expression):
         var.targets[0].data_path = path
     driver.expression = expression(names)
     return fcurve
+
+
+def drive_param(ch, mat, name, targets, expression, start=0, keep=False):
+    """Drives the material's parameter `name` from `targets`, on a property of each of the Character's
+    objects that uses the material, which the material reads (`templates.read_from_objects`, issue 70).
+    Returns the drivers."""
+    prop = templates.read_from_objects(mat, name, keep)
+    drivers = []
+    for obj in ch.parts():
+        if obj.type == "MESH" and any(s.material == mat for s in obj.material_slots):
+            obj[prop] = float(start)
+            drivers.append(add_driver(obj, f'["{prop}"]', targets, expression))
+    return drivers
 
 
 def _single_prop_driver(owner, prop, key, path):

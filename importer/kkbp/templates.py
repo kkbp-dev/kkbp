@@ -17,13 +17,15 @@ import logging
 import bpy
 
 from . import appending, library, profiles
-from .character import KEY
+from .character import ID, KEY
 
 log = logging.getLogger("kkbp")
 
 TEMPLATE = "kkbp_template"  # on a template material in the file, and on every material made from it
 PATTERNS = "kkbp_patterns"  # on a material: its pattern slot's patterns, in choice order
 VARIANT = "kkbp_variant"  # on a material whose shader `swap` replaced: the variant
+DRIVEN = "kkbp.driven."  # + a parameter: the Attribute node reading it from the object (`read_from_objects`)
+HELD = ".held"  # + after that: the Math node that also keeps the material's own value
 
 
 class TemplateError(Exception):
@@ -184,9 +186,67 @@ def param(material, name: str):
     if name not in params:
         raise TemplateError(f"the {template.name} template has no parameter {name}"
                             + (f" with the {material[VARIANT]} variant" if VARIANT in material else ""))
+    held = material.node_tree.nodes.get(DRIVEN + name + HELD)
+    if held is not None:  # read from the objects too (`read_from_objects`): this is the material's own value
+        return held.inputs[1]
     node_name, socket = params[name]
     node = node_at(material, node_name)
     return node.outputs[socket] if node.type in ("VALUE", "ATTRIBUTE") else node.inputs[socket]
+
+
+def read_from_objects(material, name: str, keep: bool = False) -> str:
+    """Makes the material read parameter `name` from a custom property of the object it is drawn on,
+    through an Attribute node, and returns the property's name. Something that changes during an
+    animation is driven there, not on the material: a driver on a material re-evaluates the material
+    every frame its inputs are animated, which costs most of the frame rate (issue 70), where an object
+    property is read as it is drawn. An object without the property reads 0.
+
+    With `keep` the material shows the larger of the property and its own value, which `param` goes on
+    giving (a Hook can still hide a material); without it the property alone decides."""
+    tree = material.node_tree
+    prop = f"kkbp_{name}_{material.get(ID, material.name)}"
+    if tree.nodes.get(DRIVEN + name) is not None:
+        return prop
+    socket = param(material, name)
+    reader = tree.nodes.new("ShaderNodeAttribute")
+    reader.name = DRIVEN + name
+    reader.attribute_type, reader.attribute_name = "OBJECT", prop
+    reader.location = (socket.node.location.x - 220, socket.node.location.y - 300)
+    value = reader.outputs["Fac"]
+    if socket.is_output:  # a Value node's: what it fed reads the property
+        for link in [l for l in tree.links if l.from_socket == socket]:
+            to_socket = link.to_socket
+            tree.links.remove(link)
+            tree.links.new(value, to_socket)
+    elif keep:
+        held = tree.nodes.new("ShaderNodeMath")
+        held.name, held.operation = DRIVEN + name + HELD, "MAXIMUM"
+        held.location = (reader.location.x + 180, reader.location.y)
+        held.inputs[1].default_value = socket.default_value
+        tree.links.new(value, held.inputs[0])
+        tree.links.new(held.outputs[0], socket)
+    else:
+        tree.links.new(value, socket)
+    return prop
+
+
+def value_on(obj, material, name: str) -> float:
+    """What the material shows for parameter `name` on `obj`: the object's property where the material
+    reads one (`read_from_objects`), with the material's own value where that is kept too."""
+    reader = material.node_tree.nodes.get(DRIVEN + name)
+    if reader is None:
+        return param(material, name).default_value
+    value = float(obj.get(reader.attribute_name, 0.0))
+    held = material.node_tree.nodes.get(DRIVEN + name + HELD)
+    return max(value, held.inputs[1].default_value) if held is not None else value
+
+
+def object_properties(material) -> list[str]:
+    """The object properties the material reads (`read_from_objects`)."""
+    if material is None or material.node_tree is None:
+        return []
+    return [n.attribute_name for n in material.node_tree.nodes
+            if n.type == "ATTRIBUTE" and n.name.startswith(DRIVEN) and n.attribute_type == "OBJECT"]
 
 
 def params(material) -> tuple[str, ...]:

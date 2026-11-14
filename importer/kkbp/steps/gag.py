@@ -17,7 +17,7 @@ from collections import defaultdict
 import numpy as np
 
 from .. import templates
-from .mesh import _meshes, _part_with_key, _quote, _single_prop_driver, add_driver
+from .mesh import _meshes, _part_with_key, _quote, _single_prop_driver, add_driver, drive_param
 
 GAG_KEY = "Gag eyes"
 CORRECTIONS = "kkbp_gag_corrections"  # on a Part's shape keys: correction key -> the expressions it is for
@@ -218,7 +218,7 @@ def drive_gag_eyes(ctx):
     for mat in materials:
         templates.pick_by(mat, picks[mat], from_picker=mat is menu_material)
         if mat is not menu_material:
-            add_driver(templates.param(mat, "choice"), "default_value", chosen.targets, chosen.chosen)
+            drive_param(ch, mat, "choice", chosen.targets, chosen.chosen)
 
     _drive_showing_keys(ctx, chosen, targets)
     for obj in _meshes(ch):

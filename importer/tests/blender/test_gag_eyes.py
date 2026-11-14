@@ -98,7 +98,7 @@ def test_the_dropdown_picks_the_gag_expression(build):
     _pick(ch, "Fiery Eyes")
     assert shows["Gag eye 00"].value == 0 and shows["Gag eye 01"].value == 1
     assert fiery.value == 1
-    assert templates.param(ch.material("cf_m_gageye_01"), "choice").default_value == 2
+    assert templates.value_on(ch.gag_eyes, ch.material("cf_m_gageye_01"), "choice") == 2
     _pick(ch, "Fiery Eyes", number=1)  # the number wins over the dropdown
     assert shows["Gag eye 00"].value == 1 and fiery.value == 0
     body[gag.GAG_KEY].value = 0.4
@@ -154,7 +154,7 @@ def test_driver_expressions_stay_simple(build):
     """Blender runs simple driver expressions without Python, so they work in untrusted files."""
     _, ch = _import(build(_two_gags()))
     owners = [o.data.shape_keys for o in ch.parts() if o.type == "MESH" and o.data.shape_keys]
-    owners += [m.node_tree for m in ch.materials()]
+    owners += [m.node_tree for m in ch.materials()] + [o for o in ch.parts() if o.type == "MESH"]
     drivers = [(o.name, fc) for o in owners if o.animation_data for fc in o.animation_data.drivers]
     assert any("gag.expression" in v.targets[0].data_path for _, fc in drivers for v in fc.driver.variables)
     for name, fcurve in drivers:
@@ -178,16 +178,19 @@ def test_fiery_eyes_leave_the_pupils_showing(golden_import):
     """Every KK gag expression hides the pupils but Fiery Eyes, which burns in front of them."""
     _, ch = golden_import("kk")
     body = ch.body.data.shape_keys.key_blocks
-    pupil = templates.param(ch.material("cf_m_hitomi_00"), "hidden")
+
+    def pupil():
+        return templates.value_on(ch.body, ch.material("cf_m_hitomi_00"), "hidden")
+
     _pick(ch, "Heart Eyes")
-    assert pupil.default_value == 0  # Gag eyes is down
+    assert pupil() == 0  # Gag eyes is down
     body[gag.GAG_KEY].value = 1.0
     _evaluate()
-    assert pupil.default_value == 1 and body[FIERY].value == 0
+    assert pupil() == 1 and body[FIERY].value == 0
     _pick(ch, "Fiery Eyes")
-    assert pupil.default_value == 0 and body[FIERY].value == 1
+    assert pupil() == 0 and body[FIERY].value == 1
     _pick(ch, number=1)  # Circle Eyes 1, the first
-    assert pupil.default_value == 1 and body[FIERY].value == 0
+    assert pupil() == 1 and body[FIERY].value == 0
 
 
 def test_the_gag_patterns_read_the_frame_from_their_object(build):
@@ -211,11 +214,22 @@ def test_the_gag_patterns_read_the_frame_from_their_object(build):
             assert obj[chain.frame_property] == 12
 
 
-def test_a_frame_change_updates_no_material(golden_import):
-    """Playing an animation doesn't re-evaluate the materials or the shape keys: the drivers that
-    read the gag expression dropdown run only when it changes."""
-    golden_import("kk")
+@pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
+@pytest.mark.parametrize("keyed", [None, "Gag eyes", "Eye Star Pupils"])
+def test_a_frame_change_updates_no_material(sample, keyed, golden_import):
+    """Playing an animation doesn't re-evaluate the materials, with nothing keyed or with the gag eyes
+    or an expression that picks an eye overlay keyed (issue 70): what the expressions change on a
+    material is driven on the objects, which the material reads as it is drawn. A driver on the
+    material would re-evaluate it on every frame, even while the key stays still."""
+    _, ch = golden_import(sample)
     scene = bpy.context.scene
+    blocks = ch.body.data.shape_keys.key_blocks
+    if keyed is not None:
+        if keyed not in blocks:
+            pytest.skip(f"{sample} has no {keyed}")
+        for frame, value in ((1, 0.0), (4, 1.0), (8, 0.0)):
+            blocks[keyed].value = value
+            blocks[keyed].keyframe_insert("value", frame=frame)
     seen = []
 
     def note(scene, depsgraph):
@@ -223,8 +237,11 @@ def test_a_frame_change_updates_no_material(golden_import):
 
     bpy.app.handlers.frame_change_post.append(note)
     try:
-        for frame in (1, 2, 3):
+        for frame in range(1, 9):
             scene.frame_set(frame)
     finally:
         bpy.app.handlers.frame_change_post.remove(note)
-    assert not {u for u in seen[-1] if u.startswith(("Material", "Key"))}, sorted(seen[-1])
+    for updated in seen[2:]:
+        assert not {u for u in updated if u.startswith("Material")}, sorted(updated)
+        if keyed is None:
+            assert not {u for u in updated if u.startswith("Key")}, sorted(updated)

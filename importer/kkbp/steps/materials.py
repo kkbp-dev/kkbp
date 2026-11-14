@@ -10,7 +10,7 @@ import bpy
 
 from .. import templates
 from . import gag
-from .mesh import FACE_PARTS, add_driver, material_id
+from .mesh import FACE_PARTS, drive_param, material_id
 
 # Every nth pixel in each direction is sampled for a material's viewport colour.
 COLOR_SAMPLE_STEP = 200
@@ -93,13 +93,13 @@ def drive_material_changes(ctx):
     for mat, chosen in picks.items():
         off = templates.choice_value(mat, None)
         terms = [(owner, target, templates.choice_value(mat, index) - off) for owner, target, index in chosen]
-        socket = templates.param(mat, templates.template_of(mat).patterns.choice)
 
         def expression(names, terms=terms, off=off):
             # One expression is on at a time: off + (its value - off).
             return f"{off}" + "".join(f"{delta:+d}*({name}>0)" for name, (_, _, delta) in zip(names, terms))
 
-        _drive(ctx, socket, _key_targets([(o, t) for o, t, _ in terms]), expression)
+        _drive(ctx, mat, templates.template_of(mat).patterns.choice, _key_targets([(o, t) for o, t, _ in terms]),
+               expression, start=off)
     for mat in list(hides) + [m for m in gag_hides if m not in hides]:
         sources, gags = hides.get(mat, []), gag_hides.get(mat, [])
         targets = _key_targets(sources) + (picked.targets if gags else [])
@@ -110,7 +110,7 @@ def drive_material_changes(ctx):
                 tests.append(picked.on(names[count:], gags))
             return f"1 if {' or '.join(tests)} else 0"
 
-        _drive(ctx, templates.param(mat, "hidden"), targets, expression)
+        _drive(ctx, mat, "hidden", targets, expression, keep=True)
 
 
 def set_viewport_colors(ctx):
@@ -147,11 +147,11 @@ def _key_targets(sources):
     return [(owner.data.shape_keys, f'key_blocks["{_quote(target)}"].value') for owner, target in sources]
 
 
-def _drive(ctx, socket, targets, expression):
-    fcurve = add_driver(socket, "default_value", targets, expression)
-    if len(fcurve.driver.expression) > 255:
-        ctx.log.warning(f"{socket.node.id_data.name}: the driver for {socket.name} is too long for Blender "
-                        f"({len(targets)} expressions)")
+def _drive(ctx, mat, name, targets, expression, start=0, keep=False):
+    """Drives the material's parameter `name` on every object of the Character that uses the material."""
+    drivers = drive_param(ctx.character, mat, name, targets, expression, start, keep)
+    if drivers and len(drivers[0].driver.expression) > 255:
+        ctx.log.warning(f"{mat.name}: the driver for {name} is too long for Blender ({len(targets)} expressions)")
 
 
 def _expression_owner(ch, target):
