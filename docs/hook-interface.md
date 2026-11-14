@@ -184,6 +184,8 @@ Part Roles: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armatu
   | `templates.variant(material)` | The variant `swap` put in, or None |
   | `templates.apply(ch, blender_material, bundle_material)` | Rebuilds a material from its template and the bundle's values; returns the new material |
 
+  What an expression changes on a material (`hidden`, and the pattern choice of the eyes and gag eyes) is driven on a custom property of each object that uses the material, not on the socket, so the materials aren't re-evaluated on every frame of an animation. `param(material, "hidden")` is then the material's own value: setting it to 1 still hides the material, but it doesn't read 1 while an expression hides it.
+
 - Prefer Blender's data API to operators. A Hook that uses operators sets the active object and selection itself.
 
 ## Importing from a script

@@ -66,8 +66,10 @@ def test_the_golden_samples_import(sample, golden_import):
     for gag in gags:
         assert gag.name == gag[character.ID]
         if templates.picker(gag) is None:  # the others follow the dropdown
-            paths = [fc.data_path for fc in gag.node_tree.animation_data.drivers]
-            assert 'nodes["gag.choice"].outputs[0].default_value' in paths, paths
+            prop, = templates.object_properties(gag)  # its choice, read from the object it is on (issue 70)
+            users = [o for o in ch.parts("gag_eyes") if any(s.material == gag for s in o.material_slots)]
+            assert users and all(f'["{prop}"]' in [fc.data_path for fc in o.animation_data.drivers] for o in users)
+            assert gag.node_tree.animation_data is None or not gag.node_tree.animation_data.drivers
     assert result.warnings == [], result.warnings
 
 
@@ -93,15 +95,15 @@ def test_expressions_drive_the_face(golden_import):
     assert gag_keys["Gag eye 01"].value == 1 and gag_keys["Gag eye 00"].value == 0
     gag = ch.material("cf_m_gageye_01")
     index = templates.patterns(gag).index("cf_t_gageye_01")
-    assert templates.param(gag, "choice").default_value == 3
+    assert templates.value_on(ch.gag_eyes, gag, "choice") == 3
     assert templates.pattern_param(gag, index, "angle_speed").default_value == pytest.approx(-0.5)
-    assert templates.param(ch.material("cf_m_hitomi_00"), "hidden").default_value == 1
+    assert templates.value_on(ch.body, ch.material("cf_m_hitomi_00"), "hidden") == 1
     body_keys["Gag eyes"].value = 0.0
     body_keys["Eye Star Pupils"].value = 1.0  # the eyes' cf_t_expression_01 overlay
     evaluate()
     eye = ch.material("cf_m_hitomi_00")
-    assert templates.param(eye, "hidden").default_value == 0
-    assert templates.param(eye, "expression").default_value == \
+    assert templates.value_on(ch.body, eye, "hidden") == 0
+    assert templates.value_on(ch.body, eye, "expression") == \
         templates.choice_value(eye, templates.patterns(eye).index("cf_t_expression_01"))
     body_keys["Eye Crying"].value = 0.7
     evaluate()
