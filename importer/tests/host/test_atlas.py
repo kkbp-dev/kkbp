@@ -51,3 +51,59 @@ def test_the_alpha_mask_folds_into_the_texture():
     out = atlas.apply_alpha_mask(texture, mask)
     assert out.getpixel((0, 0)) == (200, 100, 50, 255)  # red mask keeps it
     assert out.getpixel((3, 3))[3] == 0  # black mask hides it
+
+
+def _big():
+    return [atlas.Piece("body", (4096, 4096)), atlas.Piece("face", (4096, 4096)),
+            atlas.Piece("top", (4096, 4096)), atlas.Piece("skirt", (4096, 4096)),
+            atlas.Piece("shoes", (512, 1024)), atlas.Piece("plain", None)]
+
+
+def test_an_atlas_over_the_cap_is_split_into_several():
+    """Issue 12: four 4096 px materials don't fit one 4096 px atlas, so each gets its own, and the
+    small ones share another. Nothing is scaled down."""
+    assert atlas.plan(_big()).size[0] > 8192
+    layouts = atlas.plan_split(_big(), max_side=4096)
+    assert len(layouts) == 5 and all(l.size[0] <= 4096 for l in layouts)
+    keys = [sorted(l.pieces) for l in layouts]
+    assert sorted(k for group in keys for k in group) == ["body", "face", "plain", "shoes", "skirt", "top"]
+    assert ["plain", "shoes"] in keys
+    for layout in layouts:
+        for p in layout.pieces.values():
+            if p.image_size is not None:
+                assert p.size == p.image_size  # never scaled down
+
+
+def test_pieces_share_an_atlas_while_they_fit():
+    layouts = atlas.plan_split(_big(), max_side=8192)
+    assert len(layouts) == 2 and all(l.size[0] <= 8192 for l in layouts)
+    assert len(layouts[0].pieces) == 4  # the four big ones fill the first
+
+
+def test_an_atlas_under_the_cap_is_one_atlas_as_before():
+    def pieces():
+        return [atlas.Piece("a", (100, 100)), atlas.Piece("b", (50, 50)), atlas.Piece("c", (64, 32))]
+
+    one, = atlas.plan_split(pieces(), max_side=8192)
+    whole = atlas.plan(pieces())
+    assert one.size == whole.size
+    assert {k: (p.x, p.y) for k, p in one.pieces.items()} == {k: (p.x, p.y) for k, p in whole.pieces.items()}
+    free, = atlas.plan_split(pieces())  # no cap
+    assert free.size == whole.size
+
+
+def test_a_piece_larger_than_the_cap_gets_an_atlas_of_its_own():
+    """It isn't scaled down, so its atlas is over the cap; nothing else goes in with it."""
+    layouts = atlas.plan_split([atlas.Piece("tiled", (1024, 1024), max_uv=(3.0, 1.0)), atlas.Piece("small", (256, 256))],
+                               max_side=2048)
+    assert [sorted(l.pieces) for l in layouts] == [["tiled"], ["small"]]
+    assert layouts[0].size[0] == 3072 and layouts[1].size[0] <= 2048
+
+
+def test_uvs_land_inside_their_piece_in_a_split_atlas():
+    for layout in atlas.plan_split(_big(), max_side=4096):
+        for key, p in layout.pieces.items():
+            for u, v in ((0.0, 0.0), (1.0, 1.0)):
+                x, y = atlas.remap(layout, key, u, v)
+                assert p.x <= x * layout.size[0] <= p.x + p.size[0], key
+                assert p.y <= (1 - y) * layout.size[1] <= p.y + p.size[1], key

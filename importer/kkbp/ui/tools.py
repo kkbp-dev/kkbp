@@ -60,6 +60,10 @@ class KKBP_OT_export_prep(bpy.types.Operator):
     target: bpy.props.EnumProperty(name="Target", items=[(k, label, "") for k, (label, _) in export_prep.TARGETS.items()])
     simplify: bpy.props.EnumProperty(name="Bones", items=export_prep.SIMPLIFY)
     atlas: bpy.props.EnumProperty(name="Atlas", items=export_prep.ATLAS)
+    atlas_size: bpy.props.EnumProperty(
+        name="Largest atlas", default=str(export_prep.DEFAULT_ATLAS_SIZE),
+        description="An object whose atlas would be wider than this gets several atlases. Nothing is scaled down",
+        items=[(str(n), f"{n} px", "") for n in export_prep.ATLAS_SIZES])
 
     @classmethod
     def poll(cls, context):
@@ -68,13 +72,21 @@ class KKBP_OT_export_prep(bpy.types.Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 
+    def draw(self, context):
+        layout = self.layout
+        layout.use_property_split = True
+        for name in ("target", "simplify", "atlas"):
+            layout.prop(self, name)
+        if self.atlas != "none":
+            layout.prop(self, "atlas_size")
+
     def execute(self, context):
         ch = _character(self, context)
         if ch is None:
             return {"CANCELLED"}
         try:
             collection = export_prep.prep(ch, self.target, self.simplify, self.atlas,
-                                          log=lambda m: self.report({"INFO"}, m))
+                                          log=lambda m: self.report({"INFO"}, m), max_atlas=int(self.atlas_size))
         except (CharacterError, BundleError) as ex:
             self.report({"ERROR"}, str(ex))
             return {"CANCELLED"}

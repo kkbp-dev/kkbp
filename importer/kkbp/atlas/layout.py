@@ -32,18 +32,40 @@ class Layout:
 
 def plan(pieces: list[Piece], gaps: int = 0) -> Layout:
     """Packs the pieces, largest first, into one square atlas."""
+    ordered = _largest_first(pieces, gaps)
+    _pack(ordered)
+    width = max((p.x + p.size[0] for p in ordered), default=1)
+    height = max((p.y + p.size[1] for p in ordered), default=1)
+    side = int(max(width, height, 1))
+    return Layout({p.key: p for p in ordered}, (side, side))
+
+
+def plan_split(pieces: list[Piece], gaps: int = 0, max_side: int | None = None) -> list[Layout]:
+    """Packs the pieces into as many square atlases as it takes for none to be wider than `max_side`
+    pixels (issue 12); one atlas, as `plan` makes it, if they all fit or there is no limit. Nothing is
+    scaled down: each piece, largest first, goes in the first atlas it fits in, or starts another. A
+    piece wider than `max_side` on its own gets an atlas to itself, which is then over the limit."""
+    if max_side is None:
+        return [plan(pieces, gaps)]
+    groups: list[list[Piece]] = []
+    for p in _largest_first(pieces, gaps):
+        for group in groups:
+            if plan(group + [p], gaps).size[0] <= max_side:
+                group.append(p)
+                break
+        else:
+            groups.append([p])
+    return [plan(group, gaps) for group in groups]  # packed once more: a failed try moved the pieces
+
+
+def _largest_first(pieces, gaps):
     for p in pieces:
         p.tiles = tuple(min(max(v, 1.0), MAX_TILES) for v in p.max_uv)
         if p.image_size is None:
             p.size = (SWATCH + gaps, SWATCH + gaps)
         else:
             p.size = tuple(s * t + gaps for s, t in zip(p.image_size, p.tiles))
-    ordered = sorted(pieces, key=lambda p: (max(p.size), p.size[0] * p.size[1], p.size[0], p.key), reverse=True)
-    _pack(ordered)
-    width = max((p.x + p.size[0] for p in ordered), default=1)
-    height = max((p.y + p.size[1] for p in ordered), default=1)
-    side = int(max(width, height, 1))
-    return Layout({p.key: p for p in ordered}, (side, side))
+    return sorted(pieces, key=lambda p: (max(p.size), p.size[0] * p.size[1], p.size[0], p.key), reverse=True)
 
 
 def remap(layout: Layout, key: str, u: float, v: float, gaps: int = 0) -> tuple[float, float]:
