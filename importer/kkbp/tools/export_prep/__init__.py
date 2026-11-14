@@ -20,11 +20,16 @@ ATLAS = (("atlas", "Atlas", "One atlas each for the light, dark and normal textu
          ("skip_eyes", "Atlas without the eyes", "As Atlas, with the eyes keeping their own textures"),
          ("all_textures", "Atlas of every texture", "As Atlas, with the detail, alpha and colour masks too"),
          ("none", "No atlas", "The textures stay as they are"))
+# The largest atlas the user can pick, in pixels a side: many targets cap textures at 4096 or 8192, and a
+# 16384 px RGBA atlas takes 1 GB to paint (issue 12).
+ATLAS_SIZES = (2048, 4096, 8192, 16384)
+DEFAULT_ATLAS_SIZE = 8192
 
 
-def prep(ch, target: str, simplify: str, atlas_mode: str, log=print):
+def prep(ch, target: str, simplify: str, atlas_mode: str, log=print, max_atlas: int | None = DEFAULT_ATLAS_SIZE):
     """Readies the Character for `target`. With an atlas, the result is a copy in a "<name> atlas"
-    Collection, and the atlases are in the bundle's Cache; returns the Collection to export."""
+    Collection, and the atlases are in the bundle's Cache; returns the Collection to export. An atlas
+    wider than `max_atlas` pixels is split into several, with nothing scaled down; None means no limit."""
     if ch.rig is not None:
         raise CharacterError(f"{ch.name} has a Rigify rig. Export prep needs a Character imported without Rigify.")
     bundle = ch.bundle()
@@ -39,6 +44,6 @@ def prep(ch, target: str, simplify: str, atlas_mode: str, log=print):
     collection = ch.collection
     folder = bundle.cache_dir("atlas")
     if atlas_mode != "none":
-        collection = atlas.build(ch, atlas_mode, folder, log)
+        collection = atlas.build(ch, atlas_mode, folder, log, max_atlas)
     common.fbx_exporter(collection, str(folder / f"{atlas._safe(ch.name)} exported model.fbx"))
     return collection

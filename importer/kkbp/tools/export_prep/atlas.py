@@ -1,5 +1,6 @@
 """The atlas, in Blender: a copy of the Character whose meshes each use one atlas per texture kind
-(light, dark, normal; with "all_textures" the detail, alpha and colour masks too). The layout,
+(light, dark, normal; with "all_textures" the detail, alpha and colour masks too), or several where
+one would be over the size limit. The layout,
 the UV maths and the painting are kkbp/atlas, which has no bpy; this module reads the images,
 applies the UVs and makes the atlas materials."""
 
@@ -22,8 +23,9 @@ EYES = ("eye_l", "eye_r")  # "skip_eyes" leaves these with their own textures, s
 UV_MAP = "uv_main"
 
 
-def build(ch, mode: str, folder: Path, log):
-    """The atlas copy of the Character in a "<name> atlas" Collection; returns the Collection.
+def build(ch, mode: str, folder: Path, log, max_side: int | None = None):
+    """The atlas copy of the Character in a "<name> atlas" Collection; returns the Collection. An
+    object whose atlas would be wider than `max_side` pixels gets several atlases (issue 12).
     Pillow is required to import, so it is there; it is imported here, not when the add-on loads,
     because the add-on must load without it to offer installing it."""
     folder.mkdir(parents=True, exist_ok=True)
@@ -31,7 +33,7 @@ def build(ch, mode: str, folder: Path, log):
     bpy.context.scene.collection.children.link(collection)
     copies = _copy(ch, collection)
     for obj in [o for o in copies if o.type == "MESH"]:
-        _atlas_object(ch, obj, mode, folder, log)
+        _atlas_object(ch, obj, mode, folder, log, max_side)
         for modifier in obj.modifiers:
             if modifier.type == "SOLIDIFY":  # the outlines
                 modifier.show_viewport = modifier.show_render = False
@@ -58,7 +60,7 @@ def _copy(ch, collection):
     return list(copies.values())
 
 
-def _atlas_object(ch, obj, mode, folder, log):
+def _atlas_object(ch, obj, mode, folder, log, max_side=None):
     from ... import atlas
 
     materials = [s.material for s in obj.material_slots
@@ -79,35 +81,47 @@ def _atlas_object(ch, obj, mode, folder, log):
         coords = [uv.data[i].uv for i in loops[mat]]
         max_uv = (max((c.x for c in coords), default=1.0), max((c.y for c in coords), default=1.0))
         pieces.append(atlas.Piece(mat.name, tuple(_image(mat, "main.light").size), max_uv))
-    layout = atlas.plan(pieces)
+    layouts = atlas.plan_split(pieces, max_side=max_side)
     alpha = {m.name: _pil(_image(m, "alpha_mask")) for m in materials}
     alpha = {k: v for k, v in alpha.items() if v is not None}
-    atlas_images = {}
-    for slot in SLOTS[mode]:
-        pictures = {}
-        for mat in materials:
-            image = _image(mat, slot)
-            picture = _pil(image) if image is not None else None
-            if picture is not None and slot in ("main.light", "main.dark") and mat.name in alpha \
-                    and _keeps_alpha(mat):
-                picture = atlas.apply_alpha_mask(picture, alpha[mat.name])
-            pictures[mat.name] = picture if picture is not None else (0, 0, 0, 0)
-        if all(isinstance(p, tuple) for p in pictures.values()):
-            continue
-        path = folder / f"{_safe(obj.name)} {slot}.png"
-        atlas.compose(layout, pictures).save(path)
-        image = bpy.data.images.load(str(path), check_existing=False)
-        image.pack()
-        image[KEY] = ch.key
-        atlas_images[slot] = image
-    for mat, indices in loops.items():
-        for i in indices:
-            u, v = uv.data[i].uv
-            uv.data[i].uv = atlas.remap(layout, mat.name, u, v)
-    for slot in obj.material_slots:
-        if slot.material in loops:
-            slot.material = _atlas_material(slot.material, atlas_images)
-    log(f"{obj.name}: {len(materials)} materials in one atlas of {layout.size[0]} x {layout.size[1]}")
+    for number, layout in enumerate(layouts, 1):
+        group = [m for m in materials if m.name in layout.pieces]
+        label = f"{_safe(obj.name)} {number}" if len(layouts) > 1 else _safe(obj.name)
+        atlas_images = {}
+        for slot in SLOTS[mode]:
+            pictures = {}
+            for mat in group:
+                image = _image(mat, slot)
+                picture = _pil(image) if image is not None else None
+                if picture is not None and slot in ("main.light", "main.dark") and mat.name in alpha \
+                        and _keeps_alpha(mat):
+                    picture = atlas.apply_alpha_mask(picture, alpha[mat.name])
+                pictures[mat.name] = picture if picture is not None else (0, 0, 0, 0)
+            if all(isinstance(p, tuple) for p in pictures.values()):
+                continue
+            path = folder / f"{label} {slot}.png"
+            atlas.compose(layout, pictures).save(path)
+            image = bpy.data.images.load(str(path), check_existing=False)
+            image.pack()
+            image[KEY] = ch.key
+            atlas_images[slot] = image
+        for mat in group:
+            for i in loops[mat]:
+                u, v = uv.data[i].uv
+                uv.data[i].uv = atlas.remap(layout, mat.name, u, v)
+        for slot in obj.material_slots:
+            if slot.material in group:
+                slot.material = _atlas_material(slot.material, atlas_images)
+    sizes = ", ".join(f"{l.size[0]} x {l.size[1]}" for l in layouts)
+    if len(layouts) == 1:
+        log(f"{obj.name}: {len(materials)} materials in one atlas of {sizes}")
+    else:
+        log(f"{obj.name}: {len(materials)} materials in {len(layouts)} atlases ({sizes}), split to stay within "
+            f"{max_side} px")
+    for layout in layouts:
+        if max_side is not None and layout.size[0] > max_side:
+            log(f"{obj.name}: {next(iter(layout.pieces))} alone is {layout.size[0]} px, over the {max_side} px "
+                f"limit; it isn't scaled down, so its atlas is that size")
 
 
 def _atlas_material(mat, atlas_images):
