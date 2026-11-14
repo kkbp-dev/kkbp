@@ -15,6 +15,7 @@ STEPS: list[Step] = [
     Step(mesh.rename_uv_maps),
     Step(mesh.merge_rigged_tongue),
     Step(mesh.build_parts),
+    Step(mesh.add_tear_controls),
     Step(gag.combine_gag_keys),
     Step(mesh.order_material_slots),
     Step(mesh.order_shape_keys),

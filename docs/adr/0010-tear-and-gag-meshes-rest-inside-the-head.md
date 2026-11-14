@@ -12,3 +12,4 @@ The tear meshes (`cf_O_namida_L`, `_M`, `_S`) and the gag-eye meshes (`cf_O_gag_
 - These meshes are the one exception to "vertex positions are the capture pose" ([ADR 0006](0006-every-mesh-skinned-at-scene-root.md)).
 - The keys are in `expressions.json` like any other, with categories `tears` and `gag` and no game name.
 - A gag-eye expression names the gag mesh it needs, and the importer drives that mesh's key from it.
+- No expression shows the tear meshes, so the user moves them. The importer gives Body the tears' showing keys (`Tears big`, `Tears med`, `Tears small`), which move nothing on Body and drive the tears Part's keys of the same name, so the tears are keyed with the rest of the face (issue 69). A showing key Body has gets no driver from an expression.

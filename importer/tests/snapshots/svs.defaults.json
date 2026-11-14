@@ -1413,6 +1413,9 @@
      "Eyebrow Winking L",
      "Eyebrow Winking R",
      "Eyebrow Worried",
+     "Tears big",
+     "Tears med",
+     "Tears small",
      "Gag eyes (Fiery Eyes)",
      "Eye Closed copy",
      "Mouth Impatient (Copy)",
@@ -31990,7 +31993,7 @@
      "cf_m_namida_2",
      "cf_m_namida_3"
     ],
-    "shape_key_drivers": 28,
+    "shape_key_drivers": 34,
     "shape_keys": [
      "Basis",
      "Gag eyes",
@@ -42213,6 +42216,7 @@
   "result": "ok",
   "steps": {
    "add_joint_corrections": "ran",
+   "add_tear_controls": "ran",
    "apply_outfit_body_textures": "ran",
    "apply_templates": "ran",
    "arrange_collections": "ran",

@@ -199,6 +199,22 @@ def order_shape_keys(ctx):
                 compat.move_shape_key(obj, keys.key_blocks.find(name), "BOTTOM")
 
 
+def add_tear_controls(ctx):
+    """Gives Body the tear meshes' showing keys (`Tears big`, …), in the tears Part's order. Body has no
+    tear geometry, so on Body they move nothing: they are the controls `link_expression_keys` drives the
+    tears Part's keys from, so the tears are keyed with the rest of the face (issue 69)."""
+    ch = ctx.character
+    body = ch.body
+    if body is None or body.data.shape_keys is None:
+        return
+    showing = {e.target for e in ctx.bundle.expressions.records if e.category == "tears" and e.game_name is None}
+    for obj in ch.parts("tears"):
+        for key in obj.data.shape_keys.key_blocks if obj.data.shape_keys else ():
+            if key.name in showing and key.name not in body.data.shape_keys.key_blocks:
+                control = body.shape_key_add(name=key.name, from_mix=False)
+                control.value = 0.0  # a new key starts at 1
+
+
 def link_expression_keys(ctx):
     """Drives the expression keys of the tears and gag-eye Parts from Body's keys of the same name,
     so one slider on Body moves the whole face."""
@@ -219,7 +235,8 @@ def link_expression_keys(ctx):
 
 def drive_showing_keys(ctx):
     """Shows each tear and gag-eye mesh while an expression that `shows` it is on (ADR 0010). Once
-    the gag keys are one key, `drive_gag_eyes` drives what the gag expressions show (ADR 0042)."""
+    the gag keys are one key, `drive_gag_eyes` drives what the gag expressions show (ADR 0042). A
+    showing key Body has (the tears', `add_tear_controls`) is the user's to move and gets no driver."""
     from . import gag
 
     ch, bundle = ctx.character, ctx.bundle
@@ -234,6 +251,10 @@ def drive_showing_keys(ctx):
             by_mesh[mesh].append(effect.target)
     for mesh, targets in by_mesh.items():
         key_name = showing_key.get(mesh)
+        if _part_with_key(ch, [p for p in (ch.body,) if p], key_name):
+            ctx.log.info(f"Mesh {mesh}'s showing key {key_name} is moved from Body, so {', '.join(targets)} "
+                         f"don't show it")
+            continue
         part = _part_with_key(ch, ch.parts(("tears", "gag_eyes")), key_name)
         if part is None:
             ctx.log.warning(f"Mesh {mesh}'s showing key {key_name} wasn't found")
