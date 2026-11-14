@@ -2,7 +2,8 @@
 Body's expression shape keys (Expression Names, ADR 0004). The mouth controller blends the A, I,
 U, E and O keys around a circle; the eye controller closes or squeezes the eyes; the two custom
 controllers drive four empty keys the animator can sculpt. The copies are what the grid drives,
-so the original keys stay free to animate.
+so the original keys stay free to animate. A key Body lacks is left out and logged; the rest of the
+grid is still made (issue #64).
 
 Body holds the mouth and the tongue (ADR 0039), so the tongue follows the mouth keys.
 """
@@ -88,17 +89,19 @@ def emotion_grid(build):
     if body.data.shape_keys is None:
         build.log.warning("Body has no shape keys, so the emotion grid drives nothing")
         return
-    _mouth(rig, body)
+    _mouth(rig, body, build.log)
     keys = body.data.shape_keys
     _copy_keys(body, names.EYE_SHAPEKEYS_TO_COPY, names.EYE_SHAPEKEYS_COPY_SUFFIX)
+    missing = []
     for key, expression in EYE_DRIVERS:
         name = key + names.EYE_SHAPEKEYS_COPY_SUFFIX
-        if name not in keys.key_blocks:
-            # The rest of the grid is skipped, as the legacy script's error left it (see "Found, not fixed").
-            build.log.warning(f"Body has no {key!r} shape key, so the emotion grid stops at the eye keys: the rest "
-                              "of the eye keys and the custom keys aren't made")
-            return
+        if name not in keys.key_blocks:  # each Game has its own eye expressions (issue #64)
+            missing.append(key)
+            continue
         _height_driver(keys, name, rig, names.EYE_WIDGET_CONTROLLER_BONE, expression)
+    if missing:
+        build.log.info(f"Body has no {', '.join(repr(k) for k in missing)} shape key, so the emotion grid's eye "
+                       "controller doesn't drive it")
     for name in names.CUSTOM_SHAPEKEYS_TO_CREATE:
         body.shape_key_add(name=name).value = 0
     for name, controller, expression in CUSTOM_DRIVERS:
@@ -125,24 +128,38 @@ def _height_driver(keys, name, rig, controller, expression):
     drivers.add(keys, path, type="SCRIPTED", variables=[_location(rig, controller, "z")], expression=expression)
 
 
-def _mouth(rig, body):
+def _mouth(rig, body, log):
     """Each mouth key pair blends in as the controller moves towards its direction: the first key by
-    MOUTH_INNER, crossfading into the second by MOUTH_OUTER."""
-    _copy_keys(body, names.MOUTH_SHAPEKEYS_TO_COPY, names.MOUTH_SHAPEKEYS_COPY_SUFFIX)
+    MOUTH_INNER, crossfading into the second by MOUTH_OUTER. A pair whose second key Body lacks keeps
+    its first key at full all the way out; a first key goes by its other name if Body has that one."""
+    blocks = body.data.shape_keys.key_blocks
+    pairs = []
+    for base, second in MOUTH_PAIRS:
+        alternate = names.MOUTH_SHAPEKEY_ALTERNATES[base]
+        first = base if base in blocks or alternate not in blocks else alternate
+        pairs.append((MOUTH_DIRECTIONS[base[-1]], first, second))
+    _copy_keys(body, [name for _, first, second in pairs for name in (first, second)], names.MOUTH_SHAPEKEYS_COPY_SUFFIX)
     keys = body.data.shape_keys
     controller = names.MOUTH_WIDGET_CONTROLLER_BONE
     radius = "sqrt(x*x+z*z)"
-    for base, second in MOUTH_PAIRS:
-        direction = MOUTH_DIRECTIONS[base[-1]]
+    missing = []
+    for direction, first, second in pairs:
         angle = (f"max(0,1-acos((x*{math.cos(direction):.4f}+z*{math.sin(direction):.4f})/"
                  f"({radius}+.0001))/1.2566)")
         ramp = f"max(0,min(1,{radius}/{MOUTH_INNER}))"
         crossfade = f"max(0,min(1,({radius}-{MOUTH_INNER})/{MOUTH_OUTER - MOUTH_INNER}))"
-        for name, expression in ((base, f"(1-{crossfade})*{ramp}*{angle}"), (second, f"{crossfade}*{angle}")):
+        has_second = second + names.MOUTH_SHAPEKEYS_COPY_SUFFIX in keys.key_blocks
+        for name, expression in ((first, f"(1-{crossfade})*{ramp}*{angle}" if has_second else f"{ramp}*{angle}"),
+                                 (second, f"{crossfade}*{angle}")):
             key = keys.key_blocks.get(name + names.MOUTH_SHAPEKEYS_COPY_SUFFIX)
-            if key:
-                path = f'key_blocks["{key.name}"].value'
-                keys.driver_remove(path)
-                drivers.add(keys, path, type="SCRIPTED",
-                            variables=[_location(rig, controller, "x"), _location(rig, controller, "z")],
-                            expression=expression)
+            if key is None:
+                missing.append(name)
+                continue
+            path = f'key_blocks["{key.name}"].value'
+            keys.driver_remove(path)
+            drivers.add(keys, path, type="SCRIPTED",
+                        variables=[_location(rig, controller, "x"), _location(rig, controller, "z")],
+                        expression=expression)
+    if missing:
+        log.info(f"Body has no {', '.join(repr(k) for k in missing)} shape key, so the emotion grid's mouth "
+                 "controller doesn't drive it")

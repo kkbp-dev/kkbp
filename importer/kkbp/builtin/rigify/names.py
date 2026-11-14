@@ -619,6 +619,13 @@ MOUTH_SHAPEKEY_U2 = "Mouth Triangle"
 MOUTH_SHAPEKEY_E2 = "Mouth Impatient"
 MOUTH_SHAPEKEY_O2 = "Mouth Serious 2"
 
+# What a Game with one size of each vowel calls the circle's first keys (SVS; issue #64). The grid
+# takes the first name Body has, so no Game is asked for.
+MOUTH_SHAPEKEY_ALTERNATES = {
+    MOUTH_SHAPEKEY_A: "Mouth A", MOUTH_SHAPEKEY_I: "Mouth I", MOUTH_SHAPEKEY_U: "Mouth U",
+    MOUTH_SHAPEKEY_E: "Mouth E", MOUTH_SHAPEKEY_O: "Mouth O",
+}
+
 MOUTH_SHAPEKEYS_COPY_SUFFIX = " (Copy)"
 
 MOUTH_SHAPEKEYS_TO_COPY = (
