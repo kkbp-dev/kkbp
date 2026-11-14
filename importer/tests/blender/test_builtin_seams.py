@@ -94,3 +94,45 @@ def test_it_does_what_merge_by_distance_with_centroid_merge_does(golden_import):
     assert np.abs(got_n - before_n).max() < 0.01  # every corner keeps its normal (stored compressed)
     assert eyes_before == len([p for p in ch.body.data.polygons
                                if ch.body.material_slots[p.material_index].material.get("kkbp_role") == "eye_l"])
+
+
+def test_a_face_and_a_body_vertex_merge_from_a_little_further():
+    """Issue 85: where the face meets the body, vertices up to SEAM_DISTANCE apart merge; within one
+    material only those within MERGE_DISTANCE do."""
+    ch = character.Character.new("Chika", "KK", "/nowhere")
+    body = _body_with_a_seam(ch)
+    gap = seams.MERGE_DISTANCE * 3
+    assert gap < seams.SEAM_DISTANCE
+    mesh = body.data
+    for index in (4, 7):  # the body quad's edge on the face's side
+        mesh.vertices[index].co.x += gap
+    bm = bmesh.new()
+    bm.from_mesh(mesh)
+    vs = [bm.verts.new(co) for co in ((1 + gap, 0, 1 + gap), (2, 0, 1 + gap), (2, 0, 2), (1 + gap, 0, 2))]
+    bm.faces.new(vs).material_index = 1  # a second body quad, as far above the first
+    bm.to_mesh(mesh)
+    bm.free()
+    assert len(mesh.vertices) == 16
+    seams.fix_body_seams(fake_ctx(ch))
+    # The two face/body pairs merge; the two body quads' doubled edge, as far apart, stays.
+    assert len(body.data.vertices) == 14 and len(body.data.polygons) == 4
+
+
+def test_the_svs_neck_is_one_surface(golden_import):
+    """Issue 85: SVS writes most of the neck's face and body vertices a little further apart than
+    MERGE_DISTANCE, and they merge all the same."""
+    ch = golden_import("svs")[1]
+    body = ch.body
+    seams.fix_body_seams(fake_ctx(ch))
+    role = {i: s.material.get("kkbp_role") for i, s in enumerate(body.material_slots)}
+    used = {}
+    for p in body.data.polygons:
+        if role[p.material_index] in seams.ROLES:
+            for v in p.vertices:
+                used.setdefault(v, set()).add(role[p.material_index])
+    assert sum(1 for roles in used.values() if len(roles) == 2) >= 20  # 9 within MERGE_DISTANCE
+    face = [body.data.vertices[v].co for v, roles in used.items() if roles == {"face"}]
+    others = [body.data.vertices[v].co for v, roles in used.items() if roles == {"body"}]
+    near = [a for a in face if any((a - b).length < seams.SEAM_DISTANCE for b in others
+                                   if abs(a.z - b.z) < seams.SEAM_DISTANCE)]
+    assert not near
