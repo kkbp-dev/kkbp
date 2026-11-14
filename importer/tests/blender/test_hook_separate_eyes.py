@@ -63,3 +63,20 @@ def test_the_eyeline_shadow_goes_with_the_eyes(build, monkeypatch):
     # Body keeps its material slots, but no face uses the shadow's any more.
     used = {ch.body.material_slots[p.material_index].material.get("kkbp_role") for p in ch.body.data.polygons}
     assert "eyeline_shadow" not in used
+
+
+def test_svs_eyelashes_and_eyelids_go_with_the_eyes(golden_import):
+    """Issue 27: SVS draws its eye lines with an eyelash and an eyelid material, which go to the eyes
+    Part as KK's eyelines do."""
+    result, ch = golden_import("svs", hooks=["Separate Eyes"], options={"separate_eyes": True})
+    assert result.hooks[0].status == "ran", result.hooks
+
+    def roles(obj):
+        used = {p.material_index for p in obj.data.polygons}
+        return {s.material.get("kkbp_role") for i, s in enumerate(obj.material_slots) if s.material and i in used}
+
+    eyes, = ch.parts("eyes")
+    assert roles(eyes) == {"eye_l", "eye_r", "eye_white", "eyelash", "eyelid"}
+    eyebrows, = ch.parts("eyebrows")
+    assert roles(eyebrows) == {"eyebrow"}
+    assert not roles(ch.body) & {"eye_l", "eye_r", "eye_white", "eyelash", "eyelid", "eyebrow"}
