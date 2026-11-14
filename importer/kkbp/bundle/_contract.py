@@ -6,7 +6,7 @@ scripts/gen-importer-contract.sh after changing the schemas.
 
 # The Schema Version these sets come from.
 SCHEMA_MAJOR = 1
-SCHEMA_MINOR = 1
+SCHEMA_MINOR = 2
 
 ID_PATTERN = '^(?!.*__)[A-Za-z0-9.-](?:[A-Za-z0-9_.-]{0,61}[A-Za-z0-9.-])?$'
 
@@ -247,6 +247,8 @@ TEXTURE_ROLES_UNIQUE = frozenset({
 TEXTURE_VARIANTS = (
     'light',
     'dark',
+    'light_no_eyeshadow',
+    'dark_no_eyeshadow',
 )
 TEXTURE_VARIANTS_UNIQUE = frozenset()
 

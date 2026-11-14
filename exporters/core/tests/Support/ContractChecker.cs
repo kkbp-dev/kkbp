@@ -358,6 +358,22 @@ namespace KKBP.Exporter.Core.Tests.Support
                     problems.Add(label + " texture file " + texture.GetProperty("file").GetString() + " is missing");
                 }
             }
+            foreach (var texture in textures.EnumerateArray())
+            {
+                string variant = Optional(texture, "variant");
+                if (variant == null || !variant.EndsWith("_no_eyeshadow", StringComparison.Ordinal))
+                {
+                    continue;
+                }
+                string raw = texture.GetProperty("raw").GetString();
+                foreach (string needed in new[] { "light", "dark", "light_no_eyeshadow", "dark_no_eyeshadow" })
+                {
+                    if (!slots.Contains(raw + "\n" + needed + "\n" + Optional(texture, "pattern")))
+                    {
+                        problems.Add(label + " has " + raw + " without eyeshadow but no " + needed + " Variant of it");
+                    }
+                }
+            }
             return slots;
         }
 

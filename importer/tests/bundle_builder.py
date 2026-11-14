@@ -27,7 +27,7 @@ class BundleBuilder:
         """The default Character, or with `empty=True` only a body root bone and nothing else."""
         self.game = game
         self.name = name
-        self.schema_version = "1.1"
+        self.schema_version = "1.2"
         self.card = True
         self.exported_at = "2026-11-01T12:00:00Z"
         self.bones: list[dict] = []

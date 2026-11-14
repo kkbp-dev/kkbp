@@ -51,7 +51,7 @@ namespace KKBP.Exporter.Core
 
     public enum TextureVariant
     {
-        Light, Dark,
+        Light, Dark, LightNoEyeshadow, DarkNoEyeshadow,
     }
 
     public enum ExpressionCategory

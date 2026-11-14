@@ -90,7 +90,7 @@ The decision is [ADR 0002](../adr/0002-exporters-write-game-meaning.md).
 
 - a Texture Role from the shared set, if it has one: `main`, `color_mask`, `normal`, `detail_normal`, `alpha_mask`, `line_mask`, `detail_mask`, `overlay`;
 - its Raw Property name (always present);
-- its Texture Variant, if any: `light` or `dark`, the baked versions;
+- its Texture Variant, if any: `light` or `dark`, the baked versions, and on a face `light_no_eyeshadow` or `dark_no_eyeshadow`, the same bakes without the eyeshadow (Schema Version 1.2);
 - its pattern, if the slot holds several textures the game swaps at runtime (gag-eye frames, eye expression textures): the game's texture name;
 - the file path under `textures/`, plus offset and scale.
 

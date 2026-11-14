@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.1/sets/material-role.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.2/sets/material-role.schema.json",
   "title": "Material Role",
   "description": "What a material is for. Outfit and accessory materials have none.",
   "type": "string",

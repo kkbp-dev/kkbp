@@ -10,7 +10,7 @@ namespace KKBP.Exporter.Core
     /// </summary>
     internal sealed class BundleWriter
     {
-        public const string SchemaVersion = "1.1";
+        public const string SchemaVersion = "1.2";
 
         private static readonly byte[] PngSignature = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
 
@@ -388,7 +388,28 @@ namespace KKBP.Exporter.Core
                 }
                 result.Add(WriteTexture(texture, label));
             }
+            CheckBakesWithoutEyeshadow(textures, owner);
             return result;
+        }
+
+        /// <summary>A bake without eyeshadow comes as a light and dark pair, beside the light and dark bakes of the same texture.</summary>
+        private static void CheckBakesWithoutEyeshadow(List<TextureData> textures, string owner)
+        {
+            var all = new[] { TextureVariant.Light, TextureVariant.Dark, TextureVariant.LightNoEyeshadow, TextureVariant.DarkNoEyeshadow };
+            foreach (var texture in textures)
+            {
+                if (texture.Variant != TextureVariant.LightNoEyeshadow && texture.Variant != TextureVariant.DarkNoEyeshadow)
+                {
+                    continue;
+                }
+                foreach (var variant in all)
+                {
+                    if (!textures.Exists(t => t.Raw == texture.Raw && t.Pattern == texture.Pattern && t.Variant == variant))
+                    {
+                        throw new ExportException(Capitalise(owner) + " has a bake of " + texture.Raw + " without eyeshadow but no " + ContractNames.Of(variant) + " Variant of it.");
+                    }
+                }
+            }
         }
 
         /// <summary>

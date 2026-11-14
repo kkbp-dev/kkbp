@@ -61,7 +61,7 @@ The game shader's own name for a material property or texture slot, as the Game 
 _Avoid_: shader prop name, texture slot
 
 **Texture Variant**:
-An exporter-produced alternative of one texture, such as its baked light or dark version.
+An exporter-produced alternative of one texture, such as its baked light or dark version, or either without the eyeshadow.
 _Avoid_: pre_light, pre_dark
 
 **Bone Role**:
