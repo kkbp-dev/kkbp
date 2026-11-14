@@ -252,6 +252,22 @@ def skirt_bone(palm, primary, secondary=0):
     return f"{prefix}_{primary:02d}_{secondary:02d}"
 
 
+# --- Teeth bones (issue #42): the controls the `teeth_bones` option adds, by row and place ----
+TEETH_ROWS = ("upper", "lower")
+# From the row's left end to its right: the ends, the middle, and halfway between.
+TEETH_PLACES = ("L2", "L1", "C", "R1", "R2")
+
+
+def teeth_bone(row, place):
+    """A teeth control: `Teeth upper C`, `Teeth lower L1`."""
+    return f"Teeth {row} {place}"
+
+
+def teeth_mechanism_bone(control, mouth_bone):
+    """The hidden bone under `mouth_bone` that copies the teeth control and holds the weights."""
+    return f"{control} ({mouth_bone})"
+
+
 # --- Rigify's prefixes for the bones it makes from a metarig bone ---------------------------
 ORIGINAL_BONE_PREFIX = "ORG-"
 

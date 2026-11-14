@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from .... import compat
 from ....editing import editing
-from . import accessories, deform, eyes, features, handles, layout, limbs, torso, types
+from . import accessories, deform, eyes, features, handles, layout, limbs, teeth, torso, types
 from . import lists as bone_lists
 
 
@@ -34,7 +34,9 @@ def build_metarig(build):
         torso.head_and_hips(build)
         limbs.limbs(build)
         accessories.skirt(build)
+        teeth_plan = teeth.add_bones(build) if build.teeth_bones else None
     types.rigify_types(build)
+    teeth.rig(build, teeth_plan)
     lists = bone_lists.bone_lists(build, found)
     layout.sort_bones(build, lists)
     layout.rigify_ui(build)
