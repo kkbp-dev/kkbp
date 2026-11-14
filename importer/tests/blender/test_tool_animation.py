@@ -34,7 +34,7 @@ def no_preferences(monkeypatch):
 @pytest.fixture
 def walked(scenes, golden_import):
     """(Character, walk FBX, action): the KK Golden Sample with Rigify and the walk retargeted onto
-    its rig. The retarget takes about a minute, so it is made once and each test opens a copy
+    its rig. The retarget takes about ten seconds, so it is made once and each test opens a copy
     (SceneCache)."""
     def make(folder):
         result, rigged = golden_import("kk", hooks=["Rigify"])
@@ -132,6 +132,43 @@ def test_the_walk_drives_the_rig_like_the_game_bones(walked):
             axis = (rig.matrix_world @ rig.data.bones[deform].matrix_local).to_3x3() @ Vector((0.0, 1.0, 0.0))
             angle = math.degrees((want @ axis).angle(got @ axis))
             assert angle < 5, (frame, game, angle)
+
+
+def test_the_meshes_are_back_after_the_retarget(walked):
+    """Issue 67: the meshes are kept out of the evaluation only while the retarget runs."""
+    rigged, _, _ = walked
+    meshes = [o for o in rigged.parts() if o.type == "MESH"]
+    assert meshes and not any(o.hide_viewport for o in meshes)
+
+
+def test_a_frame_the_quick_way_misses_is_posed_level_by_level(golden_import, tmp_path, monkeypatch):
+    """Issue 67: when the controls don't reach their goals with one or two updates, the frame is posed
+    with an update for each bone depth, and the result is the same."""
+    result, rigged = golden_import("kk", hooks=["Rigify"])
+    path = _write_walk(rigged, tmp_path)
+    real, frames = animation._missed, set()
+
+    def misses_at_first(rig, goals):
+        frame = bpy.context.scene.frame_current
+        if frame <= 6:  # these frames always "miss", so they take the slow way
+            frames.add(frame)
+            return set(goals)
+        return real(rig, goals)
+
+    monkeypatch.setattr(animation, "_missed", misses_at_first)
+    said = []
+    animation.import_animation(rigged, path, log=said.append)
+    assert any(f"{len(frames)} frames were posed the slower way" in line for line in said), (said, sorted(frames))
+    rig = rigged.rig
+    source = next(o for o in compat.import_fbx(path, animation.FBX_SCALE) if o.type == "ARMATURE")
+    bpy.context.scene.frame_set(6)
+    for game, deform in (("cf_j_arm00_L", "DEF-Left arm"), ("cf_j_thigh00_R", "DEF-Right leg")):
+        want = _turn(source.matrix_world @ source.pose.bones[game].matrix,
+                     source.matrix_world @ source.data.bones[game].matrix_local)
+        got = _turn(rig.matrix_world @ rig.pose.bones[deform].matrix,
+                    rig.matrix_world @ rig.data.bones[deform].matrix_local)
+        axis = (rig.matrix_world @ rig.data.bones[deform].matrix_local).to_3x3() @ Vector((0.0, 1.0, 0.0))
+        assert math.degrees((want @ axis).angle(got @ axis)) < 5, game
 
 
 def test_ik_snap_switches_the_limbs_to_ik(walked):
