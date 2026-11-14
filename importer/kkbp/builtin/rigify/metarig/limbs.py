@@ -1,6 +1,6 @@
 """The limbs: the arms', legs' and feet's bones placed from the joint-correction bones and the meshes,
-the heels, and with the joint-correction bones (KK and KKS, ADR 0022) the palms and fingers. In Edit
-Mode.
+the heels, the palms and the fingers. The elbow, knee and KK's finger placement need the joint-correction
+bones (KK and KKS, ADR 0022); without them the hands are aimed from the meshes (ADR 0045). In Edit Mode.
 
 Each side is described by a Limb of names. The right side mirrors the left along x; where a value
 isn't a mirror (the thumbs' rolls, the elbow joint-correction rolls) both are written out.
@@ -11,6 +11,8 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 from math import radians
+
+from mathutils import Vector
 
 from .. import bones, meshes, names
 from . import accessories
@@ -55,17 +57,20 @@ RIGHT = Limb(False, names.RIGHT_SHOULDER_JOINT_CORRECTION_BONE, names.MID_RIGHT_
              names.BACK_RIGHT_KNEE_JOINT_CORRECTION_BONE, names.RIGHT_LEG_BONE, names.ORIGINAL_RIGHT_LEG_DEFORM_BONE3,
              names.ORIGINAL_RIGHT_HEEL_BONE, names.RIGHT_HEEL_BONE)
 SIDES = (LEFT, RIGHT)
+UP = Vector((0.0, 0.0, 1.0))
 
 
 @dataclass(frozen=True)
 class Finger:
     """One finger of one side. `palm` is its palm bone (the index finger's for a thumb); `rolls` its
-    three bones' rolls in degrees."""
+    three bones' rolls in degrees; `game_groups` the vertex groups of its joints where the weights
+    are on `cf_s_` bones under them (`names.game_finger_group`)."""
     palm: str
     bones: tuple
     deforms: tuple
     palm_deform: str
     rolls: tuple
+    game_groups: tuple = ()
     middle: bool = False
     thumb: bool = False
 
@@ -78,7 +83,9 @@ def _finger(side, finger, rolls, **kw):
                   bones=(n("BONE1"), n("BONE2"), n("BONE3")),
                   deforms=(n("DEFORM_BONE1"), n("DEFORM_BONE2"), n("DEFORM_BONE3")),
                   palm_deform=None if finger == "THUMB" else getattr(names, f"{s}_{finger}_PALM_DEFORM_BONE"),
-                  rolls=rolls, **kw)
+                  rolls=rolls,
+                  game_groups=tuple(names.game_finger_group(side is LEFT, finger.split("_")[0].lower(), joint)
+                                    for joint in (1, 2, 3)), **kw)
 
 
 # In the order they are made: each finger, left then right.
@@ -103,9 +110,11 @@ def _back(low, high, factor):
 
 def limbs(build):
     metarig, edit = build.metarig, build.metarig.data.edit_bones
-    if build.kk_extras:
-        for side in SIDES:
+    for side in SIDES:
+        if build.kk_extras:
             _arm(build, side)
+        else:
+            _aim_wrist(build, side)
     for side in SIDES:
         edit[side.toe].tail.z = edit[side.toe].head.z
     for side in SIDES:
@@ -117,8 +126,7 @@ def limbs(build):
             edit[side.leg].head.y = _along(mid.head.y, back.head.y, 0.33)
     for side in SIDES:
         _heel_and_ankle(metarig, side, ankles[side])
-    if build.kk_extras:
-        _palms_and_fingers(build)
+    _palms_and_fingers(build)
 
 
 def _arm(build, side):
@@ -138,6 +146,13 @@ def _arm(build, side):
         edit[name].roll = radians(90 if side.left else -90)
     wrist = edit[side.wrist]
     wrist.head.y = mid.head.y - math.dist([mid.head.y], [back.head.y]) * 0.15
+    _aim_wrist(build, side)
+
+
+def _aim_wrist(build, side):
+    """The wrist points level across the hand, two thirds of the way along its vertices. A wrist
+    with no child to aim it comes from the Core Import pointing straight up (issue 24)."""
+    wrist = build.metarig.data.edit_bones[side.wrist]
     if wrist.tail.z != wrist.head.z:
         wrist.tail.y = wrist.head.y
         wrist.tail.z = wrist.head.z
@@ -200,6 +215,9 @@ def _finger_bones(build, side, finger):
     metarig = build.metarig
     edit = metarig.data.edit_bones
     one, two, three = (edit[n] for n in finger.bones)
+    if not build.kk_extras:
+        _game_finger(build, side, finger)
+        return
     b1, b2, b3 = (meshes.group_bounds(build.body, n) for n in finger.deforms)
     x = _along if side.left else _back
     if not finger.thumb:
@@ -209,15 +227,7 @@ def _finger_bones(build, side, finger):
         three.tail.x = x(b3.min_x, b3.max_x, 0.95)
         three.tail.y = three.head.y + (two.tail.y - two.head.y)
         three.tail.z = _along(b3.min_z, b3.max_z, 0.4)
-        wrist = edit[side.wrist]
-        palm = bones.copy_bone(metarig, finger.bones[0], finger.palm)
-        palm.parent = edit[side.wrist]
-        accessories.connect(metarig, finger.bones[0], finger.palm, False)
-        palm.head.z = palm.tail.z
-        reach = math.dist([wrist.tail.x], [wrist.head.x]) * 0.6
-        palm.head.x = wrist.tail.x - reach if side.left else wrist.tail.x + reach
-        palm.head.y = palm.head.y + (one.head.y - one.tail.y)
-        palm.roll = radians(0)
+        _palm_bone(build, side, finger)
     else:
         one.head.x = x(b1.min_x, b1.max_x, 0.2)
         two.head.x = x(b2.min_x, b2.max_x, 0.5)
@@ -234,3 +244,42 @@ def _finger_bones(build, side, finger):
         one.parent = edit[finger.palm]
     for bone, roll in zip((one, two, three), finger.rolls):
         bone.roll = radians(roll)
+
+
+def _palm_bone(build, side, finger):
+    """The finger's palm bone, from 40% along the wrist to the finger's base, level."""
+    metarig = build.metarig
+    edit = metarig.data.edit_bones
+    one, wrist = edit[finger.bones[0]], edit[side.wrist]
+    palm = bones.copy_bone(metarig, finger.bones[0], finger.palm)
+    palm.parent = wrist
+    accessories.connect(metarig, finger.bones[0], finger.palm, False)
+    palm.head.z = palm.tail.z
+    reach = math.dist([wrist.tail.x], [wrist.head.x]) * 0.6
+    palm.head.x = wrist.tail.x - reach if side.left else wrist.tail.x + reach
+    palm.head.y = palm.head.y + (one.head.y - one.tail.y)
+    palm.roll = radians(0)
+
+
+def _game_finger(build, side, finger):
+    """A finger on a skeleton without the joint-correction bones (SVS, ADR 0045). Its joints stay
+    where the game has them. Its last bone has no child to aim it and comes from the Core Import
+    pointing straight up (issue 26): it carries on the way the second bone points, as far as the
+    fingertip's vertices reach. The fingers keep the rolls they came with, which bend them downwards
+    as KK's fixed rolls do; a thumb is rolled to bend level, towards the palm, as KK's is."""
+    edit = build.metarig.data.edit_bones
+    one, two, three = (edit[n] for n in finger.bones)
+    direction = (two.tail - two.head).normalized()
+    b = meshes.group_bounds(build.body, finger.game_groups[2])
+    if not b.vertices:
+        b = meshes.group_bounds(build.body, finger.deforms[2])
+    reach = max((direction.dot(b.coordinates[v.index] - three.head) for v in b.vertices), default=0.0)
+    three.tail = three.head + direction * (reach * 0.95 if reach > 0 else two.length * 0.7)
+    three.align_roll(two.z_axis)
+    if finger.thumb:
+        for bone in (one, two, three):
+            level = bone.y_axis.cross(UP)
+            bone.align_roll(level if side.left else -level)
+        one.parent = edit[finger.palm]
+    else:
+        _palm_bone(build, side, finger)

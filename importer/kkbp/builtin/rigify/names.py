@@ -376,6 +376,16 @@ ORIGINAL_LEFT_ELBOW_DEFORM_BONE3 = "cf_s_wrist_L"
 ORIGINAL_RIGHT_ELBOW_DEFORM_BONE3 = right_name(ORIGINAL_LEFT_ELBOW_DEFORM_BONE3)
 ORIGINAL_LEFT_WRIST_DEFORM_BONE = "cf_s_hand_L"
 ORIGINAL_RIGHT_WRIST_DEFORM_BONE = right_name(ORIGINAL_LEFT_WRIST_DEFORM_BONE)
+
+
+def game_finger_group(left: bool, finger: str, joint: int) -> str:
+    """The vertex group of a finger joint on a skeleton whose finger joints have a `cf_s_` child that
+    takes the weights (SVS: `cf_s_index01_L` under `cf_j_index01_L`). KK and KKS weight the joint bones
+    themselves. These bones have no Bone Role, so the name is written here. `finger` is thumb, index,
+    middle, ring or little; `joint` 1 to 3."""
+    return f"cf_s_{finger}0{joint}_{'L' if left else 'R'}"
+
+
 ORIGINAL_LEFT_THUMB_DEFORM_BONE1 = LEFT_THUMB_BONE1
 ORIGINAL_RIGHT_THUMB_DEFORM_BONE1 = RIGHT_THUMB_BONE1
 ORIGINAL_LEFT_THUMB_DEFORM_BONE2 = LEFT_THUMB_BONE2

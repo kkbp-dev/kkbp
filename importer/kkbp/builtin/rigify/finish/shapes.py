@@ -65,16 +65,3 @@ def scale_and_turn(build):
             pose_bone.custom_shape_rotation_euler[0] = math.pi / 2
     _scale(rig, names.CROTCH_BONE, 0.2)
 
-
-def hand_ik(build):
-    """Without the joint-correction bones (SVS, ADR 0022) the hand IK widgets are turned and smaller."""
-    rig = build.rig
-    for bone, x_turn in (("Left wrist_ik", 1.0472), ("Right wrist_ik", 2.0944)):
-        if pose_bone := rig.pose.bones.get(bone):
-            pose_bone.custom_shape_rotation_euler[0] = x_turn
-            pose_bone.custom_shape_rotation_euler[2] = -1.5708
-            pose_bone.custom_shape_scale_xyz = (.6, .6, .6)
-    for bone in ("Right wrist_ik_wrist", "Left wrist_ik_wrist"):
-        if pose_bone := rig.pose.bones.get(bone):
-            pose_bone.custom_shape_scale_xyz = (.6, .6, .6)
-            pose_bone.custom_shape_translation = (0, -0.04, 0)

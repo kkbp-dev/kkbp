@@ -13,3 +13,4 @@ The legacy Rigify set-up had parts only KK and KKS got: the joint-correction dri
 - The bone names the test checks are listed in the Rigify Hook with a note on why, like every other exact name it uses.
 - A KK skeleton missing one of those bones (a mod, a future game update) loses all the KK parts, not just the ones that need that bone.
 - Giving SVS its own corrections or palm controls later means a second set of bones to test for, not a Game check.
+- [ADR 0045](0045-every-skeleton-gets-aimed-hands-and-palms.md) takes the wrist aiming and the palms out from behind this test, and removes the SVS-only hand IK widget turn.
