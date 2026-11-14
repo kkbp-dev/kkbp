@@ -15,6 +15,7 @@ from ... import templates
 from ...character import ID, KEY
 
 # The texture slots each atlas mode makes an atlas of.
+WITHOUT_EYESHADOW = {"main.light": "main.light_no_eyeshadow", "main.dark": "main.dark_no_eyeshadow"}
 SLOTS = {"atlas": ("main.light", "main.dark", "normal"),
          "skip_eyes": ("main.light", "main.dark", "normal"),
          "all_textures": ("main.light", "main.dark", "normal", "detail_normal", "alpha_mask", "color_mask",
@@ -141,6 +142,11 @@ def _atlas_material(mat, atlas_images):
             node.image = atlas_images[slot]
         elif slot == "alpha_mask":
             node.image = None  # folded into the light and dark atlases
+    # The atlas holds the face with or without its eyeshadow (_image), so both pairs show it.
+    for slot, plain in WITHOUT_EYESHADOW.items():
+        node = templates.texture_node(copy, plain)
+        if node is not None and slot in atlas_images:
+            node.image = atlas_images[slot]
     if "main.dark" not in atlas_images and "main.light" in atlas_images:
         templates.texture_node(copy, "main.dark").image = atlas_images["main.light"]
     # The alpha mask is in the atlases now and its slot is empty, which the shader would read as
@@ -159,6 +165,11 @@ def _keeps_alpha(mat):
 
 
 def _image(mat, slot):
+    """The material's image for `slot`. A face whose Eyeshadow is below a half gives its bakes without
+    eyeshadow as its light and dark (ADR 0046): an atlas holds one of the two."""
+    plain = WITHOUT_EYESHADOW.get(slot)
+    if plain is not None and "eyeshadow" in templates.params(mat) and templates.param(mat, "eyeshadow").default_value < 0.5:
+        slot = plain
     node = templates.texture_node(mat, slot)
     return node.image if node is not None and node.image is not None and node.image.size[0] else None
 

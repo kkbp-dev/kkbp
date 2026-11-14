@@ -161,11 +161,12 @@ def _outline(ch, source, name, keep_textures=False):
             _unlink(mat, socket)
             socket.default_value = BLACK
     else:
+        # Every baked version of the main texture: the face's bakes without eyeshadow would show
+        # through the black as the Gag eyes key fades to them (ADR 0046).
         black = _image(hook_assets.OUTLINES.black)
-        for variant in ("light", "dark"):
-            node = templates.texture(mat, "main", variant)
-            if node is not None:
-                node.image = black
+        for slot in templates.template_of(mat).textures:
+            if slot.startswith("main."):
+                templates.texture_node(mat, slot).image = black
     return mat
 
 

@@ -643,9 +643,7 @@
    "images": [
     "SVS OutlineMask.png",
     "Template: BlackWithAlpha",
-    "Template: Normal detail placeholder",
-    "cf_m_head_00 main.dark_no_eyeshadow",
-    "cf_m_head_00 main.light_no_eyeshadow"
+    "Template: Normal detail placeholder"
    ],
    "node_groups": [
     ".Eyeshadow",

@@ -115,3 +115,20 @@ def test_only_a_thinning_mask_thins_the_outline(build, monkeypatch, game, expect
     monkeypatch.setattr(outlines, "_thin_where_masked", lambda body, face, mask, modifier: thinned.append(mask.name))
     _import(build, game)
     assert thinned == expected
+
+
+@pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
+def test_the_face_outline_is_black_in_every_bake(sample, golden_import):
+    """The face's outline is a copy of its material: each baked version of the main texture in it is
+    black, the bakes without eyeshadow too, or the outline would turn to skin as the Gag eyes key
+    fades to them (issue 38)."""
+    _, ch = golden_import(sample, hooks=["Outlines"])
+    face = ch.materials(roles="face")[0]
+    assert templates.texture(face, "main", "light_no_eyeshadow") is not None
+    outline = next(s.material for s in ch.body.material_slots
+                   if s.material is not None and s.material.get(outlines.OUTLINE) == face[character.ID])
+    black = templates.texture(outline, "main", "light").image
+    assert character.KEY not in black
+    for slot in templates.template_of(outline).textures:
+        if slot.startswith("main."):
+            assert templates.texture_node(outline, slot).image == black, slot
