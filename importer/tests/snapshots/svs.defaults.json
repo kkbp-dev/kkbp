@@ -1356,7 +1356,7 @@
      "Outline cf_m_head_00",
      "Outline cf_m_body_00"
     ],
-    "shape_key_drivers": 17,
+    "shape_key_drivers": 20,
     "shape_keys": [
      "Basis",
      "Gag eyes",
@@ -1432,9 +1432,12 @@
      "Eye Closed copy",
      "Mouth A (Copy)",
      "Mouth E (Copy)",
+     "Mouth Hate, Closed (Copy)",
      "Mouth I (Copy)",
      "Mouth Impatient (Copy)",
      "Mouth O (Copy)",
+     "Mouth Serious (Copy)",
+     "Mouth Smiling (Copy)",
      "Mouth Triangle (Copy)",
      "Mouth U (Copy)",
      "Eye Closed (Copy)",

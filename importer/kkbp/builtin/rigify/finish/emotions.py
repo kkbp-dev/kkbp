@@ -131,13 +131,16 @@ def _height_driver(keys, name, rig, controller, expression):
 def _mouth(rig, body, log):
     """Each mouth key pair blends in as the controller moves towards its direction: the first key by
     MOUTH_INNER, crossfading into the second by MOUTH_OUTER. A pair whose second key Body lacks keeps
-    its first key at full all the way out; a first key goes by its other name if Body has that one."""
+    its first key at full all the way out; a key goes by its other name
+    (names.MOUTH_SHAPEKEY_ALTERNATES) if Body has only that one."""
     blocks = body.data.shape_keys.key_blocks
-    pairs = []
-    for base, second in MOUTH_PAIRS:
-        alternate = dict(names.MOUTH_SHAPEKEY_ALTERNATES)[base]
-        first = base if base in blocks or alternate not in blocks else alternate
-        pairs.append((MOUTH_DIRECTIONS[base[-1]], first, second))
+    alternates = dict(names.MOUTH_SHAPEKEY_ALTERNATES)
+
+    def present(name):
+        alternate = alternates.get(name)
+        return name if name in blocks or alternate not in blocks else alternate
+
+    pairs = [(MOUTH_DIRECTIONS[base[-1]], present(base), present(second)) for base, second in MOUTH_PAIRS]
     _copy_keys(body, [name for _, first, second in pairs for name in (first, second)], names.MOUTH_SHAPEKEYS_COPY_SUFFIX)
     keys = body.data.shape_keys
     controller = names.MOUTH_WIDGET_CONTROLLER_BONE

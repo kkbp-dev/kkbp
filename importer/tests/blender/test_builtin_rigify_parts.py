@@ -43,7 +43,8 @@ def test_the_emotion_grid_makes_the_custom_keys_on_kk(golden_import):
 
 def test_the_emotion_grid_is_whole_without_some_of_its_keys(golden_import):
     """Issue 64. SVS's Body has no "Eye Both Eyes Shut Tight", one size of each vowel, and only two
-    of the mouth circle's second keys: the grid drives what there is, and the custom keys are made."""
+    of the mouth circle's second keys: the grid drives what there is, with other keys standing in on the
+    mouth circle, and the custom keys are made."""
     _, ch = golden_import("svs", hooks=["Rigify"])
     keys = ch.body.data.shape_keys
     assert names.EYE_SHAPEKEY_CLOSED3 not in keys.key_blocks
@@ -58,11 +59,12 @@ def test_the_emotion_grid_is_whole_without_some_of_its_keys(golden_import):
         assert name in keys.key_blocks and path(name, "") in driven, name
     for vowel in "AIUEO":
         assert path(f"Mouth {vowel}", names.MOUTH_SHAPEKEYS_COPY_SUFFIX) in driven, vowel
-    # "Mouth A" has no second key to fade into, so it stays at full; "Mouth U" fades into "Mouth Triangle".
-    alone = driven[path("Mouth A", names.MOUTH_SHAPEKEYS_COPY_SUFFIX)]
-    paired = driven[path("Mouth U", names.MOUTH_SHAPEKEYS_COPY_SUFFIX)]
-    assert not alone.startswith("(1-") and paired.startswith("(1-")
-    assert path(names.MOUTH_SHAPEKEY_U2, names.MOUTH_SHAPEKEYS_COPY_SUFFIX) in driven
+    # Every vowel fades into a second key: SVS's own namesake, or the one picked for it.
+    for second in ("Mouth Smiling", "Mouth Hate, Closed", names.MOUTH_SHAPEKEY_U2, names.MOUTH_SHAPEKEY_E2,
+                   "Mouth Serious"):
+        assert path(second, names.MOUTH_SHAPEKEYS_COPY_SUFFIX) in driven, second
+    for vowel in "AIUEO":
+        assert driven[path(f"Mouth {vowel}", names.MOUTH_SHAPEKEYS_COPY_SUFFIX)].startswith("(1-"), vowel
 
 
 def test_the_mouth_circle_moves_the_svs_mouth(golden_import):
@@ -74,8 +76,12 @@ def test_the_mouth_circle_moves_the_svs_mouth(golden_import):
     scene = bpy.context.scene
     controller.location = (0, 0, 0.09)  # straight up: A
     scene.frame_set(scene.frame_current)
-    assert keys["Mouth A" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value > 0.95  # the angle term stops just short of 1
-    assert keys["Mouth U" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value == pytest.approx(0.0, abs=1e-3)
+    assert keys["Mouth Smiling" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value > 0.95  # the angle term stops just short of 1
+    assert keys["Mouth A" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value == pytest.approx(0.0, abs=1e-3)
+    controller.location = (0, 0, 0.045)  # halfway: all of A, none of the second key yet
+    scene.frame_set(scene.frame_current)
+    assert keys["Mouth A" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value > 0.9
+    assert keys["Mouth Smiling" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value == pytest.approx(0.0, abs=1e-3)
     controller.location = (0, 0, 0)
 
 
