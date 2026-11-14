@@ -18,8 +18,11 @@ SWITCH = Option("separate_eyes", bool, False, "Separate eyes",
                 description="Moves the eyes and eyebrows out of Body into their own objects, with their shape keys "
                             "following Body's, so they can show through the hair with the compositor")
 
+# Part Role -> the Material Roles whose faces it takes. SVS draws its eye lines with an eyelash and an
+# eyelid material where KK and KKS have eyelines (issue 27).
 PARTS = {
-    "eyes": (("eye_l", "eye_r", "eye_white", "eyeline_upper", "eyeline_lower", "eyeline_shadow"), "Eyes {name}"),
+    "eyes": (("eye_l", "eye_r", "eye_white", "eyeline_upper", "eyeline_lower", "eyeline_shadow", "eyelash", "eyelid"),
+             "Eyes {name}"),
     "eyebrows": (("eyebrow",), "Eyebrows {name}"),
 }
 OUTLINE = "Outline Modifier"
