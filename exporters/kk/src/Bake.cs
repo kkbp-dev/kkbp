@@ -26,6 +26,9 @@ namespace KKBP.Exporter
 
         private static readonly string[] Overlays = { "_overtex1", "_overtex2", "_overtex3" };
 
+        /// <summary>The face's overlay that holds the eyeshadow; the others are the cheeks and the lips.</summary>
+        private const string Eyeshadow = "_overtex3";
+
         private static readonly Quaternion FrontLight = new Quaternion(0, 1, 0, 0);
         private static readonly Quaternion BackLight = new Quaternion(0, 0, 0, -1);
 
@@ -101,8 +104,11 @@ namespace KKBP.Exporter
             quad.RecalculateTangents();
         }
 
-        /// <summary>Adds the light and dark Variants of one material slot to its captured material.</summary>
-        public void Add(Renderer renderer, Material source, int slot, MaterialData data, bool skin)
+        /// <summary>
+        /// Adds the light and dark Variants of one material slot to its captured material, and for a
+        /// face with eyeshadow the same two without it (ADR 0046).
+        /// </summary>
+        public void Add(Renderer renderer, Material source, int slot, MaterialData data, bool skin, bool face)
         {
             var mesh = Meshes.SourceMesh(renderer);
             var material = new Material(source);
@@ -137,6 +143,8 @@ namespace KKBP.Exporter
 
                 byte[] meshLight = null;
                 byte[] meshDark = null;
+                byte[] plainLight = null;
+                byte[] plainDark = null;
                 if (meshDependent)
                 {
                     int across, up;
@@ -147,6 +155,12 @@ namespace KKBP.Exporter
                         Aim(front, up / 2f, (float)across / up);
                         meshLight = LightBake.Fold(Render(FrontLight, flattened, sub, material, renderer, block, width * across, height * up), width, height, across, up);
                         meshDark = LightBake.Fold(Render(BackLight, flattened, sub, material, renderer, block, width * across, height * up), width, height, across, up);
+                        if (face && !tessellated && material.HasProperty(Eyeshadow) && material.GetTexture(Eyeshadow) != null)
+                        {
+                            material.SetTexture(Eyeshadow, null);
+                            plainLight = LightBake.Fold(Render(FrontLight, flattened, sub, material, renderer, block, width * across, height * up), width, height, across, up);
+                            plainDark = LightBake.Fold(Render(BackLight, flattened, sub, material, renderer, block, width * across, height * up), width, height, across, up);
+                        }
                     }
                     foreach (string t in Overlays)
                     {
@@ -169,6 +183,15 @@ namespace KKBP.Exporter
                     Aim(new Vector3(0.5f, 0.5f, 1f), 0.5f, 1f);
                     lit = Render(FrontLight, quad, 0, material, renderer, block, width, height);
                     dark = Render(BackLight, quad, 0, material, renderer, block, width, height);
+                    if (plainLight != null)
+                    {
+                        var under = (byte[])lit.Clone();
+                        LightBake.Overlay(under, plainLight);
+                        plainLight = under;
+                        under = (byte[])dark.Clone();
+                        LightBake.Overlay(under, plainDark);
+                        plainDark = under;
+                    }
                     if (meshLight != null)
                     {
                         LightBake.Overlay(lit, meshLight);
@@ -177,6 +200,11 @@ namespace KKBP.Exporter
                 }
                 data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Light, Png = Png(lit, width, height) });
                 data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Dark, Png = Png(dark, width, height) });
+                if (plainLight != null)
+                {
+                    data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.LightNoEyeshadow, Png = Png(plainLight, width, height) });
+                    data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.DarkNoEyeshadow, Png = Png(plainDark, width, height) });
+                }
             }
             finally
             {
