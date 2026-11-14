@@ -1,6 +1,10 @@
 # Tear and gag-eye meshes rest hidden inside the head
 
-The tear meshes (`cf_O_namida_L`, `_M`, `_S`) and the gag-eye meshes (`cf_O_gag_eye_00` to `_02`) are written with their basis pushed back inside the head, by half the depth of the face mesh, so they rest in the middle of the head. (At first the push was the whole depth, which left them poking out through the back of the head.) Each gets one exporter-made shape key, `Tears big`, `Tears med`, `Tears small` or `Gag eye 00` to `Gag eye 02`, that moves it forward to where the game shows it. Raising the key shows the mesh; at 0 it is out of sight. The expression keys on these meshes are baked from that hidden basis, so they add to it.
+The tear meshes (`cf_O_namida_L`, `_M`, `_S`) and the gag-eye meshes (`cf_O_gag_eye_00` to `_02`) are written with their basis pushed back inside the head, by half the depth of the face mesh, so they rest in the middle of the head. (At first the push was the whole depth, which left them poking out through the back of the head.) Each gets one exporter-made shape key, `Tears big`, `Tears med`, `Tears small` or `Gag eye 00` to `Gag eye 02`, that moves it forward to where the game shows it.
+
+The basis is also half as wide, narrowed towards the middle of the face from left to right, and the showing key widens it again. The head narrows towards its back, so at full width the meshes came out through its sides there: on the SVS Sample Card 68 of the gag eyes' 248 vertices and about half of each tear mesh's were outside the head mesh, by up to 13.5 mm, and on KK and KKS 6 of each gag mesh's 240 by 2.3 mm. At half width none is, and the nearest is 4 mm inside (issue 84).
+
+Raising the key shows the mesh; at 0 it is out of sight. The expression keys on these meshes are baked from that hidden basis, so they add to it.
 
 ## Considered Options
 
