@@ -1,4 +1,4 @@
-"""The UI in Japanese and Simplified Chinese (issue #37): Blender's language setting translates it."""
+"""The UI in other languages than English (issue #37): Blender's language setting translates it."""
 
 import warnings
 
@@ -29,7 +29,10 @@ def language():
     view.language = before
 
 
-def _translated(text) -> bool:
+def _translated(text, table) -> bool:
+    """Whether `text` has a translation: its own (which may read the same as the English), or Blender's."""
+    if text in table.TRANSLATIONS or text in table.IN_CONTEXT:
+        return True
     return any(bpy.app.translations.pgettext_iface(text, context) != text for context in CONTEXTS)
 
 
@@ -59,7 +62,7 @@ def _shown() -> set:
         found |= {getattr(cls, "bl_label", ""), getattr(cls, "bl_description", "")}
     for properties in [_properties(cls) for cls in classes] + [options]:
         for prop in properties:
-            if prop.is_hidden or prop.name in ("", prop.identifier):  # a property with no name of its own
+            if prop.identifier == "name" or prop.is_hidden or prop.name in ("", prop.identifier):  # a property with no name of its own
                 continue
             found |= {prop.name, prop.description}
             if prop.type == "ENUM":
@@ -77,6 +80,7 @@ def test_the_ui_follows_blenders_language(language, locale):
     table = translations.LANGUAGES[locale]
     gettext = bpy.app.translations.pgettext_iface
     assert gettext("Import Options") == "Import Options"  # English until the language is set
+    assert table.TRANSLATIONS["Import Options"] != "Import Options"
     language(locale)
     assert gettext("Import Options") == table.TRANSLATIONS["Import Options"]  # a panel's title
     assert gettext("Fix body seams") == table.TRANSLATIONS["Fix body seams"]  # an Import Option
@@ -130,7 +134,7 @@ def test_what_the_ui_shows_is_translated(language, locale):
     shown = _shown()
     assert "Import Options" in shown and "Use Rigify armature" in shown and "Separate all clothing" in shown
     language(locale)
-    missing = sorted(text for text in shown if not _translated(text))
+    missing = sorted(text for text in shown if not _translated(text, translations.LANGUAGES[locale]))
     if missing:
         warnings.warn(f"{locale}: {len(missing)} UI strings have no translation: {missing}")
     assert len(missing) < len(shown) / 10

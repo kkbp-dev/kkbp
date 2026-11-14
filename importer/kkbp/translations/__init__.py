@@ -1,8 +1,9 @@
-"""The UI in Japanese and Simplified Chinese (issue #37), through Blender's own translation API: the
+"""The UI in other languages than English (issue #37), through Blender's own translation API: the
 UI follows Blender's language setting, and the strings in the code stay English.
 
 Each language is a module named by Blender's locale, holding `TRANSLATIONS`: English string ->
-translation. A string with no entry shows in English. What is translated is what the user reads in
+translation. A string with no entry shows in English; a word that is the same in a language
+("Atlas") still has its entry, so every language's table holds the same strings. What is translated is what the user reads in
 panels, dialogs, Preferences and tooltips. Log lines, reports and errors stay English, so a bug
 report reads the same in every language, and so do names from the game (ADR 0004).
 
@@ -14,9 +15,11 @@ wording, here and everywhere else.
 import bpy
 
 from .. import pillow
-from . import ja_JP, zh_HANS
+from . import de_DE, es, fr_FR, id_ID, ja_JP, pt_BR, ru_RU, th_TH, zh_HANS
 
-LANGUAGES = {"ja_JP": ja_JP, "zh_HANS": zh_HANS}
+# Blender's locale -> the module with its table. Blender has two Portuguese locales; both get the one table.
+LANGUAGES = {"de_DE": de_DE, "es": es, "fr_FR": fr_FR, "id_ID": id_ID, "ja_JP": ja_JP, "pt_BR": pt_BR,
+             "pt_PT": pt_BR, "ru_RU": ru_RU, "th_TH": th_TH, "zh_HANS": zh_HANS}
 # Blender looks a property's name, a tooltip and a label up in "*", and an operator's name in "Operator".
 CONTEXTS = ("*", "Operator")
 # The context of the few strings a language's IN_CONTEXT translates: a panel or property says it is in

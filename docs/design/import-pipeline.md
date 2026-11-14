@@ -110,8 +110,8 @@ def find_kkbp():
 
 ## UI languages
 
-- The UI is in English, Japanese (`ja_JP`) and Simplified Chinese (`zh_HANS`), and follows Blender's own language setting (Preferences > Interface > Language). There is no language choice in KKBP (issue 37).
-- The strings in the code stay English. `kkbp/translations/` holds one table per language, English string to translation, registered with Blender's translation API (`bpy.app.translations`). A string with no entry shows in English.
+- The UI is in English, French, German, Indonesian, Japanese, Portuguese, Russian, Simplified Chinese, Spanish and Thai, and follows Blender's own language setting (Preferences > Interface > Language). There is no language choice in KKBP (issue 37).
+- The strings in the code stay English. `kkbp/translations/` holds one table per language, named by Blender's locale (`ja_JP.py`; the Portuguese one serves `pt_BR` and `pt_PT`), English string to translation, registered with Blender's translation API (`bpy.app.translations`). A string with no entry shows in English.
 - Translated: panel titles, buttons, labels, dialogs, Preferences, Import Option labels and choices, the built-in Hooks' names in the panel, and tooltips. Not translated: log lines, operator reports, errors and the import summary, so a bug report reads the same in every language; and names from the game, such as Expression Names (ADR 0004).
 - A user Hook's name and options show as its script wrote them.
 - Blender looks a string up in an add-on's table before its own catalogue, for its whole UI. So a table never holds a word Blender already translates ("Save", "Bones", "Shader"): that word keeps Blender's wording. Where Blender's word means something else (its "Hooks" are the modifiers), the panel or property is put in the `KKBP` translation context and translated there.
