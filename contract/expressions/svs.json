@@ -347,6 +347,36 @@
     },
     {
       "list": "mouth",
+      "index": 19,
+      "game_name": null,
+      "name": "Mouth A"
+    },
+    {
+      "list": "mouth",
+      "index": 20,
+      "game_name": null,
+      "name": "Mouth I"
+    },
+    {
+      "list": "mouth",
+      "index": 21,
+      "game_name": null,
+      "name": "Mouth U"
+    },
+    {
+      "list": "mouth",
+      "index": 22,
+      "game_name": null,
+      "name": "Mouth E"
+    },
+    {
+      "list": "mouth",
+      "index": 23,
+      "game_name": null,
+      "name": "Mouth O"
+    },
+    {
+      "list": "mouth",
       "index": 24,
       "game_name": null,
       "name": "Mouth Catlike",
@@ -357,6 +387,12 @@
       "index": 25,
       "game_name": null,
       "name": "Mouth Triangle"
+    },
+    {
+      "list": "mouth",
+      "index": 26,
+      "game_name": null,
+      "name": "Mouth Cartoony Smile"
     },
     {
       "list": "mouth",
@@ -388,108 +424,6 @@
       "shapes": [
         {
           "shape": "face.kuti_f00_keno_cl",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "name": "Mouth A",
-      "shapes": [
-        {
-          "shape": "face.kuti_f00_vo_a",
-          "weight": 1
-        },
-        {
-          "shape": "tooth.f00_no_dw_op",
-          "weight": 1
-        },
-        {
-          "shape": "tang.f00_def_op",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "name": "Mouth I",
-      "shapes": [
-        {
-          "shape": "face.kuti_f00_vo_i",
-          "weight": 1
-        },
-        {
-          "shape": "tooth.f00_no_dw_op",
-          "weight": 1
-        },
-        {
-          "shape": "tang.f00_def_op",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "name": "Mouth U",
-      "shapes": [
-        {
-          "shape": "face.kuti_f00_vo_u",
-          "weight": 1
-        },
-        {
-          "shape": "tooth.f00_no_dw_op",
-          "weight": 1
-        },
-        {
-          "shape": "tang.f00_def_op",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "name": "Mouth E",
-      "shapes": [
-        {
-          "shape": "face.kuti_f00_vo_e",
-          "weight": 1
-        },
-        {
-          "shape": "tooth.f00_none",
-          "weight": 1
-        },
-        {
-          "shape": "tang.f00_def_op",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "name": "Mouth O",
-      "shapes": [
-        {
-          "shape": "face.kuti_f00_vo_o",
-          "weight": 1
-        },
-        {
-          "shape": "tooth.f00_none",
-          "weight": 1
-        },
-        {
-          "shape": "tang.f00_def_op",
-          "weight": 1
-        }
-      ]
-    },
-    {
-      "name": "Mouth Cartoony Smile",
-      "shapes": [
-        {
-          "shape": "face.kuti_f00_niko_op",
-          "weight": 1
-        },
-        {
-          "shape": "tooth.f00_none",
-          "weight": 1
-        },
-        {
-          "shape": "tang.f00_def_op",
           "weight": 1
         }
       ]

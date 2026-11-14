@@ -133,7 +133,7 @@ Differences from the baseline approved after the Phase 4 comparison (`causes.py`
 - KK's and KKS's eyeline keeps a copy of its vertices for each of its two materials, as Blender's glTF importer makes them (+364 vertices).
 - SVS hair is its own hair Part.
 - Expressions that move nothing aren't exported (KK's Eyebrow Default, the body's vagina.open).
-- Game patterns the translation tables don't name keep the game's name (KK and KKS mouths 40 to 42, six SVS mouths).
+- Game patterns the translation tables don't name keep the game's name (KK and KKS mouths 40 to 42). Six SVS mouths did too, until the table named them (issue 45).
 - A mesh has only the UV sets it has in the game.
 - A mesh without expressions has no shape keys, not a lone Basis.
 - Every active transform under the body root is a bone, so the samples have bones the legacy exports lacked (KKS's ClothCyclerCollision, SVS's o_tango).

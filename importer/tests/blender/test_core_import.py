@@ -140,6 +140,16 @@ def test_the_tears_are_moved_from_bodys_shape_keys(sample, golden_import):
     assert tear_keys["Tears big"].mute
 
 
+def test_svs_has_each_vowel_mouth_once(golden_import):
+    """Issue 45: the game's own vowel and Cartoony Smile mouths carry the Expression Names, with no
+    second copy under the game's numbered name."""
+    _, ch = golden_import("svs")
+    names = [k.name for k in ch.body.data.shape_keys.key_blocks]
+    for name in ("Mouth A", "Mouth I", "Mouth U", "Mouth E", "Mouth O", "Mouth Cartoony Smile"):
+        assert names.count(name) == 1, name
+    assert not [n for n in names if n.startswith("mouth ")]
+
+
 @pytest.mark.parametrize("sample, material, pattern", [
     ("kk", "cf_m_gageye_02", "cf_t_gageye_08"),
     ("kks", "cf_m_gageye_02", "cf_t_gageye_08"),

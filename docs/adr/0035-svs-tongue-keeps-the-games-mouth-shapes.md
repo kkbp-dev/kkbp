@@ -20,3 +20,4 @@ The exporter keeps what the game shows. The table's recipes (Mouth A, I, U, E, O
 
 - In Blender, most SVS mouth keys leave the tongue still. That is correct, not a bug.
 - With the recipes that drop the lower teeth, a gap can show between the tongue and the lower teeth.
+- Since issue 45, Mouth A, I, U, E, O and Cartoony Smile are the game's own mouth patterns 19 to 23 and 26, not recipes: their lips were identical to the recipes', and their teeth and tongue are now the game's too. Only Mouth Hate is still a recipe.
