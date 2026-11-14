@@ -99,28 +99,59 @@ namespace KKBP.Exporter.Core.AdapterKit
             return !(minX[a] >= maxX[b] || maxX[a] <= minX[b] || minY[a] >= maxY[b] || maxY[a] <= minY[b]);
         }
 
+        /// <summary>The side of a bake for a material with no texture to take its size from.</summary>
+        public const int DefaultSide = 2048;
+
+        /// <summary>The side of a body or face bake.</summary>
+        public const int SkinSide = 4096;
+
+        /// <summary>
+        /// The width and height to bake a material's light and dark Variants at: its main texture's own,
+        /// so the bake has one pixel for each texel and keeps the texture's shape. A main size of 0 means
+        /// the material has no main texture. The body and the face (<paramref name="skin"/>) are always
+        /// <see cref="SkinSide"/> square: they draw layers placed by other UV sets (SVS's pubic hair,
+        /// KK's overlays), which are finer than the main texture (ADR 0044).
+        /// </summary>
+        public static void Size(int mainWidth, int mainHeight, bool skin, out int width, out int height)
+        {
+            if (skin)
+            {
+                width = height = SkinSide;
+            }
+            else if (mainWidth <= 0 || mainHeight <= 0)
+            {
+                width = height = DefaultSide;
+            }
+            else
+            {
+                width = mainWidth;
+                height = mainHeight;
+            }
+        }
+
         /// <summary>
         /// Folds a render covering several UV tiles (UVs outside 0–1) onto one tile of
-        /// <paramref name="size"/> pixels square, keeping the most opaque pixel at each point.
+        /// <paramref name="width"/> by <paramref name="height"/> pixels, keeping the most opaque pixel
+        /// at each point.
         /// </summary>
-        public static byte[] Fold(byte[] pixels, int size, int tilesAcross, int tilesUp)
+        public static byte[] Fold(byte[] pixels, int width, int height, int tilesAcross, int tilesUp)
         {
             if (tilesAcross == 1 && tilesUp == 1)
             {
                 return pixels;
             }
-            int width = size * tilesAcross;
-            var result = new byte[size * size * 4];
-            for (int y = 0; y < size; y++)
+            int rowLength = width * tilesAcross;
+            var result = new byte[width * height * 4];
+            for (int y = 0; y < height; y++)
             {
-                for (int x = 0; x < size; x++)
+                for (int x = 0; x < width; x++)
                 {
-                    int dst = (y * size + x) * 4;
+                    int dst = (y * width + x) * 4;
                     for (int ty = 0; ty < tilesUp && result[dst + 3] < 255; ty++)
                     {
                         for (int tx = 0; tx < tilesAcross && result[dst + 3] < 255; tx++)
                         {
-                            int src = ((ty * size + y) * width + tx * size + x) * 4;
+                            int src = ((ty * height + y) * rowLength + tx * width + x) * 4;
                             if (pixels[src + 3] > result[dst + 3])
                             {
                                 Array.Copy(pixels, src, result, dst, 4);

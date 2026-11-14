@@ -407,7 +407,35 @@ namespace KKBP.Exporter.Core.Tests
         {
             // Two 1x1 tiles side by side: the second is opaque.
             var pixels = new byte[] { 10, 10, 10, 100, 20, 20, 20, 255 };
-            Assert.Equal(new byte[] { 20, 20, 20, 255 }, KKBP.Exporter.Core.AdapterKit.LightBake.Fold(pixels, 1, 2, 1));
+            Assert.Equal(new byte[] { 20, 20, 20, 255 }, KKBP.Exporter.Core.AdapterKit.LightBake.Fold(pixels, 1, 1, 2, 1));
+        }
+
+        [Fact]
+        public void Fold_takes_tiles_that_arent_square()
+        {
+            // Two tiles of 2x1 pixels, one above the other (rows bottom up): each gives one opaque pixel.
+            var pixels = new byte[] { 1, 1, 1, 255, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 255 };
+            Assert.Equal(new byte[] { 1, 1, 1, 255, 2, 2, 2, 255 }, KKBP.Exporter.Core.AdapterKit.LightBake.Fold(pixels, 2, 1, 1, 2));
+        }
+
+        [Fact]
+        public void A_bake_has_its_main_textures_size_and_shape()
+        {
+            // Issue 53: a 1024x512 texture was baked as a 1024 square.
+            int width, height;
+            KKBP.Exporter.Core.AdapterKit.LightBake.Size(1024, 512, false, out width, out height);
+            Assert.Equal(new[] { 1024, 512 }, new[] { width, height });
+            KKBP.Exporter.Core.AdapterKit.LightBake.Size(0, 0, false, out width, out height);
+            Assert.Equal(new[] { 2048, 2048 }, new[] { width, height });
+        }
+
+        [Fact]
+        public void The_body_and_face_bakes_stay_4096_square()
+        {
+            // Their layers placed by other UV sets are finer than the main texture (ADR 0044).
+            int width, height;
+            KKBP.Exporter.Core.AdapterKit.LightBake.Size(1024, 512, true, out width, out height);
+            Assert.Equal(new[] { 4096, 4096 }, new[] { width, height });
         }
 
         private static double Lin(byte b) { double c = b / 255.0; return c <= 0.04045 ? c / 12.92 : System.Math.Pow((c + 0.055) / 1.055, 2.4); }

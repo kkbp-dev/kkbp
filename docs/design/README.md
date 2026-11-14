@@ -62,6 +62,7 @@ ADRs:
 - [0041 Edit templates follow the games' own shaders, and grade their light and dark as the maker camera does](../adr/0041-edit-templates-follow-the-games-shaders.md)
 - [0042 One Gag eyes key, with a dropdown that picks the gag expression](../adr/0042-one-gag-eyes-key-with-a-dropdown.md)
 - [0043 The Rigify Hook is rewritten in the importer's style, and a rig fingerprint shows the rig is unchanged](../adr/0043-rigify-rewritten-and-checked-by-a-rig-fingerprint.md)
+- [0044 Bakes have their main texture's size and shape; the body and face stay 4096 square](../adr/0044-bakes-keep-the-main-textures-shape-and-skin-stays-4096.md)
 
 Folded or dropped from the original review: candidate 6 (Exporter Naming) is replaced by Ids; candidate 9 (import options declared once) is part of the import pipeline.
 

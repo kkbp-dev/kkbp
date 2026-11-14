@@ -20,4 +20,4 @@ So the KK and KKS bake sets the camera's rect to the full viewport while it runs
 ## Consequences
 
 - KK and KKS bakes of patterned and detailed textures are as sharp as their main texture, so their light and dark Variants change and the Golden Samples were remade. The SVS bakes that could be measured were already sharp; the SVS line is a safeguard.
-- Bakes are still square at the larger side of the main texture, and the face is still baked at 4096. A rectangular texture is stretched along its short side, which costs a little vertical sharpness in Blender. This is left for a separate decision.
+- Bakes are still square at the larger side of the main texture, and the face is still baked at 4096. A rectangular texture is stretched along its short side, which costs a little vertical sharpness in Blender. This is left for a separate decision. (Decided in [ADR 0044](0044-bakes-keep-the-main-textures-shape-and-skin-stays-4096.md): bakes follow the main texture's shape, and the body and face stay 4096.)
