@@ -29,10 +29,33 @@ namespace KKBP.Exporter.Core.AdapterKit
         }
 
         /// <summary>
-        /// Moves the mesh's vertices by the offset and adds the showing key, which moves them back.
-        /// Shape keys already on the mesh are deltas, so they stay as they are.
+        /// How much of its width a hidden mesh keeps. The head narrows towards its back, so at its
+        /// full width a mesh that is as wide as the eyes comes out through the sides there (issue 84).
         /// </summary>
-        public static void Apply(MeshData mesh, Vec3 offset, ExpressionCategory category, string expressionName)
+        public const float Width = 0.5f;
+
+        /// <summary>The middle of the face mesh from left to right, which hidden meshes narrow towards.</summary>
+        public static float Middle(Vec3[] facePositions)
+        {
+            if (facePositions == null || facePositions.Length == 0)
+            {
+                throw new ArgumentException("The face mesh has no vertices.", "facePositions");
+            }
+            float min = float.MaxValue;
+            float max = float.MinValue;
+            foreach (var p in facePositions)
+            {
+                min = Math.Min(min, p.X);
+                max = Math.Max(max, p.X);
+            }
+            return (min + max) / 2;
+        }
+
+        /// <summary>
+        /// Moves the mesh's vertices by the offset, narrows them towards `middle`, and adds the showing
+        /// key, which puts them back. Shape keys already on the mesh are deltas, so they stay as they are.
+        /// </summary>
+        public static void Apply(MeshData mesh, Vec3 offset, float middle, ExpressionCategory category, string expressionName)
         {
             if (category != ExpressionCategory.Tears && category != ExpressionCategory.Gag)
             {
@@ -41,8 +64,11 @@ namespace KKBP.Exporter.Core.AdapterKit
             var show = new Vec3[mesh.Positions.Length];
             for (int i = 0; i < show.Length; i++)
             {
-                mesh.Positions[i] = mesh.Positions[i] + offset;
-                show[i] = offset * -1;
+                var shown = mesh.Positions[i];
+                var hidden = shown + offset;
+                hidden.X = middle + (hidden.X - middle) * Width;
+                mesh.Positions[i] = hidden;
+                show[i] = shown - hidden;
             }
             mesh.Morphs.Add(new MorphData { Category = category, ExpressionName = expressionName, PositionDeltas = show });
         }

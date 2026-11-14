@@ -69,7 +69,7 @@ namespace KKBP.Exporter.Core.Tests
             var mesh = new MeshData { Positions = new[] { new Vec3(0, 1.5f, 0.1f), new Vec3(0.01f, 1.5f, 0.1f) } };
             var existing = new MorphData { Category = ExpressionCategory.Eye, ExpressionName = "Eye Default", PositionDeltas = new[] { new Vec3(0, 0.01f, 0), new Vec3(0, 0.01f, 0) } };
             mesh.Morphs.Add(existing);
-            HiddenBasis.Apply(mesh, new Vec3(0, 0, -0.2f), ExpressionCategory.Tears, "Tears big");
+            HiddenBasis.Apply(mesh, new Vec3(0, 0, -0.2f), 0, ExpressionCategory.Tears, "Tears big");
 
             Assert.Equal(-0.1f, mesh.Positions[0].Z, 5);
             Assert.Equal(0.01f, existing.PositionDeltas[0].Y, 6);
@@ -80,10 +80,29 @@ namespace KKBP.Exporter.Core.Tests
         }
 
         [Fact]
+        public void A_hidden_mesh_is_half_as_wide_about_the_faces_middle()
+        {
+            var face = new[] { new Vec3(-0.08f, 1.5f, 0), new Vec3(0.12f, 1.5f, 0.1f) };
+            Assert.Equal(0.02f, HiddenBasis.Middle(face), 5);
+            var mesh = new MeshData { Positions = new[] { new Vec3(-0.04f, 1.5f, 0.1f), new Vec3(0.08f, 1.5f, 0.1f) } };
+            HiddenBasis.Apply(mesh, new Vec3(0, 0, -0.05f), 0.02f, ExpressionCategory.Gag, "Gag eye 00");
+
+            Assert.Equal(-0.01f, mesh.Positions[0].X, 5);
+            Assert.Equal(0.05f, mesh.Positions[1].X, 5);
+            var show = mesh.Morphs.Last().PositionDeltas;
+            for (int i = 0; i < 2; i++)
+            {
+                var shown = mesh.Positions[i] + show[i];
+                Assert.Equal(i == 0 ? -0.04f : 0.08f, shown.X, 5);
+                Assert.Equal(0.1f, shown.Z, 5);
+            }
+        }
+
+        [Fact]
         public void Only_tears_and_gag_eyes_get_one()
         {
             var mesh = new MeshData { Positions = new[] { Vec3.Zero } };
-            Assert.Throws<System.ArgumentException>(() => HiddenBasis.Apply(mesh, Vec3.Zero, ExpressionCategory.Eye, "Eye Default"));
+            Assert.Throws<System.ArgumentException>(() => HiddenBasis.Apply(mesh, Vec3.Zero, 0, ExpressionCategory.Eye, "Eye Default"));
         }
     }
 

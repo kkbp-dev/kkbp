@@ -140,6 +140,36 @@ def test_the_tears_are_moved_from_bodys_shape_keys(sample, golden_import):
     assert tear_keys["Tears big"].mute
 
 
+@pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
+def test_the_tears_and_gag_eyes_rest_inside_the_head(sample, golden_import):
+    """Issue 84: with their showing keys down, no vertex of the tears or the gag eyes is outside the
+    face mesh, so nothing shows at the back of the head when the hair is hidden."""
+    import bmesh
+    from mathutils.bvhtree import BVHTree
+
+    _, ch = golden_import(sample)
+    body = ch.body
+    slots = {i for i, s in enumerate(body.material_slots) if s.material in ch.materials(roles="face")}
+    bm = bmesh.new()
+    bm.from_mesh(body.data)
+    bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index not in slots], context="FACES")
+    bm.transform(body.matrix_world)
+    bm.normal_update()
+    assert bm.faces
+    skin = BVHTree.FromBMesh(bm)
+    bm.free()
+    parts = ch.parts(("tears", "gag_eyes"))
+    assert parts
+    for part in parts:
+        outside = []
+        for v in part.data.vertices:
+            point = part.matrix_world @ v.co
+            nearest, normal, _, _ = skin.find_nearest(point)
+            if (point - nearest).dot(normal) > 0:
+                outside.append(v.index)
+        assert not outside, f"{part.name}: {len(outside)} of {len(part.data.vertices)} vertices are outside"
+
+
 def test_svs_has_each_vowel_mouth_once(golden_import):
     """Issue 45: the game's own vowel and Cartoony Smile mouths carry the Expression Names, with no
     second copy under the game's numbered name."""

@@ -421,12 +421,13 @@ namespace KKBP.Exporter
                 return;
             }
             var offset = HiddenBasis.Offset(face.Positions);
+            var middle = HiddenBasis.Middle(face.Positions);
             foreach (var mesh in sink.Meshes)
             {
                 KeyValuePair<ExpressionCategory, string> show;
                 if (HiddenUntilShown.TryGetValue(mesh.Name, out show))
                 {
-                    HiddenBasis.Apply(mesh, offset, show.Key, show.Value);
+                    HiddenBasis.Apply(mesh, offset, middle, show.Key, show.Value);
                 }
             }
         }
