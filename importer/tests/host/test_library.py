@@ -76,7 +76,8 @@ def test_kk_choices():
     assert _pick("KK", "face", "opaque", plain) == ("KK Light Dark Face", None, {"force_visibility": 0})
     assert _pick("KK", "face", "opaque", plain[:3])[0] == "KK Light Dark"
     assert _pick("KK", "body", "opaque", plain)[0] == "KK Light Dark"
-    assert _pick("SVS", "face", "opaque", plain)[0] == "SVS Light Dark"
+    assert _pick("SVS", "face", "opaque", plain) == ("SVS Light Dark Face", None, {"force_visibility": 2})
+    assert _pick("SVS", "face", "opaque") == ("SVS Light Dark", None, {"force_visibility": 2})
     assert _pick("KK", "body", "opaque") == ("KK Light Dark", None, {"force_visibility": 2})
     assert _pick("KK", None, "cutout") == ("KK Light Dark", None, {"force_visibility": 2})
     assert _pick("KK", "eyebrow", "alpha") == ("KK Light Dark", "BLENDED", {"force_visibility": 2})

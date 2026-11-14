@@ -1,10 +1,12 @@
 # The face is also baked without its eyeshadow
 
-The light and dark bakes of the face have the eyeshadow drawn into them, so its colour around the eyes can't be faded or removed in Blender (issue 38). When a KK or KKS face has eyeshadow, the exporter bakes it a second time without it and writes the results as two more Texture Variants of the face's `_MainTex`: `light_no_eyeshadow` and `dark_no_eyeshadow` (Schema Version 1.2). The importer gives such a face the `KK Light Dark Face` template, whose **Eyeshadow** parameter fades between the two pairs: 1, the default, is the game's own bake, and 0 is the face without eyeshadow.
+The light and dark bakes of the face have the eyeshadow drawn into them, so its colour around the eyes can't be faded or removed in Blender (issue 38). When a face has eyeshadow, the exporter bakes it a second time without it and writes the results as two more Texture Variants of the face's `_MainTex`: `light_no_eyeshadow` and `dark_no_eyeshadow` (Schema Version 1.2). The importer gives such a face the `KK Light Dark Face` template (`SVS Light Dark Face` on SVS), whose **Eyeshadow** parameter fades between the two pairs: 1, the default, is the game's own bake, and 0 is the face without eyeshadow.
 
 ## What the exporter leaves out
 
-The eyeshadow is the face material's third overlay, `_overtex3`; the other two overlays are the cheeks and the lips and stay in both bakes. The overlays are drawn in the bake's mesh pass, so the second bake is that pass again with `_overtex3` cleared, laid over the same quad pass. A face with no eyeshadow texture gets no second bake, and neither does a tessellated face shader, whose bake has no quad pass to share.
+KK and KKS: the eyeshadow is the face material's third overlay, `_overtex3`; the other two overlays are the cheeks and the lips and stay in both bakes. The overlays are drawn in the bake's mesh pass, so the second bake is that pass again with `_overtex3` cleared, laid over the same quad pass. A face with no eyeshadow texture gets no second bake, and neither does a tessellated face shader, whose bake has no quad pass to share.
+
+SVS: the head shader has no eyeshadow layer of its own. The game draws the eyeshadow into the head's texture (`_Create_jm_main_skin_head`) with the face's create material (`HumanFace.customTexCtrlFace`), whose eyeshadow texture and colour are the properties `ChaShader.Face.CreateShader` names. For the second bake the adapter sets that colour's alpha to 0, has the game draw the head's texture again (`SetNewCreateTexture`), bakes the face, and then puts the colour back and draws the texture once more. A face whose create material has no eyeshadow texture, or a clear eyeshadow colour, gets no second bake.
 
 ## Considered Options
 
@@ -18,5 +20,5 @@ The eyeshadow is the face material's third overlay, `_overtex3`; the other two o
 
 - The contract says the two come as a pair, beside the `light` and `dark` of the same texture. The Exporter Core fails an export that breaks this, and the importer's bundle check reports it.
 - A bundle with eyeshadow has two more 4096² PNGs.
-- SVS writes neither: its head shader (`lif_main_skin_head`) has no eyeshadow layer of its own among the textures and colours the exporter captures, so there is nothing to leave out of its bake. The game has eyeshadow settings, so it is drawn somewhere else; finding where is its own piece of work.
-- `KK Light Dark Face` has the same shader node and shader variants as `KK Light Dark`, so Convert shaders, the outlines' face mask and the other Hooks treat it the same.
+- The SVS adapter changes the Character's face texture for the length of one bake. It is put back in a `finally`, so a bake that fails leaves the Character as it was.
+- Each face template has the same shader node and shader variants as the template it adds to, so Convert shaders, the outlines' face mask and the other Hooks treat it the same.

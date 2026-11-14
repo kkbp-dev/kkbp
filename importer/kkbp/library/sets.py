@@ -2,7 +2,7 @@
 
 A set is a list of rows, keyed on (Material Role, Blend Mode); the first row that matches a material
 picks its template, parameter values and render method. A set may extend another: a row with the
-same key as a parent's row takes its place (every one of them, when the parent has several), a row with a new key comes before all the parent's
+same key and `needs` as a parent's row takes its place, a row with a new key comes before all the parent's
 rows, and `replace` swaps template names in the parent's rows it keeps. A row with `needs` matches only a material that has those slots; the next row is tried
 for one that lacks them. A material that lacks a slot its template `requires` gets the
 set's `fallback`, as the legacy importer gave unbaked materials its Transparent template.
@@ -76,12 +76,14 @@ SETS: Mapping[str, TemplateSet] = MappingProxyType({s.name: s for s in (
     TemplateSet(
         "SVS",
         extends="KK",
-        replace={"KK Light Dark": "SVS Light Dark", "KK Eye": "SVS Light Dark"},
+        replace={"KK Light Dark": "SVS Light Dark", "KK Light Dark Face": "SVS Light Dark Face",
+                 "KK Eye": "SVS Light Dark"},
         rows=(
             Row("Gag", role="gag_eyes", render_method="DITHERED"),
             Row("SVS Light Dark", role="eye_l", **_BLENDED),
             Row("SVS Light Dark", role="eye_r", **_BLENDED),
             Row("SVS Light Dark", role="eyelash", **_BLENDED),
+            Row("SVS Light Dark Face", role="face", needs=("main.light_no_eyeshadow", "main.dark_no_eyeshadow")),
             Row("SVS Light Dark", role="face"),
             Row("SVS Light Dark", role="eye_white", render_method="DITHERED"),
             Row("SVS Light Dark", blend_mode="alpha", render_method="DITHERED"),
@@ -103,10 +105,10 @@ def resolve(name: str) -> TemplateSet:
     if s.extends is None:
         return s
     parent = resolve(s.extends)
-    own = {r.key: r for r in s.rows}
-    parent_keys = {r.key for r in parent.rows}
-    rows = tuple(r for r in s.rows if r.key not in parent_keys)
-    rows += tuple(own.get(r.key) or dc_replace(r, template=s.replace.get(r.template, r.template))
+    own = {(r.key, r.needs): r for r in s.rows}
+    parent_keys = {(r.key, r.needs) for r in parent.rows}
+    rows = tuple(r for r in s.rows if (r.key, r.needs) not in parent_keys)
+    rows += tuple(own.get((r.key, r.needs)) or dc_replace(r, template=s.replace.get(r.template, r.template))
                   for r in parent.rows)
     return TemplateSet(name=s.name, rows=rows,
                        fallback=s.fallback or s.replace.get(parent.fallback, parent.fallback),

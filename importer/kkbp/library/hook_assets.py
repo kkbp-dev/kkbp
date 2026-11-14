@@ -99,7 +99,7 @@ OUTLINES = OutlineAssets(
     black="Template: BlackWithAlpha",
     placeholder="Template: Placeholder",
     face_masks=MappingProxyType({"KK Light Dark": "KK OutlineMask.png", "KK Light Dark Face": "KK OutlineMask.png",
-                                 "SVS Light Dark": "SVS OutlineMask.png"}),
+                                 "SVS Light Dark": "SVS OutlineMask.png", "SVS Light Dark Face": "SVS OutlineMask.png"}),
     thinning_masks=frozenset({"SVS OutlineMask.png"}),
 )
 
