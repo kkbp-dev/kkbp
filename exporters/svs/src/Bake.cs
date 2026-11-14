@@ -117,6 +117,12 @@ namespace KKBP.Exporter
         /// <summary>Adds the light and dark Variants of one material slot to its captured material.</summary>
         public void Add(Renderer renderer, Material source, int slot, MaterialData data, bool skin)
         {
+            Add(renderer, source, slot, data, skin, TextureVariant.Light, TextureVariant.Dark);
+        }
+
+        /// <summary>Bakes one material slot lit and unlit, as it is drawn now, and adds the two as these Variants.</summary>
+        public void Add(Renderer renderer, Material source, int slot, MaterialData data, bool skin, TextureVariant lightVariant, TextureVariant darkVariant)
+        {
             var mesh = Meshes.SourceMesh(renderer);
             var material = new Material(source);
             Mesh flattened = null;
@@ -195,8 +201,8 @@ namespace KKBP.Exporter
                     lit = EyeLayer(FrontLight, lit, material, renderer, block, width, height, white);
                     dark = EyeLayer(BackLight, dark, material, renderer, block, width, height, white);
                 }
-                data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Light, Png = Png(lit, width, height) });
-                data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Dark, Png = Png(dark, width, height) });
+                data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = lightVariant, Png = Png(lit, width, height) });
+                data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = darkVariant, Png = Png(dark, width, height) });
             }
             finally
             {
