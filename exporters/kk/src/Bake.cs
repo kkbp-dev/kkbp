@@ -102,7 +102,7 @@ namespace KKBP.Exporter
         }
 
         /// <summary>Adds the light and dark Variants of one material slot to its captured material.</summary>
-        public void Add(Renderer renderer, Material source, int slot, MaterialData data, bool face)
+        public void Add(Renderer renderer, Material source, int slot, MaterialData data, bool skin)
         {
             var mesh = Meshes.SourceMesh(renderer);
             var material = new Material(source);
@@ -125,7 +125,9 @@ namespace KKBP.Exporter
                         material.SetFloat(f, 0);
                     }
                 }
-                int size = face ? 4096 : material.mainTexture != null ? Mathf.Max(material.mainTexture.width, material.mainTexture.height) : 2048;
+                var main = material.mainTexture;
+                int width, height;
+                LightBake.Size(main != null ? main.width : 0, main != null ? main.height : 0, skin, out width, out height);
                 var block = new MaterialPropertyBlock();
                 renderer.GetPropertyBlock(block);
                 int sub = Mathf.Min(slot, mesh.subMeshCount - 1);
@@ -143,8 +145,8 @@ namespace KKBP.Exporter
                     if (flattened != null)
                     {
                         Aim(front, up / 2f, (float)across / up);
-                        meshLight = LightBake.Fold(Render(FrontLight, flattened, sub, material, renderer, block, size * across, size * up), size, across, up);
-                        meshDark = LightBake.Fold(Render(BackLight, flattened, sub, material, renderer, block, size * across, size * up), size, across, up);
+                        meshLight = LightBake.Fold(Render(FrontLight, flattened, sub, material, renderer, block, width * across, height * up), width, height, across, up);
+                        meshDark = LightBake.Fold(Render(BackLight, flattened, sub, material, renderer, block, width * across, height * up), width, height, across, up);
                     }
                     foreach (string t in Overlays)
                     {
@@ -159,22 +161,22 @@ namespace KKBP.Exporter
                 byte[] dark;
                 if (tessellated && meshLight != null)
                 {
-                    lit = LightBake.Pad(meshLight, size, size, 2);
-                    dark = LightBake.Pad(meshDark, size, size, 2);
+                    lit = LightBake.Pad(meshLight, width, height, 2);
+                    dark = LightBake.Pad(meshDark, width, height, 2);
                 }
                 else
                 {
                     Aim(new Vector3(0.5f, 0.5f, 1f), 0.5f, 1f);
-                    lit = Render(FrontLight, quad, 0, material, renderer, block, size, size);
-                    dark = Render(BackLight, quad, 0, material, renderer, block, size, size);
+                    lit = Render(FrontLight, quad, 0, material, renderer, block, width, height);
+                    dark = Render(BackLight, quad, 0, material, renderer, block, width, height);
                     if (meshLight != null)
                     {
                         LightBake.Overlay(lit, meshLight);
                         LightBake.Overlay(dark, meshDark);
                     }
                 }
-                data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Light, Png = Png(lit, size) });
-                data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Dark, Png = Png(dark, size) });
+                data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Light, Png = Png(lit, width, height) });
+                data.Textures.Add(new TextureData { Role = TextureRole.Main, Raw = "_MainTex", Variant = TextureVariant.Dark, Png = Png(dark, width, height) });
             }
             finally
             {
@@ -307,10 +309,10 @@ namespace KKBP.Exporter
             return bytes;
         }
 
-        private static byte[] Png(byte[] rgba, int size)
+        private static byte[] Png(byte[] rgba, int width, int height)
         {
-            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false);
-            var pixels = new Color32[size * size];
+            var texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            var pixels = new Color32[width * height];
             for (int i = 0; i < pixels.Length; i++)
             {
                 pixels[i] = new Color32(rgba[i * 4], rgba[i * 4 + 1], rgba[i * 4 + 2], rgba[i * 4 + 3]);

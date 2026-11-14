@@ -323,7 +323,7 @@ namespace KKBP.Exporter
                     {
                         continue;
                     }
-                    bool large = m.Renderer == cha.rendBody || m.Renderer == cha.rendFace;
+                    bool skin = m.Renderer == cha.rendBody || m.Renderer == cha.rendFace;
                     for (int slot = 0; slot < m.Slots.Length; slot++)
                     {
                         string key = Meshes.MaterialKey(m.Data.Key, slot);
@@ -334,7 +334,7 @@ namespace KKBP.Exporter
                         }
                         try
                         {
-                            bake.Add(m.Renderer, m.Slots[slot], slot, data, large);
+                            bake.Add(m.Renderer, m.Slots[slot], slot, data, skin);
                         }
                         catch (Exception e)
                         {
