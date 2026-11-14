@@ -9,6 +9,7 @@ from ..character import Character, CharacterError
 from ..editing import switch
 from ..bundle import BundleError
 from ..pipeline import hooks as hook_registry
+from ..translations import CONTEXT
 from ..tools import (animation, bulk_import, edit_material, export_prep, link_hair,
                      merge_weights, run_hook)
 
@@ -104,7 +105,7 @@ class KKBP_OT_run_hook(bpy.types.Operator):
     bl_description = "Runs a Hook, such as Rigify, on a Character imported without it"
     bl_options = {"REGISTER", "UNDO"}
 
-    hook: bpy.props.EnumProperty(name="Hook", items=_hook_items)
+    hook: bpy.props.EnumProperty(name="Hook", items=_hook_items, translation_context=CONTEXT)
 
     @classmethod
     def poll(cls, context):

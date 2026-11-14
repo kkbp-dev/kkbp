@@ -11,6 +11,7 @@ from ..bundle import BundleError
 from ..mesh_loader import MeshLoaderError
 from ..pipeline import import_bundle
 from ..pipeline.options import OptionError
+from ..translations import iface
 from . import options
 
 MANIFEST = "manifest.json"
@@ -76,12 +77,15 @@ class KKBP_OT_import_bundle(bpy.types.Operator):
 class KKBP_OT_install_pillow(bpy.types.Operator):
     bl_idname = "kkbp.install_pillow"
     bl_label = "Install Pillow"
-    bl_description = f"Download Pillow {pillow.PILLOW_VERSION} from PyPI with Blender's pip and install it into KKBP"
+    # Not an f-string: the translations are keyed by this text, and fill it the same way.
+    bl_description = "Download Pillow {version} from PyPI with Blender's pip and install it into KKBP".format(
+        version=pillow.PILLOW_VERSION)
 
     def invoke(self, context, event):
         if not bpy.app.online_access:
             return context.window_manager.invoke_confirm(
-                self, event, message="Online access is turned off in Blender's Preferences. Download Pillow anyway?")
+                self, event,
+                message=iface("Online access is turned off in Blender's Preferences. Download Pillow anyway?"))
         return self.execute(context)
 
     def execute(self, context):

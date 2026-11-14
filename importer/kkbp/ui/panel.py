@@ -5,6 +5,7 @@ from __future__ import annotations
 import bpy
 
 from .. import mesh_loader, pillow, settings
+from ..translations import CONTEXT, iface
 from . import options
 
 
@@ -67,6 +68,7 @@ class KKBP_PT_import_options(bpy.types.Panel):
 
 class KKBP_PT_hooks(bpy.types.Panel):
     bl_label = "Hooks"
+    bl_translation_context = CONTEXT  # not Blender's own "Hooks", the modifiers
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
     bl_category = "KKBP"
@@ -85,7 +87,7 @@ class KKBP_PT_hooks(bpy.types.Panel):
             if script.error:
                 layout.label(text=f"{script.path.name}: {script.error}", icon="ERROR")
             else:
-                layout.label(text=f"{script.path.name}: {', '.join(script.hooks) or 'no Hooks'}", icon="SCRIPT")
+                layout.label(text=f"{script.path.name}: {', '.join(script.hooks) or iface('no Hooks')}", icon="SCRIPT")
 
 
 classes = (KKBP_PT_import, KKBP_PT_import_options, KKBP_PT_hooks)

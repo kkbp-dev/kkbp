@@ -108,6 +108,16 @@ def find_kkbp():
 - Defaults live in Preferences. Current values live on the scene, so a `.blend` remembers how it was imported.
 - The scene's values are a property group generated from the declarations, rebuilt when they change. A new scene starts from the Preferences defaults, which the panel's **Save as Defaults** sets from the current scene. Only the values set on the scene are passed to `import_bundle`; the rest come from Preferences.
 
+## UI languages
+
+- The UI is in English, Japanese (`ja_JP`) and Simplified Chinese (`zh_HANS`), and follows Blender's own language setting (Preferences > Interface > Language). There is no language choice in KKBP (issue 37).
+- The strings in the code stay English. `kkbp/translations/` holds one table per language, English string to translation, registered with Blender's translation API (`bpy.app.translations`). A string with no entry shows in English.
+- Translated: panel titles, buttons, labels, dialogs, Preferences, Import Option labels and choices, the built-in Hooks' names in the panel, and tooltips. Not translated: log lines, operator reports, errors and the import summary, so a bug report reads the same in every language; and names from the game, such as Expression Names (ADR 0004).
+- A user Hook's name and options show as its script wrote them.
+- Blender looks a string up in an add-on's table before its own catalogue, for its whole UI. So a table never holds a word Blender already translates ("Save", "Bones", "Shader"): that word keeps Blender's wording. Where Blender's word means something else (its "Hooks" are the modifiers), the panel or property is put in the `KKBP` translation context and translated there.
+- Text put together at draw time goes through `translations.iface`. Write a label as one whole string, not as pieces joined together, so it can be translated whole.
+- Tests: without Blender, every key in a table is still a string in the code, and the languages translate the same strings. In Blender, the labels follow the language, Blender's own words aren't replaced, and a string the UI shows without a translation is reported as a warning, not a failure.
+
 ## Failure
 
 - If a built-in Step fails, the import stops. The error names the Step, and the partly built scene is left in place. The whole import is a single undo step.
