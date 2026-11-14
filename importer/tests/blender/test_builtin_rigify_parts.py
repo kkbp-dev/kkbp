@@ -1,5 +1,5 @@
 """Parts of the Rigify Hook on the Golden Samples: what it finds the Character has, and the emotion
-grid's behaviour when Body lacks an eye key (the rig fingerprint, run.py fingerprint, checks the
+grid when Body lacks some of its keys (the rig fingerprint, run.py fingerprint, checks the
 rest against the rig before the rewrite)."""
 
 from types import SimpleNamespace
@@ -41,18 +41,48 @@ def test_the_emotion_grid_makes_the_custom_keys_on_kk(golden_import):
         assert name in keys.key_blocks and f'key_blocks["{name}"].value' in driven, name
 
 
-def test_the_emotion_grid_stops_at_a_missing_eye_key_and_says_so(golden_import):
-    """SVS's Body has no "Eye Both Eyes Shut Tight": the grid stops there, as it always did (see
-    "Found, not fixed" in the pull request), and the log names the key."""
-    result, ch = golden_import("svs", hooks=["Rigify"])
+def test_the_emotion_grid_is_whole_without_some_of_its_keys(golden_import):
+    """Issue 64. SVS's Body has no "Eye Both Eyes Shut Tight", one size of each vowel, and only two
+    of the mouth circle's second keys: the grid drives what there is, with other keys standing in on the
+    mouth circle, and the custom keys are made."""
+    _, ch = golden_import("svs", hooks=["Rigify"])
     keys = ch.body.data.shape_keys
-    missing = names.EYE_SHAPEKEY_CLOSED3
-    assert missing not in keys.key_blocks
-    assert any(missing in w and "emotion grid stops" in w for w in result.warnings), result.warnings
-    driven = _driven(keys)
-    for key in (names.EYE_SHAPEKEY_CLOSED1, names.EYE_SHAPEKEY_CLOSED2):
-        assert f'key_blocks["{key}{names.EYE_SHAPEKEYS_COPY_SUFFIX}"].value' in driven, key
-    assert not any(name in keys.key_blocks for name in names.CUSTOM_SHAPEKEYS_TO_CREATE)
+    assert names.EYE_SHAPEKEY_CLOSED3 not in keys.key_blocks
+    driven = {d.data_path: d.driver.expression for d in keys.animation_data.drivers}
+
+    def path(key, suffix):
+        return f'key_blocks["{key}{suffix}"].value'
+
+    for key in (names.EYE_SHAPEKEY_CLOSED1, names.EYE_SHAPEKEY_CLOSED2, names.EYE_SHAPEKEY_CLOSED4):
+        assert path(key, names.EYE_SHAPEKEYS_COPY_SUFFIX) in driven, key
+    for name in names.CUSTOM_SHAPEKEYS_TO_CREATE:
+        assert name in keys.key_blocks and path(name, "") in driven, name
+    for vowel in "AIUEO":
+        assert path(f"Mouth {vowel}", names.MOUTH_SHAPEKEYS_COPY_SUFFIX) in driven, vowel
+    # Every vowel fades into a second key: SVS's own namesake, or the one picked for it.
+    for second in ("Mouth Smiling", "Mouth Hate, Closed", names.MOUTH_SHAPEKEY_U2, names.MOUTH_SHAPEKEY_E2,
+                   "Mouth Serious"):
+        assert path(second, names.MOUTH_SHAPEKEYS_COPY_SUFFIX) in driven, second
+    for vowel in "AIUEO":
+        assert driven[path(f"Mouth {vowel}", names.MOUTH_SHAPEKEYS_COPY_SUFFIX)].startswith("(1-"), vowel
+
+
+def test_the_mouth_circle_moves_the_svs_mouth(golden_import):
+    import bpy
+
+    _, ch = golden_import("svs", hooks=["Rigify"])
+    keys = ch.body.data.shape_keys.key_blocks
+    controller = ch.rig.pose.bones[names.MOUTH_WIDGET_CONTROLLER_BONE]
+    scene = bpy.context.scene
+    controller.location = (0, 0, 0.09)  # straight up: A
+    scene.frame_set(scene.frame_current)
+    assert keys["Mouth Smiling" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value > 0.95  # the angle term stops just short of 1
+    assert keys["Mouth A" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value == pytest.approx(0.0, abs=1e-3)
+    controller.location = (0, 0, 0.045)  # halfway: all of A, none of the second key yet
+    scene.frame_set(scene.frame_current)
+    assert keys["Mouth A" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value > 0.9
+    assert keys["Mouth Smiling" + names.MOUTH_SHAPEKEYS_COPY_SUFFIX].value == pytest.approx(0.0, abs=1e-3)
+    controller.location = (0, 0, 0)
 
 
 # --- the hands without the joint-correction bones (SVS; issues 24 and 26, ADR 0045) ---------------

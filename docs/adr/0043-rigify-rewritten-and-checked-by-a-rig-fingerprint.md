@@ -12,7 +12,7 @@ The user decided the rewrite must leave the rig as it was: every bone, constrain
 
 ## Consequences
 
-- One log line changed: on a Body without one of the eye keys the emotion grid stops where it always did, but says which key is missing instead of passing on Blender's error (SVS's Golden Sample).
+- One log line changed: on a Body without one of the eye keys the emotion grid stops where it always did, but says which key is missing instead of passing on Blender's error (SVS's Golden Sample). Issue #64 later made the grid whole on such a Body: a missing key is skipped and logged, and the rest is made.
 - The bone-name tables can't be changed: the legacy scripts removed names from them for a Character without a tongue or Better Penetration bones, and the next Character imported in the same session got a different rig. Each Character now works on its own copies; a first import's rig is unchanged.
 - What looked wrong but was kept, so the rig stays the same, is listed in the pull request for issue 33 under "Found, not fixed", for later issues.
 - A later change to the Rigify Hook that must keep the rig records a fingerprint baseline first ("Rig fingerprint" in the harness README); one that changes the rig on purpose re-records the importer snapshots as usual.
