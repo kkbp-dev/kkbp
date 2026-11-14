@@ -29,7 +29,7 @@ Status: agreed design, not yet implemented.
 - The exporter writes a Blend Mode per material (`opaque`, `cutout`, `alpha`, `glasses`) in `materials.json` ([ADR 0002](../adr/0002-exporters-write-game-meaning.md)). The importer no longer matches the game's own shader names.
 - A Template Set is a selection table keyed on (Material Role, Blend Mode), plus the Template Descriptions for its templates.
 - The Game Profile names its Template Set. A set can extend another and override only what differs: SVS's set extends KK's, swaps in SVS Light Dark and sets its own render methods. Both use the one Gag template ([ADR 0019](../adr/0019-one-gag-template-built-per-material.md)).
-- A row can set parameter values and the render method. A material that lacks a slot its template requires (Light Dark needs `main.light`) gets the set's fallback, Transparent.
+- A row can set parameter values and the render method. A material that lacks a slot its template requires (Light Dark needs `main.light`) gets the set's fallback, Transparent. A row can also name slots a material `needs` to match it; the next row is tried for a material without them. The KK face's first row is `KK Light Dark Face`, which needs the bakes without eyeshadow and has an Eyeshadow parameter that fades them ([ADR 0046](../adr/0046-the-face-is-also-baked-without-its-eyeshadow.md)).
 - Raw Properties a template has a slot for (`_expression`, SVS's `_Cloth_alpha_bot`) and the per-pattern values an expression sets (`_AngleSpeed`, …) are mapped to slots and parameters in the Game Profile.
 
 ## Appending and sharing

@@ -2,8 +2,9 @@
 
 A set is a list of rows, keyed on (Material Role, Blend Mode); the first row that matches a material
 picks its template, parameter values and render method. A set may extend another: a row with the
-same key as a parent's row takes its place, a row with a new key comes before all the parent's
-rows, and `replace` swaps template names in the parent's rows it keeps. A material that lacks a slot its template `requires` gets the
+same key as a parent's row takes its place (every one of them, when the parent has several), a row with a new key comes before all the parent's
+rows, and `replace` swaps template names in the parent's rows it keeps. A row with `needs` matches only a material that has those slots; the next row is tried
+for one that lacks them. A material that lacks a slot its template `requires` gets the
 set's `fallback`, as the legacy importer gave unbaked materials its Transparent template.
 
 The Game Profile names its set (`TEMPLATE_SET`).
@@ -28,13 +29,15 @@ class Row:
     params: Mapping[str, float] = _EMPTY
     render_method: str | None = None  # DITHERED or BLENDED; None keeps the template's
     transparent_shadow: bool | None = None
+    needs: tuple[str, ...] = ()  # texture slots the material must have for this row to match
 
     @property
     def key(self):
         return (self.role, self.blend_mode)
 
-    def matches(self, role: str | None, blend_mode: str) -> bool:
-        return (self.role is None or self.role == role) and (self.blend_mode is None or self.blend_mode == blend_mode)
+    def matches(self, role: str | None, blend_mode: str, slots: Iterable[str] = ()) -> bool:
+        return ((self.role is None or self.role == role) and (self.blend_mode is None or self.blend_mode == blend_mode)
+                and set(self.needs) <= set(slots))
 
 
 @dataclass(frozen=True)
@@ -59,6 +62,8 @@ SETS: Mapping[str, TemplateSet] = MappingProxyType({s.name: s for s in (
             Row("Gag", role="gag_eyes", render_method="BLENDED"),
             Row("KK Eye", role="eye_l", **_BLENDED),
             Row("KK Eye", role="eye_r", **_BLENDED),
+            Row("KK Light Dark Face", role="face", params={"force_visibility": 0},
+                needs=("main.light_no_eyeshadow", "main.dark_no_eyeshadow")),
             Row("KK Light Dark", role="face", params={"force_visibility": 0}),
             Row("KK Light Dark", role="eye_white", **_BLENDED),
             Row("KK Light Dark", blend_mode="alpha", **_BLENDED),
@@ -114,7 +119,7 @@ def choose(set_name: str, role: str | None, blend_mode: str, slots: Iterable[str
     s = resolve(set_name)
     present = set(slots)
     for row in s.rows:
-        if row.matches(role, blend_mode):
+        if row.matches(role, blend_mode, present):
             template = TEMPLATES[row.template]
             if not set(template.requires) <= present and s.fallback:
                 row = Row(s.fallback, role=row.role, blend_mode=row.blend_mode)

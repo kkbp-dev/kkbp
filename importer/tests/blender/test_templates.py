@@ -52,6 +52,34 @@ def test_a_baked_material_gets_light_dark_with_its_textures(build):
     assert mat.surface_render_method == "DITHERED"
 
 
+def test_a_face_with_bakes_without_eyeshadow_gets_the_eyeshadow_slider(build):
+    """Issue 38: at 1 the face is the game's bake, at 0 the bake without eyeshadow."""
+    b = _builder()
+    face = next(m for m in b.materials if m["id"] == "cf_m_face_00")
+    face["textures"] += [b.add_texture("_MainTex", role="main", variant="light_no_eyeshadow"),
+                         b.add_texture("_MainTex", role="main", variant="dark_no_eyeshadow")]
+    bundle = kkbp.bundle.open_bundle(build(b))
+    ch = character.Character.new("Test Chara", "KK", bundle.path)
+    mat = _apply(ch, bundle, "cf_m_face_00")
+    assert mat[templates.TEMPLATE] == "KK Light Dark Face"
+    slider = templates.param(mat, "eyeshadow")
+    assert slider.default_value == 1 and templates.param(mat, "force_visibility").default_value == 0
+    for variant in ("light", "dark"):
+        full = templates.texture(mat, "main", variant=variant)
+        without = templates.texture(mat, "main", variant=f"{variant}_no_eyeshadow")
+        assert character.KEY in full.image and character.KEY in without.image and full.image != without.image
+        mix = slider.node.outputs[variant.capitalize()].links[0].to_socket
+        assert mix.node.name == "shader" and mix.name == variant.capitalize()
+    assert "cycles" in templates.template_of(mat).variants
+
+
+def test_a_face_without_those_bakes_has_no_eyeshadow_slider(build):
+    bundle, ch = _open(build)
+    mat = _apply(ch, bundle, "cf_m_face_00")
+    assert mat[templates.TEMPLATE] == "KK Light Dark" and "eyeshadow" not in templates.params(mat)
+    assert templates.texture(mat, "main", variant="light_no_eyeshadow") is None
+
+
 def test_parameters_and_render_method_come_from_the_set(build):
     bundle, ch = _open(build)
     face = _apply(ch, bundle, "cf_m_face_00")
