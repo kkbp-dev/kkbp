@@ -169,6 +169,48 @@ def test_a_failed_step_stops_the_import_and_leaves_the_scene(build):
     assert "Traceback" in result.log_path.read_text(encoding="utf-8")
 
 
+# --- progress --------------------------------------------------------------------------
+
+class _Counter:
+    """Stands in for the window manager's progress counter, which a test can't read back."""
+    seen = None
+
+    def __init__(self, total):
+        type(self).seen = self.calls = [("begin", total)]
+
+    def advance(self):
+        self.calls.append("advance")
+
+    def end(self):
+        self.calls.append("end")
+
+
+def test_progress_counts_every_step_and_hook(build, monkeypatch):
+    """Issue 66: the counter reaches its total whatever ran, so skipped Steps and Hooks count too."""
+    monkeypatch.setattr(run, "Progress", _Counter)
+    hook = hooks.register_hook(lambda ctx: None, name="on", source="tests")
+    off = hooks.register_hook(lambda ctx: None, name="off", source="tests")
+    result = _run(build(), [Step(lambda ctx: None), Step(lambda ctx: None, games=["SVS"])], [hook, (off, False)])
+    assert result.ok
+    assert _Counter.seen == [("begin", 4)] + ["advance"] * 4 + ["end"]
+
+
+def test_progress_ends_when_a_step_fails(build, monkeypatch):
+    monkeypatch.setattr(run, "Progress", _Counter)
+
+    def breaks(ctx):
+        raise KeyError("cf_j_head")
+
+    hook = hooks.register_hook(lambda ctx: None, name="after", source="tests")
+    result = _run(build(), [Step(breaks), Step(lambda ctx: None)], [hook])
+    assert not result.ok
+    assert _Counter.seen == [("begin", 3), "end"]  # the cursor comes back, without counting on
+
+
+def test_the_real_counter_runs_headless(build):
+    assert _run(build(), [Step(lambda ctx: None)]).ok
+
+
 # --- Import Options -------------------------------------------------------------------
 
 def test_option_declarations():

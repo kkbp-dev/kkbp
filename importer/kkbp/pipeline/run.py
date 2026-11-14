@@ -95,9 +95,42 @@ def run_pipeline(bundle: Bundle, steps: list[Step], hooks: list[tuple[Hook, bool
     log.info(f"Import Options: {options.as_dict()}")
 
     editing.object_mode()
+    progress = Progress(len(steps) + len(hooks))
+    try:
+        _run_steps_and_hooks(ctx, step_ctx, steps, hooks, result, progress)
+    finally:
+        progress.end()
+
+    log.source = "import"
+    result.seconds = time.perf_counter() - started
+    log.info(result.summary()[0])
+    result.warnings = list(log.warnings)
+    result.log_path = _write_log(bundle, log, result)
+    return result
+
+
+class Progress:
+    """Blender's progress counter: a number from 0 to 100 in place of the mouse cursor, which keeps
+    updating while the window is frozen by the import (issue 66). It does nothing headless."""
+
+    def __init__(self, total: int):
+        self.manager, self.done = bpy.context.window_manager, 0
+        self.manager.progress_begin(0, max(total, 1))
+
+    def advance(self):
+        self.done += 1
+        self.manager.progress_update(self.done)
+
+    def end(self):
+        self.manager.progress_end()
+
+
+def _run_steps_and_hooks(ctx, step_ctx, steps, hooks, result, progress):
+    bundle, log = ctx.bundle, ctx.log
     for step in steps:
         if not step.runs_on(bundle.game):
             result.steps.append(StepOutcome(step.name, "skipped", reason=f"not for {bundle.game}"))
+            progress.advance()
             continue
         log.source = step.name
         t = time.perf_counter()
@@ -113,17 +146,12 @@ def run_pipeline(bundle: Bundle, steps: list[Step], hooks: list[tuple[Hook, bool
         result.steps.append(StepOutcome(step.name, "ran", seconds))
         log.source = "import"
         log.info(f"Step {step.name}: {seconds:.2f} s")
+        progress.advance()
 
     if result.ok:
         for hook, switched_on in hooks:
             result.hooks.append(_run_hook(ctx, hook, switched_on))
-
-    log.source = "import"
-    result.seconds = time.perf_counter() - started
-    log.info(result.summary()[0])
-    result.warnings = list(log.warnings)
-    result.log_path = _write_log(bundle, log, result)
-    return result
+            progress.advance()
 
 
 def _run_hook(ctx, hook: Hook, switched_on: bool) -> HookOutcome:
