@@ -135,7 +135,7 @@ def _mouth(rig, body, log):
     blocks = body.data.shape_keys.key_blocks
     pairs = []
     for base, second in MOUTH_PAIRS:
-        alternate = names.MOUTH_SHAPEKEY_ALTERNATES[base]
+        alternate = dict(names.MOUTH_SHAPEKEY_ALTERNATES)[base]
         first = base if base in blocks or alternate not in blocks else alternate
         pairs.append((MOUTH_DIRECTIONS[base[-1]], first, second))
     _copy_keys(body, [name for _, first, second in pairs for name in (first, second)], names.MOUTH_SHAPEKEYS_COPY_SUFFIX)
