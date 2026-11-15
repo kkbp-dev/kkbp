@@ -53,6 +53,6 @@ def reload_hooks():
 
 
 def require_pillow():
-    """Raises PillowMissing ("Pillow is required. Install it from the KKBP panel.") until it loads."""
+    """Raises PillowMissing ("Pillow is required. Install it with the buttons below.") until it loads."""
     from . import pillow
     pillow.require()

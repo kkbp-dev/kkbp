@@ -6,7 +6,7 @@ Every entry is unreviewed: none has been checked by a native speaker yet (issue 
 TRANSLATIONS = {
     # The panel
     "Import Options": "Opsi Impor",
-    "Pillow is required. Install it from the KKBP panel.": "Pillow diperlukan. Pasang dari panel KKBP.",
+    "Pillow is required. Install it with the buttons below.": "Pillow diperlukan. Pasang dari panel KKBP.",
     "Import Export Bundle": "Impor Bundel Ekspor",
     "No Step or Hook declares an option yet.": "Belum ada Langkah atau Hook yang mendeklarasikan opsi.",
     "No hook scripts loaded": "Tidak ada skrip hook yang dimuat",
@@ -37,12 +37,12 @@ TRANSLATIONS = {
     "Import manifest.json": "Impor manifest.json",
     "Import a Character from an Export Bundle: choose its manifest.json, or open its folder and import with no file chosen":
         "Mengimpor Karakter dari Bundel Ekspor: pilih manifest.json-nya, atau buka foldernya dan impor tanpa memilih file",
-    "Install Pillow": "Pasang Pillow",
+    "Download Pillow": "Pasang Pillow",
     "Download Pillow {version} from PyPI with Blender's pip and install it into KKBP":
         "Unduh Pillow {version} dari PyPI dengan pip milik Blender dan pasang ke KKBP",
     "Online access is turned off in Blender's Preferences. Download Pillow anyway?":
         "Akses daring dimatikan di Preferensi Blender. Tetap unduh Pillow?",
-    "Install Pillow from File": "Pasang Pillow dari File",
+    "Install Pillow from local file": "Pasang Pillow dari File",
     "Install a Pillow wheel (.whl) you downloaded yourself, for this Blender's Python and platform":
         "Pasang wheel Pillow (.whl) yang Anda unduh sendiri, untuk Python dan platform Blender ini",
     "Reload Hooks": "Muat Ulang Hook",

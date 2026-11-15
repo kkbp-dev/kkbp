@@ -76,7 +76,7 @@ def test_the_download_uses_blenders_pip_and_the_pin():
 
 def test_import_needs_pillow(monkeypatch, build):
     monkeypatch.setattr(pillow, "available", lambda: False)
-    with pytest.raises(pillow.PillowMissing, match="Pillow is required. Install it from the KKBP panel."):
+    with pytest.raises(pillow.PillowMissing, match="Pillow is required. Install it with the buttons below."):
         kkbp.api.import_bundle(build(), hooks=[])
     with pytest.raises(pillow.PillowMissing):
         settings.require_pillow()

@@ -22,7 +22,7 @@ log = logging.getLogger("kkbp")
 
 # Raised only on purpose, so the harness tests what users get.
 PILLOW_VERSION = "12.3.0"
-REQUIRED_MESSAGE = "Pillow is required. Install it from the KKBP panel."
+REQUIRED_MESSAGE = "Pillow is required. Install it with the buttons below."
 
 ADDON_DIR = Path(__file__).resolve().parent
 _PLACEHOLDER = re.compile(r"^#wheel_placeholder[ \t]*$", re.MULTILINE)

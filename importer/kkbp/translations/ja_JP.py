@@ -6,17 +6,17 @@ Every entry is unreviewed: none has been checked by a native speaker yet (issue 
 TRANSLATIONS = {
     # The panel
     "Import Options": "インポートオプション",
-    "Pillow is required. Install it from the KKBP panel.": "Pillowが必要です。KKBPパネルからインストールしてください。",
+    "Pillow is required. Install it with the buttons below.": "Pillowが必要です。このパネルからインストールしてください。",
     "Import Export Bundle": "エクスポートバンドルをインポート",
-    "No Step or Hook declares an option yet.": "オプションを持つステップやフックはまだありません。",
+    "No Step or Hook declares an option yet.": "オプションを持つステップやフックはまだありません。", 
     "No hook scripts loaded": "フックスクリプトは読み込まれていません",
     "no Hooks": "フックなし",
     "not loaded": "未読み込み",
     "Blender's glTF importer isn't available. Enable the \"glTF 2.0 format\" add-on in Preferences.":
-        "BlenderのglTFインポーターが使えません。プリファレンスで「glTF 2.0 format」アドオンを有効にしてください。",
+        "BlenderのglTFインポーターが使えません。プリファレンスで「glTF 2.0 format」アドオンを有効化。",
 
     # Preferences
-    "Run this Hook after each import": "インポートのたびにこのフックを実行する",
+    "Run this Hook after each import": "インポートの後にこのフックを実行する",
     "Hooks folder": "フックフォルダー",
     "Every .py file in this folder is loaded as a Hook script. There is no default folder":
         "このフォルダー内のすべての.pyファイルがフックスクリプトとして読み込まれます。既定のフォルダーはありません",
@@ -28,21 +28,21 @@ TRANSLATIONS = {
     "Forget Hook": "フックを一覧から外す",
     "Remove the selected Hook from the list. It comes back, at the end, if it is loaded again":
         "選択したフックを一覧から外します。もう一度読み込まれると、一覧の最後に戻ります",
-    "Use the built-in defaults": "組み込みの既定値を使う",
-    "Forget the saved Import Option defaults": "保存したインポートオプションの既定値を消去する",
+    "Use the built-in defaults": "組み込みの既定値を使う", #not visible text
+    "Forget the saved Import Option defaults": "保存したインポートオプションの既定値を消去する", #not visible text
 
     # Importing
     "Import manifest.json": "manifest.jsonをインポート",
     "Import a Character from an Export Bundle: choose its manifest.json, or open its folder and import with no "
     "file chosen":
         "エクスポートバンドルからキャラクターをインポートします。manifest.jsonを選ぶか、"
-        "バンドルのフォルダーを開いてファイルを選ばずにインポートしてください",
-    "Install Pillow": "Pillowをインストール",
+        "バンドルのフォルダーを開いてファイルを選ばずにインポートボタン使えて",
+    "Download Pillow": "Pillowをダウンロード",
     "Download Pillow {version} from PyPI with Blender's pip and install it into KKBP":
         "Blenderのpipを使ってPyPIからPillow {version}をダウンロードし、KKBPにインストールする",
     "Online access is turned off in Blender's Preferences. Download Pillow anyway?":
         "Blenderのプリファレンスでオンラインアクセスが無効になっています。それでもPillowをダウンロードしますか?",
-    "Install Pillow from File": "ファイルからPillowをインストール",
+    "Install Pillow from local file": "ファイルからPillowをインストール",
     "Install a Pillow wheel (.whl) you downloaded yourself, for this Blender's Python and platform":
         "自分でダウンロードしたPillowのwheel (.whl) をインストールします。このBlenderのPythonとプラットフォーム用のものを選んでください",
     "Reload Hooks": "フックを再読み込み",
@@ -59,14 +59,14 @@ TRANSLATIONS = {
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported "
     "Characters":
         "ファイルにインポートしたキャラクター以外何もない場合、Blenderのスタートアップファイルのキューブ、カメラ、ライトを削除する",
-    "Fix body seams": "体を縫合する",
+    "Fix body seams": "体を縫合する", #will be removed
     "Merges the vertices of the face and body materials that sit on top of each other (Merge by Distance). It can "
     "change the weights around the neck; without it, seams may show around the neck and down the chest when "
-    "outlines are on":
+    "outlines are on": #will be removed
         "顔と体のマテリアルの重なっている頂点をマージします (距離でマージ)。首まわりのウェイトが変わることがあります。"
         "無効にすると、アウトラインが有効なとき首まわりや胸に縫い目が見えることがあります",
     "Which shaders the Character's materials use": "キャラクターのマテリアルに使うシェーダー",
-    "Keeps the Eevee shaders": "Eeveeシェーダーのままにする",
+    "Keeps the Eevee shaders": "Eeveeシェーダーにする",
     "Uses a modified shader setup for Eevee": "別のEeveeシェーダー設定にする",
     "Cycles (toon)": "Cycles (トゥーン)",
     "Toon shaders for Cycles": "Cycles用のトゥーンシェーダー",
@@ -74,7 +74,7 @@ TRANSLATIONS = {
     "The classic shaders for Cycles": "Cycles用のクラシックシェーダー",
     "A very simple material setup": "とても簡易なマテリアル設定",
     "Separation type": "分離タイプ",
-    "How the clothes are split into objects": "服をどのようにオブジェクトに分けるか",
+    "How the clothes are split into objects": "服の分離方法", 
     "One object per outfit": "1コーデにつき1オブジェクト",
     "Each Outfit's clothes are one object": "コーデごとに服を1つのオブジェクトにする",
     "Separate all clothing": "すべての服を別々にする",
@@ -85,7 +85,7 @@ TRANSLATIONS = {
     "Face cards": "顔カード",
     "Adds 2D eye and mouth cards in front of the face, with the Character's eye textures. Their Collection starts "
     "hidden":
-        "キャラクターの目のテクスチャを使った2Dの目と口のカードを顔の前に追加します。カードのコレクションは最初は非表示です",
+        "キャラクターの目のテクスチャで、2Dの目と口のカードを顔の前に追加します。最初はカードのコレクションがシーンに除外される",
     "SFW mode": "エロ無しモード",
     "Attempts to cover up some NSFW things": "エロの部分をなるべく隠す",
     "Use Rigify armature": "Rigifyアーマチュアにする",
@@ -96,7 +96,7 @@ TRANSLATIONS = {
     "Separate eyes": "目を分離",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so "
     "they can show through the hair with the compositor":
-        "目と眉をBodyから別のオブジェクトに移します。シェイプキーはBodyに追従するので、コンポジターで髪を透かして表示できます",
+        "目と眉をBodyから別のオブジェクトに移します。Bodyは目と眉のシェイプキーをまだ持ってます。コンポジターで目と眉を髪にオーバーレイできます",
 
     # The built-in Hooks' names, as the panel lists them
     "Outlines": "アウトライン",
@@ -105,8 +105,8 @@ TRANSLATIONS = {
     "Convert shaders": "シェーダーを変換",
 
     # Tools
-    "Merge Weights": "ウェイトをマージ",
-    "Gives the selected bones' weights to their parents and deletes the bones":
+    "Merge Weights": "ウェイトをマージ", #never displayed
+    "Gives the selected bones' weights to their parents and deletes the bones": #never displayed
         "選択したボーンのウェイトを親ボーンに渡し、そのボーンを削除する",
     "Export Prep": "エクスポートの準備",
     "Readies the Character for another program: bone names, a simpler skeleton, an atlas, and an FBX exporter on "
@@ -131,7 +131,7 @@ TRANSLATIONS = {
     "The textures stay as they are": "テクスチャはそのままにする",
     "Run Hook": "フックを実行",
     "Runs a Hook, such as Rigify, on a Character imported without it":
-        "Rigifyなどのフックを、それなしでインポートしたキャラクターに実行する",
+        "フックをインポートしたキャラクターに実行する",
     "Built in": "組み込み",
     "Bulk Import": "バルクインポート",
     "Imports every Export Bundle in a folder, each in its own Blender in the background, and saves a .blend beside "
@@ -148,11 +148,11 @@ TRANSLATIONS = {
         "リグのIKコントロールをFKのポーズにスナップし、手足をIKに切り替える",
 
     # Edit Material
-    "Saturate": "彩度補正",
+    "Saturate": "彩度補正", #will be removed
     "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
-        "従来のインポーターと同じように、テクスチャと色にゲームのカラーグレーディングをかけるかどうか",
-    "Hair and eyebrows saturate, everything else doesn't": "髪と眉は彩度補正し、他はしない",
-    "Don't saturate": "彩度補正しない",
+        "従来のインポーターと同じように、テクスチャと色にゲームのカラーグレーディングをかけるかどうか", #will be removed
+    "Hair and eyebrows saturate, everything else doesn't": "髪と眉は彩度補正し、他はしない", #will be removed
+    "Don't saturate": "彩度補正しない", #will be removed
     "Edit Material": "マテリアルを編集",
     "Swaps the active material for an editable one that rebuilds the game's colouring, so its colours can be "
     "changed and saved":
@@ -161,7 +161,7 @@ TRANSLATIONS = {
     "Puts the original material back and drops the changes": "元のマテリアルに戻し、変更を破棄する",
     "Starts the edit again from the Export Bundle": "エクスポートバンドルから編集をやり直す",
     "Bakes the edited colours into the original material's light and dark textures":
-        "編集した色を元のマテリアルのライトとダークのテクスチャにベイクする",
+        "編集した色を元のマテリアルのライトとダークのテクスチャに保存する",
     "Link Hair": "他の髪マテリアルをアップデート",
     "Puts every hair material into edit with the active hair material's settings":
         "アクティブな髪マテリアルの設定で、すべての髪マテリアルを編集状態にする",

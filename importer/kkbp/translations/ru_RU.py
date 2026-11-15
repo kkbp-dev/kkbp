@@ -6,7 +6,7 @@ Every entry is unreviewed: none has been checked by a native speaker yet (issue 
 TRANSLATIONS = {
     # The panel
     "Import Options": "Параметры импорта",
-    "Pillow is required. Install it from the KKBP panel.": "Требуется Pillow. Установите его из панели KKBP.",
+    "Pillow is required. Install it with the buttons below.": "Требуется Pillow. Установите его из панели KKBP.",
     "Import Export Bundle": "Импортировать пакет экспорта",
     "No Step or Hook declares an option yet.": "Пока ни один шаг или хук не объявил параметров.",
     "No hook scripts loaded": "Скрипты хуков не загружены",
@@ -36,12 +36,12 @@ TRANSLATIONS = {
     "Import manifest.json": "Импортировать manifest.json",
     "Import a Character from an Export Bundle: choose its manifest.json, or open its folder and import with no file chosen":
         "Импортирует персонажа из пакета экспорта: выберите его manifest.json или откройте его папку и импортируйте, не выбирая файл",
-    "Install Pillow": "Установить Pillow",
+    "Download Pillow": "Установить Pillow",
     "Download Pillow {version} from PyPI with Blender's pip and install it into KKBP":
         "Скачать Pillow {version} с PyPI с помощью pip из Blender и установить его в KKBP",
     "Online access is turned off in Blender's Preferences. Download Pillow anyway?":
         "Доступ в интернет отключён в настройках Blender. Всё равно скачать Pillow?",
-    "Install Pillow from File": "Установить Pillow из файла",
+    "Install Pillow from local file": "Установить Pillow из файла",
     "Install a Pillow wheel (.whl) you downloaded yourself, for this Blender's Python and platform":
         "Установить wheel-файл Pillow (.whl), который вы скачали сами, для Python и платформы этого Blender",
     "Reload Hooks": "Перезагрузить хуки",
