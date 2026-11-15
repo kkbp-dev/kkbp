@@ -21,13 +21,13 @@ The rig stands the character's lowest point on the floor. IK stretch is off.
 
 The game moves small helper bones to keep the elbows, knees, shoulders and hips from collapsing as they bend. KKBP copies the game's own rules for them, so the joints hold their shape as they do in the game's Studio.
 
-> **Picture to come:** `images/rig/joint-corrections.jpg`, a fully bent elbow and knee with Joint corrections on and off.
+> **Picture to come:** `images/rig/joint-corrections.jpg`, a fully bent elbow and knee holding their shape.
 
-The Joint corrections option (on by default) works with or without Rigify.
+Every import has them, with or without Rigify.
 
 ## Teeth bones
 
-Teeth bones (off by default) gives the rig five controls for each row of teeth: the two ends, the two halfway points and the middle. The teeth still follow the mouth as before. It does nothing without Rigify.
+The Rigify rig has five controls for each row of teeth: the two ends, the two halfway points and the middle. The teeth still follow the mouth as before. The plain armature has none.
 
 ## Snap IKs
 

@@ -21,7 +21,6 @@ The options apply to the next import, so set them before clicking the button.
 
 | Option | Default | What it does | More |
 |---|---|---|---|
-| Joint corrections | on | Moves the elbow, knee, shoulder, hip and other correction bones with the limbs, as the game does | [The rig](rig.md#joint-corrections) |
 | Fix body seams | on | Merges the face and body vertices that sit on top of each other. It can change the weights around the neck; without it, seams may show around the neck and down the chest when outlines are on | |
 | Shader | Eevee | Which shaders the materials use: Eevee, Eevee+, Cycles (toon), Cycles (classic) or Principled BSDF | [Shaders](shaders.md) |
 | Separation type | One object per outfit | "Separate all clothing" makes each piece of clothing its own object | [Outfits](outfits.md#separate-all-clothing) |
@@ -29,7 +28,6 @@ The options apply to the next import, so set them before clicking the button.
 | Face cards | on | Adds 2D eye and mouth cards in front of the face, in a hidden collection | [Expressions](expressions.md#face-cards) |
 | SFW mode | off | Attempts to cover up some NSFW things | [Outfits](outfits.md#sfw-mode) |
 | Use Rigify armature | on | Generates a Rigify control rig for posing and animating in Blender. Off, the character keeps the plain armature, which is easier to export | [The rig](rig.md) |
-| Teeth bones | off | Gives the Rigify rig five controls for each row of teeth | [The rig](rig.md#teeth-bones) |
 | Separate eyes | off | Moves the eyes and eyebrows into their own objects, so they can show through the hair with the compositor | [Expressions](expressions.md#separate-eyes) |
 | Delete default scene | on | Deletes the startup file's cube, camera and light, if the file holds nothing else but imported characters | |
 
