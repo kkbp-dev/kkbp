@@ -24,7 +24,7 @@ class HookOwnsTest(unittest.TestCase):
             del hook_owns.OWNS["Test hook"]
 
     def test_variant_names(self):
-        self.assertEqual(hook_owns.Run("Fix body seams").variant, "hook.fix_body_seams")
+        self.assertEqual(hook_owns.Run("Delete default scene").variant, "hook.delete_default_scene")
         self.assertEqual(hook_owns.Run("Convert shaders", choice="cycles").variant, "hook.convert_shaders.cycles")
 
 

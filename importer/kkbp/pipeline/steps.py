@@ -6,7 +6,7 @@ lists, the Game Profile (ctx.profile) and the bundle's Roles, Groups and Names.
 """
 
 from .. import joint_corrections
-from ..steps import armature, gag, materials, mesh
+from ..steps import armature, gag, materials, mesh, welds
 from .step import Step
 
 STEPS: list[Step] = [
@@ -14,7 +14,9 @@ STEPS: list[Step] = [
     Step(armature.join_armatures),
     Step(mesh.rename_uv_maps),
     Step(mesh.merge_rigged_tongue),
+    Step(welds.weld_copies),
     Step(mesh.build_parts),
+    Step(welds.weld_neck),
     Step(mesh.add_tear_controls),
     Step(gag.combine_gag_keys),
     Step(mesh.order_material_slots),
@@ -39,12 +41,10 @@ STEPS: list[Step] = [
 ]
 
 # The built-in Hooks (builtin/) by name, in the fixed order they run after the Core Import.
-# Fixing seams comes first because it changes the body mesh later Hooks work on; SFW comes before
-# Rigify so the rig is built without the bones it deletes. Separate Eyes comes after Rigify so the
-# new Parts are made on the finished rig. Delete default scene runs last, once
-# every object the other Hooks add is in the file.
+# SFW comes before Rigify so the rig is built without the bones it deletes. Separate Eyes comes after
+# Rigify so the new Parts are made on the finished rig. Delete default scene runs last, once every
+# object the other Hooks add is in the file.
 BUILTIN_HOOKS: list[str] = [
-    "Fix body seams",
     "Convert shaders",
     "Separate meshes",
     "Outlines",

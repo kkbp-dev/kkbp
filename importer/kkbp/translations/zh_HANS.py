@@ -58,12 +58,6 @@ TRANSLATIONS = {
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported "
     "Characters":
         "如果文件中除导入的角色外没有其他内容，则删除 Blender 启动文件中的立方体、摄像机和灯光",
-    "Fix body seams": "修复身体接缝",
-    "Merges the vertices of the face and body materials that sit on top of each other (Merge by Distance). It can "
-    "change the weights around the neck; without it, seams may show around the neck and down the chest when "
-    "outlines are on":
-        "合并脸部和身体材质中重叠的顶点 (按距离合并)。这可能会改变颈部周围的权重; "
-        "如果禁用，启用轮廓线时颈部周围和胸口可能会看到接缝",
     "Which shaders the Character's materials use": "角色材质使用的着色器",
     "Keeps the Eevee shaders": "保留 Eevee 着色器",
     "Uses a modified shader setup for Eevee": "使用修改过的 Eevee 着色器设置",

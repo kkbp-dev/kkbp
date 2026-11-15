@@ -59,12 +59,6 @@ TRANSLATIONS = {
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported "
     "Characters":
         "ファイルにインポートしたキャラクター以外何もない場合、Blenderのスタートアップファイルのキューブ、カメラ、ライトを削除する",
-    "Fix body seams": "体を縫合する", #will be removed
-    "Merges the vertices of the face and body materials that sit on top of each other (Merge by Distance). It can "
-    "change the weights around the neck; without it, seams may show around the neck and down the chest when "
-    "outlines are on": #will be removed
-        "顔と体のマテリアルの重なっている頂点をマージします (距離でマージ)。首まわりのウェイトが変わることがあります。"
-        "無効にすると、アウトラインが有効なとき首まわりや胸に縫い目が見えることがあります",
     "Which shaders the Character's materials use": "キャラクターのマテリアルに使うシェーダー",
     "Keeps the Eevee shaders": "Eeveeシェーダーにする",
     "Uses a modified shader setup for Eevee": "別のEeveeシェーダー設定にする",

@@ -38,7 +38,6 @@ class Run:
 # when it is written.
 RUNS: list[Run] = [
     Run("Delete default scene", {"delete_default_scene": True}),
-    Run("Fix body seams", {"fix_seams": True}),
     *[Run("Convert shaders", {"convert_shaders": c}, c) for c in ("eevee_mod", "cycles", "cycles_classic", "principled")],
     Run("Separate meshes", {"separation_type": "by_material"}, "by_material"),
     Run("Outlines", {"use_outlines": True}),
@@ -53,7 +52,6 @@ OWNS: dict[str, tuple] = {
     # Blender's startup objects and their data (the harness imports into an empty file, so nothing).
     "Delete default scene": (lambda d: d.path[0] == "objects" and len(d.path) >= 2 and d.path[1] in DEFAULT_OBJECTS,
                              ("counts", "objects"), ("counts", "meshes"), ("counts", "cameras"), ("counts", "lights")),
-    "Fix body seams": tuple(("objects", BODY, "mesh", field) for field in ("vertices", "edges", "faces")),
     # The shader groups and the images the variants bring, and Eevee+'s geometry-nodes modifier on Body.
     "Convert shaders": (("materials", "*", "node_groups", "**"), ("materials", "*", "images", "**"),
                         ("images", "**"), ("counts", "node_groups"), ("counts", "images"),

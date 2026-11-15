@@ -56,9 +56,6 @@ TRANSLATIONS = {
     "Delete default scene": "ลบฉากเริ่มต้น",
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported Characters":
         "ลบลูกบาศก์ กล้อง และไฟของไฟล์เริ่มต้นของ Blender หากในไฟล์ไม่มีอะไรนอกจากตัวละครที่นำเข้า",
-    "Fix body seams": "แก้รอยต่อของลำตัว",
-    "Merges the vertices of the face and body materials that sit on top of each other (Merge by Distance). It can change the weights around the neck; without it, seams may show around the neck and down the chest when outlines are on":
-        "รวมจุดยอดของวัสดุใบหน้าและลำตัวที่ซ้อนทับกัน (รวมตามระยะทาง) อาจทำให้น้ำหนักรอบคอเปลี่ยนไป หากไม่ใช้ อาจเห็นรอยต่อรอบคอและหน้าอกเมื่อเปิดเส้นขอบ",
     "Which shaders the Character's materials use": "วัสดุของตัวละครใช้เชดเดอร์ใด",
     "Keeps the Eevee shaders": "คงเชดเดอร์ Eevee ไว้",
     "Uses a modified shader setup for Eevee": "ใช้ชุดเชดเดอร์ที่ปรับแต่งสำหรับ Eevee",

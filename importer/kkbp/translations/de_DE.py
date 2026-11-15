@@ -58,9 +58,6 @@ TRANSLATIONS = {
     "Delete default scene": "Standardszene löschen",
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported Characters":
         "Löscht Würfel, Kamera und Licht aus Blenders Startdatei, wenn die Datei nichts außer importierten Charakteren enthält",
-    "Fix body seams": "Körpernähte beheben",
-    "Merges the vertices of the face and body materials that sit on top of each other (Merge by Distance). It can change the weights around the neck; without it, seams may show around the neck and down the chest when outlines are on":
-        "Verschmilzt die übereinanderliegenden Vertices der Gesichts- und Körpermaterialien (Nach Abstand verschmelzen). Das kann die Gewichte am Hals verändern; ohne diese Option können bei eingeschalteten Umrandungen Nähte am Hals und auf der Brust sichtbar sein",
     "Which shaders the Character's materials use": "Welche Shader die Materialien des Charakters verwenden",
     "Keeps the Eevee shaders": "Behält die Eevee-Shader",
     "Uses a modified shader setup for Eevee": "Verwendet einen angepassten Shader-Aufbau für Eevee",

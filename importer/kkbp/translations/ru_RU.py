@@ -57,9 +57,6 @@ TRANSLATIONS = {
     "Delete default scene": "Удалить сцену по умолчанию",
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported Characters":
         "Удаляет куб, камеру и источник света из стартового файла Blender, если в файле нет ничего, кроме импортированных персонажей",
-    "Fix body seams": "Исправить швы тела",
-    "Merges the vertices of the face and body materials that sit on top of each other (Merge by Distance). It can change the weights around the neck; without it, seams may show around the neck and down the chest when outlines are on":
-        "Объединяет вершины материалов лица и тела, лежащие друг на друге (объединение по расстоянию). Это может изменить веса вокруг шеи; без этого при включённых обводках швы могут быть видны вокруг шеи и на груди",
     "Which shaders the Character's materials use": "Какие шейдеры используют материалы персонажа",
     "Keeps the Eevee shaders": "Оставляет шейдеры Eevee",
     "Uses a modified shader setup for Eevee": "Использует изменённую настройку шейдеров для Eevee",
