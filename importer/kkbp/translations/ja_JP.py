@@ -55,9 +55,6 @@ TRANSLATIONS = {
         "このシーンのインポートオプションを、新しいシーンとスクリプトからのインポートの既定値にする",
 
     # Import Options
-    "Joint corrections": "関節補正",
-    "Moves the elbow, knee, shoulder, hip and other correction bones with the limbs, as the game does":
-        "ゲームと同じように、ひじ、ひざ、肩、腰などの補正ボーンを手足に合わせて動かす",
     "Delete default scene": "デフォルトシーンを削除",
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported "
     "Characters":
@@ -96,11 +93,6 @@ TRANSLATIONS = {
     "armature, which is easier to export":
         "Blenderでのアニメーションに向いたRigifyのコントロールリグを生成します。無効にするとキャラクターはFKアーマチュアのままで、"
         "エクスポートしやすくなります",
-    "Teeth bones": "歯のボーン",
-    "Gives the Rigify rig five controls for each row of teeth, and moves the teeth's weights onto new bones under "
-    "the mouth bones. Does nothing without Rigify":
-        "Rigifyリグに歯の上下の列それぞれ5つのコントロールを追加し、歯のウェイトを口のボーンの下の新しいボーンに移します。"
-        "Rigifyを使わない場合は何もしません",
     "Separate eyes": "目を分離",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so "
     "they can show through the hair with the compositor":

@@ -55,9 +55,6 @@ TRANSLATIONS = {
         "Gunakan Opsi Impor adegan ini sebagai bawaan untuk adegan baru dan impor lewat skrip",
 
     # Import Options
-    "Joint corrections": "Koreksi sendi",
-    "Moves the elbow, knee, shoulder, hip and other correction bones with the limbs, as the game does":
-        "Menggerakkan tulang koreksi siku, lutut, bahu, pinggul, dan lainnya mengikuti anggota badan, seperti di dalam game",
     "Delete default scene": "Hapus adegan bawaan",
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported Characters":
         "Menghapus kubus, kamera, dan lampu dari file awal Blender, jika file tidak berisi apa pun selain Karakter yang diimpor",
@@ -90,9 +87,6 @@ TRANSLATIONS = {
     "Use Rigify armature": "Gunakan kerangka Rigify",
     "Generates a Rigify control rig, suitable for animating in Blender. Without it the Character keeps the FK armature, which is easier to export":
         "Membuat rig kontrol Rigify yang cocok untuk animasi di Blender. Tanpanya, Karakter tetap memakai kerangka FK, yang lebih mudah diekspor",
-    "Teeth bones": "Tulang gigi",
-    "Gives the Rigify rig five controls for each row of teeth, and moves the teeth's weights onto new bones under the mouth bones. Does nothing without Rigify":
-        "Memberi rig Rigify lima kontrol untuk tiap baris gigi, dan memindahkan bobot gigi ke tulang baru di bawah tulang mulut. Tidak berpengaruh tanpa Rigify",
     "Separate eyes": "Pisahkan mata",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so they can show through the hair with the compositor":
         "Memindahkan mata dan alis dari Body ke objek tersendiri, dengan kunci bentuk yang mengikuti milik Body, sehingga bisa tampil menembus rambut lewat kompositor",

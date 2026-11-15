@@ -27,7 +27,7 @@ STEPS: list[Step] = [
     Step(armature.bend_limbs_for_ik),
     Step(armature.orient_fingers_and_legs, games=["KK", "KKS"]),
     Step(armature.sort_bone_collections),
-    Step(joint_corrections.add_joint_corrections, options=[joint_corrections.OPTION], label="Armature"),
+    Step(joint_corrections.add_joint_corrections),
     Step(materials.apply_templates),
     Step(materials.apply_outfit_body_textures),
     Step(gag.drive_frames),

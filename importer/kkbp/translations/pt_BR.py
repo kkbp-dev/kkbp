@@ -55,9 +55,6 @@ TRANSLATIONS = {
         "Usa as opções de importação desta cena como padrões para cenas novas e importações por script",
 
     # Import Options
-    "Joint corrections": "Correções de articulações",
-    "Moves the elbow, knee, shoulder, hip and other correction bones with the limbs, as the game does":
-        "Move os ossos de correção de cotovelos, joelhos, ombros, quadris e outros junto com os membros, como o jogo faz",
     "Delete default scene": "Excluir cena padrão",
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported Characters":
         "Exclui o cubo, a câmera e a luz do arquivo inicial do Blender, se o arquivo não tiver nada além de personagens importados",
@@ -90,9 +87,6 @@ TRANSLATIONS = {
     "Use Rigify armature": "Usar armação Rigify",
     "Generates a Rigify control rig, suitable for animating in Blender. Without it the Character keeps the FK armature, which is easier to export":
         "Gera um rig de controle Rigify, adequado para animar no Blender. Sem ele, o personagem mantém a armação FK, que é mais fácil de exportar",
-    "Teeth bones": "Ossos dos dentes",
-    "Gives the Rigify rig five controls for each row of teeth, and moves the teeth's weights onto new bones under the mouth bones. Does nothing without Rigify":
-        "Dá ao rig Rigify cinco controles para cada fileira de dentes e move os pesos dos dentes para ossos novos sob os ossos da boca. Não faz nada sem o Rigify",
     "Separate eyes": "Separar olhos",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so they can show through the hair with the compositor":
         "Move os olhos e as sobrancelhas de Body para objetos próprios, com as chaves de formato seguindo as de Body, para que possam aparecer através do cabelo com o compositor",

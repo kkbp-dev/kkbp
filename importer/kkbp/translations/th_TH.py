@@ -53,9 +53,6 @@ TRANSLATIONS = {
         "ใช้ตัวเลือกการนำเข้าของฉากนี้เป็นค่าเริ่มต้นสำหรับฉากใหม่และการนำเข้าผ่านสคริปต์",
 
     # Import Options
-    "Joint corrections": "การแก้ไขข้อต่อ",
-    "Moves the elbow, knee, shoulder, hip and other correction bones with the limbs, as the game does":
-        "ขยับกระดูกแก้ไขของข้อศอก เข่า ไหล่ สะโพก และอื่น ๆ ตามแขนขา เหมือนในเกม",
     "Delete default scene": "ลบฉากเริ่มต้น",
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported Characters":
         "ลบลูกบาศก์ กล้อง และไฟของไฟล์เริ่มต้นของ Blender หากในไฟล์ไม่มีอะไรนอกจากตัวละครที่นำเข้า",
@@ -88,9 +85,6 @@ TRANSLATIONS = {
     "Use Rigify armature": "ใช้โครงร่าง Rigify",
     "Generates a Rigify control rig, suitable for animating in Blender. Without it the Character keeps the FK armature, which is easier to export":
         "สร้างริกควบคุม Rigify ที่เหมาะกับการทำแอนิเมชันใน Blender หากไม่ใช้ ตัวละครจะคงโครงร่าง FK ไว้ ซึ่งส่งออกได้ง่ายกว่า",
-    "Teeth bones": "กระดูกฟัน",
-    "Gives the Rigify rig five controls for each row of teeth, and moves the teeth's weights onto new bones under the mouth bones. Does nothing without Rigify":
-        "เพิ่มตัวควบคุมห้าตัวให้ฟันแต่ละแถวในริก Rigify และย้ายน้ำหนักของฟันไปยังกระดูกใหม่ใต้กระดูกปาก ไม่มีผลหากไม่ใช้ Rigify",
     "Separate eyes": "แยกดวงตา",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so they can show through the hair with the compositor":
         "ย้ายดวงตาและคิ้วออกจาก Body ไปเป็นวัตถุของตัวเอง โดยให้ชีปคีย์ตามของ Body เพื่อให้แสดงทะลุผมได้ด้วยคอมโพสิเตอร์",

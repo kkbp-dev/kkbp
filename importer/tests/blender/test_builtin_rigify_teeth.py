@@ -1,15 +1,18 @@
-"""The Rigify Hook's `teeth_bones` option (issue #42): five controls for each row of teeth, on
+"""The Rigify Hook's teeth bones (issues #42 and #99): five controls for each row of teeth, on
 teeth that still follow the mouth bones as they did."""
 
 import bpy
 import pytest
 
-from conftest import submodule
+from bundle_copy import copy_bundle
+from conftest import golden, kkbp, submodule
 
 names = submodule("builtin.rigify.names")
+character = submodule("character")
+settings = submodule("settings")
+teeth = submodule("builtin.rigify.metarig.teeth")
 
 SAMPLES = ("kk", "kks", "svs")
-OPTIONS = {"teeth_bones": True}
 CONTROLS = [names.teeth_bone(row, place) for row in names.TEETH_ROWS for place in names.TEETH_PLACES]
 # Mouth bones a game weights its teeth to, which both rigs have as controls.
 MOUTH_BONES = ("cf_J_MouthCavity", "cf_J_MouthMove", "cf_J_Mouth_L")
@@ -46,9 +49,23 @@ def _moved_by(ch, bone, vertices, offset=(0.003, 0.002, 0.001)):
     return [b - a for a, b in zip(before, after)]
 
 
+def _without_teeth_bones(scenes, sample):
+    """The Golden Sample with a Rigify rig that was given no teeth bones, to compare with."""
+    def make(folder):
+        copy = copy_bundle(golden(sample), folder / sample)
+        with pytest.MonkeyPatch.context() as mp:
+            mp.setattr(settings, "option_defaults", lambda: {})
+            mp.setattr(teeth, "add_bones", lambda build: None)
+            result = kkbp.api.import_bundle(copy, hooks=["Rigify"])
+        assert result.ok, f"{result.failed_step}: {result.error}"
+        return result.character_key
+
+    return character.Character(scenes.get(("no teeth bones", sample), make))
+
+
 @pytest.mark.parametrize("sample", SAMPLES)
 def test_each_row_of_teeth_gets_five_controls(golden_import, sample):
-    _, ch = golden_import(sample, hooks=["Rigify"], options=OPTIONS)
+    _, ch = golden_import(sample, hooks=["Rigify"])
     rig = ch.rig
     for name in CONTROLS:
         bone = rig.pose.bones.get(name)
@@ -64,7 +81,7 @@ def test_each_row_of_teeth_gets_five_controls(golden_import, sample):
 
 @pytest.mark.parametrize("sample", SAMPLES)
 def test_every_teeth_vertex_keeps_a_whole_weight(golden_import, sample):
-    _, ch = golden_import(sample, hooks=["Rigify"], options=OPTIONS)
+    _, ch = golden_import(sample, hooks=["Rigify"])
     body, rig = ch.body, ch.rig
     group_names = {g.index: g.name for g in body.vertex_groups}
     for index in _teeth(ch):
@@ -76,7 +93,7 @@ def test_every_teeth_vertex_keeps_a_whole_weight(golden_import, sample):
 
 @pytest.mark.parametrize("sample", SAMPLES)
 def test_an_end_control_moves_its_end_of_its_row_only(golden_import, sample):
-    _, ch = golden_import(sample, hooks=["Rigify"], options=OPTIONS)
+    _, ch = golden_import(sample, hooks=["Rigify"])
     vertices = _teeth(ch)
     rest = _positions(ch, vertices)
     moved = _moved_by(ch, names.teeth_bone("upper", "L2"), vertices)
@@ -88,19 +105,15 @@ def test_an_end_control_moves_its_end_of_its_row_only(golden_import, sample):
 
 
 @pytest.mark.parametrize("sample", SAMPLES)
-def test_the_teeth_follow_the_mouth_bones_as_before(golden_import, sample):
-    _, ch = golden_import(sample, hooks=["Rigify"])
+def test_the_teeth_follow_the_mouth_bones_as_without_teeth_bones(golden_import, scenes, sample):
+    ch = _without_teeth_bones(scenes, sample)
+    assert not [b.name for b in ch.rig.data.bones if b.name.startswith("Teeth ")]
     vertices = _teeth(ch)
     before = {bone: _moved_by(ch, bone, vertices) for bone in MOUTH_BONES}
-    _, ch = golden_import(sample, hooks=["Rigify"], options=OPTIONS)
+    _, ch = golden_import(sample, hooks=["Rigify"])
     assert _teeth(ch) == vertices
     for bone in MOUTH_BONES:
         after = _moved_by(ch, bone, vertices)
         worst = max((a - b).length for a, b in zip(before[bone], after))
         assert worst < 1e-5, (bone, worst)
     assert any(d.length > 1e-4 for moved in before.values() for d in moved)
-
-
-def test_no_teeth_bones_unless_asked(golden_import):
-    _, ch = golden_import("kk", hooks=["Rigify"])
-    assert not [b.name for b in ch.rig.data.bones if b.name.startswith("Teeth ")]

@@ -54,9 +54,6 @@ TRANSLATIONS = {
         "将此场景的导入选项用作新场景和脚本导入的默认值",
 
     # Import Options
-    "Joint corrections": "关节修正",
-    "Moves the elbow, knee, shoulder, hip and other correction bones with the limbs, as the game does":
-        "像游戏中一样，让手肘、膝盖、肩部、髋部等修正骨骼随四肢移动",
     "Delete default scene": "删除默认场景",
     "Deletes the cube, camera and light of Blender's startup file, if the file holds nothing else but imported "
     "Characters":
@@ -94,10 +91,6 @@ TRANSLATIONS = {
     "Generates a Rigify control rig, suitable for animating in Blender. Without it the Character keeps the FK "
     "armature, which is easier to export":
         "生成适合在 Blender 中制作动画的 Rigify 控制绑定。禁用时角色保留 FK 骨架，更便于导出",
-    "Teeth bones": "牙齿骨骼",
-    "Gives the Rigify rig five controls for each row of teeth, and moves the teeth's weights onto new bones under "
-    "the mouth bones. Does nothing without Rigify":
-        "为 Rigify 绑定的上下两排牙齿各添加五个控制器，并将牙齿的权重移到嘴部骨骼下的新骨骼上。不使用 Rigify 时无效",
     "Separate eyes": "分离眼睛",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so "
     "they can show through the hair with the compositor":
