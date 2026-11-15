@@ -13474,7 +13474,7 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 40934,
+    "edges": 39389,
     "faces": 25982,
     "material_slots": [
      "cf_m_face_00",
@@ -13629,7 +13629,7 @@
      "uv_eyeshadow"
     ],
     "vertex_groups": 702,
-    "vertices": 14962
+    "vertices": 13408
    },
    "modifiers": [
     {
@@ -13707,7 +13707,7 @@
    ],
    "mesh": {
     "color_attributes": [],
-    "edges": 16775,
+    "edges": 14985,
     "faces": 9646,
     "material_slots": [
      "cf_m_hair_b_08_00",
@@ -13720,7 +13720,7 @@
      "uv_nipple_and_shine"
     ],
     "vertex_groups": 723,
-    "vertices": 7269
+    "vertices": 5350
    },
    "modifiers": [
     {
@@ -13751,7 +13751,7 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 33163,
+    "edges": 31830,
     "faces": 20824,
     "material_slots": [
      "cf_top_defshirt_m",
@@ -13769,7 +13769,7 @@
      "uv_underhair"
     ],
     "vertex_groups": 723,
-    "vertices": 12417
+    "vertices": 11026
    },
    "modifiers": [
     {
@@ -13798,7 +13798,7 @@
    ],
    "mesh": {
     "color_attributes": [],
-    "edges": 3208,
+    "edges": 3078,
     "faces": 2052,
     "material_slots": [
      "cf_m_namida_00",
@@ -13849,7 +13849,7 @@
      "uv_main"
     ],
     "vertex_groups": 702,
-    "vertices": 1162
+    "vertices": 1038
    },
    "modifiers": [
     {
@@ -13896,7 +13896,9 @@
    "set_view_transform": "ran",
    "set_viewport_colors": "ran",
    "sort_bone_collections": "ran",
-   "trim_skeleton": "ran"
+   "trim_skeleton": "ran",
+   "weld_copies": "ran",
+   "weld_neck": "ran"
   }
  },
  "summary_version": 1
