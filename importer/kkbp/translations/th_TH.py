@@ -6,7 +6,7 @@ Every entry is unreviewed: none has been checked by a native speaker yet (issue 
 TRANSLATIONS = {
     # The panel
     "Import Options": "ตัวเลือกการนำเข้า",
-    "Pillow is required. Install it from the KKBP panel.": "จำเป็นต้องมี Pillow ติดตั้งได้จากแผง KKBP",
+    "Pillow is required. Install it with the buttons below.": "จำเป็นต้องมี Pillow ติดตั้งได้จากแผง KKBP",
     "Import Export Bundle": "นำเข้าชุดส่งออก",
     "No Step or Hook declares an option yet.": "ยังไม่มีขั้นตอนหรือฮุกใดประกาศตัวเลือก",
     "No hook scripts loaded": "ไม่ได้โหลดสคริปต์ฮุก",
@@ -35,12 +35,12 @@ TRANSLATIONS = {
     "Import manifest.json": "นำเข้า manifest.json",
     "Import a Character from an Export Bundle: choose its manifest.json, or open its folder and import with no file chosen":
         "นำเข้าตัวละครจากชุดส่งออก: เลือก manifest.json ของชุดนั้น หรือเปิดโฟลเดอร์ของชุดแล้วนำเข้าโดยไม่เลือกไฟล์",
-    "Install Pillow": "ติดตั้ง Pillow",
+    "Download Pillow": "ติดตั้ง Pillow",
     "Download Pillow {version} from PyPI with Blender's pip and install it into KKBP":
         "ดาวน์โหลด Pillow {version} จาก PyPI ด้วย pip ของ Blender แล้วติดตั้งลงใน KKBP",
     "Online access is turned off in Blender's Preferences. Download Pillow anyway?":
         "การเข้าถึงออนไลน์ถูกปิดอยู่ในการตั้งค่าของ Blender จะดาวน์โหลด Pillow ต่อไปหรือไม่?",
-    "Install Pillow from File": "ติดตั้ง Pillow จากไฟล์",
+    "Install Pillow from local file": "ติดตั้ง Pillow จากไฟล์",
     "Install a Pillow wheel (.whl) you downloaded yourself, for this Blender's Python and platform":
         "ติดตั้งไฟล์ wheel ของ Pillow (.whl) ที่คุณดาวน์โหลดเอง สำหรับ Python และแพลตฟอร์มของ Blender นี้",
     "Reload Hooks": "โหลดฮุกใหม่",

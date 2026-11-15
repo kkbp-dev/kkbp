@@ -46,7 +46,7 @@ How the importer keeps up with new Blender releases, and how changes are checked
   - the Pillow version is pinned and only raised on purpose, so the harness tests what users get;
   - the `wheels/` folder is emptied first and the file pip just downloaded is used, not `os.listdir(...)[0]`.
 - Offline install: the panel also accepts a wheel file the user downloaded elsewhere, installed through steps 2–3 above. The file must be a Pillow wheel whose tags match the running Python and platform (worked out from the interpreter, never a fixed `cp313`), because Blender will move to newer Python versions.
-- Enforcement: until Pillow loads, the panel shows only an **Install Pillow** button and the import operator's `poll()` returns False. `kkbp.import_bundle()` raises "Pillow is required. Install it from the KKBP panel."
+- Enforcement: until Pillow loads, the panel shows only a **Download Pillow** button and the import operator's `poll()` returns False. `kkbp.import_bundle()` raises "Pillow is required. Install it with the buttons below."
 
 ## Mesh Loader
 

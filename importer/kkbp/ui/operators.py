@@ -76,7 +76,7 @@ class KKBP_OT_import_bundle(bpy.types.Operator):
 
 class KKBP_OT_install_pillow(bpy.types.Operator):
     bl_idname = "kkbp.install_pillow"
-    bl_label = "Install Pillow"
+    bl_label = "Download Pillow"
     # Not an f-string: the translations are keyed by this text, and fill it the same way.
     bl_description = "Download Pillow {version} from PyPI with Blender's pip and install it into KKBP".format(
         version=pillow.PILLOW_VERSION)
@@ -99,7 +99,7 @@ class KKBP_OT_install_pillow(bpy.types.Operator):
 
 class KKBP_OT_install_pillow_file(bpy.types.Operator):
     bl_idname = "kkbp.install_pillow_file"
-    bl_label = "Install Pillow from File"
+    bl_label = "Install Pillow from local file"
     bl_description = "Install a Pillow wheel (.whl) you downloaded yourself, for this Blender's Python and platform"
 
     filepath: bpy.props.StringProperty(subtype="FILE_PATH")

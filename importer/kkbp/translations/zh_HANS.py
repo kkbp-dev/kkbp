@@ -6,7 +6,7 @@ Every entry is unreviewed: none has been checked by a native speaker yet (issue 
 TRANSLATIONS = {
     # The panel
     "Import Options": "导入选项",
-    "Pillow is required. Install it from the KKBP panel.": "需要 Pillow。请在 KKBP 面板中安装。",
+    "Pillow is required. Install it with the buttons below.": "需要 Pillow。请在 KKBP 面板中安装。",
     "Import Export Bundle": "导入导出包",
     "No Step or Hook declares an option yet.": "还没有带选项的步骤或钩子。",
     "No hook scripts loaded": "没有加载钩子脚本",
@@ -36,12 +36,12 @@ TRANSLATIONS = {
     "Import a Character from an Export Bundle: choose its manifest.json, or open its folder and import with no "
     "file chosen":
         "从导出包导入角色: 选择其中的 manifest.json，或打开导出包文件夹后不选文件直接导入",
-    "Install Pillow": "安装 Pillow",
+    "Download Pillow": "安装 Pillow",
     "Download Pillow {version} from PyPI with Blender's pip and install it into KKBP":
         "用 Blender 的 pip 从 PyPI 下载 Pillow {version} 并安装到 KKBP",
     "Online access is turned off in Blender's Preferences. Download Pillow anyway?":
         "Blender 偏好设置中已关闭在线访问。仍要下载 Pillow 吗?",
-    "Install Pillow from File": "从文件安装 Pillow",
+    "Install Pillow from local file": "从文件安装 Pillow",
     "Install a Pillow wheel (.whl) you downloaded yourself, for this Blender's Python and platform":
         "安装你自己下载的 Pillow wheel (.whl)，需与此 Blender 的 Python 和平台相符",
     "Reload Hooks": "重新加载钩子",

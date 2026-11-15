@@ -6,7 +6,7 @@ Every entry is unreviewed: none has been checked by a native speaker yet (issue 
 TRANSLATIONS = {
     # The panel
     "Import Options": "インポートオプション",
-    "Pillow is required. Install it from the KKBP panel.": "Pillowが必要です。KKBPパネルからインストールしてください。",
+    "Pillow is required. Install it with the buttons below.": "Pillowが必要です。このパネルからインストールしてください。",
     "Import Export Bundle": "エクスポートバンドルをインポート",
     "No Step or Hook declares an option yet.": "オプションを持つステップやフックはまだありません。",
     "No hook scripts loaded": "フックスクリプトは読み込まれていません",
@@ -37,12 +37,12 @@ TRANSLATIONS = {
     "file chosen":
         "エクスポートバンドルからキャラクターをインポートします。manifest.jsonを選ぶか、"
         "バンドルのフォルダーを開いてファイルを選ばずにインポートしてください",
-    "Install Pillow": "Pillowをインストール",
+    "Download Pillow": "Pillowをインストール",
     "Download Pillow {version} from PyPI with Blender's pip and install it into KKBP":
         "Blenderのpipを使ってPyPIからPillow {version}をダウンロードし、KKBPにインストールする",
     "Online access is turned off in Blender's Preferences. Download Pillow anyway?":
         "Blenderのプリファレンスでオンラインアクセスが無効になっています。それでもPillowをダウンロードしますか?",
-    "Install Pillow from File": "ファイルからPillowをインストール",
+    "Install Pillow from local file": "ファイルからPillowをインストール",
     "Install a Pillow wheel (.whl) you downloaded yourself, for this Blender's Python and platform":
         "自分でダウンロードしたPillowのwheel (.whl) をインストールします。このBlenderのPythonとプラットフォーム用のものを選んでください",
     "Reload Hooks": "フックを再読み込み",
