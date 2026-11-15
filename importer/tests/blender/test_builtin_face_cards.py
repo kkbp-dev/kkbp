@@ -22,7 +22,7 @@ def _import(build, b=None):
         materials = {m["id"]: m for m in b.materials}
         materials["cf_m_hitomi_00"]["textures"] = [b.add_texture("_MainTex", role="main", variant="light"),
                                                    b.add_texture("_MainTex", role="main", variant="dark")]
-    result = kkbp.api.import_bundle(build(b), hooks=["Face cards"])
+    result = kkbp.api.import_bundle(build(b), hooks=["Face cards"], options={"use_face_cards": True})
     assert result.ok and result.hooks[0].status == "ran", result.hooks
     return character.Character(result.character_key), result
 

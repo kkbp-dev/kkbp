@@ -14,7 +14,7 @@ from ..library import hook_assets
 from ..pipeline.hooks import hook
 from ..pipeline.options import Option
 
-SWITCH = Option("use_face_cards", bool, True, "Face cards",
+SWITCH = Option("use_face_cards", bool, False, "Face cards",
                 description="Adds 2D eye and mouth cards in front of the face, with the Character's eye textures. "
                             "Their Collection starts hidden")
 

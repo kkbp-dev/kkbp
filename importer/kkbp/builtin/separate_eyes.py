@@ -1,11 +1,14 @@
 """Separate Eyes: moves the eyes and the eyebrows out of Body into their own objects, whose
 expression keys Body's drive, so they can be drawn through the hair with the compositor (legacy
 linkshapekeys, D35; a Hook since issue 16). On the data API: each new object is a copy of Body
-keeping only its faces. The new Parts go in an `Eyes and Eyebrows` Collection."""
+keeping only its faces. The new Parts go in an `Eyes and Eyebrows` Collection. The Hook also turns on
+the scene's Cryptomatte Object and Material passes, which the compositor needs to pick them out
+(issue 102)."""
 
 from __future__ import annotations
 
 import bmesh
+import bpy
 from mathutils import Matrix
 
 from ..character import ROLE
@@ -33,6 +36,10 @@ UV_WARP = "UV_WARP"
 def separate_eyes(ctx):
     made = separate(ctx.character)
     ctx.log.info(f"Separated {', '.join(o.name for o in made) or 'nothing'}")
+    if made:
+        for layer in bpy.context.scene.view_layers:  # never turned off: the user may want them anyway
+            layer.use_pass_cryptomatte_object = layer.use_pass_cryptomatte_material = True
+        ctx.log.info("Turned on the scene's Cryptomatte Object and Material passes")
 
 
 def separate(ch) -> list:

@@ -12,7 +12,7 @@ The built-in Hooks are modules in `importer/kkbp/builtin/`. They run in the orde
 | 2 | Convert shaders | `convert_shaders` (choice): `off` "Eevee", `eevee_mod`, `cycles`, `cycles_classic`, `principled` | `off` | none: the variants are in `library.blend` |
 | 3 | Separate meshes | `separation_type` (choice): `off` "One object per outfit", `by_material` "Separate all clothing" | `off` | none |
 | 4 | Outlines | `use_outlines` (bool) | on | `outlines.blend` |
-| 5 | Face cards | `use_face_cards` (bool) | on | `face_cards.blend` |
+| 5 | Face cards | `use_face_cards` (bool) | off | `face_cards.blend` |
 | 6 | SFW | `sfw_mode` (bool) | off | none |
 | 7 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
 | 8 | Separate Eyes | `separate_eyes` (bool) | off | none |
@@ -73,7 +73,7 @@ A change to the Hook is checked with the rig fingerprint (`run.py fingerprint`, 
 
 ### Separate Eyes (`separate_eyes.py`)
 
-Moves the eye and eyebrow materials out of Body into new Parts with Part Roles `eyes` and `eyebrows`, in an `Eyes and Eyebrows <name>` Collection, parented to Body with their shape keys driven from Body's (D35, D60). The eyes Part takes the pupils, eye whites and eye lines: KK's and KKS's eyelines, and SVS's eyelash and eyelid materials. The Rigify eye UV-warp modifiers move with them.
+Moves the eye and eyebrow materials out of Body into new Parts with Part Roles `eyes` and `eyebrows`, in an `Eyes and Eyebrows <name>` Collection, parented to Body with their shape keys driven from Body's (D35, D60). The eyes Part takes the pupils, eye whites and eye lines: KK's and KKS's eyelines, and SVS's eyelash and eyelid materials. The Rigify eye UV-warp modifiers move with them. When it separates something, it also turns on the Cryptomatte Object and Material passes of every view layer of the scene, which the compositor needs to pick the Parts out (issue 102); it never turns them off.
 
 ### Delete default scene (`default_scene.py`)
 
