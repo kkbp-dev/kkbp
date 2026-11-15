@@ -69,7 +69,8 @@ class KKBP_AP_preferences(bpy.types.AddonPreferences):
         col.operator("kkbp.remove_user_hook", text="", icon="X")
         defaults = self.option_defaults()
         box = layout.box()
-        box.label(text="Import Option defaults" + ("" if defaults else ": the built-in ones"))
+        # Two whole labels, not one with an ending added, so each is translated as a whole.
+        box.label(text="Import Option defaults" if defaults else "Import Option defaults: the built-in ones")
         for name, value in sorted(defaults.items()):
             box.label(text=f"{name} = {value!r}")
         if defaults:

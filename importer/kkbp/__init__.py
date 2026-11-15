@@ -5,12 +5,13 @@ Other add-ons and hook scripts use the public API in `api` (docs/design/import-p
 
 import bpy
 
-from . import api, builtin, dropdowns, mesh_loader, ui  # noqa: F401  (api: other add-ons reach it as
+from . import api, builtin, dropdowns, mesh_loader, translations, ui  # noqa: F401  (api: other add-ons reach it as
 #                                         <module>.api; builtin: importing it registers the built-in Hooks)
 from .pipeline import hooks
 
 
 def register():
+    translations.register()
     ui.register()
     dropdowns.register()
     # Blender's own glTF add-on may register after this one, and Preferences are only readable
@@ -24,6 +25,7 @@ def unregister():
     hooks.unregister_hooks(hooks.FOLDER_MODULE)
     dropdowns.unregister()
     ui.unregister()
+    translations.unregister()
 
 
 def _after_startup():
