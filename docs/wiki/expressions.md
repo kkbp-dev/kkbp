@@ -30,13 +30,13 @@ The gag eyes and the tears are hidden until an expression shows them, and the no
 
 ## Face cards
 
-Face cards (on by default) adds flat 2D eye and mouth cards in front of the face, with the character's eye textures, for a drawn look. They are in a collection that starts hidden: show it in the Outliner to use them.
+Face cards (off by default) adds flat 2D eye and mouth cards in front of the face, with the character's eye textures, for a drawn look. They are in a collection that starts hidden: show it in the Outliner to use them.
 
 > **Picture to come:** `images/expressions/face-cards.jpg`, the face cards in use.
 
 ## Separate eyes
 
-Separate eyes (off by default) moves the eyes and eyebrows out of the body into their own objects, in an `Eyes and Eyebrows` collection. Their shape keys follow the body's. Use it to draw the eyes and eyebrows over the hair with the compositor.
+Separate eyes (off by default) moves the eyes and eyebrows out of the body into their own objects, in an `Eyes and Eyebrows` collection. Their shape keys follow the body's. Use it to draw the eyes and eyebrows over the hair with the compositor. It also turns on the Cryptomatte Object and Material passes in the View Layer properties, which the compositor needs for that.
 
 To do this on a character already imported, use Run Hook in the Tools panel and pick Separate Eyes.
 

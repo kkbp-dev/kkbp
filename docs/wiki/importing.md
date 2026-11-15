@@ -25,7 +25,7 @@ The options apply to the next import, so set them before clicking the button.
 | Shader | Eevee | Which shaders the materials use: Eevee, Eevee+, Cycles (toon), Cycles (classic) or Principled BSDF | [Shaders](shaders.md) |
 | Separation type | One object per outfit | "Separate all clothing" makes each piece of clothing its own object | [Outfits](outfits.md#separate-all-clothing) |
 | Use outlines | on | Gives the body, hair and clothes an outline | [Shaders](shaders.md#outlines) |
-| Face cards | on | Adds 2D eye and mouth cards in front of the face, in a hidden collection | [Expressions](expressions.md#face-cards) |
+| Face cards | off | Adds 2D eye and mouth cards in front of the face, in a hidden collection | [Expressions](expressions.md#face-cards) |
 | SFW mode | off | Attempts to cover up some NSFW things | [Outfits](outfits.md#sfw-mode) |
 | Use Rigify armature | on | Generates a Rigify control rig for posing and animating in Blender. Off, the character keeps the plain armature, which is easier to export | [The rig](rig.md) |
 | Separate eyes | off | Moves the eyes and eyebrows into their own objects, so they can show through the hair with the compositor | [Expressions](expressions.md#separate-eyes) |
