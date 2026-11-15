@@ -143,7 +143,7 @@ A Hook doesn't get the Game Profile; what a Hook needs to know about the Charact
 | `ch.bundle()` | Reopens the Export Bundle the Character came from |
 | `kkbp.Character.of(obj)`, `kkbp.Character.all(scene)` | The Character an object belongs to, and every Character in a scene |
 
-Part Roles: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows`. The tongue is part of Body: find its faces by the `tongue` Material Role. The armature's bones are named by bundle Id, except that the Rigify Hook gives the rig and its metarig the legacy KKBP names (`Left arm`, `Head`).
+Part Roles: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows`. The tongue is part of Body: find its faces by the `tongue` Material Role. The armature's bones are named by bundle Id, except that the Rigify Hook gives the rig and its metarig readable names (`Left arm`, `Head`).
 
 ## Bundle
 

@@ -7,7 +7,7 @@ KKBP has three parts: exporters (BepInEx plugins for KK, KKS and SVS) write an *
 ## Read before changing anything
 
 - [CONTEXT.md](CONTEXT.md): the glossary. Use its terms, not the ones it lists under "Avoid".
-- [docs/design/README.md](docs/design/README.md): the design docs, the roadmap and every agreed decision (D1 to D59).
+- [docs/design/README.md](docs/design/README.md): the design docs and every numbered decision (D1 onwards), each saying what holds now.
 - [docs/adr/](docs/adr/): decisions that look wrong without context. Check them before "fixing" something that seems odd (for example SVS's eye bones, ADR 0028; edit materials not saturating, ADR 0026; Expression Names as display strings, ADR 0004).
 - [docs/hook-interface.md](docs/hook-interface.md): the public Hook API, version 2.0.
 - The README in [exporters/](exporters/README.md) (with "Working with the games"), [importer/](importer/README.md) (with "Blender quirks") and [the test harness](importer/tests/harness/README.md).
@@ -30,7 +30,7 @@ A fresh clone can't run the tests yet: the Golden Samples the tests import are m
 - Work in small commits. Stage files by path; never `git add -A`. End every commit message with the `Co-Authored-By:` trailer of the model that wrote it.
 - Never commit the files and folders listed in `.gitignore`.
 - The git author is a placeholder from the global `~/.gitconfig`; leave it alone.
-- No remote and no CI: build, test and check steps are local scripts under `scripts/`.
+- The remote is `origin` on GitHub (`kkbp-dev/test`); a change goes on its own branch and into `main` through a pull request. There is no CI: build, test and check steps are local scripts under `scripts/`.
 - Nothing gets installed into Blender's own Python or the user's Blender profile without their OK, and each OK covers that one install.
 - Long runs (the full test suite, `export-sample.sh`, game exports) take minutes: run them in the background and wait for them.
 - Run the full test suite once, after a change. Don't run it before the change for a baseline: the committed snapshots are the baseline, and `scripts/test-importer.sh` stops at once on a tree that already passed (the green stamp). To see whether a failure predates the change, run that one test (`launch.py -k <name>`, or `run.py core --sample <game>`) on the base commit, not the whole suite.
@@ -38,7 +38,7 @@ A fresh clone can't run the tests yet: the Golden Samples the tests import are m
 ## Rules the code follows
 
 - **Contract:** don't change `contract/` without the user's OK. If the contract looks wrong or incomplete, stop and say so. A Schema Version major change also forces a hook interface major change. A contract change touches several places; see "Common changes".
-- **Legacy code is read-only reference**, ignored by git: `Blender addons/` (the old importer), `kkbp_exporter/`, `svs_exporter/`, `Sample exporter output files/`, `games/`. Files copied out of them can arrive with mode 755; check before committing.
+- **The earlier importer and exporters aren't in the repository**, and the docs and code describe KKBP as it is, not by comparison with them. A copy kept beside the repository (`.gitignore` lists `Blender addons/`, `kkbp_exporter/`, `svs_exporter/` and `Sample exporter output files/`) is read-only reference. `games/` is ignored by git too. Files copied out of any of them can arrive with mode 755; check before committing.
 - **Golden Samples are local** (ADR 0031): `contract/samples/` is ignored by git and never committed. Each developer makes them from the tracked Sample Cards in `contract/sample-cards/` with `scripts/export-sample.sh`. The importer snapshots stay committed; their comparison allows 3.5 cm on the bones physics moves (`importer/tests/harness/physics.py`).
 - **Importer:**
   - `bundle/`, `profiles/` and `library/` never import `bpy` (a host test checks).
@@ -116,7 +116,7 @@ Run the importer's host tests and pytest only on `importer/.venv/bin/python` (Bl
   1. Stage the package with the pinned wheel from `importer/tests/.work/wheels/` in `kkbp/wheels/`.
   2. Replace the manifest's `#wheel_placeholder` line with `wheels = ["./wheels/<file>.whl"]`.
   3. Run `blender --command extension install-file --repo user_default --enable <zip>`, then restart Blender. The profile copy is in `~/.config/blender/5.2/extensions/user_default/kkbp`.
-- **A release:** drop `-dev` in `importer/kkbp/blender_manifest.toml` and `exporters/Exporter.props`, re-record the snapshots, package both (`scripts/package-importer.sh`, `scripts/package-exporters.sh`), deploy, and tag locally.
+- **A release:** drop `-dev` in `importer/kkbp/blender_manifest.toml` and `exporters/Exporter.props`, re-record the snapshots, package both (`scripts/package-importer.sh`, `scripts/package-exporters.sh`), deploy, and tag.
 
 ## The machine
 

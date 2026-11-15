@@ -5,8 +5,8 @@ exporters; the credits below are for the work it ports or reproduces.
 
 The legacy KKBP importer
   Copyright (c) 2024 KKBP developers. MIT License.
-  The Rigify Hook's scripts (importer/kkbp/builtin/rigify/before.py, after.py and commons.py) are
-  its Rigify scripts, ported with as few changes as possible. The Material Template library and the
+  The Rigify Hook (importer/kkbp/builtin/rigify/) began as its Rigify scripts and builds the same
+  rig. The Material Template library and the
   built-in Hooks' asset files (importer/kkbp/library/) are built from its KK Shader V9.blend: the
   node groups and materials (importer/tools/library/groups/ and materials/), the images, meshes and
   scenes (importer/library-src/) were extracted from it, with the shader templates, the edit

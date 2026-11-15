@@ -2,7 +2,7 @@
 
 How the importer turns an [Export Bundle](export-bundle.md) into a Character in Blender, and where custom scripts plug in. Terms are defined in [CONTEXT.md](../../CONTEXT.md).
 
-Status: agreed design, not yet implemented. `ctx.character` is defined in [character.md](character.md).
+`ctx.character` is defined in [character.md](character.md).
 
 ## Steps
 
@@ -26,15 +26,13 @@ STEPS = [
 
 - Each Step declares a list of Games it applies to.
 - **An empty list means the Step runs on every Game.** A non-empty list means it runs only on the Games in that list.
-- This replaces the `if is_kk` branches in today's Step lists. To be revisited in candidate 4 (Game Profile).
+- A Step that differs in detail between Games reads the Game Profile instead ([game-profile.md](game-profile.md)).
 
 ## Hooks
 
 - Hooks run only **after the Core Import has finished**. There are no hook points between phases, and Hooks cannot replace built-in Steps.
-- Today's post-operations become built-in Hooks on that same hook point: the Cycles/Eevee/Principled shader conversions, Rigify, SFW, separate meshes, outlines and face cards.
-- Two import options that are part of the Core Import today also become built-in Hooks at the end of the import:
-  - **Fix body seams** (today's `fix_seams` option and the `remove_body_seams` Step), which merges by distance on the body materials;
-  - **Separate meshes**, with the **Separation type** as its choice option ("One object per outfit" or "Separate all clothing", today's `separate_clothes`). Like convert shaders, it has a choice option rather than an on/off switch.
+- Everything optional is a built-in Hook on that same hook point ([hooks-and-tools.md](hooks-and-tools.md)): fixing body seams, the shader conversions, separating meshes, outlines, face cards, SFW, Rigify, separating the eyes and deleting the default scene.
+- A Hook's switch is a bool or a choice option: Convert shaders and Separate meshes (its **Separation type**) have a choice rather than an on/off switch.
 - A Hook owns its own asset file if it needs one (Rigify widgets, the face-card rig). User Hooks can bring their own `.blend` too, for example to replace the Material Templates after the import.
 - Registration: built-ins, add-ons and folder scripts all use one decorator, `kkbp.hook` (it calls the internal `register_hook`). A folder script is a `.py` file with one or more decorated functions, and loading the file registers them.
 - An extension's module name is `bl_ext.<repository>.kkbp` and differs between systems, so there is no `import kkbp`. The hooks-folder loader puts the public API into each script's namespace as `kkbp` before running it:
@@ -66,7 +64,7 @@ def find_kkbp():
 - Built-in Hooks run first, in a fixed order: fix body seams → shader conversion → separate meshes → outlines → face cards → SFW → Rigify → delete default scene. Fixing seams runs first because it changes the body mesh that later Hooks work on.
 - User Hooks run after them, in a list in Preferences that the user can reorder and switch on or off.
 - Each built-in Hook gets one automatic on/off Import Option (`fix_seams`, `use_rigify`, `use_outlines`, `sfw_mode`). The pipeline checks the switch, so Hooks don't return early themselves.
-- The shader variants (today's B/C/D/E dropdown) are one "convert shaders" Hook with a choice option.
+- The shader variants are one "convert shaders" Hook with a choice option.
 
 ### Hooks folder
 
@@ -103,7 +101,6 @@ def find_kkbp():
 
 - Each Step or Hook declares its own options, for example `use_rigify: bool = True`.
 - That one declaration produces the panel control, the Preferences default and `ctx.options.<name>`.
-- This replaces today's three copies (`KKPanel.py`, `preferences.py`, `load_user_defaults`). Candidate 9 is folded into this one.
 - Types: bool, int, float, choice and text. Each has a default, a label and an optional description.
 - Defaults live in Preferences. Current values live on the scene, so a `.blend` remembers how it was imported.
 - The scene's values are a property group generated from the declarations, rebuilt when they change. A new scene starts from the Preferences defaults, which the panel's **Save as Defaults** sets from the current scene. Only the values set on the scene are passed to `import_bundle`; the rest come from Preferences.

@@ -2,13 +2,11 @@
 
 How the importer keeps up with new Blender releases, and how changes are checked. Terms are defined in [CONTEXT.md](../../CONTEXT.md).
 
-Status: agreed design, not yet implemented.
-
 ## Supported Blender versions
 
-- The minimum starts at **Blender 5.2 LTS**, because this is a new plugin. Every newer release is supported.
-- After that, the minimum follows Blender's normal LTS timeline: an LTS stays supported until Blender ends its support, and then the minimum moves to the oldest LTS that is still maintained.
-- Code for versions below the minimum is deleted. That includes today's Blender 2.x/3.x branches, the 5.1 rendering workaround, and the 5.2 checks (`use_transparent_shadow`, Geometry Nodes modifier inputs), which become unconditional.
+- The minimum is **Blender 5.2 LTS**. Every newer release is supported.
+- The minimum follows Blender's normal LTS timeline: an LTS stays supported until Blender ends its support, and then the minimum moves to the oldest LTS that is still maintained.
+- There is no code for versions below the minimum. When the minimum moves, the `compat/` branches for older versions are deleted.
 - So the Compat module starts empty. It exists so that the next API change has one obvious home.
 
 ## Compat module
@@ -24,13 +22,11 @@ Status: agreed design, not yet implemented.
 - Steps use the data API (`bpy.data`, `bmesh`, `edit_bones.new`, …) wherever one exists.
 - Operators remain only where there is no equivalent. They go through small helpers in Compat that set an explicit context with `bpy.context.temp_override`.
 - This is done as each Step is ported, not as a separate pass.
-- Mode switching uses one context manager, `with editing(obj, "EDIT"):`, which always restores the previous state, even if an error is raised. It replaces the 63 `mode_set` calls and `c.switch()`.
+- Mode switching uses one context manager, `with editing(obj, "EDIT"):`, which always restores the previous state, even if an error is raised.
 
 ## Third-party code
 
-- The bundled third-party code is removed: shotariya's `material_combiner` (MIT, about 3,000 lines, used for the export atlas) and the CATS scripts (MIT, used only for Merge Weights).
-- The features KKBP uses from them are rewritten as KKBP's own code, using the originals as a reference.
-- Scope: only what KKBP's panel offers today. That is the export atlas, with its current size and material options, and Merge Weights. The rest of material_combiner's general-purpose UI is not carried over.
+- No third-party code is bundled. The export atlas and Merge Weights are KKBP's own code, written with shotariya's Material Combiner and the CATS scripts (both MIT) as references; NOTICE credits them.
 - The atlas is split in two:
   - a part with no `bpy` that works out the rectangle layout and UV remapping and composites the images with Pillow, tested with pytest (Pillow installed in the development environment);
   - a thin Blender part that only loads and saves images and applies the UVs, tested in the harness.
@@ -41,7 +37,7 @@ Status: agreed design, not yet implemented.
 
 - The atlas uses Pillow, installed as a wheel through the extension's `blender_manifest.toml`.
 - **Pillow is mandatory.** Importing is not possible until it is installed.
-- The existing installer is reused (today's `InstallPIL` in `exporting/material_combiner/get_pillow.py`, which moves out of the removed folder). It:
+- The installer (`kkbp/pillow.py`):
   1. downloads Pillow from PyPI with Blender's own pip into `<add-on>/wheels`;
   2. replaces `#wheel_placeholder` in `blender_manifest.toml` with the `wheels = [...]` entry;
   3. calls `addon_utils.extensions_refresh()`, Blender's call for "an extension changed on disk", which installs the wheel without a restart (disabling and re-enabling the add-on is the fallback if Pillow still doesn't load);
@@ -62,8 +58,3 @@ Status: agreed design, not yet implemented.
 - Headless Blender (`blender --background`) runs on two builds: the minimum (5.2 LTS) and the latest stable release.
 - Each sample import produces a JSON scene summary: Parts and roles, materials with their template and texture images, shape keys, bone count and rounded positions, vertex counts.
 - Summaries are stored in `importer/tests/snapshots/`. They change only through an explicit "update snapshots" command, and the diff is reviewed.
-- The same summaries do the old-vs-new comparison described in [export-bundle.md](export-bundle.md#testing).
-
-## Other candidates
-
-- Candidate 6 (Exporter Naming) is dropped. Assigning Ids is part of the shared exporter writer ([export-bundle.md](export-bundle.md#ids)).

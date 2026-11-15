@@ -2,8 +2,6 @@
 
 The Export Bundle is the versioned contract between the exporters and the importer: the folder an exporter writes for one Character, and the only thing the importer reads. Terms are defined in [CONTEXT.md](../../CONTEXT.md). The mesh format decision is [ADR 0001](../adr/0001-gltf-instead-of-pmx.md).
 
-Status: agreed design, not yet implemented. These are new plugins; no backwards compatibility with today's export folders.
-
 ## Repository and contract
 
 - One repository: `contract/` (JSON Schemas, written spec, Sample Cards; the Golden Samples are made locally, ADR 0031), `exporters/core`, `exporters/kk`, `exporters/svs`, `importer/`, plus `CONTEXT.md` and `docs/`.
@@ -40,7 +38,7 @@ kkbp_cache/<kind>/
 - Schema Version: `major.minor`. The importer accepts any bundle with its major version, whatever the minor, and ignores unknown fields.
 - Exporter name and Exporter Version: informational, never used to accept or reject a bundle.
 - Export time (RFC 3339, UTC), Character name, Card file (`card.png`, or null).
-- Export options used (replaces `KKBPExporterConfig.json`): `all_outfits`, `all_variations`, `physics`, `enabled_shape_keys`, `current_pose`, plus Game-only options under `extensions`. The batch-export switch is UI state and isn't recorded.
+- Export options used: `all_outfits`, `all_variations`, `physics`, `enabled_shape_keys`, `current_pose`, plus Game-only options under `extensions`. The batch-export switch is UI state and isn't recorded.
 - Passes: for each, kind (`body` or `outfit`), Outfit index (null for the body), `.glb` path, data-file path.
 - The first Schema Version is `1.0`, released with importer 10.0.0 and exporters 6.0.0. From then on, a change that only adds (an optional field, a set value) raises the minor version (`1.1`), and any other change raises the major version (`2.0`), which also forces a hook interface major version.
 - No file hashes.
@@ -125,7 +123,6 @@ The shared importer steps use Roles only. Game profiles use Raw Properties for e
 ## Exporter side
 
 - One shared C# module, with no dependencies, writes glTF 2.0 and JSON. Its interface takes plain arrays, not Unity types. It is compiled into all exporters: KK (.NET 3.5, Unity 5.6), KKS (.NET 4.6, Unity 2019.4), SVS (.NET 6 IL2CPP, Unity 2021.3).
-- It replaces PmxLib, the KK string-patching JSON writers and SVS's `CustomJsonSerializer`.
 - Its output is checked with the Khronos glTF Validator in the contract tests.
 
 ## Importer side
@@ -149,7 +146,7 @@ bundle.warnings
 - Sections are frozen standard-library dataclasses, built when the bundle opens.
 - The bundle checks everything on open: required files present and parseable, Game identified, Schema Version accepted. It gives one error listing every problem, or a list of warnings.
 - All JSON is read on open. `.glb` files and textures are only handed out as paths.
-- Every current reader moves to the bundle, including `extras/editmaterial.py`. `JsonFileManager` is deleted.
+- Nothing else in the importer reads a bundle's files: Steps, Hooks and tools all go through the opened bundle.
 - The Mesh Loader is the only caller of `bpy.ops.import_scene.gltf` and sets every option explicitly.
 - Post-import hooks receive the opened Bundle (read-only) and the imported Character. The bundle's interface is therefore part of what hook authors depend on.
 
@@ -157,10 +154,4 @@ bundle.warnings
 
 - A small builder writes valid bundles into a temporary folder, so tests go through the real open-and-validate path.
 - The Golden Samples, exported locally from the Sample Cards in `contract/sample-cards/` (ADR 0031), are the full regression set.
-- To check the rewrite: Phase 0 records a scene summary from the current importer for each of the three current samples (objects, materials, shape keys, bone count and positions, vertex counts, textures used). The new exporters re-export the same three Characters, and the new importer must produce matching summaries within a tolerance, comparing names through Ids. Each difference is either a bug or an approved fix. (Done in Phase 6; the baseline is retired, ADR 0032.)
-
-## Effect on the architecture plan
-
-- Candidate 5's PMX Loader becomes the Mesh Loader.
-- Part of candidate 7 (the shared glTF and JSON writer) moves into Phase 1.
-- The Phase 0 harness becomes the old-vs-new comparison above.
+- The importer's snapshots of the Golden Samples' imported scenes are the regression target ([the harness README](../../importer/tests/harness/README.md)).

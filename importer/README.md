@@ -1,6 +1,6 @@
 # importer
 
-The Blender importer. Phase 3 built its foundations: reading bundles, Character, the Mesh Loader, the pipeline with its Hooks, and Pillow. Phase 4 ported the Core Import's Steps, the Material Templates and the Game Profiles. Phase 5 adds the built-in Hooks and the tools used after an import ([hooks-and-tools.md](../docs/design/hooks-and-tools.md)).
+The Blender importer: it reads an Export Bundle, runs the Core Import's Steps and then the Hooks, and has tools used after an import ([hooks-and-tools.md](../docs/design/hooks-and-tools.md)).
 
 See [docs/design/import-pipeline.md](../docs/design/import-pipeline.md) and [tests/harness/README.md](tests/harness/README.md).
 
@@ -8,7 +8,7 @@ See [docs/design/import-pipeline.md](../docs/design/import-pipeline.md) and [tes
 |---|---|
 | `kkbp/` | The extension. `kkbp/bundle/` never imports `bpy`. |
 | `kkbp/pipeline/steps.py` | The Step list with Game lists, and the built-in Hook order |
-| `kkbp/steps/` | The Steps, by topic: `mesh`, `armature`, `materials` |
+| `kkbp/steps/` | The Steps, by topic: `mesh`, `armature`, `materials`, `gag` |
 | `kkbp/profiles/` | The Game Profiles (`kk`, `kks`, `svs`); never imports `bpy` |
 | `kkbp/library/` | The Material Template library (`library.blend`), its Template Descriptions and Template Sets, and the built-in Hooks' asset files with their descriptions (`hook_assets.py`); never imports `bpy` |
 | `kkbp/builtin/` | The built-in Hooks, one module each |
@@ -20,6 +20,8 @@ See [docs/design/import-pipeline.md](../docs/design/import-pipeline.md) and [tes
 | `tools/library/` | Builds `library.blend` and the Hooks' asset files from code (`scripts/build-library.sh`, [ADR 0040](../docs/adr/0040-the-library-is-built-from-code.md)): `build.py`, the builder `nodes.py`, one module per node group in `groups/` and per material in `materials/`, and the decompiler, fingerprint and comparison tools |
 | `library-src/` | The images, meshes and scenes the library and asset files are built from |
 | `kkbp/api.py` | The public API hook scripts get as `kkbp` |
+| `kkbp/ui/` | The panel, its operators and Preferences |
+| `kkbp/translations/` | The UI in other languages, one table per language |
 | `tests/host/` | pytest tests that run without Blender |
 | `tests/blender/` | pytest tests that run inside headless Blender, on every harness build, in an isolated profile |
 | `tests/bundle_builder.py` | Writes small valid bundles for tests |

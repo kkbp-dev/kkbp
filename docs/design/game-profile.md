@@ -1,8 +1,8 @@
 # Game Profile
 
-How the importer handles differences between Games, replacing today's 66 `is_kk()` / `get_prefix()` branches. Terms are defined in [CONTEXT.md](../../CONTEXT.md).
+How the importer handles differences between Games. Terms are defined in [CONTEXT.md](../../CONTEXT.md).
 
-Status: agreed design, not yet implemented. The decision to tag meaning in the exporters is [ADR 0002](../adr/0002-exporters-write-game-meaning.md).
+The decision to tag meaning in the exporters is [ADR 0002](../adr/0002-exporters-write-game-meaning.md).
 
 ## Where game knowledge lives
 
