@@ -70,6 +70,7 @@ ADRs:
 - [0044 Bakes have their main texture's size and shape; the body and face stay 4096 square](../adr/0044-bakes-keep-the-main-textures-shape-and-skin-stays-4096.md)
 - [0045 The Rigify Hook aims the hands and makes palms on every skeleton](../adr/0045-every-skeleton-gets-aimed-hands-and-palms.md)
 - [0046 The face is also baked without its eyeshadow](../adr/0046-the-face-is-also-baked-without-its-eyeshadow.md)
+- [0047 The exporter makes vertex copies one, and mirrors the Body](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)
 
 ## Decisions
 
@@ -95,9 +96,9 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 
 [hooks-and-tools.md](hooks-and-tools.md) describes each Hook and tool.
 
-- **D14** `BUILTIN_HOOKS`: Fix body seams → Convert shaders → Separate meshes → Outlines → Face cards → SFW → Rigify → Separate Eyes → Delete default scene. Switches and defaults: `fix_seams` on; `convert_shaders` (`off`, `eevee_mod`, `cycles`, `cycles_classic`, `principled`) off; `separation_type` (`off` "One object per outfit", `by_material` "Separate all clothing") off; `use_outlines` on; `use_face_cards` off (issue 102's PR); `sfw_mode` off; `use_rigify` on; `separate_eyes` off; `delete_default_scene` on. Built-ins pass their switch to `kkbp.hook`. Outlines skips itself for the Cycles and Principled variants.
+- **D14** `BUILTIN_HOOKS`: Convert shaders → Separate meshes → Outlines → Face cards → SFW → Rigify → Separate Eyes → Delete default scene. Switches and defaults: `convert_shaders` (`off`, `eevee_mod`, `cycles`, `cycles_classic`, `principled`) off; `separation_type` (`off` "One object per outfit", `by_material` "Separate all clothing") off; `use_outlines` on; `use_face_cards` off (issue 102's PR); `sfw_mode` off; `use_rigify` on; `separate_eyes` off; `delete_default_scene` on. Built-ins pass their switch to `kkbp.hook`. Outlines skips itself for the Cycles and Principled variants.
 - **D15** The Hooks live in `importer/kkbp/builtin/`. Each asset file has a description with no `bpy`, checked against the file by a harness test, and is built from code by `scripts/build-library.sh` (D66): `rigify.blend` (widgets), `face_cards.blend` (its mouth atlas stored as WebP at quality 95), `outlines.blend`.
-- **D16** Fix body seams merges by distance with bmesh on Body faces of Material Roles `face` and `body`: as Merge by Distance at 0.00001 with Centroid Merge, keeping each face corner's custom normal. A face vertex and a body vertex also merge from up to 0.0001 apart, because SVS writes most of the neck's pairs 0.010 to 0.026 mm apart (issue 85).
+- **D16** There is no Fix body seams Hook: the Exporter Core makes each group of vertex copies the same, and the Core Import's weld Steps weld them, keeping each face corner's custom normal (issues 85 and 100, [ADR 0047](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)).
 - **D17** Separate meshes splits each `outfit` Part into one Part per material, named by material Id, through a Compat helper.
 - **D18** Convert shaders goes through `templates.swap`, with rules by Material Role; the Eevee Mod inputs are per-variant template params; Principled is a `.Principled` variant group. SVS Light Dark gets the KK variants, with a warning that its bottom alpha mask is lost.
 - **D19** Outlines: a Solidify modifier and black copies of the materials, found through templates; the face outline mask is chosen by the face material's template. There is no `outline` Part Role.
