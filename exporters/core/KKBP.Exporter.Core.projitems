@@ -31,6 +31,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)src\MeshVectors.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\Model.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\Sets.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\Symmetry.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\UnitySpace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\Welds.cs" />
   </ItemGroup>
 </Project>
