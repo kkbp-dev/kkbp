@@ -165,6 +165,16 @@
          "WGT-RIG-Armature {character}_RingFingerPalm_fk_L",
          "WGT-RIG-Armature {character}_RingFingerPalm_fk_R",
          "WGT-RIG-Armature {character}_Spine_fk",
+         "WGT-RIG-Armature {character}_Teeth lower C",
+         "WGT-RIG-Armature {character}_Teeth lower L1",
+         "WGT-RIG-Armature {character}_Teeth lower L2",
+         "WGT-RIG-Armature {character}_Teeth lower R1",
+         "WGT-RIG-Armature {character}_Teeth lower R2",
+         "WGT-RIG-Armature {character}_Teeth upper C",
+         "WGT-RIG-Armature {character}_Teeth upper L1",
+         "WGT-RIG-Armature {character}_Teeth upper L2",
+         "WGT-RIG-Armature {character}_Teeth upper R1",
+         "WGT-RIG-Armature {character}_Teeth upper R2",
          "WGT-RIG-Armature {character}_Thumb0_L",
          "WGT-RIG-Armature {character}_Thumb0_L.001",
          "WGT-RIG-Armature {character}_Thumb0_R",
@@ -425,9 +435,9 @@
   "armatures": 4,
   "images": 70,
   "materials": 44,
-  "meshes": 336,
+  "meshes": 346,
   "node_groups": 17,
-  "objects": 378
+  "objects": 388
  },
  "images": [
   "MouthAtlas.webp",
@@ -1454,7 +1464,7 @@
      "uv_underhair",
      "uv_eyeshadow"
     ],
-    "vertex_groups": 772,
+    "vertex_groups": 782,
     "vertices": 16796
    },
    "modifiers": [
@@ -2080,7 +2090,7 @@
      ],
      [
       "DEF",
-      6
+      16
      ],
      [
       "Deform bones",
@@ -2100,7 +2110,7 @@
      ],
      [
       "Face (MCH)",
-      19
+      29
      ],
      [
       "Fingers",
@@ -2179,7 +2189,7 @@
       6
      ]
     ],
-    "bone_count": 872,
+    "bone_count": 892,
     "bones": {
      "Breasts handle": {
       "deform": false,
@@ -3705,6 +3715,286 @@
        0.0,
        0.0017,
        1.0523
+      ]
+     },
+     "Teeth lower C": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.0348,
+       1.3447
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0,
+       -0.0348,
+       1.3487
+      ]
+     },
+     "Teeth lower C (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0,
+       -0.0348,
+       1.3447
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0,
+       -0.0348,
+       1.3487
+      ]
+     },
+     "Teeth lower L1": {
+      "deform": false,
+      "head": [
+       0.0087,
+       -0.0305,
+       1.3445
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0087,
+       -0.0305,
+       1.3485
+      ]
+     },
+     "Teeth lower L1 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0087,
+       -0.0305,
+       1.3445
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0087,
+       -0.0305,
+       1.3485
+      ]
+     },
+     "Teeth lower L2": {
+      "deform": false,
+      "head": [
+       0.0129,
+       -0.0238,
+       1.3453
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0129,
+       -0.0238,
+       1.3493
+      ]
+     },
+     "Teeth lower L2 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0129,
+       -0.0238,
+       1.3453
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0129,
+       -0.0238,
+       1.3493
+      ]
+     },
+     "Teeth lower R1": {
+      "deform": false,
+      "head": [
+       -0.0087,
+       -0.0305,
+       1.3445
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0087,
+       -0.0305,
+       1.3485
+      ]
+     },
+     "Teeth lower R1 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       -0.0087,
+       -0.0305,
+       1.3445
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0087,
+       -0.0305,
+       1.3485
+      ]
+     },
+     "Teeth lower R2": {
+      "deform": false,
+      "head": [
+       -0.0128,
+       -0.0238,
+       1.3453
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0128,
+       -0.0238,
+       1.3493
+      ]
+     },
+     "Teeth lower R2 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       -0.0128,
+       -0.0238,
+       1.3453
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0128,
+       -0.0238,
+       1.3493
+      ]
+     },
+     "Teeth upper C": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.0374,
+       1.3505
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0,
+       -0.0374,
+       1.3545
+      ]
+     },
+     "Teeth upper C (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0,
+       -0.0374,
+       1.3505
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0,
+       -0.0374,
+       1.3545
+      ]
+     },
+     "Teeth upper L1": {
+      "deform": false,
+      "head": [
+       0.0093,
+       -0.033,
+       1.3514
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0093,
+       -0.033,
+       1.3554
+      ]
+     },
+     "Teeth upper L1 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0093,
+       -0.033,
+       1.3514
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0093,
+       -0.033,
+       1.3554
+      ]
+     },
+     "Teeth upper L2": {
+      "deform": false,
+      "head": [
+       0.0134,
+       -0.0249,
+       1.3521
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0134,
+       -0.0249,
+       1.3561
+      ]
+     },
+     "Teeth upper L2 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0134,
+       -0.0249,
+       1.3521
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0134,
+       -0.0249,
+       1.3561
+      ]
+     },
+     "Teeth upper R1": {
+      "deform": false,
+      "head": [
+       -0.0093,
+       -0.033,
+       1.3514
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0093,
+       -0.033,
+       1.3554
+      ]
+     },
+     "Teeth upper R1 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       -0.0093,
+       -0.033,
+       1.3514
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0093,
+       -0.033,
+       1.3554
+      ]
+     },
+     "Teeth upper R2": {
+      "deform": false,
+      "head": [
+       -0.0133,
+       -0.0249,
+       1.3521
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0133,
+       -0.0249,
+       1.3561
+      ]
+     },
+     "Teeth upper R2 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       -0.0133,
+       -0.0249,
+       1.3521
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0133,
+       -0.0249,
+       1.3561
       ]
      },
      "Thumb0_L": {
@@ -5304,7 +5594,7 @@
       ]
      },
      "cf_J_MouthCavity": {
-      "deform": true,
+      "deform": false,
       "head": [
        0.0,
        -0.0159,
@@ -14391,7 +14681,7 @@
      }
     },
     "drivers": 89,
-    "pose_constraints": 42
+    "pose_constraints": 52
    },
    "constraints": 0,
    "hidden": {
@@ -14529,7 +14819,7 @@
      ],
      [
       "DEF",
-      122
+      132
      ],
      [
       "Deform bones",
@@ -14549,7 +14839,7 @@
      ],
      [
       "Face (MCH)",
-      25
+      35
      ],
      [
       "Fingers",
@@ -14636,7 +14926,7 @@
       10
      ]
     ],
-    "bone_count": 1282,
+    "bone_count": 1302,
     "bones": {
      "Breasts handle": {
       "deform": false,
@@ -26958,6 +27248,286 @@
        1.0546
       ]
      },
+     "Teeth lower C": {
+      "deform": true,
+      "head": [
+       0.0,
+       -0.0348,
+       1.347
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0,
+       -0.0348,
+       1.351
+      ]
+     },
+     "Teeth lower C (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0,
+       -0.0348,
+       1.347
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0,
+       -0.0348,
+       1.351
+      ]
+     },
+     "Teeth lower L1": {
+      "deform": true,
+      "head": [
+       0.0087,
+       -0.0305,
+       1.3468
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0087,
+       -0.0305,
+       1.3508
+      ]
+     },
+     "Teeth lower L1 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0087,
+       -0.0305,
+       1.3468
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0087,
+       -0.0305,
+       1.3508
+      ]
+     },
+     "Teeth lower L2": {
+      "deform": true,
+      "head": [
+       0.0129,
+       -0.0238,
+       1.3476
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0129,
+       -0.0238,
+       1.3516
+      ]
+     },
+     "Teeth lower L2 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0129,
+       -0.0238,
+       1.3476
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0129,
+       -0.0238,
+       1.3516
+      ]
+     },
+     "Teeth lower R1": {
+      "deform": true,
+      "head": [
+       -0.0087,
+       -0.0305,
+       1.3468
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0087,
+       -0.0305,
+       1.3508
+      ]
+     },
+     "Teeth lower R1 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       -0.0087,
+       -0.0305,
+       1.3468
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0087,
+       -0.0305,
+       1.3508
+      ]
+     },
+     "Teeth lower R2": {
+      "deform": true,
+      "head": [
+       -0.0128,
+       -0.0238,
+       1.3476
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0128,
+       -0.0238,
+       1.3516
+      ]
+     },
+     "Teeth lower R2 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       -0.0128,
+       -0.0238,
+       1.3476
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0128,
+       -0.0238,
+       1.3516
+      ]
+     },
+     "Teeth upper C": {
+      "deform": true,
+      "head": [
+       0.0,
+       -0.0374,
+       1.3528
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0,
+       -0.0374,
+       1.3568
+      ]
+     },
+     "Teeth upper C (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0,
+       -0.0374,
+       1.3528
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0,
+       -0.0374,
+       1.3568
+      ]
+     },
+     "Teeth upper L1": {
+      "deform": true,
+      "head": [
+       0.0093,
+       -0.033,
+       1.3537
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0093,
+       -0.033,
+       1.3577
+      ]
+     },
+     "Teeth upper L1 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0093,
+       -0.033,
+       1.3537
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0093,
+       -0.033,
+       1.3577
+      ]
+     },
+     "Teeth upper L2": {
+      "deform": true,
+      "head": [
+       0.0134,
+       -0.0249,
+       1.3544
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0134,
+       -0.0249,
+       1.3584
+      ]
+     },
+     "Teeth upper L2 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       0.0134,
+       -0.0249,
+       1.3544
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       0.0134,
+       -0.0249,
+       1.3584
+      ]
+     },
+     "Teeth upper R1": {
+      "deform": true,
+      "head": [
+       -0.0093,
+       -0.033,
+       1.3537
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0093,
+       -0.033,
+       1.3577
+      ]
+     },
+     "Teeth upper R1 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       -0.0093,
+       -0.033,
+       1.3537
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0093,
+       -0.033,
+       1.3577
+      ]
+     },
+     "Teeth upper R2": {
+      "deform": true,
+      "head": [
+       -0.0133,
+       -0.0249,
+       1.3544
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0133,
+       -0.0249,
+       1.3584
+      ]
+     },
+     "Teeth upper R2 (cf_J_MouthCavity)": {
+      "deform": true,
+      "head": [
+       -0.0133,
+       -0.0249,
+       1.3544
+      ],
+      "parent": "cf_J_MouthCavity",
+      "tail": [
+       -0.0133,
+       -0.0249,
+       1.3584
+      ]
+     },
      "Thumb0_L": {
       "deform": false,
       "head": [
@@ -32588,7 +33158,7 @@
      }
     },
     "drivers": 495,
-    "pose_constraints": 668
+    "pose_constraints": 678
    },
    "constraints": 0,
    "hidden": {
@@ -36737,6 +37307,296 @@
     "uv_maps": [],
     "vertex_groups": 0,
     "vertices": 32
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth lower C": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    -0.0348,
+    1.3447
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth lower L1": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0087,
+    -0.0305,
+    1.3445
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth lower L2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0129,
+    -0.0238,
+    1.3453
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth lower R1": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    -0.0087,
+    -0.0305,
+    1.3445
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth lower R2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    -0.0128,
+    -0.0238,
+    1.3453
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth upper C": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    -0.0374,
+    1.3505
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth upper L1": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0093,
+    -0.033,
+    1.3514
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth upper L2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0134,
+    -0.0249,
+    1.3521
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth upper R1": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    -0.0093,
+    -0.033,
+    1.3514
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-RIG-Armature {character}_Teeth upper R2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    -0.0133,
+    -0.0249,
+    1.3521
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
    },
    "modifiers": [],
    "parent": null,

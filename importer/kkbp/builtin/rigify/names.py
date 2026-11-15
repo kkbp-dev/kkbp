@@ -252,7 +252,7 @@ def skirt_bone(palm, primary, secondary=0):
     return f"{prefix}_{primary:02d}_{secondary:02d}"
 
 
-# --- Teeth bones (issue #42): the controls the `teeth_bones` option adds, by row and place ----
+# --- Teeth bones (issue #42): the controls of the teeth, by row and place ----
 TEETH_ROWS = ("upper", "lower")
 # From the row's left end to its right: the ends, the middle, and halfway between.
 TEETH_PLACES = ("L2", "L1", "C", "R1", "R2")

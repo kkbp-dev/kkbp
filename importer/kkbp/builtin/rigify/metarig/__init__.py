@@ -34,7 +34,7 @@ def build_metarig(build):
         torso.head_and_hips(build)
         limbs.limbs(build)
         accessories.skirt(build)
-        teeth_plan = teeth.add_bones(build) if build.teeth_bones else None
+        teeth_plan = teeth.add_bones(build)
     types.rigify_types(build)
     teeth.rig(build, teeth_plan)
     lists = bone_lists.bone_lists(build, found)

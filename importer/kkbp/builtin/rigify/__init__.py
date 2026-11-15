@@ -32,12 +32,7 @@ CUSTOM_COLLECTION = "Custom"
 JUNK = "Junk {name}"  # what the Bone Widgets collection becomes: widgets and the metarig, hidden
 
 
-TEETH_BONES = Option("teeth_bones", bool, False, "Teeth bones",
-                     description="Gives the Rigify rig five controls for each row of teeth, and moves the teeth's "
-                                 "weights onto new bones under the mouth bones. Does nothing without Rigify")
-
-
-@hook(name="Rigify", switch=SWITCH, options=[TEETH_BONES])
+@hook(name="Rigify", switch=SWITCH)
 def rigify(ctx):
     ch = ctx.character
     if compat.enable_rigify():
@@ -50,7 +45,7 @@ def rigify(ctx):
     # The legacy scripts count and re-aim bones, so the joint corrections' helper bones come off
     # first and go back on the generated rig, where the deforming bones are (ADR 0038).
     joint_corrections.remove(metarig)
-    build = RigBuild(ctx, metarig, kk_extras=kk, teeth_bones=ctx.options.teeth_bones)
+    build = RigBuild(ctx, metarig, kk_extras=kk)
     prepare.run(ctx)
     build_metarig(build)
     _add_custom_collection(metarig)

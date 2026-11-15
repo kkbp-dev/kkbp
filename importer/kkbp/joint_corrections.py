@@ -36,13 +36,8 @@ from mathutils import Matrix, Quaternion, Vector
 
 from .bundle import model
 from .editing import editing
-from .pipeline.options import Option
 from .profiles import corrections as rules_mod
 from .profiles import gamemath as gm
-
-OPTION = Option("joint_corrections", bool, True, "Joint corrections",
-                description="Moves the elbow, knee, shoulder, hip and other correction bones with the limbs, "
-                            "as the game does")
 
 COLLECTION = "Joint corrections (MCH)"
 CONSTRAINT = "Joint correction"
@@ -137,8 +132,6 @@ class GameSkeleton:
 
 def add_joint_corrections(ctx):
     """The game's joint corrections, from the Game Profile, on the armature (see the module's notes)."""
-    if not ctx.options.joint_corrections:
-        return
     armature, skeleton = ctx.character.armature, ctx.bundle.skeleton
     game = GameSkeleton(skeleton)
     rules = ctx.profile.corrections

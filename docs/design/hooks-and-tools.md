@@ -14,7 +14,7 @@ The built-in Hooks are modules in `importer/kkbp/builtin/`. They run in the orde
 | 4 | Outlines | `use_outlines` (bool) | on | `outlines.blend` |
 | 5 | Face cards | `use_face_cards` (bool) | on | `face_cards.blend` |
 | 6 | SFW | `sfw_mode` (bool) | off | none |
-| 7 | Rigify | `use_rigify` (bool); `teeth_bones` (bool, off): five controls for each row of teeth | on | `rigify.blend` |
+| 7 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
 | 8 | Separate Eyes | `separate_eyes` (bool) | off | none |
 | 9 | Delete default scene | `delete_default_scene` (bool) | on | none |
 
@@ -60,7 +60,7 @@ Turns the armature into a hidden metarig (still `ch.armature`), generates a Rigi
 - **Joint corrections.** The Core Import's joint corrections are put back on the generated rig ([ADR 0038](../adr/0038-joint-corrections-copy-the-games-rules.md)).
 - **Tongue.** The single tongue is rigged on Body ([ADR 0020](../adr/0020-one-tongue-with-mouth-keys-and-bones.md), [ADR 0039](../adr/0039-the-tongue-is-part-of-body.md)).
 - **Skirt.** Found by the game's indexed names, `cf_d_sk_top` and `cf_d_sk_00_00` to `cf_j_sk_07_05` (`names.skirt_bone`): all 48, or there is no skirt rig.
-- **Teeth bones** (`teeth_bones`, `metarig/teeth.py`, issue 42). The faces with the `teeth` Material Role are split into an upper and a lower row by connected piece. Each row gets the controls `Teeth <row> L2`, `L1`, `C`, `R1`, `R2` (ends, halfway, middle) in the `Face (MCH)` collection. Under each mouth bone the teeth are weighted to, a control has a hidden bone that copies it and takes those weights, so the teeth follow the mouth bones exactly as without the option.
+- **Teeth bones** (`metarig/teeth.py`, issues 42 and 99; every rig gets them). The faces with the `teeth` Material Role are split into an upper and a lower row by connected piece. Each row gets the controls `Teeth <row> L2`, `L1`, `C`, `R1`, `R2` (ends, halfway, middle) in the `Face (MCH)` collection. Under each mouth bone the teeth are weighted to, a control has a hidden bone that copies it and takes those weights, so the teeth follow the mouth bones exactly as they would without the controls.
 - **Widgets.** Each Character gets its own widgets; the fixed widget meshes come from `rigify.blend`. The Bone Widgets collection becomes a hidden Junk collection that also holds the metarig.
 - **Bone collections.** The rig's collections are built from the Core's (D7). Hair and accessory bones of later Outfits go in their own collections, from the Outfit tag `join_armatures` gives each bone (`kkbp_outfit`, D29). An empty, hidden `Custom` collection sits to the right of NSFW in the Rig Layers panel, for bones the user adds (issue 7).
 - **Emotion grid** (`finish/emotions.py`). Mouth, eye and custom key controllers and their drivers, built from the Expression Names present. A key Body lacks is left out and named in the log, and the rest of the grid is made (issue 64). The mouth circle's first keys also go by `Mouth A`, `I`, `U`, `E`, `O`; where Body lacks the second keys of A, I and O, `Mouth Smiling`, `Mouth Hate, Closed` and `Mouth Serious` stand in (for SVS); a first key with no second stays at full instead of fading out.

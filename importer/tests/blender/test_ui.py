@@ -153,8 +153,7 @@ def test_each_option_is_one_line_beside_its_owner():
     layout = _Layout()
     panel = submodule("ui.panel").KKBP_PT_import_options
     panel.draw(type("Panel", (), {"layout": layout})(), bpy.context)
-    assert layout.lines == [["Armature", ("joint_corrections", "Joint corrections")], ["One", ("one", "Use one")],
-                            ["Two", ("mode", "")], ["", ("amount", "Amount")]]
+    assert layout.lines == [["One", ("one", "Use one")], ["Two", ("mode", "")], ["", ("amount", "Amount")]]
 
 
 def test_scene_options_follow_the_declarations():
@@ -171,7 +170,7 @@ def test_scene_options_follow_the_declarations():
     group = bpy.context.scene.kkbp_options
     assert group.tint == pytest.approx(0.75)  # kept across the rebuild
     assert group.shader == "off"
-    assert [owner for owner, _ in ui_options.owners()] == ["Armature", "Tinter", "Other"]
+    assert [owner for owner, _ in ui_options.owners()] == ["Tinter", "Other"]
 
 
 def test_the_operator_passes_the_scene_options(build):
@@ -189,7 +188,7 @@ def test_saved_defaults_apply_to_scripted_imports(build, clean):
     ui_options.rebuild()
     bpy.context.scene.kkbp_options.tint = 0.9
     assert bpy.ops.kkbp.save_option_defaults() == {"FINISHED"}
-    assert clean.option_defaults() == {"tint": pytest.approx(0.9), "joint_corrections": True}
+    assert clean.option_defaults() == {"tint": pytest.approx(0.9)}
     bpy.ops.wm.read_homefile(use_empty=True)
     assert bpy.context.scene.kkbp_options.tint == pytest.approx(0.9)  # a new scene starts from them
     submodule("api").import_bundle(build())

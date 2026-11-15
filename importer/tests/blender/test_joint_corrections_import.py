@@ -117,9 +117,3 @@ def test_bent_limbs_move_the_correction_bones_by_the_rules(golden_import, game, 
     drivers = armature.animation_data.drivers
     assert all(d.driver.is_valid and d.driver.is_simple_expression for d in drivers
                if d.data_path.startswith('pose.bones["JC-'))
-
-
-def test_the_option_off_leaves_no_corrections(golden_import):
-    armature = golden_import("kk", options={"joint_corrections": False})[1].armature
-    assert jc.STASH not in armature
-    assert not [b for b in armature.data.bones if b.name.startswith(jc.PREFIX)]

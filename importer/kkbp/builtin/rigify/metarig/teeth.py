@@ -1,5 +1,4 @@
-"""Teeth bones (issue #42): five controls along each row of teeth, when the Hook's `teeth_bones`
-option is on.
+"""Teeth bones (issues #42 and #99): five controls along each row of teeth, on every Rigify rig.
 
 The teeth are the faces with the `teeth` Material Role. Their two rows are told apart by which
 piece of the mesh a vertex is in, not by height, because the rows overlap in height. Each row gets a
@@ -57,7 +56,7 @@ def add_bones(build) -> Plan | None:
     for row, vertices in zip(names.TEETH_ROWS, _rows(build)):
         vertices = [v for v in vertices if v.weights]
         if len(vertices) < MIN_VERTICES or not _lay_along(vertices):
-            build.log.warning(f"Found no {row} row of teeth weighted to bones, so it gets no teeth bones")
+            build.log.info(f"Found no {row} row of teeth weighted to bones, so it gets no teeth bones")
             continue
         totals = {}
         for vertex in vertices:
