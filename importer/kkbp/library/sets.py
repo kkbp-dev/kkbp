@@ -58,8 +58,10 @@ SETS: Mapping[str, TemplateSet] = MappingProxyType({s.name: s for s in (
         fallback="Transparent",
         defaults={"force_visibility": 2},
         rows=(
-            Row("KK Tears", role="tears", render_method="BLENDED"),
-            Row("Gag", role="gag_eyes", render_method="BLENDED"),
+            # The tears and gag eyes cast no shadow: their shaders draw nothing for a shadow ray, which
+            # counts only with transparent shadows on (issue 86).
+            Row("KK Tears", role="tears", **_BLENDED),
+            Row("Gag", role="gag_eyes", **_BLENDED),
             Row("KK Eye", role="eye_l", **_BLENDED),
             Row("KK Eye", role="eye_r", **_BLENDED),
             Row("KK Light Dark Face", role="face", params={"force_visibility": 0},
@@ -79,7 +81,7 @@ SETS: Mapping[str, TemplateSet] = MappingProxyType({s.name: s for s in (
         replace={"KK Light Dark": "SVS Light Dark", "KK Light Dark Face": "SVS Light Dark Face",
                  "KK Eye": "SVS Light Dark"},
         rows=(
-            Row("Gag", role="gag_eyes", render_method="DITHERED"),
+            Row("Gag", role="gag_eyes", render_method="DITHERED", transparent_shadow=True),
             Row("SVS Light Dark", role="eye_l", **_BLENDED),
             Row("SVS Light Dark", role="eye_r", **_BLENDED),
             Row("SVS Light Dark", role="eyelash", **_BLENDED),

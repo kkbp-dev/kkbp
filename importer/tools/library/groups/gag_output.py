@@ -27,7 +27,7 @@ def build(lib):
         'location': (-300.0, -100.0),
     })
     t.node('ShaderNodeMixShader', 'Mix Shader', props={
-        'location': (0.0, 0.0),
+        'location': (200.0, 0.0),
     })
     t.node('ShaderNodeMath', 'Math', inputs={'Value_001': 0.5}, props={
         'location': (-600.0, -250.0),
@@ -39,11 +39,29 @@ def build(lib):
         'operation': 'MULTIPLY',
     })
 
+    # Nothing for a shadow ray: the gag eyes are flat pictures in front of the face and cast no
+    # shadow on it (issue 86). The material needs its transparent shadows on for this to count.
+    t.node('ShaderNodeLightPath', 'Light Path', props={
+        'location': (-600.0, -450.0),
+    })
+    t.node('ShaderNodeMath', 'Math.002', inputs={'Value': 1.0}, props={
+        'location': (-300.0, -450.0),
+        'label': 'Not a shadow ray',
+        'operation': 'SUBTRACT',
+    })
+    t.node('ShaderNodeMath', 'Math.003', props={
+        'location': (-50.0, -250.0),
+        'operation': 'MULTIPLY',
+    })
+
     t.link('Group Input', 'Color', 'Emission', 'Color')
     t.link('Group Input', 'Expression', 'Math', 'Value')
     t.link('Group Input', 'Alpha', 'Math.001', 'Value')
     t.link('Math', 'Value', 'Math.001', 'Value_001')
-    t.link('Math.001', 'Value', 'Mix Shader', 'Fac')
+    t.link('Light Path', 'Is Shadow Ray', 'Math.002', 'Value_001')
+    t.link('Math.001', 'Value', 'Math.003', 'Value')
+    t.link('Math.002', 'Value', 'Math.003', 'Value_001')
+    t.link('Math.003', 'Value', 'Mix Shader', 'Fac')
     t.link('Transparent BSDF', 'BSDF', 'Mix Shader', 'Shader')
     t.link('Emission', 'Emission', 'Mix Shader', 'Shader_001')
     t.link('Mix Shader', 'Shader', 'Group Output', 'Shader')

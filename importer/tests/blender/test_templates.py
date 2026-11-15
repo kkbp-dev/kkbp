@@ -185,3 +185,64 @@ def test_unknown_parameters_and_foreign_materials_are_errors(build):
         templates.param(_apply(ch, bundle, "cf_m_body"), "colour")
     with pytest.raises(templates.TemplateError, match="wasn't made from a KKBP Material Template"):
         templates.param(bpy.data.materials.new("mine"), "hidden")
+
+
+def _floor_under_a_quad(material, path):
+    """Renders the middle of a floor that has a quad with `material` between it and the sun, seen from
+    under the quad. Returns the pixel's red value: 0 in the quad's shadow."""
+    compat = submodule("compat")
+    scene = bpy.context.scene
+    scene.render.resolution_x = scene.render.resolution_y = 16
+    scene.view_settings.view_transform = "Standard"
+
+    def plane(name, size, z, material):
+        mesh = bpy.data.meshes.new(name)
+        h = size / 2
+        mesh.from_pydata([(-h, -h, z), (h, -h, z), (h, h, z), (-h, h, z)], [], [(0, 1, 2, 3)])
+        mesh.materials.append(material)
+        obj = bpy.data.objects.new(name, mesh)
+        scene.collection.objects.link(obj)
+
+    plane("floor", 10, 0, bpy.data.materials.new("floor"))
+    plane("quad", 2, 1, material)
+    sun = bpy.data.objects.new("sun", bpy.data.lights.new("sun", "SUN"))
+    sun.location.z = 5
+    camera = bpy.data.objects.new("camera", bpy.data.cameras.new("camera"))
+    camera.location.z, camera.data.type, camera.data.ortho_scale = 0.5, "ORTHO", 1
+    for obj in (sun, camera):
+        scene.collection.objects.link(obj)
+    scene.camera = camera
+    compat.render_still(scene, path)
+    image = bpy.data.images.load(str(path))
+    middle = (8 * 16 + 8) * 4
+    return image.pixels[middle]
+
+
+def test_gag_eyes_cast_no_shadow(build, tmp_path):
+    bundle, ch = _open(build)
+    gag = _apply(ch, bundle, "cf_m_gageye_00")
+    assert gag.use_transparent_shadow
+    output = gag.node_tree.nodes["gag.output"]
+    for name in ("Expression", "Alpha"):  # drawn in full, as when a gag expression shows
+        for link in list(output.inputs[name].links):
+            gag.node_tree.links.remove(link)
+        output.inputs[name].default_value = 1.0
+    assert _floor_under_a_quad(gag, tmp_path / "lit.png") > 0.5
+    gag.use_transparent_shadow = False  # the same picture does shade the floor without it
+    assert _floor_under_a_quad(gag, tmp_path / "shaded.png") < 0.1
+
+
+def test_tears_cast_no_shadow(build, tmp_path):
+    bundle, ch = _open(build)
+    tears = _apply(ch, bundle, "c_m_namida")
+    assert tears[templates.TEMPLATE] == "KK Tears" and tears.use_transparent_shadow
+    assert _floor_under_a_quad(tears, tmp_path / "lit.png") > 0.5
+    tears.use_transparent_shadow = False
+    assert _floor_under_a_quad(tears, tmp_path / "shaded.png") < 0.1
+
+
+def test_svs_tears_and_gag_eyes_cast_no_shadow_either(build):
+    bundle, ch = _open(build, "SVS")
+    gag = _apply(ch, bundle, "cf_m_gageye_00")
+    assert gag.surface_render_method == "DITHERED" and gag.use_transparent_shadow
+    assert _apply(ch, bundle, "c_m_namida").use_transparent_shadow

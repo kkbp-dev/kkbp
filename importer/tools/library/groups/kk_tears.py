@@ -151,6 +151,17 @@ def build(lib):
         'label': 'hidden.mix',
     })
 
+    # Nothing for a shadow ray either: the tears cast no shadow on the face (issue 86). The
+    # material needs its transparent shadows on for this to count.
+    t.node('ShaderNodeLightPath', 'Light Path', props={
+        'location': (1132.5598, -300.0),
+    })
+    t.node('ShaderNodeMath', 'hidden.or_shadow', props={
+        'location': (1332.5598, -300.0),
+        'label': 'hidden.or_shadow',
+        'operation': 'MAXIMUM',
+    })
+
     t.link('TearHDRI', 'Color', 'Bright/Contrast', 'Color')
     t.link('Texture Coordinate', 'Reflection', 'TearHDRI', 'Vector')
     t.link('Texture Coordinate', 'Normal', 'Separate XYZ', 'Vector')
@@ -186,6 +197,8 @@ def build(lib):
     t.link('Group Input', 'Main', 'Mix.004', 'A_Color')
     t.link('Mix Shader.003', 'Shader', 'hidden.mix', 'Shader')
     t.link('hidden.transparent', 'BSDF', 'hidden.mix', 'Shader_001')
-    t.link('Group Input', 'Hidden', 'hidden.mix', 'Fac')
+    t.link('Group Input', 'Hidden', 'hidden.or_shadow', 'Value')
+    t.link('Light Path', 'Is Shadow Ray', 'hidden.or_shadow', 'Value_001')
+    t.link('hidden.or_shadow', 'Value', 'hidden.mix', 'Fac')
     t.link('hidden.mix', 'Shader', 'Group Output', 'Shader')
     return t
