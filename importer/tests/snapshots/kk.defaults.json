@@ -3,24 +3,6 @@
   "children": {
    "{character}": {
     "children": {
-     "Face cards {character}": {
-      "children": {
-       "Facecard bone shapes": {
-        "children": {},
-        "objects": [
-         "Facecard-bone-center",
-         "Facecard-bone-clip",
-         "Facecard-bone-eye",
-         "Facecard-bone-pupil"
-        ]
-       }
-      },
-      "objects": [
-       "Face card eyes",
-       "Face card mouth",
-       "Face card rig"
-      ]
-     },
      "Junk {character}": {
       "children": {
        "WGTS_Armature {character}": {
@@ -490,17 +472,15 @@
  },
  "counts": {
   "actions": 0,
-  "armatures": 4,
-  "images": 88,
-  "materials": 55,
-  "meshes": 399,
-  "node_groups": 18,
-  "objects": 446
+  "armatures": 3,
+  "images": 86,
+  "materials": 50,
+  "meshes": 393,
+  "node_groups": 14,
+  "objects": 439
  },
  "images": [
-  "Eye_White_Alpha.png",
   "KK OutlineMask.png",
-  "MouthAtlas.webp",
   "Template orbita_1k.exr",
   "cf_m_body alpha_mask",
   "cf_m_body detail_normal",
@@ -585,42 +565,6 @@
   "cf_m_top_jacket06 normal"
  ],
  "materials": {
-  "Eyeline card": {
-   "id": null,
-   "images": [
-    "cf_m_eyeline_00_up main.light",
-    "cf_m_eyeline_down main.light",
-    "cf_m_eyeline_kage main.light"
-   ],
-   "node_groups": [
-    ".eyeline sticker"
-   ],
-   "roles": [],
-   "surface_render_method": "DITHERED"
-  },
-  "Eyewhite card": {
-   "id": null,
-   "images": [
-    "Eye_White_Alpha.png",
-    "cf_m_sirome_00 main.light"
-   ],
-   "node_groups": [
-    ".eyewhite sticker"
-   ],
-   "roles": [],
-   "surface_render_method": "DITHERED"
-  },
-  "Gag Mouth": {
-   "id": null,
-   "images": [
-    "MouthAtlas.webp"
-   ],
-   "node_groups": [
-    "Gag Mouth Atlas"
-   ],
-   "roles": [],
-   "surface_render_method": "BLENDED"
-  },
   "Outline Hair Outfit 00 {character}": {
    "id": null,
    "images": [
@@ -942,28 +886,6 @@
    "roles": [],
    "surface_render_method": "DITHERED",
    "template": "KK Light Dark"
-  },
-  "Pupil L card": {
-   "id": null,
-   "images": [
-    "cf_m_hitomi_00 main.light"
-   ],
-   "node_groups": [
-    ".pupil sticker"
-   ],
-   "roles": [],
-   "surface_render_method": "DITHERED"
-  },
-  "Pupil R card": {
-   "id": null,
-   "images": [
-    "cf_m_hitomi_00_2 main.light"
-   ],
-   "node_groups": [
-    ".pupil sticker"
-   ],
-   "roles": [],
-   "surface_render_method": "DITHERED"
   },
   "cf_m_body": {
    "id": "cf_m_body",
@@ -1925,388 +1847,6 @@
     ],
     "vertex_groups": 0,
     "vertices": 219
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "Face card eyes": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.0009,
-    0.0019
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 864,
-    "faces": 384,
-    "material_slots": [
-     "Eyeline card",
-     "Eyewhite card",
-     "Pupil R card",
-     "Pupil L card"
-    ],
-    "shape_key_drivers": 0,
-    "shape_keys": [
-     "Basis",
-     "Key 1"
-    ],
-    "uv_maps": [
-     "UVMap"
-    ],
-    "vertex_groups": 4,
-    "vertices": 486
-   },
-   "modifiers": [
-    {
-     "name": "Armature",
-     "type": "ARMATURE"
-    },
-    {
-     "name": "Subdivision",
-     "type": "SUBSURF"
-    }
-   ],
-   "parent": "Face card rig",
-   "roles": [
-    "face_card"
-   ],
-   "type": "MESH"
-  },
-  "Face card mouth": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    -0.0021,
-    -0.1127,
-    1.3426
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 144,
-    "faces": 64,
-    "material_slots": [
-     "Gag Mouth"
-    ],
-    "shape_key_drivers": 0,
-    "shape_keys": [
-     "Basis",
-     "Key 1"
-    ],
-    "uv_maps": [
-     "UVMap"
-    ],
-    "vertex_groups": 0,
-    "vertices": 81
-   },
-   "modifiers": [
-    {
-     "name": "Subdivision",
-     "type": "SUBSURF"
-    }
-   ],
-   "parent": "Face card rig",
-   "roles": [
-    "face_card"
-   ],
-   "type": "MESH"
-  },
-  "Face card rig": {
-   "armature": {
-    "bone_collections": [
-     [
-      "Pupil Clip",
-      4
-     ]
-    ],
-    "bone_count": 10,
-    "bones": {
-     "Eye.L": {
-      "deform": true,
-      "head": [
-       0.0428,
-       0.0,
-       0.0
-      ],
-      "parent": "Eyes_Root",
-      "tail": [
-       0.0428,
-       -0.015,
-       0.0
-      ]
-     },
-     "Eye.R": {
-      "deform": true,
-      "head": [
-       -0.0428,
-       0.0,
-       0.0
-      ],
-      "parent": "Eyes_Root",
-      "tail": [
-       -0.0428,
-       -0.015,
-       0.0
-      ]
-     },
-     "Eyes_Root": {
-      "deform": true,
-      "head": [
-       0.0,
-       0.0,
-       0.0
-      ],
-      "parent": null,
-      "tail": [
-       0.0,
-       0.0,
-       0.03
-      ]
-     },
-     "Mouth": {
-      "deform": true,
-      "head": [
-       0.0,
-       0.0,
-       -0.0507
-      ],
-      "parent": "Eyes_Root",
-      "tail": [
-       0.0,
-       0.0,
-       -0.0361
-      ]
-     },
-     "Pupil.L": {
-      "deform": true,
-      "head": [
-       0.0402,
-       -0.0004,
-       0.002
-      ],
-      "parent": "Eye.L",
-      "tail": [
-       0.0402,
-       -0.0104,
-       0.002
-      ]
-     },
-     "Pupil.R": {
-      "deform": true,
-      "head": [
-       -0.0401,
-       -0.0004,
-       0.002
-      ],
-      "parent": "Eye.R",
-      "tail": [
-       -0.0401,
-       -0.0104,
-       0.002
-      ]
-     },
-     "PupilClip_Bottom.L": {
-      "deform": false,
-      "head": [
-       0.0393,
-       -0.0024,
-       -0.0194
-      ],
-      "parent": "Pupil.L",
-      "tail": [
-       0.0393,
-       -0.0024,
-       -0.0154
-      ]
-     },
-     "PupilClip_Bottom.R": {
-      "deform": false,
-      "head": [
-       -0.0393,
-       -0.0024,
-       -0.0194
-      ],
-      "parent": "Pupil.R",
-      "tail": [
-       -0.0393,
-       -0.0024,
-       -0.0154
-      ]
-     },
-     "PupilClip_Top.L": {
-      "deform": false,
-      "head": [
-       0.041,
-       -0.0024,
-       0.0234
-      ],
-      "parent": "Pupil.L",
-      "tail": [
-       0.041,
-       -0.0024,
-       0.0274
-      ]
-     },
-     "PupilClip_Top.R": {
-      "deform": false,
-      "head": [
-       -0.0409,
-       -0.0024,
-       0.0234
-      ],
-      "parent": "Pupil.R",
-      "tail": [
-       -0.0409,
-       -0.0024,
-       0.0274
-      ]
-     }
-    },
-    "drivers": 0,
-    "pose_constraints": 8
-   },
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    0.0,
-    0.0
-   ],
-   "modifiers": [],
-   "parent": "Rig {character}",
-   "roles": [
-    "face_card"
-   ],
-   "type": "ARMATURE"
-  },
-  "Facecard-bone-center": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.1712,
-    1.4096
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 27,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 30
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "Facecard-bone-clip": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    0.0045,
-    1.3393
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 20,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 20
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "Facecard-bone-eye": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    0.0074,
-    0.9554
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 12,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 8
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "Facecard-bone-pupil": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    -0.0188,
-    -0.0081,
-    1.3451
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 32,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 32
    },
    "modifiers": [],
    "parent": null,
@@ -46862,7 +46402,7 @@
   "hooks": {
    "Convert shaders": "off",
    "Delete default scene": "ran",
-   "Face cards": "ran",
+   "Face cards": "off",
    "Fix body seams": "ran",
    "Outlines": "ran",
    "Rigify": "ran",

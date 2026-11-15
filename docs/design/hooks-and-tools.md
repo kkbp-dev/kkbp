@@ -12,7 +12,7 @@ The built-in Hooks are modules in `importer/kkbp/builtin/`. They run in the orde
 | 2 | Convert shaders | `convert_shaders` (choice): `off` "Eevee", `eevee_mod`, `cycles`, `cycles_classic`, `principled` | `off` | none: the variants are in `library.blend` |
 | 3 | Separate meshes | `separation_type` (choice): `off` "One object per outfit", `by_material` "Separate all clothing" | `off` | none |
 | 4 | Outlines | `use_outlines` (bool) | on | `outlines.blend` |
-| 5 | Face cards | `use_face_cards` (bool) | on | `face_cards.blend` |
+| 5 | Face cards | `use_face_cards` (bool) | off | `face_cards.blend` |
 | 6 | SFW | `sfw_mode` (bool) | off | none |
 | 7 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
 | 8 | Separate Eyes | `separate_eyes` (bool) | off | none |
