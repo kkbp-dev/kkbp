@@ -46,9 +46,9 @@ It builds all three adapters and writes `exporters/dist/kkbp-exporters-<version>
 
 ## Exporting in the game
 
-In the character maker, KK and KKS show the exporter window from the sidebar toggle "Show KKBP Exporter", and SVS shows and hides it with Ctrl+Tab. The window opens where the legacy KK exporter drew its options, and its option names are the legacy KK exporter's: Export All Outfits, Export Variations, Freeze Current Pose, Freeze Shape Keys and Disable Physics. Disable Physics is the inverse of the manifest's `physics` option.
+In the character maker, KK and KKS show the exporter window from the sidebar toggle "Show KKBP Exporter", and SVS shows and hides it with Ctrl+Tab. Its options are Export All Outfits, Export Variations, Freeze Current Pose, Freeze Shape Keys and Disable Physics. Disable Physics is the inverse of the manifest's `physics` option.
 
-**Export every card in a folder…** opens a folder browser in the window, starting at the folder it last exported (the game's `UserData/chara` at first). **Export them** loads each `.png` directly in that folder into the maker, in name order, and exports it with the window's options, one bundle each, into the usual output folder; it is the legacy KK exporter's "Bulk export all cards in folder". A file the game doesn't load as a character card (an outfit card, a plain picture) is skipped and logged, and the batch goes on. The window shows "Card 3 of 12", and **Stop after this card** ends the batch early. At the end it shows how many exported and how many failed; the BepInEx log names each failure. Each card replaces the Character in the maker, and the last one stays loaded.
+**Export every card in a folder…** opens a folder browser in the window, starting at the folder it last exported (the game's `UserData/chara` at first). **Export them** loads each `.png` directly in that folder into the maker, in name order, and exports it with the window's options, one bundle each, into the usual output folder. A file the game doesn't load as a character card (an outfit card, a plain picture) is skipped and logged, and the batch goes on. The window shows "Card 3 of 12", and **Stop after this card** ends the batch early. At the end it shows how many exported and how many failed; the BepInEx log names each failure. Each card replaces the Character in the maker, and the last one stays loaded.
 
 ## The game launcher
 
@@ -99,7 +99,7 @@ What the adapters' authors learned the hard way. The safety rules for running th
 
 - `ilspycmd` (in `~/.dotnet/tools`) decompiles the games. KK and KKS: `Assembly-CSharp.dll` under `<game>_Data/Managed/`. SVS: its IL2CPP interop assemblies are in `games/Summer Vacation Scramble/BepInEx/SamabakeScramble/interop/`, not `BepInEx/interop/`.
 - .NET string literals are stored as UTF-16, so a plain `grep` on a DLL finds nothing; decode the file as UTF-16LE at both byte alignments.
-- The game assemblies aren't publicized: protected members such as `CustomTextureCreate.matCreate` and `texMain` are read by reflection. The legacy exporters built against publicized copies, so their code doesn't port directly.
+- The game assemblies aren't publicized: protected members such as `CustomTextureCreate.matCreate` and `texMain` are read by reflection.
 
 ### Loading cards
 
@@ -121,4 +121,3 @@ What the adapters' authors learned the hard way. The safety rules for running th
 
 - A game keeps the plugin it loaded at startup: deploy only to a closed game.
 - A running-game check can't be tested with a renamed copy of `sleep` (it refuses to run under another name); doing so launched the real SVS once.
-- The legacy samples can mislead: in the legacy KK sample, `cf_m_body_T3.png` is the rendered material's liquid texture, not a create texture, because the two share one file name. Legacy's shader property lists (`MaterialShaders.cs`) are handwritten and inexact (`tex4uv` typed as a colour).

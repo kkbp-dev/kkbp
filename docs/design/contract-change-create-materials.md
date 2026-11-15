@@ -1,14 +1,14 @@
-# Contract change: KK and KKS create materials
+# KK and KKS create materials in the bundle
 
-Status: **implemented**. Phase 1: the bundle schema, contract-test rules, the Core's material sections and docs. Phase 2: the KK and KKS adapter, KK's create shaders in `shader-properties.json`, and the kk and kks golden samples; the clothes row below was corrected against the game. Written in Phase 5 (D37) because the importer's edit material tool needs data the Export Bundle doesn't carry. Terms are in [CONTEXT.md](../../CONTEXT.md).
+A material's `extensions.kk.create` section: what it holds, which materials carry one, and who reads it. It is in the bundle schema, the contract tests, the Core's material sections, and the KK and KKS adapter, with KK's create shaders in `shader-properties.json`. Terms are in [CONTEXT.md](../../CONTEXT.md).
 
 ## Why
 
 In Koikatsu and Koikatsu Sunshine the game doesn't colour the body, the face, the eyes and most clothes in their rendered material. A separate **create material** (`CustomTextureCreate.matCreate`) composites an uncoloured base texture, colour and pattern masks and the Character's chosen colours into a texture. The rendered material then shows that texture as its `_MainTex`.
 
-The Phase 2 adapters capture only the rendered material's own slots, so the bundle has the composited result but not what it was made from. In the KK golden sample, `cf_m_face_00` and `cf_m_body` have no `_Color`. `cf_m_top_inner01` has neither colours nor pattern masks.
+A rendered material's own slots hold the composited result but not what it was made from. In the KK Golden Sample, `cf_m_face_00` and `cf_m_body` have no `_Color`. `cf_m_top_inner01` has neither colours nor pattern masks.
 
-The importer's edit material tool (D27, D37) rebuilds the game's colouring in Blender so the colours can be changed and baked again. It needs exactly those inputs. The legacy exporter wrote them; see `kkbp_exporter/KKBP_Exporter/PmxBuilder.cs`, `ExportSpecialTextures`, `ExportClothingTextures`, `GetCreateBodyMaterials` and `GetCreateClothesMaterials`.
+The importer's edit material tool (D27, D37) rebuilds the game's colouring in Blender so the colours can be changed and baked again. It needs exactly those inputs.
 
 SVS needs nothing: its shaders carry their creation inputs as ordinary slots (`_Create_main_texture`, `_Create_jm_main_skin_head`), and the importer has no SVS edit templates.
 
@@ -45,7 +45,7 @@ The shader name above is illustrative; the adapter writes the create material's 
 - `create` has the shape of a material's shader data: `shader`, `colors`, `floats`, `vectors` (keyed by Raw Property, encoded as the material's own are) and `textures` (the existing `#/$defs/texture`). It has no `id`, `name`, `role` or `blend_mode`; the material it sits on gives those.
 - **Values:** every colour, float and vector property of the create material's shader, as the adapter already captures a material's.
 - **Textures:** every texture slot the create material holds, by Raw Property, with its Texture Role where the shared table gives one (`_ColorMask` → `color_mask`). In addition, `_MainTex` is `CustomTextureCreate.texMain`, the uncoloured base the game colours, with role `main`. It takes the slot's place if the create material also has one. There are no `light` or `dark` variants and no patterns.
-- **Which materials carry one**, as the legacy exporter matched them:
+- **Which materials carry one**:
 
   | Create material | Material that carries it |
   |---|---|
@@ -55,7 +55,7 @@ The shader name above is illustrative; the adapter writes the create material's 
   | `ctCreateEyeL`, `ctCreateEyeR` | `eye_l`, `eye_r` |
   | `ctCreateClothes[kind, i]`, `ctCreateClothesSub[kind, i]` | the first material slot of each renderer the game gives that texture, in that Outfit's Pass: `rendNormal01`, `rendAlpha01` and `rendAccessory` for `i` = 0, `rendNormal02` for 1, `rendNormal03` for 2, on the main or sub clothes component |
 
-  A material the game doesn't composite carries none. The clothes row follows the game's `ChangeCustomClothes`, which sets each texture on `renderer.material`, the first slot only. Legacy differed: it gave every slot of `GetClothRenderers(component)[i]` the create, gave `rendAccessory` every `i`'s, and left out `rendAlpha01`.
+  A material the game doesn't composite carries none. The clothes row follows the game's `ChangeCustomClothes`, which sets each texture on `renderer.material`, the first slot only.
 - A create whose materials weren't captured, such as the shoes not worn or half-off clothes without `all_variations`, is left out.
 - **Where:** `extensions.kk`. It is data only KK and KKS have ([export-bundle.md](export-bundle.md#shared-core-and-game-extensions)), and it is the first Game-only field, which the rule allows because the edit material tool reads it. KKS writes it under `kk` too; `kks` stays empty.
 - **Schema Version:** stays `1.0`. Changes before the first release don't bump it ([export-bundle.md](export-bundle.md#manifest)).
@@ -100,11 +100,11 @@ The fake adapter emits one, so the Core's tests cover it with the schemas and th
 - The same in the KKS sample. The SVS sample has no `create`.
 - Nothing else in the samples changes beyond new texture files and their numbering.
 
-## What the importer does once it lands (Phase 5, this repository's importer session)
+## What the importer does with it
 
 - `bundle/` reads `create` into the material model, with its textures as ordinary texture records. `tools/gen_contract.py` and the test-bundle builder follow the schema.
 - The edit material tool fills its edit templates from the material's own textures plus its `create`:
-  - the saturated base and rendered main textures;
+  - the base and rendered main textures;
   - the colour and pattern masks and the `_Texture3`…`_Texture7` layers;
-  - the colours, through the legacy saturation (ADR 0025).
+  - the colours ([library-from-code.md](library-from-code.md) has how each template uses them).
 - Bake and link hair follow.

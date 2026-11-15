@@ -1,8 +1,6 @@
 # Exporter Core
 
-How the exporters are structured: one shared Exporter Core and one Game Adapter per game. It replaces the forked `PmxBuilder.cs` files (2,882 lines in KK, 2,396 in SVS) and the duplicated PmxLib. Terms are defined in [CONTEXT.md](../../CONTEXT.md).
-
-Status: agreed design, not yet implemented.
+How the exporters are structured: one shared Exporter Core and one Game Adapter per game. Terms are defined in [CONTEXT.md](../../CONTEXT.md).
 
 ## Split
 
@@ -45,7 +43,7 @@ Status: agreed design, not yet implemented.
 
 ## What the adapters capture
 
-Agreed at the start of Phase 2. Each point applies to both adapters unless it names a Game.
+Each point applies to both adapters unless it names a Game.
 
 - **Passes.** The Body Pass holds the body and head meshes: body, face, eyes, eyebrows, eyelines, nose, teeth, tongue, tears and gag eyes. Each adapter also captures the body's rigged tongue, even when its object is inactive: in KK and KKS `n_tang/o_tang` (`ChaReference.S_TongueB`), which the game shows in place of the head's tongue only at tongue state 1, and in SVS `n_body/o_tang` (`HumanBody.rendTongueBody`; the head's is `o_tango`). It is weighted to the `cf_j_tang_*` chain, has Material Role `tongue`, and has no expressions and no light and dark bake. Its vertices are the head tongue's in the same order, so the importer can copy its weights onto the head tongue and drop it. Each Outfit Pass holds that Outfit's clothes, hair and accessories, as the legacy `Outfit NN` folders did.
 - **Meshes.** One mesh per enabled renderer whose GameObject is active; one primitive per material slot. Extra materials beyond the submesh count re-render the last submesh, as in Unity. Mosaic and male-part stand-ins (`o_mnpa`, `o_dankon`, …), the ChaAlphaMask plugin's `o_Mask` quad in KK and KKS, SVS's hair outline shells (`hair_*_line`, shader `LIF/lif_main_hair_outline`) and hit meshes are never captured. `alternate` meshes, those shown only in a non-default clothing state, are captured only with `all_variations`. Normals and tangents are written at unit length, as glTF requires; one the game gives zero-length or not finite, as some clothes and accessories do, takes the average of the good ones of the vertices it shares a triangle with, or failing that any direction that fits (a tangent perpendicular to the normal).
@@ -64,7 +62,7 @@ Agreed at the start of Phase 2. Each point applies to both adapters unless it na
   - Body Pass: `customTexCtrlBody` on the body, `customTexCtrlFace` on the face, `ctCreateEyeW` on both eye whites, `ctCreateEyeL` and `ctCreateEyeR` on `rendEye[0]` and `[1]`.
   - Outfit Passes, for the clothes worn there: `ctCreateClothes[kind, i]` and `ctCreateClothesSub[kind, i]` as the game's `ChangeCustomClothes` gives them out, `i` = 0 to `rendNormal01`, `rendAlpha01` and `rendAccessory`, 1 to `rendNormal02`, 2 to `rendNormal03`.
   A create whose renderers weren't captured is left out. KK's create shaders are in `shader-properties.json` from KK's own `chara/mm_base.unity3d`, dumped through KKS with `dump_bundles`.
-- **Physics.** SVS moves hair, clothes and breasts with MagicaCloth, which `physics.json` doesn't hold, so SVS bundles carry colliders only, as legacy SVS bundles did. MagicaCloth stays out of the contract until a Step or Hook reads physics; adding it then is a minor Schema Version change. In KK and KKS, `DynamicBone`, `DynamicBone_Ver01` and `DynamicBone_Ver02` all become chains, with distribution curves and `Ver02`'s active pattern applied per bone. With `physics` the bones settle for two seconds before capture; without it they are reset. `physics.json` is always written.
+- **Physics.** SVS moves hair, clothes and breasts with MagicaCloth, which `physics.json` doesn't hold, so SVS bundles carry colliders only. MagicaCloth stays out of the contract until a Step or Hook reads physics; adding it then is a minor Schema Version change. In KK and KKS, `DynamicBone`, `DynamicBone_Ver01` and `DynamicBone_Ver02` all become chains, with distribution curves and `Ver02`'s active pattern applied per bone. With `physics` the bones settle for two seconds before capture; without it they are reset. `physics.json` is always written.
 - **Card.** The Character's card as the game saves it, `card.png`.
 
 Unity-free helpers that both adapters need (normal-map unpacking on RGBA buffers, morph delta sums, the hidden tear and gag basis, the helper-bone rule) live in the Core's `AdapterKit` folder, so the fake adapter's tests cover them.
@@ -77,8 +75,8 @@ Unity-free helpers that both adapters need (normal-map unpacking on RGBA buffers
 
 ## Export options
 
-- The "Export hit boxes" option is removed. Exporters always release the game's hit objects before capturing, so hit box meshes and bones never reach a bundle.
-- As a result, the importer has no hit box Step (today's KK-only `separate_hitboxes`), no `hitbox` Part Role and no `hitbox` Bone Group.
+- There is no "Export hit boxes" option. Exporters always release the game's hit objects before capturing, so hit box meshes and bones never reach a bundle.
+- As a result, the importer has no hit box Step, no `hitbox` Part Role and no `hitbox` Bone Group.
 
 ## In-game UI
 

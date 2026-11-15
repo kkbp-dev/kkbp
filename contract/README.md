@@ -52,11 +52,11 @@ The contract tests check these in code.
 - A pattern that isn't in the table keeps its game name and has no Expression Name.
 - Every name in a table must be in the Expression Name set and appear once per table.
 
-The tables were first written from the legacy samples in Phase 1. Phase 2 checked their positions against the games: the legacy KK and KKS exporters inserted an extra mouth entry, "Open" (the default mouth opened), after pattern 0, so every later mouth position was one too high. That entry is gone; its look is `Mouth Default`, the open version of pattern 0. The exporter also makes the tear and gag-mesh keys (`Tears small`, `Tears med`, `Tears big`, `Gag eye 00` to `Gag eye 02`), which are in the set but not in any table.
+The tables' positions are the games' own pattern positions. `Mouth Default` is the open version of pattern 0. The exporter also makes the tear and gag-mesh keys (`Tears small`, `Tears med`, `Tears big`, `Gag eye 00` to `Gag eye 02`), which are in the set but not in any table.
 
 ## Texture Roles
 
-Adapters map the game's slots to Roles. Phase 1 starts from:
+Adapters map the game's slots to Roles:
 
 | Role | Raw Properties |
 |---|---|
@@ -73,7 +73,7 @@ Everything else, including `_liquidmask`, is known by its Raw Property only.
 
 ## Golden Samples
 
-`samples/kk`, `samples/kks` and `samples/svs` are the Golden Samples: the Sample Cards in `sample-cards/`, the same three Characters as the legacy samples, exported by the new exporters. They are game content, so they are not in the repository (ADR 0031); each developer makes their own from the games they have:
+`samples/kk`, `samples/kks` and `samples/svs` are the Golden Samples: the Sample Cards in `sample-cards/`, exported by the exporters. They are game content, so they are not in the repository (ADR 0031); each developer makes their own from the games they have:
 
 ```bash
 scripts/export-sample.sh        # every installed game

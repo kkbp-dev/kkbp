@@ -1,8 +1,6 @@
 # Character
 
-How the importer and its tools find an imported Character's Blender objects. This replaces the 14 `get_*` scanners in `common.py` and `scene.kkbp.character_name`. Terms are defined in [CONTEXT.md](../../CONTEXT.md).
-
-Status: agreed design, not yet implemented.
+How the importer and its tools find an imported Character's Blender objects. Terms are defined in [CONTEXT.md](../../CONTEXT.md).
 
 ## Identity
 
@@ -40,7 +38,6 @@ ch.bundle()                  # reopens the Export Bundle this Character came fro
 
 - Materials and images carry the Character Key and their bundle Id as custom properties.
 - `ch.material(id)` and `ch.materials(...)` find them through those properties, never by name. Blender renames clashing materials (`cf_m_body.001`) when a second Character, or the same one again, is imported.
-- `ch.materials(...)` replaces `get_body_materials`, `get_hair_materials` and `get_outfit_materials`.
 
 ## Importing again
 
@@ -63,7 +60,7 @@ ch.bundle()                  # reopens the Export Bundle this Character came fro
 ## Link to the bundle
 
 - The Character stores its Export Bundle's path.
-- `ch.bundle()` reopens the bundle for tools used after the import (edit material, bake, export prep). They no longer read `scene.kkbp.import_dir`.
+- `ch.bundle()` reopens the bundle for tools used after the import (edit material, bake, export prep). Nothing about the bundle's place is kept on the scene.
 - If the folder has moved, `ch.bundle()` raises a clear error, and the panel offers to locate it again.
 
 ## Testing
