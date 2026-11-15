@@ -73,7 +73,7 @@ A change to the Hook is checked with the rig fingerprint (`run.py fingerprint`, 
 
 ### Separate Eyes (`separate_eyes.py`)
 
-Moves the eye and eyebrow materials out of Body into new Parts with Part Roles `eyes` and `eyebrows`, in an `Eyes and Eyebrows <name>` Collection, parented to Body with their shape keys driven from Body's (D35, D60). The eyes Part takes the pupils, eye whites and eye lines: KK's and KKS's eyelines, and SVS's eyelash and eyelid materials. The Rigify eye UV-warp modifiers move with them.
+Moves the eye and eyebrow materials out of Body into new Parts with Part Roles `eyes` and `eyebrows`, in an `Eyes and Eyebrows <name>` Collection, parented to Body with their shape keys driven from Body's (D35, D60). The eyes Part takes the pupils, eye whites and eye lines: KK's and KKS's eyelines, and SVS's eyelash and eyelid materials. The Rigify eye UV-warp modifiers move with them. When it separates something, it also turns on the Cryptomatte Object and Material passes of every view layer of the scene, which the compositor needs to pick the Parts out (issue 102); it never turns them off.
 
 ### Delete default scene (`default_scene.py`)
 

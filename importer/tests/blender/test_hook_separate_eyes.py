@@ -48,6 +48,24 @@ def test_the_hook_runs_after_rigify_and_puts_the_parts_in_their_own_collection(b
     assert ch.body.users_collection[0] is ch.collection
 
 
+def _cryptomatte_passes():
+    return [(layer.use_pass_cryptomatte_object, layer.use_pass_cryptomatte_material)
+            for layer in bpy.context.scene.view_layers]
+
+
+def test_the_hook_turns_on_the_cryptomatte_passes_of_every_view_layer(build, monkeypatch):
+    monkeypatch.setattr(settings, "option_defaults", lambda: {})
+    bpy.context.scene.view_layers.new("Second")
+    b = BundleBuilder()
+    b.add_expression("cf_Ohitomi_L", "Eye Happy", "eye", game_name="笑い")
+    assert kkbp.api.import_bundle(build(b), hooks=[]).ok
+    assert _cryptomatte_passes() == [(False, False), (False, False)]  # an import without the Hook leaves them
+    result = kkbp.api.import_bundle(build(b), options={"separate_eyes": True}, hooks=["Separate Eyes"])
+    assert result.hooks[0].status == "ran", result.hooks
+    assert _cryptomatte_passes() == [(True, True), (True, True)]
+    assert not any(layer.use_pass_cryptomatte_asset for layer in bpy.context.scene.view_layers)
+
+
 def test_the_eyeline_shadow_goes_with_the_eyes(build, monkeypatch):
     monkeypatch.setattr(settings, "option_defaults", lambda: {})
     b = BundleBuilder()
