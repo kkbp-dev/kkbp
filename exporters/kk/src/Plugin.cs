@@ -38,6 +38,9 @@ namespace KKBP.Exporter
 
         internal string Status { get; private set; }
 
+        /// <summary>Set by AutoExport: where the next export writes its SymmetryProbe file, or null.</summary>
+        internal string ProbeSymmetry;
+
         /// <summary>The batch export running now, or null.</summary>
         internal CardBatch Batch { get; private set; }
 
@@ -181,6 +184,7 @@ namespace KKBP.Exporter
             {
                 Directory.CreateDirectory(folder);
                 adapter = new KkAdapter(MakerAPI.GetCharacterControl(), options);
+                adapter.ProbeSymmetryPath = ProbeSymmetry;
                 export = new BundleExport(adapter, folder);
             }
             catch (Exception e)

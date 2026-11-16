@@ -3402,13 +3402,13 @@
       "head": [
        -0.0622,
        0.1883,
-       0.863
+       0.8629
       ],
       "parent": "Buttocks handle",
       "tail": [
        -0.0622,
        0.2623,
-       0.863
+       0.8629
       ]
      },
      "Right Eye": {
@@ -19382,13 +19382,13 @@
       "head": [
        0.0622,
        0.1883,
-       0.8627
+       0.8628
       ],
       "parent": "Buttocks handle",
       "tail": [
        0.0622,
        0.2623,
-       0.8627
+       0.8628
       ]
      },
      "Left Eye": {
@@ -21782,7 +21782,7 @@
       "tail": [
        -0.475,
        0.0304,
-       1.2548
+       1.2547
       ]
      },
      "MCH-Right heel_rock1": {
@@ -23322,7 +23322,7 @@
       "tail": [
        -0.123,
        -0.0848,
-       0.5034
+       0.5033
       ]
      },
      "MCH-cf_j_sk_02_00": {
@@ -26990,7 +26990,7 @@
       "tail": [
        -0.492,
        0.0295,
-       1.2548
+       1.2547
       ]
      },
      "Right eye handle": {
@@ -46432,6 +46432,7 @@
    "load_passes": "ran",
    "merge_rigged_tongue": "ran",
    "move_eyelids_forward": "skipped",
+   "move_upper_eyeline_forward": "ran",
    "order_material_slots": "ran",
    "order_shape_keys": "ran",
    "orient_fingers_and_legs": "ran",
@@ -46439,6 +46440,7 @@
    "set_bone_tails_and_roll": "ran",
    "set_view_transform": "ran",
    "set_viewport_colors": "ran",
+   "snap_to_symmetry": "ran",
    "sort_bone_collections": "ran",
    "trim_skeleton": "ran",
    "weld_copies": "ran",

@@ -6,7 +6,7 @@ lists, the Game Profile (ctx.profile) and the bundle's Roles, Groups and Names.
 """
 
 from .. import joint_corrections
-from ..steps import armature, gag, materials, mesh, welds
+from ..steps import armature, gag, materials, mesh, symmetry, welds
 from .step import Step
 
 STEPS: list[Step] = [
@@ -15,6 +15,7 @@ STEPS: list[Step] = [
     Step(mesh.rename_uv_maps),
     Step(mesh.merge_rigged_tongue),
     Step(welds.weld_copies),
+    Step(symmetry.snap_to_symmetry),
     Step(mesh.build_parts),
     Step(welds.weld_neck),
     Step(mesh.add_tear_controls),
@@ -24,6 +25,7 @@ STEPS: list[Step] = [
     Step(mesh.link_expression_keys),
     Step(mesh.drive_showing_keys),
     Step(mesh.move_eyelids_forward, games=["SVS"]),
+    Step(mesh.move_upper_eyeline_forward),
     Step(armature.trim_skeleton),
     Step(armature.set_bone_tails_and_roll),
     Step(armature.bend_limbs_for_ik),

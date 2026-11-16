@@ -11,10 +11,13 @@ namespace KKBP.Exporter
     internal sealed class Meshes
     {
         private readonly Rig rig;
+        private readonly bool mirror;
 
-        public Meshes(Rig rig)
+        /// <summary>With <paramref name="mirror"/>, each mesh is skinned with mirrored skin matrices (MirrorSkin).</summary>
+        public Meshes(Rig rig, bool mirror)
         {
             this.rig = rig;
+            this.mirror = mirror;
         }
 
         /// <summary>Why the last renderer was skipped, or null.</summary>
@@ -96,6 +99,11 @@ namespace KKBP.Exporter
             if (freezeShapeKeys && smr != null)
             {
                 AddCurrentShapeKeys(smr, mesh, basis, normals);
+            }
+
+            if (mirror)
+            {
+                MirrorSkin(skin, bones, basis, weights);
             }
 
             data.Positions = new Vec3[count];
@@ -226,6 +234,59 @@ namespace KKBP.Exporter
             finally
             {
                 Object.Destroy(baked);
+            }
+        }
+
+        /// <summary>
+        /// Makes the skin matrices mirror images across X = 0 where the game's nearly are (SkinMirror,
+        /// ADR 0048), so a symmetrical mesh is skinned symmetrical. Only the skinning changes, not the bones.
+        /// </summary>
+        private static void MirrorSkin(Matrix4x4[] skin, Transform[] bones, Vector3[] basis, BoneWeight[] weights)
+        {
+            var names = new string[skin.Length];
+            var rows = new float[skin.Length][];
+            for (int i = 0; i < skin.Length; i++)
+            {
+                names[i] = i < bones.Length && bones[i] != null ? bones[i].name : null;
+                rows[i] = new float[16];
+                for (int k = 0; k < 16; k++)
+                {
+                    rows[i][(k % 4) * 4 + k / 4] = skin[i][k]; // Unity indexes column by column
+                }
+            }
+            var vertices = new Vec3[basis.Length];
+            for (int v = 0; v < basis.Length; v++)
+            {
+                vertices[v] = Seam.V3(basis[v]);
+            }
+            int[] joints = null;
+            float[] amounts = null;
+            if (weights != null)
+            {
+                joints = new int[weights.Length * 4];
+                amounts = new float[weights.Length * 4];
+                for (int v = 0; v < weights.Length; v++)
+                {
+                    var w = weights[v];
+                    joints[v * 4] = w.boneIndex0;
+                    joints[v * 4 + 1] = w.boneIndex1;
+                    joints[v * 4 + 2] = w.boneIndex2;
+                    joints[v * 4 + 3] = w.boneIndex3;
+                    amounts[v * 4] = w.weight0;
+                    amounts[v * 4 + 1] = w.weight1;
+                    amounts[v * 4 + 2] = w.weight2;
+                    amounts[v * 4 + 3] = w.weight3;
+                }
+            }
+            Core.AdapterKit.SkinMirror.Mirror(names, rows, vertices, joints, amounts, 4);
+            for (int i = 0; i < skin.Length; i++)
+            {
+                var m = skin[i];
+                for (int k = 0; k < 16; k++)
+                {
+                    m[k] = rows[i][(k % 4) * 4 + k / 4];
+                }
+                skin[i] = m;
             }
         }
 

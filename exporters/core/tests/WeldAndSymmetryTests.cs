@@ -189,7 +189,8 @@ namespace KKBP.Exporter.Core.Tests
         [Fact]
         public void Near_mirror_pairs_become_exact_mirrors()
         {
-            var mesh = Points("m", new Vec3(0.1f, 1, 0.02f), new Vec3(-0.10003f, 1.00001f, 0.02f), new Vec3(0.3f, 1, 0));
+            var mesh = Points("m", new Vec3(0.1f, 1, 0.02f), new Vec3(-0.10003f, 1.00001f, 0.02f), new Vec3(0.3f, 1, 0),
+                new Vec3(0.2f, 1.2f, 0), new Vec3(-0.2015f, 1.2f, 0), new Vec3(0.3f, 1.3f, 0));
             var result = Symmetry.Mirror(new[] { mesh });
             var a = mesh.Positions[0];
             var b = mesh.Positions[1];
@@ -199,16 +200,17 @@ namespace KKBP.Exporter.Core.Tests
             Assert.Equal(0.100015f, a.X, 6);
             Assert.Equal(2, result.Paired);
             Assert.Equal(new Vec3(0.3f, 1, 0), mesh.Positions[2]); // nothing near its mirror
-            Assert.Equal(1, result.Unpaired);
+            Assert.Equal(0.2015f, -mesh.Positions[4].X, 6); // 1.5 mm off: more than MaxOffset
+            Assert.Equal(4, result.Unpaired);
         }
 
         [Fact]
         public void Vertices_near_the_middle_go_onto_it()
         {
-            var mesh = Points("m", new Vec3(2e-5f, 1, 0), new Vec3(-6e-5f, 1.1f, 0), new Vec3(0.2f, 1, 0));
+            var mesh = Points("m", new Vec3(2e-4f, 1, 0), new Vec3(-6e-4f, 1.1f, 0), new Vec3(0.2f, 1, 0));
             var result = Symmetry.Mirror(new[] { mesh });
             Assert.Equal(0f, mesh.Positions[0].X);
-            Assert.Equal(-6e-5f, mesh.Positions[1].X); // its mirror is 0.12 mm away
+            Assert.Equal(-6e-4f, mesh.Positions[1].X); // its mirror is 1.2 mm away
             Assert.Equal(1, result.Centred);
         }
 

@@ -20,6 +20,7 @@ namespace KKBP.Exporter
     /// </code>
     /// With "diagnose", it writes what it finds about the maker's Character there instead of exporting.
     /// With "stay": true, it leaves the game in the maker with the card loaded, for trying the window.
+    /// With "probe_symmetry": "/path/skinning.json", it also writes how the Body Pass was skinned (SymmetryProbe).
     /// With "folder" instead of "card", it runs the window's batch export on every card in that folder;
     /// the result then has "cards", "bundles" and "failures", and succeeds only if every card exported.
     /// </summary>
@@ -155,6 +156,8 @@ namespace KKBP.Exporter
             }
 
             Step("Exporting");
+            object symmetry;
+            plugin.ProbeSymmetry = request.TryGet("probe_symmetry", out symmetry) ? (string)symmetry : null;
             BundleExport export = null;
             SvsAdapter adapter = null;
             var run = plugin.Export(Options(), (string)request["output"], (e, a) => { export = e; adapter = a; });

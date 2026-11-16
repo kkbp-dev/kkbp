@@ -15,8 +15,12 @@ namespace KKBP.Exporter.Core
     /// </summary>
     public static class Symmetry
     {
-        /// <summary>The farthest a vertex may be from its partner's mirror image and still be paired, in metres.</summary>
-        public const float MaxOffset = 1e-4f;
+        /// <summary>
+        /// The farthest a vertex may be from its partner's mirror image and still be paired, in metres.
+        /// Once the skinning is mirrored (SkinMirror) what is left is where the game's own mesh or weights
+        /// aren't symmetrical: up to 0.3 mm on the KKS waist and 1 mm at most, but for the tongue (ADR 0048).
+        /// </summary>
+        public const float MaxOffset = 1e-3f;
 
         public sealed class Result
         {
