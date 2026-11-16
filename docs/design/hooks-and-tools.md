@@ -8,21 +8,16 @@ The built-in Hooks are modules in `importer/kkbp/builtin/`. They run in the orde
 
 | Order | Hook (name in `BUILTIN_HOOKS`) | Options | Default | Asset file |
 |---|---|---|---|---|
-| 1 | Fix body seams | `fix_seams` (bool) | on | none |
-| 2 | Convert shaders | `convert_shaders` (choice): `off` "Eevee", `eevee_mod`, `cycles`, `cycles_classic`, `principled` | `off` | none: the variants are in `library.blend` |
-| 3 | Separate meshes | `separation_type` (choice): `off` "One object per outfit", `by_material` "Separate all clothing" | `off` | none |
-| 4 | Outlines | `use_outlines` (bool) | on | `outlines.blend` |
-| 5 | Face cards | `use_face_cards` (bool) | off | `face_cards.blend` |
-| 6 | SFW | `sfw_mode` (bool) | off | none |
-| 7 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
-| 8 | Separate Eyes | `separate_eyes` (bool) | off | none |
-| 9 | Delete default scene | `delete_default_scene` (bool) | on | none |
+| 1 | Convert shaders | `convert_shaders` (choice): `off` "Eevee", `eevee_mod`, `cycles`, `cycles_classic`, `principled` | `off` | none: the variants are in `library.blend` |
+| 2 | Separate meshes | `separation_type` (choice): `off` "One object per outfit", `by_material` "Separate all clothing" | `off` | none |
+| 3 | Outlines | `use_outlines` (bool) | on | `outlines.blend` |
+| 4 | Face cards | `use_face_cards` (bool) | off | `face_cards.blend` |
+| 5 | SFW | `sfw_mode` (bool) | off | none |
+| 6 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
+| 7 | Separate Eyes | `separate_eyes` (bool) | off | none |
+| 8 | Delete default scene | `delete_default_scene` (bool) | on | none |
 
-Fix body seams comes first because it changes the body mesh the later Hooks work on. SFW comes before Rigify so the rig is built without the bones it deletes. Separate Eyes comes after Rigify so the new Parts are made on the finished rig. Delete default scene runs last, once every object the other Hooks add is in the file.
-
-### Fix body seams (`seams.py`)
-
-Merges the Body vertices of Material Roles `face` and `body` that sit on top of each other, keeping each face corner's custom normal (D16).
+The Core Import welds the copies of each vertex before any Hook runs ([ADR 0047](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)). SFW comes before Rigify so the rig is built without the bones it deletes. Separate Eyes comes after Rigify so the new Parts are made on the finished rig. Delete default scene runs last, once every object the other Hooks add is in the file.
 
 ### Convert shaders (`shaders.py`)
 

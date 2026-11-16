@@ -12,5 +12,6 @@ def test_outlines_on_an_earlier_import(build, monkeypatch):
     result = kkbp.api.import_bundle(build(), hooks=[])
     ch = character.Character(result.character_key)
     assert "Outline Modifier" not in ch.hairs[0].modifiers
-    log = run_hook.run_hook(ch, "Fix body seams")
-    assert any("Merged" in line for line in log.lines)
+    log = run_hook.run_hook(ch, "Outlines")
+    # The test bundle's Body has no baked materials, which the Hook reports for this Character.
+    assert log.warnings == ["hook Outlines: Body has no baked face or body material, so it has no outline"]

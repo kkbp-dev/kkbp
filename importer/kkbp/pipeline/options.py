@@ -92,7 +92,7 @@ def _choice(name, c):
 
 
 class Options:
-    """The Import Options in effect: read-only, as attributes (`ctx.options.fix_seams`) or items."""
+    """The Import Options in effect: read-only, as attributes (`ctx.options.use_rigify`) or items."""
 
     __slots__ = ("_values",)
 

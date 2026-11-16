@@ -8,7 +8,6 @@ that marks the bone, is written in the Hook with a note on why.
 """
 
 from . import default_scene  # noqa: E402,F401
-from . import seams  # noqa: E402,F401
 from . import shaders  # noqa: E402,F401
 from . import separate  # noqa: E402,F401
 from . import outlines  # noqa: E402,F401

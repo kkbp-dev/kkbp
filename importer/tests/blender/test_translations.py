@@ -83,7 +83,7 @@ def test_the_ui_follows_blenders_language(language, locale):
     assert table.TRANSLATIONS["Import Options"] != "Import Options"
     language(locale)
     assert gettext("Import Options") == table.TRANSLATIONS["Import Options"]  # a panel's title
-    assert gettext("Fix body seams") == table.TRANSLATIONS["Fix body seams"]  # an Import Option
+    assert gettext("Delete default scene") == table.TRANSLATIONS["Delete default scene"]  # an Import Option
     assert gettext("Export Prep", "Operator") == table.TRANSLATIONS["Export Prep"]  # a button
     assert translations.iface("no Hooks") == table.TRANSLATIONS["no Hooks"]
     tooltip = bpy.types.KKBP_OT_export_prep.bl_description

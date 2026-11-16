@@ -31,7 +31,7 @@ STEPS = [
 ## Hooks
 
 - Hooks run only **after the Core Import has finished**. There are no hook points between phases, and Hooks cannot replace built-in Steps.
-- Everything optional is a built-in Hook on that same hook point ([hooks-and-tools.md](hooks-and-tools.md)): fixing body seams, the shader conversions, separating meshes, outlines, face cards, SFW, Rigify, separating the eyes and deleting the default scene.
+- Everything optional is a built-in Hook on that same hook point ([hooks-and-tools.md](hooks-and-tools.md)): the shader conversions, separating meshes, outlines, face cards, SFW, Rigify, separating the eyes and deleting the default scene.
 - A Hook's switch is a bool or a choice option: Convert shaders and Separate meshes (its **Separation type**) have a choice rather than an on/off switch.
 - A Hook owns its own asset file if it needs one (Rigify widgets, the face-card rig). User Hooks can bring their own `.blend` too, for example to replace the Material Templates after the import.
 - Registration: built-ins, add-ons and folder scripts all use one decorator, `kkbp.hook` (it calls the internal `register_hook`). A folder script is a `.py` file with one or more decorated functions, and loading the file registers them.
@@ -61,9 +61,9 @@ def find_kkbp():
 
 ### Order and switching
 
-- Built-in Hooks run first, in a fixed order: fix body seams → shader conversion → separate meshes → outlines → face cards → SFW → Rigify → delete default scene. Fixing seams runs first because it changes the body mesh that later Hooks work on.
+- Built-in Hooks run first, in a fixed order: shader conversion → separate meshes → outlines → face cards → SFW → Rigify → separate eyes → delete default scene.
 - User Hooks run after them, in a list in Preferences that the user can reorder and switch on or off.
-- Each built-in Hook gets one automatic on/off Import Option (`fix_seams`, `use_rigify`, `use_outlines`, `sfw_mode`). The pipeline checks the switch, so Hooks don't return early themselves.
+- Each built-in Hook gets one automatic on/off Import Option (`use_rigify`, `use_outlines`, `sfw_mode`). The pipeline checks the switch, so Hooks don't return early themselves.
 - The shader variants are one "convert shaders" Hook with a choice option.
 
 ### Hooks folder

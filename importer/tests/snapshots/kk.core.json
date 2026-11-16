@@ -8309,7 +8309,7 @@
       ],
       "parent": "cf_j_sk_01_02",
       "tail": [
-       -0.1158,
+       -0.1159,
        -0.0775,
        0.6412
       ]
@@ -8317,13 +8317,13 @@
      "cf_j_sk_01_04": {
       "deform": true,
       "head": [
-       -0.1158,
+       -0.1159,
        -0.0775,
        0.6412
       ],
       "parent": "cf_j_sk_01_03",
       "tail": [
-       -0.1213,
+       -0.1214,
        -0.0824,
        0.5369
       ]
@@ -8331,13 +8331,13 @@
      "cf_j_sk_01_05": {
       "deform": true,
       "head": [
-       -0.1213,
+       -0.1214,
        -0.0824,
        0.5369
       ],
       "parent": "cf_j_sk_01_04",
       "tail": [
-       -0.1213,
+       -0.1214,
        -0.0824,
        0.4869
       ]
@@ -8477,7 +8477,7 @@
       ],
       "parent": "cf_j_sk_03_02",
       "tail": [
-       -0.1371,
+       -0.1372,
        0.176,
        0.6635
       ]
@@ -8485,7 +8485,7 @@
      "cf_j_sk_03_04": {
       "deform": true,
       "head": [
-       -0.1371,
+       -0.1372,
        0.176,
        0.6635
       ],
@@ -8813,7 +8813,7 @@
       ],
       "parent": "cf_j_sk_07_02",
       "tail": [
-       0.115,
+       0.1151,
        -0.0777,
        0.6411
       ]
@@ -8821,7 +8821,7 @@
      "cf_j_sk_07_04": {
       "deform": true,
       "head": [
-       0.115,
+       0.1151,
        -0.0777,
        0.6411
       ],
@@ -13842,7 +13842,7 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 39012,
+    "edges": 37500,
     "faces": 24736,
     "material_slots": [
      "cf_m_face_00",
@@ -13995,7 +13995,7 @@
      "uv_eyeshadow"
     ],
     "vertex_groups": 723,
-    "vertices": 14283
+    "vertices": 12778
    },
    "modifiers": [
     {
@@ -14073,7 +14073,7 @@
    ],
    "mesh": {
     "color_attributes": [],
-    "edges": 16775,
+    "edges": 14985,
     "faces": 9646,
     "material_slots": [
      "cf_m_hair_b_08_00",
@@ -14086,7 +14086,7 @@
      "uv_nipple_and_shine"
     ],
     "vertex_groups": 744,
-    "vertices": 7269
+    "vertices": 5350
    },
    "modifiers": [
     {
@@ -14117,7 +14117,7 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 37188,
+    "edges": 34683,
     "faces": 22888,
     "material_slots": [
      "cf_m_top_inner01",
@@ -14138,7 +14138,7 @@
      "uv_underhair"
     ],
     "vertex_groups": 744,
-    "vertices": 14374
+    "vertices": 11813
    },
    "modifiers": [
     {
@@ -14167,7 +14167,7 @@
    ],
    "mesh": {
     "color_attributes": [],
-    "edges": 3208,
+    "edges": 3078,
     "faces": 2052,
     "material_slots": [
      "cf_m_namida_00",
@@ -14216,7 +14216,7 @@
      "uv_main"
     ],
     "vertex_groups": 723,
-    "vertices": 1162
+    "vertices": 1038
    },
    "modifiers": [
     {
@@ -14263,7 +14263,9 @@
    "set_view_transform": "ran",
    "set_viewport_colors": "ran",
    "sort_bone_collections": "ran",
-   "trim_skeleton": "ran"
+   "trim_skeleton": "ran",
+   "weld_copies": "ran",
+   "weld_neck": "ran"
   }
  },
  "summary_version": 1

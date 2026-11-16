@@ -53,7 +53,7 @@ python3 importer/tests/harness/run.py hooks
 Run each built-in Hook on its own (`hooks=[that one]`, its switch on, once per choice for a choice switch) and check that it changes only what it owns, by the rules in [hook_owns.py](hook_owns.py). The reports are `importer/tests/.work/hooks/<build>.<sample>.<run>.md`:
 
 ```bash
-python3 importer/tests/harness/run.py hooks --each [--hook "Fix body seams"]
+python3 importer/tests/harness/run.py hooks --each [--hook "Outlines"]
 ```
 
 All three at once, with every import in one queue (the Core Import once per sample and build, not twice) and then the three checks; `scripts/test-importer.sh` runs this after the in-Blender tests:

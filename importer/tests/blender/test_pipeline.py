@@ -214,7 +214,7 @@ def test_the_real_counter_runs_headless(build):
 # --- Import Options -------------------------------------------------------------------
 
 def test_option_declarations():
-    assert Option("fix_seams", bool, True, "Fix body seams").kind == "bool"
+    assert Option("use_outlines", bool, True, "Outlines").kind == "bool"
     assert Option("size", int, 2, "Size", min=1, max=4).kind == "int"
     shader = Option("shader", str, "off", "Convert shaders", choices=["off", ("eevee", "Eevee"), ("cycles", "Cycles", "")])
     assert shader.kind == "choice" and shader.choice_ids == ("off", "eevee", "cycles")
@@ -302,19 +302,19 @@ def test_hook_interface_version(build):
 
 def test_built_in_switches(build):
     ran = []
-    seams = Option("fix_seams", bool, True, "Fix body seams")
+    outlines = Option("use_outlines", bool, True, "Outlines")
     shader = Option("convert_shaders", str, "off", "Convert shaders", choices=["off", "eevee"])
-    a = hooks.register_hook(lambda ctx: ran.append("seams"), name="Fix body seams", source="kkbp.hooks.seams",
-                            switch=seams, builtin=True)
+    a = hooks.register_hook(lambda ctx: ran.append("outlines"), name="Outlines", source="kkbp.hooks.outlines",
+                            switch=outlines, builtin=True)
     b = hooks.register_hook(lambda ctx: ran.append("shaders"), name="Convert shaders", source="kkbp.hooks.shaders",
                             switch=shader, builtin=True)
-    result = _run(build(), [], [a, b], options={"fix_seams": False, "convert_shaders": "eevee"}, declared=[seams, shader])
+    result = _run(build(), [], [a, b], options={"use_outlines": False, "convert_shaders": "eevee"}, declared=[outlines, shader])
     assert ran == ["shaders"]
-    assert (result.hooks[0].status, result.hooks[0].reason) == ("off", "fix_seams is off")
+    assert (result.hooks[0].status, result.hooks[0].reason) == ("off", "use_outlines is off")
     with pytest.raises(ValueError, match="only built-in Hooks have a switch"):
-        hooks.register_hook(lambda ctx: None, name="mine", source="tests", switch=seams)
+        hooks.register_hook(lambda ctx: None, name="mine", source="tests", switch=outlines)
     with pytest.raises(ValueError, match="only built-in Hooks have a switch"):
-        kkbp.api.hook(name="mine", switch=seams)(lambda ctx: None)
+        kkbp.api.hook(name="mine", switch=outlines)(lambda ctx: None)
 
 
 def test_hooks_switched_off_in_preferences(build):
@@ -325,13 +325,13 @@ def test_hooks_switched_off_in_preferences(build):
 
 def test_hook_order(monkeypatch):
     b1 = hooks.register_hook(lambda ctx: None, name="Rigify", source="kkbp.hooks.rigify", builtin=True)
-    b2 = hooks.register_hook(lambda ctx: None, name="Fix body seams", source="kkbp.hooks.seams", builtin=True)
+    b2 = hooks.register_hook(lambda ctx: None, name="Convert shaders", source="kkbp.hooks.shaders", builtin=True)
     u1 = hooks.register_hook(lambda ctx: None, name="one", source="a")
     u2 = hooks.register_hook(lambda ctx: None, name="two", source="b")
     u3 = hooks.register_hook(lambda ctx: None, name="new", source="c")
-    assert hooks.builtin_in_order(["Fix body seams", "Rigify"]) == [b2, b1]
+    assert hooks.builtin_in_order(["Convert shaders", "Rigify"]) == [b2, b1]
     with pytest.raises(RuntimeError, match="missing from BUILTIN_HOOKS: Rigify"):
-        hooks.builtin_in_order(["Fix body seams"])
+        hooks.builtin_in_order(["Convert shaders"])
     assert hooks.user_in_order([("b:two", False), ("a:one", True), ("gone:old", True)]) == [
         (u2, False), (u1, True), (u3, True)]
 

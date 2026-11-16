@@ -86,6 +86,21 @@ namespace KKBP.Exporter.Core
                 AddMaterial(material, pass.Kind == PassKind.Body);
             }
 
+            // Copies of one vertex become one, then the Body is mirrored; both before the meshes are converted (ADR 0047).
+            var roles = new Dictionary<string, MaterialRole>();
+            foreach (var material in sink.Materials)
+            {
+                if (material.Key != null && material.Role.HasValue)
+                {
+                    roles[material.Key] = material.Role.Value;
+                }
+            }
+            Welds.Weld(sink.Meshes, roles);
+            if (pass.Kind == PassKind.Body)
+            {
+                Symmetry.Mirror(sink.Meshes);
+            }
+
             var glbMeshes = new List<GlbMesh>();
             var meshRecords = new JsonArray();
             var passMeshes = new Dictionary<string, MeshData>();
