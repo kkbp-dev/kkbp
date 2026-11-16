@@ -114,7 +114,7 @@ namespace KKBP.Exporter
                     throw new ExportException("The Character isn't in a T-pose: the arms aren't level.");
                 }
                 rig = new Rig(cha.transform, cha.objTop.transform);
-                meshes = new Meshes(rig);
+                meshes = new Meshes(rig, !Options.CurrentPose);
                 physics = new Physics(rig);
                 rig.RecordBody();
                 CaptureBody(sink);

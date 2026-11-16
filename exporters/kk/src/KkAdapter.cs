@@ -106,7 +106,7 @@ namespace KKBP.Exporter
             {
                 yield return Prepare();
                 rig = new Rig(cha.transform, cha.objTop.transform);
-                meshes = new Meshes(rig);
+                meshes = new Meshes(rig, !Options.CurrentPose);
                 physics = new Physics(rig);
                 rig.RecordBody();
                 CaptureBody(sink);
