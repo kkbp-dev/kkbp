@@ -40,6 +40,9 @@ NAMES = {
 FACE_PARTS = ("tears", "gag_eyes")
 # How much the SVS eyelid and eyelashes move forward (Blender -Y) so they don't clip into the eyes.
 EYELID_OFFSET = 0.0005
+# How much the upper eyeline moves forward off the shadow beneath it, so Blender's X Mirror can tell them
+# apart (ADR 0049).
+UPPER_EYELINE_OFFSET = 0.0001
 
 
 def load_passes(ctx):
@@ -284,6 +287,27 @@ def move_eyelids_forward(ctx):
         for layer in layers:
             for v in verts:
                 layer[v].co.y -= EYELID_OFFSET
+
+
+def move_upper_eyeline_forward(ctx):
+    """Moves the upper eyeline forward off its shadow (ADR 0049). KK and KKS draw the eyeline's shadow
+    as a second copy of the upper eyeline, at exactly the same place, and Blender's X Mirror can pair a
+    place with only one vertex. Only a mesh with both an `eyeline_upper` and an `eyeline_shadow` material
+    moves, and only the vertices the upper eyeline uses alone."""
+    ch, bundle = ctx.character, ctx.bundle
+    for obj in _meshes(ch):
+        roles = [_role(bundle, s.material) for s in obj.material_slots]
+        if "eyeline_upper" not in roles or "eyeline_shadow" not in roles:
+            continue
+        mesh = obj.data
+        upper = {i for i, r in enumerate(roles) if r == "eyeline_upper"}
+        mine = {v for p in mesh.polygons if p.material_index in upper for v in p.vertices}
+        others = {v for p in mesh.polygons if p.material_index not in upper for v in p.vertices}
+        verts = mine - others
+        layers = [mesh.vertices] + ([k.data for k in mesh.shape_keys.key_blocks] if mesh.shape_keys else [])
+        for layer in layers:
+            for v in verts:
+                layer[v].co.y -= UPPER_EYELINE_OFFSET
 
 
 def arrange_collections(ctx):
