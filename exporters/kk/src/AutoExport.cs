@@ -19,10 +19,12 @@ namespace KKBP.Exporter
     /// { "card": "/path/card.png", "outfit": 0, "output": "/path/folder",
     ///   "options": { "all_outfits": false, ... }, "dump_shaders": "/path/shaders.json",
     ///   "dump_bundles": [ "/path/kk/abdata/chara/mm_base.unity3d" ],
-    ///   "probe_corrections": "/path/out.json", "probe_poses": "/path/poses.json" }
+    ///   "probe_corrections": "/path/out.json", "probe_poses": "/path/poses.json",
+    ///   "probe_symmetry": "/path/skinning.json" }
     /// </code>
     /// "probe_corrections" records the game's joint corrections for the poses in "probe_poses"
-    /// instead of exporting (CorrectionProbe).
+    /// instead of exporting (CorrectionProbe). "probe_symmetry" also writes how the Body Pass was
+    /// skinned (SymmetryProbe).
     /// "dump_bundles" (KKS only) names asset bundles, such as KK's, whose shaders the dump also lists.
     /// Every field but "card" and "output" is optional. The result goes to kkbp-autoexport.result.json
     /// next to the request: { "state": "succeeded" | "failed", "bundle": …, "error": …, "warnings": […] }.
@@ -159,6 +161,8 @@ namespace KKBP.Exporter
             }
 
             Step("Exporting");
+            object symmetry;
+            plugin.ProbeSymmetry = request.TryGet("probe_symmetry", out symmetry) ? (string)symmetry : null;
             BundleExport export = null;
             KkAdapter adapter = null;
             yield return plugin.StartCoroutine(plugin.Export(Options(), (string)request["output"], (e, a) => { export = e; adapter = a; }));

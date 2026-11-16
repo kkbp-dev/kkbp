@@ -84,6 +84,9 @@ namespace KKBP.Exporter
         /// <summary>Messages about things left out of the bundle, for the log.</summary>
         public readonly List<string> Warnings = new List<string>();
 
+        /// <summary>Where SymmetryProbe writes the Body Pass's skinning, or null for no probe.</summary>
+        public string ProbeSymmetryPath;
+
         public IList<PassInfo> Passes()
         {
             var passes = new List<PassInfo> { PassInfo.Body() };
@@ -306,6 +309,10 @@ namespace KKBP.Exporter
             baked.AddRange(AddEyeWhites(sink, captured));
             BakeLightAndDark(sink, baked);
             physics.Capture(cha.objTop.transform, sink, t => rig.OwnerOf(t) == Owner.Body);
+            if (ProbeSymmetryPath != null)
+            {
+                SymmetryProbe.Write(ProbeSymmetryPath, captured);
+            }
         }
 
         /// <summary>
