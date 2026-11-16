@@ -14,6 +14,9 @@ namespace KKBP.Exporter
     /// shaders whose look depends on the mesh (the skin shaders, overlay textures, specular height, xukmi, tessellation)
     /// the mesh flattened into UV space is drawn too and laid over it. While it runs, the Character's
     /// renderers and anything else near the origin are hidden; Dispose puts everything back.
+    /// Each bake's own textures, material copies and meshes go with DestroyImmediate: a whole Pass bakes in
+    /// one frame, and Object.Destroy waits for the frame's end, so a card with many materials ran out of
+    /// memory before any was freed (issue 5).
     /// </summary>
     internal sealed class Bake : IDisposable
     {
@@ -206,10 +209,10 @@ namespace KKBP.Exporter
             }
             finally
             {
-                UnityEngine.Object.Destroy(material);
+                UnityEngine.Object.DestroyImmediate(material);
                 if (flattened != null)
                 {
-                    UnityEngine.Object.Destroy(flattened);
+                    UnityEngine.Object.DestroyImmediate(flattened);
                 }
             }
         }
@@ -280,7 +283,7 @@ namespace KKBP.Exporter
             }
             finally
             {
-                UnityEngine.Object.Destroy(copy);
+                UnityEngine.Object.DestroyImmediate(copy);
             }
         }
 
@@ -322,7 +325,7 @@ namespace KKBP.Exporter
             var uvs = mesh.uv;
             if (uvs.Length == 0)
             {
-                UnityEngine.Object.Destroy(mesh);
+                UnityEngine.Object.DestroyImmediate(mesh);
                 return null;
             }
             float minX = float.PositiveInfinity, minY = float.PositiveInfinity, maxX = float.NegativeInfinity, maxY = float.NegativeInfinity;
@@ -395,7 +398,7 @@ namespace KKBP.Exporter
             camera.targetTexture = null;
             RenderTexture.ReleaseTemporary(rt);
             var pixels = read.GetPixels32();
-            UnityEngine.Object.Destroy(read);
+            UnityEngine.Object.DestroyImmediate(read);
             var bytes = new byte[pixels.Length * 4];
             for (int i = 0; i < pixels.Length; i++)
             {
@@ -418,7 +421,7 @@ namespace KKBP.Exporter
             texture.SetPixels32(pixels);
             texture.Apply();
             var png = Svs.EncodePng(texture);
-            UnityEngine.Object.Destroy(texture);
+            UnityEngine.Object.DestroyImmediate(texture);
             return png;
         }
 
