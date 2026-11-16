@@ -233,7 +233,8 @@ namespace KKBP.Exporter
             }
             finally
             {
-                Object.Destroy(baked);
+                // Now, not at the frame's end: a Pass captures every mesh in one frame (see Bake).
+                Object.DestroyImmediate(baked);
             }
         }
 

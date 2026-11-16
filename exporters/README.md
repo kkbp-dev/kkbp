@@ -117,6 +117,10 @@ What the adapters' authors learned the hard way. The safety rules for running th
 - URP won't render from a disabled camera.
 - Under Proton on GNOME, Ctrl and Shift reach SVS but the letter of a Ctrl+Shift shortcut doesn't; the window uses Ctrl+Tab.
 
+### Freeing what the export makes
+
+- A Pass captures and bakes in a single frame, and `Object.Destroy` only acts at the frame's end. Textures, materials and meshes made for one mesh or one bake go with `DestroyImmediate`, or a card with many materials runs the game out of memory (issue 5: about 100 MB per bake under Wine, until the computer froze).
+
 ### Testing in the games
 
 - A game keeps the plugin it loaded at startup: deploy only to a closed game.

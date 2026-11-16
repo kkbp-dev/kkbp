@@ -157,7 +157,8 @@ namespace KKBP.Exporter
                 readable.Apply();
             }
             png = Kks.EncodePng(readable);
-            Object.Destroy(readable);
+            // Now, not at the frame's end: a Pass reads many textures in one frame (see Bake).
+            Object.DestroyImmediate(readable);
             pngs[id] = png;
             return png;
         }
