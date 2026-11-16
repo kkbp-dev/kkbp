@@ -101,6 +101,28 @@ def test_the_back_of_a_double_sided_card_stays():
     assert len(mesh.vertices) == 8 and len(mesh.polygons) == 2
 
 
+def test_a_doubled_layer_of_several_faces_stays_apart():
+    """An eyeline and its shadow: two quads side by side, then the same two again with their own
+    vertices. Once the first shadow quad is kept apart, the second must still be found."""
+    ch = character.Character.new("Chika", "KK", "/nowhere")
+    mesh = bpy.data.meshes.new("m")
+    bm = bmesh.new()
+    for _ in range(2):
+        vs = [bm.verts.new(co) for co in ((0, 0, 0), (1, 0, 0), (2, 0, 0), (2, 0, 1), (1, 0, 1), (0, 0, 1))]
+        bm.faces.new((vs[0], vs[1], vs[4], vs[5]))
+        bm.faces.new((vs[1], vs[2], vs[3], vs[4]))
+    bm.to_mesh(mesh)
+    bm.free()
+    mat = bpy.data.materials.new("body")
+    mat["id"] = "body"
+    mesh.materials.append(mat)
+    obj = bpy.data.objects.new("m", mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    ch.add_part(obj, "body")
+    welds.weld_copies(fake_ctx(ch, _bundle({"body": "body"})))
+    assert len(mesh.vertices) == 12 and len(mesh.polygons) == 4
+
+
 def test_the_neck_welds_the_face_to_the_body_only():
     """On Body: the face/body doubled edge welds; the doubled edge of two body quads (two meshes joined
     into Body) and the eyeline's doubled edge with the face stay."""

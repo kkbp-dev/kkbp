@@ -13474,7 +13474,7 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 39389,
+    "edges": 39394,
     "faces": 25982,
     "material_slots": [
      "cf_m_face_00",
@@ -13629,7 +13629,7 @@
      "uv_eyeshadow"
     ],
     "vertex_groups": 702,
-    "vertices": 13408
+    "vertices": 13424
    },
    "modifiers": [
     {

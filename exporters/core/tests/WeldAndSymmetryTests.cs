@@ -120,6 +120,22 @@ namespace KKBP.Exporter.Core.Tests
         }
 
         [Fact]
+        public void A_doubled_layer_of_several_triangles_stays_apart_whatever_their_order()
+        {
+            // An eyeline and its shadow: two triangles side by side, then the same two again with their
+            // own vertices. Once the first shadow triangle is taken apart, the second must still be found.
+            var p = new[]
+            {
+                new Vec3(0, 0, 0), new Vec3(0.01f, 0, 0), new Vec3(0, 0.01f, 0), new Vec3(0.01f, 0.01f, 0),
+                new Vec3(0, 0, 0), new Vec3(0.01f, 0, 0), new Vec3(0, 0.01f, 0), new Vec3(0.01f, 0.01f, 0),
+            };
+            var mesh = TestMeshes.Make("m", p, new[] { 0, 1, 2, 1, 3, 2, 4, 5, 6, 5, 7, 6 }, new[] { "a" }, new int[8], "mat");
+            var result = Welds.Weld(new[] { mesh }, NoRoles);
+            Assert.Equal(0, result.Groups);
+            Assert.Equal(8, result.KeptApart);
+        }
+
+        [Fact]
         public void The_neck_joins_the_face_to_the_body_with_the_bodys_weights()
         {
             var face = TestMeshes.Make("face", new[] { new Vec3(0, 1.4f, 0), new Vec3(0.01f, 1.4f, 0), new Vec3(0, 1.41f, 0) },

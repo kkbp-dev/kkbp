@@ -1560,7 +1560,7 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 37478,
+    "edges": 37500,
     "faces": 24736,
     "material_slots": [
      "cf_m_face_00",
@@ -1734,7 +1734,7 @@
      "uv_eyeshadow"
     ],
     "vertex_groups": 779,
-    "vertices": 12726
+    "vertices": 12778
    },
    "modifiers": [
     {
@@ -23322,7 +23322,7 @@
       "tail": [
        -0.123,
        -0.0848,
-       0.5034
+       0.5033
       ]
      },
      "MCH-cf_j_sk_02_00": {
@@ -32184,7 +32184,7 @@
       "tail": [
        0.3246,
        -0.2488,
-       0.2759
+       0.2758
       ]
      },
      "cf_j_sk_07_01": {

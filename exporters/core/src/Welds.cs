@@ -240,7 +240,9 @@ namespace KKBP.Exporter.Core
 
             /// <summary>
             /// Takes out of their groups the vertices of triangles that would become the same triangle,
-            /// until none would. Returns how many vertices were taken out.
+            /// until none would. Returns how many vertices were taken out. Each pass reads the groups as
+            /// they stood when it began: taking vertices out halfway through would hide the triangles they
+            /// double from the rest of the pass.
             /// </summary>
             public int KeepDoubledTrianglesApart()
             {
@@ -249,6 +251,12 @@ namespace KKBP.Exporter.Core
                 while (changed)
                 {
                     changed = false;
+                    var ids = new int[position.Length];
+                    for (int g = 0; g < ids.Length; g++)
+                    {
+                        ids[g] = Id(g);
+                    }
+                    var doubled = new List<int>();
                     for (int m = 0; m < meshes.Count; m++)
                     {
                         var seen = new Dictionary<Triple, int[]>();
@@ -258,7 +266,7 @@ namespace KKBP.Exporter.Core
                             for (int t = 0; t < idx.Length; t += 3)
                             {
                                 var corners = new[] { offset[m] + idx[t], offset[m] + idx[t + 1], offset[m] + idx[t + 2] };
-                                var key = new Triple(Id(corners[0]), Id(corners[1]), Id(corners[2]));
+                                var key = new Triple(ids[corners[0]], ids[corners[1]], ids[corners[2]]);
                                 int[] first;
                                 if (!seen.TryGetValue(key, out first))
                                 {
@@ -269,16 +277,14 @@ namespace KKBP.Exporter.Core
                                 {
                                     continue; // the game lists the same triangle twice: welding doesn't change that
                                 }
-                                foreach (int g in first)
-                                {
-                                    changed |= TakeApart(g, ref taken);
-                                }
-                                foreach (int g in corners)
-                                {
-                                    changed |= TakeApart(g, ref taken);
-                                }
+                                doubled.AddRange(first);
+                                doubled.AddRange(corners);
                             }
                         }
+                    }
+                    foreach (int g in doubled)
+                    {
+                        changed |= TakeApart(g, ref taken);
                     }
                 }
                 return taken;
@@ -295,10 +301,13 @@ namespace KKBP.Exporter.Core
                 return true;
             }
 
-            /// <summary>The group a vertex ends in: its own if it was taken apart.</summary>
+            /// <summary>
+            /// The group a vertex ends in: its own if it was taken apart, numbered past the vertices so it
+            /// can't match the group it left, whose id may be this vertex's index.
+            /// </summary>
             private int Id(int g)
             {
-                return apart[g] ? g : Find(g);
+                return apart[g] ? position.Length + g : Find(g);
             }
 
             /// <summary>Writes each group's shared position, weights and shape keys. Returns the number of groups.</summary>

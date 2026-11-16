@@ -95,20 +95,24 @@ def _groups(mesh, first=None, second=None):
             if other != v:
                 unite(v, other)
 
+    # Each pass reads the groups as they stood when it began: taking vertices out halfway through would
+    # hide the faces they double from the rest of the pass. A vertex taken out is numbered past the
+    # vertices, so it can't match the group it left, whose id may be its own index.
     apart = set()
     changed = True
     while changed:
-        changed = False
+        ids = [count + v if v in apart else find(v) for v in range(count)]
         seen = {}
+        doubled = set()
         for p in mesh.polygons:
-            key = tuple(sorted(v if v in apart else find(v) for v in p.vertices))
-            if key not in seen:
-                seen[key] = tuple(p.vertices)
-                continue
-            for v in (*seen[key], *p.vertices):
-                if v not in apart and len(members.get(find(v), ())) > 1:
-                    apart.add(v)
-                    changed = True
+            corners = tuple(p.vertices)
+            key = tuple(sorted(ids[v] for v in corners))
+            first = seen.setdefault(key, corners)
+            if first is not corners and sorted(first) != sorted(corners):
+                doubled.update(first, corners)
+        taken = {v for v in doubled if v not in apart and len(members.get(find(v), ())) > 1}
+        apart |= taken
+        changed = bool(taken)
     groups = {}
     for v in range(count):
         if v not in apart:
