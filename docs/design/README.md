@@ -72,6 +72,7 @@ ADRs:
 - [0046 The face is also baked without its eyeshadow](../adr/0046-the-face-is-also-baked-without-its-eyeshadow.md)
 - [0047 The exporter makes vertex copies one, and mirrors the Body](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)
 - [0048 The Body is skinned with mirrored skin matrices](../adr/0048-the-body-is-skinned-with-mirrored-skin-matrices.md)
+- [0049 The importer snaps mirror partners and lifts the upper eyeline](../adr/0049-the-importer-snaps-mirror-partners-and-lifts-the-upper-eyeline.md)
 
 ## Decisions
 

@@ -30,3 +30,4 @@ Body Pass positions with an exact mirror image: KK 13891 of 13897, KKS 14524 of 
 - It runs only when the export doesn't keep the current pose (`current_pose`), which is the game's to keep.
 - The head tongue's six vertices that the game made 1 to 5 mm off stay as they are.
 - The probe stays in the adapters as a developer request, for checking this after a game update.
+- In Blender, the glTF importer's rounding and the upper eyeline's shadow still kept X Mirror from some KK and KKS vertices; the importer puts both right ([ADR 0049](0049-the-importer-snaps-mirror-partners-and-lifts-the-upper-eyeline.md)).
