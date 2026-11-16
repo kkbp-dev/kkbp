@@ -71,6 +71,7 @@ ADRs:
 - [0045 The Rigify Hook aims the hands and makes palms on every skeleton](../adr/0045-every-skeleton-gets-aimed-hands-and-palms.md)
 - [0046 The face is also baked without its eyeshadow](../adr/0046-the-face-is-also-baked-without-its-eyeshadow.md)
 - [0047 The exporter makes vertex copies one, and mirrors the Body](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)
+- [0048 The Body is skinned with mirrored skin matrices](../adr/0048-the-body-is-skinned-with-mirrored-skin-matrices.md)
 
 ## Decisions
 

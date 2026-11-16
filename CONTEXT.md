@@ -118,6 +118,10 @@ _Avoid_: scene light, lighting preset
 One of the vertices a mesh holds at one place because their corners differ, at a UV seam or a hard edge. The Exporter Core gives each group of copies one position, weights and shape keys, and the Core Import welds them into one vertex.
 _Avoid_: double, duplicate vertex, seam
 
+**Skin Matrix**:
+A bone's pose at capture times its bind pose: what takes a mesh's own vertices to where the game draws them. The adapters make each left and right pair's mirror images before they skin a mesh (ADR 0048).
+_Avoid_: bone matrix, bind matrix
+
 **Exporter Core**:
 The game-independent part shared by every exporter, which turns captured data into an Export Bundle.
 _Avoid_: builder, PmxBuilder, shared lib
