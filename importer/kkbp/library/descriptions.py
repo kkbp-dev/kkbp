@@ -176,6 +176,20 @@ def _svs_colors(*names, alpha_from=0):
     return out
 
 
+# lif_main_eye's texture slots and the `.SVS eye` sockets they feed.
+_SVS_EYE_SLOTS = {"shadow_mask": "Shadow mask", "iris_mask": "Iris", "pupil": "Pupil", "grade": "Grade",
+                  "highlight1": "Highlight 1", "highlight2": "Highlight 2", "highlight3": "Highlight 3"}
+_SVS_EYE_COLORS = {"eye_white1": "Eye white 1", "eye_white2": "Eye white 2", "eye1": "Eye 1", "eye2": "Eye 2",
+                   "eye3": "Eye 3", "pupil1": "Pupil 1", "pupil2": "Pupil 2", "pupil3": "Pupil 3",
+                   "line_color": "Line color", "grade_color": "Grade color", "highlight_color1": "Highlight color 1",
+                   "highlight_color2": "Highlight color 2", "highlight_color3": "Highlight color 3"}
+_SVS_EYE_UV = {"eye_position": "Eye position", "eye_position_w": "Eye position w",
+               "eye_position_add": "Eye position add", "eye_position_add_w": "Eye position add w",
+               "pupil_size": "Pupil size", "rotation": "Rotation", "mirror": "Mirror", "eye_open": "Eye open",
+               "grade_position": "Grade position", "grade_size": "Grade size", "parallax": "Parallax",
+               **{f"highlight{k}_position": f"Highlight {k} position" for k in (1, 2, 3)},
+               **{f"highlight{k}_position_w": f"Highlight {k} position w" for k in (1, 2, 3)},
+               **{f"highlight{k}_rotation": f"Highlight {k} rotation" for k in (1, 2, 3)}}
 # What main_opaque and main_item share: the shadow colour and extends, the line switches, the
 # maker's ambient and line colour.
 _ITEM_LIGHT = {"shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend"),
@@ -345,6 +359,18 @@ _EDIT_TEMPLATES = (
              params={**_GAME_BAKE, **_SVS_LIGHT, "length": ("uv", "Length"), "width": ("uv", "Width"),
                      **_svs_colors("color1", "color2", "color3", "line_color", alpha_from=1),
                      "light_influence": ("lit", "Light influence"), "shadow_power": ("lit", "Shadow power")}),
+    Template("SVS lif_main_eyelash_up", graded=True,
+             textures={"eyelash_up": "tex.eyelash_up", "eyelash_down": "tex.eyelash_down"},
+             params={**_GAME_BAKE, **_SVS_LIGHT, **_svs_colors("color1", "color2", "color3", "line_color", alpha_from=1),
+                     "shadow_power": ("lit", "Shadow power")}),
+    Template("SVS lif_main_eye", graded=True, textures={k: f"tex.{k}" for k in _SVS_EYE_SLOTS},
+             params={**_GAME_BAKE, **_SVS_LIGHT, "eye_white_only": ("lit", "Eye white only"),
+                     "shadow_power": ("lit", "Shadow power"), "highlight_power": ("lit", "Highlight power"),
+                     **{f"{k}_present": ("lit", f"{socket} present") for k, socket in _SVS_EYE_SLOTS.items()},
+                     **{name: ("lit", socket) for name, socket in _SVS_EYE_COLORS.items()},
+                     **{f"{name}_alpha": ("lit", f"{socket} alpha") for name, socket in _SVS_EYE_COLORS.items()
+                        if name not in ("eye_white1", "eye1")},
+                     **{name: ("uv", socket) for name, socket in _SVS_EYE_UV.items()}}),
 )
 EDIT_TEMPLATES = tuple(t.name for t in _EDIT_TEMPLATES)
 

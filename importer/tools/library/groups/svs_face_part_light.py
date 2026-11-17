@@ -5,11 +5,12 @@ exporter bakes them (models.svs_face_part_light, issue 62): unshadowed, no addit
     lit    = clamp(Ambient' * 0.5 + mix(l5, luma(l5), (1 - mean(Light color)) * 0.1))
     tint   = HSV(hue, sqrt(saturation) of (Color + K) * K, value of Color * K),  K = (0.687, 0.798, 1)
     shadow = min(overlay(Ambient' * 0.6 + 0.3, clamp(l5) * tint) + Ambient' * 0.1, 1)
-    t      = min(max(clamp(1 - mean(L)), P * ((1 - N.L) * o - 0.5 * (o - 1))), 1),  o = clamp(mean(L), 1, 99)
+    t      = min(max(clamp(1 - mean(L)), P * ((1 - N.L) * o - 0.5 * (o - 1))), Cap),  o = clamp(mean(L), 1, 99)
     P      = mix(0.75 - 0.65 * a, 0.9 - 0.4 * a, Shadow power),  a = min(mean(max(Ambient, 0)), 1)
     Light  = mix(lit, shadow, t) + clamp(Light color - 1, 0, 99) * (1 - clamp((0.2 - N.L) / 0.15))
 
-Ambient' is Ambient clamped to 0..1: the light probe at the bake quad's normal. Linear colours.
+Ambient' is Ambient clamped to 0..1: the light probe at the bake quad's normal. Cap is 1 but for
+the eye (1 - 0.2 * its highlights). Linear colours.
 Written by hand."""
 
 NAME = '.SVS face part light'
@@ -26,6 +27,7 @@ def build(lib):
     t.socket('INPUT', 'Light color', 'NodeSocketVector', default_value=(1.0, 1.0, 1.0))
     t.socket('INPUT', 'N.L', 'NodeSocketFloat', default_value=0.828421950340271, min_value=-1.0, max_value=1.0)
     t.socket('INPUT', 'Ambient', 'NodeSocketVector', default_value=(0.18855378, 0.18145701, 0.1885538))
+    t.socket('INPUT', 'Cap', 'NodeSocketFloat', default_value=1.0, min_value=0.0, max_value=1.0)
     t.make('NodeGroupInput', 'in', (-1600, 0))
     t.make('NodeGroupOutput', 'out', (1400, 0))
 
@@ -83,7 +85,7 @@ def build(lib):
     floor = t.math('dim', 'SUBTRACT', 1.0, mean, location=(-600, 600), clamp=True)
     amount = t.math('amount', 'MINIMUM', t.math('amount.max', 'MAXIMUM', floor,
                     t.math('amount.p', 'MULTIPLY', (p, 'Result_Float'), turned, location=(-450, 750)), location=(-300, 700)),
-                    1.0, location=(-150, 700))
+                    ('in', 'Cap'), location=(-150, 700))
     t.make('ShaderNodeMix', 'mixed', (100, 200), {'data_type': 'VECTOR', 'clamp_factor': False},
            {'Factor_Float': amount, 'A_Vector': lit, 'B_Vector': shadow})
 

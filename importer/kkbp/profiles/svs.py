@@ -14,6 +14,43 @@ RAW_TEXTURES = {
 # As KK's, with SVS's most common legacy aimed-bone length.
 BONES = {**kk.BONES, "aim_length": 0.077}
 
+def _face_part_colors(prefix):
+    """The eyebrow's and eyelash's colours: `<prefix>1` to `3` and `_Line_color`, the last three with
+    their alpha."""
+    raws = [f"{prefix}{k}" for k in (1, 2, 3)] + ["_Line_color"]
+    names = ["color1", "color2", "color3", "line_color"]
+    return [*[[n, [f"own:{r}"], "plain"] for n, r in zip(names, raws)],
+            *[[f"{n}_alpha", [f"own:{r}"], "alpha"] for n, r in zip(names[1:], raws[1:])]]
+
+
+# lif_main_eye's texture slots and colours.
+_EYE_TEXTURES = {"shadow_mask": ["own:_Shadow_mask"], "iris_mask": ["own:_Eye_mask"], "pupil": ["own:_Pipil_texture"],
+                 "grade": ["own:_Grade_texture"],
+                 **{f"highlight{k}": [f"own:_Highlight_texture_0{k}"] for k in (1, 2, 3)}}
+_EYE_COLORS = [
+    *[[name, [f"own:{raw}"], "plain"] for name, raw in (
+        ("eye_white1", "_Eye_white_color_01"), ("eye_white2", "_Eye_white_color_02"), ("eye1", "_Eye_color_01"),
+        ("eye2", "_Eye_color_02"), ("eye3", "_Eye_color_03"), ("pupil1", "_Piple_color_01"), ("pupil2", "_Piple_color_02"),
+        ("pupil3", "_Piple_color_03"), ("line_color", "_Line_color"), ("grade_color", "_Grade_color"),
+        ("highlight_color1", "_Highlight_color_01"), ("highlight_color2", "_Highlight_color_02"),
+        ("highlight_color3", "_Highlight_color_03"))],
+    *[[f"{name}_alpha", [f"own:{raw}"], "alpha"] for name, raw in (
+        ("eye_white2", "_Eye_white_color_02"), ("eye2", "_Eye_color_02"), ("eye3", "_Eye_color_03"),
+        ("pupil1", "_Piple_color_01"), ("pupil2", "_Piple_color_02"), ("pupil3", "_Piple_color_03"),
+        ("line_color", "_Line_color"), ("grade_color", "_Grade_color"), ("highlight_color1", "_Highlight_color_01"),
+        ("highlight_color2", "_Highlight_color_02"), ("highlight_color3", "_Highlight_color_03"))],
+    *[[name, [f"own:{raw}"], "float"] for name, raw in (
+        ("shadow_power", "_Shadow_power"), ("highlight_power", "_Highlight_power"), ("rotation", "_rotation"),
+        ("mirror", "_Eye_postion_rebers"), ("eye_open", "_Eye_open"), ("grade_position", "_Grade_position"),
+        ("grade_size", "_Grade_size"), ("parallax", "_Parallax"),
+        *[(f"highlight{k}_rotation", f"_Highlight_0{k}_rotation") for k in (1, 2, 3)])],
+    *[[name, [f"own:{raw}"], how] for base, raw in (
+        ("eye_position", "_Eye_position"), ("eye_position_add", "_Eye_position_add"), ("pupil_size", "_Pipil_size"),
+        *[(f"highlight{k}_position", f"_Highlight_0{k}_position") for k in (1, 2, 3)])
+      for name, how in ((base, "vector"), (f"{base}_w", "vector_w")) if not (base == "pupil_size" and how == "vector_w")],
+]
+
+
 # The edit material tool (D38-D41; profiles/kk.py says what each table holds). SVS's templates follow
 # its LIF shaders (issue 62, importer/tools/game_shaders/models.py); a shader none follows (the
 # `_alpha` and `_low` copies, modded shaders) isn't editable. SVS's materials carry their textures by
@@ -21,11 +58,16 @@ BONES = {**kk.BONES, "aim_length": 0.077}
 EDIT = {
     "templates": {
         "eyebrow": "SVS lif_main_eyebrow",
+        "eyelash": "SVS lif_main_eyelash_up",
+        "eye_l": "SVS lif_main_eye", "eye_r": "SVS lif_main_eye", "eye_white": "SVS lif_main_eye",
     },
     "shader_templates": {},
     "not_editable_blend_modes": ["glasses"],
     "textures": {
         "eyebrow": ["own:_eyebrow_texture"],
+        "eyelash_up": ["own:_Eyelash_up_texture"],
+        "eyelash_down": ["own:_Eyelash_dw_texture"],
+        **_EYE_TEXTURES,
     },
     "saturated": [],
     "saturated_roles": [],
@@ -33,16 +75,20 @@ EDIT = {
     "shadow": ["own:_ShadowColor"],
     "colors": {
         "SVS lif_main_eyebrow": [
-            *[[name, [f"own:{raw}"], "plain"] for name, raw in (
-                ("color1", "_eyebrow_color01"), ("color2", "_eyebrow_color02"), ("color3", "_eyebrow_color03"),
-                ("line_color", "_Line_color"))],
-            *[[f"{name}_alpha", [f"own:{raw}"], "alpha"] for name, raw in (
-                ("color2", "_eyebrow_color02"), ("color3", "_eyebrow_color03"), ("line_color", "_Line_color"))],
+            *_face_part_colors("_eyebrow_color0"),
             ["length", ["own:_BrowLength"], "float"], ["width", ["own:_BrowWidth"], "float"],
             ["light_influence", ["own:_Ligjht_influence"], "float"], ["shadow_power", ["own:_Shadow_power"], "float"],
         ],
+        "SVS lif_main_eyelash_up": [*_face_part_colors("_Eyelash_color0"), ["shadow_power", ["own:_Shadow_power"], "float"]],
+        "SVS lif_main_eye": _EYE_COLORS,
     },
-    "values": [],
+    "values": [
+        # The eye white copies bake the eye white alone (ADR 0034).
+        ["role:eye_white", {"eye_white_only": 1.0}],
+        # An image node without an image reads black and opaque; the game's missing texture is
+        # transparent.
+        *[[f"missing:{slot}", {f"{slot}_present": 0.0}] for slot in _EYE_TEXTURES],
+    ],
 }
 
 

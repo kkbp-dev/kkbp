@@ -1,15 +1,18 @@
-"""`.SVS lif_main_eyebrow`: SVS's eyebrow shader as the exporter bakes it, front-lit (Light) and
-back-lit (Dark), in linear colour (models.lif_main_eyebrow, issue 62).
+"""`.SVS face part`: SVS's eyebrow and eyelash shaders (LIF/lif_main_eyebrow, lif_main_eyelash_up) as
+the exporter bakes them, front-lit (Light) and back-lit (Dark), in linear colour
+(models.svs_face_part, issue 62).
 
-    col   = mix(Color 1, Color 2, r * Color 2 alpha * a)
-    col   = mix(col, Color 3, g * Color 3 alpha * a);  col = mix(col, Line color, b * Line color alpha * a)
+    w     = By alpha ? a : 1
+    col   = mix(Color 1, Color 2, r * Color 2 alpha * w)
+    col   = mix(col, Color 3, g * Color 3 alpha * w);  col = mix(col, Line color, b * Line color alpha * w)
     col   = clamp(mix(col, Light color * col, 0.7 * Light influence))
     Light = clamp(col * `.SVS face part light`(col, N.L light));  Dark the same at N.L dark
-    Alpha = a where a >= 0.5, else 0
+    Alpha = a where a >= Alpha cut, else 0
 
-r, g, b, a are the texture's (read at `.SVS eyebrow uv`). Colours are linear. Written by hand."""
+r, g, b, a are the texture's. The eyebrow weighs its layers by its alpha and cuts at 0.5; the
+eyelash doesn't, and cuts at 0.9. Colours are linear. Written by hand."""
 
-NAME = '.SVS lif_main_eyebrow'
+NAME = '.SVS face part'
 KIND = 'ShaderNodeTree'
 
 LIGHT_NDL = 0.828421950340271  # models.SVS_LIGHT
@@ -18,14 +21,16 @@ AMBIENT = (0.18855378, 0.18145701, 0.1885538)  # models.SVS_QUAD_AMBIENT
 
 
 def color_layers(t, colors, location):
-    """The texture's r, g and b pick colours over the first, each by its alpha and the texture's;
-    returns the source of the result."""
+    """The texture's r, g and b pick colours over the first, each by its alpha (and the texture's,
+    by `By alpha`); returns the source of the result."""
     x, y = location
     t.make('ShaderNodeSeparateColor', 'tex', (x, y + 300), ins={'Color': ('in', 'Texture')})
+    t.make('ShaderNodeMix', 'weight', (x, y + 500), {'data_type': 'FLOAT'},
+           {'Factor_Float': ('in', 'By alpha'), 'A_Float': 1.0, 'B_Float': ('in', 'Texture alpha')})
     previous = ('in', colors[0])
     for k, (channel, name) in enumerate(zip(('Red', 'Green', 'Blue'), colors[1:])):
         f = t.math(f'{name}.amount', 'MULTIPLY', t.math(f'{name}.alpha', 'MULTIPLY', ('tex', channel), ('in', f'{name} alpha'),
-                   location=(x + 200, y - k * 250)), ('in', 'Texture alpha'), location=(x + 350, y - k * 250))
+                   location=(x + 200, y - k * 250)), ('weight', 'Result_Float'), location=(x + 350, y - k * 250))
         t.make('ShaderNodeMix', f'{name}.mix', (x + 550, y - k * 250), {'data_type': 'VECTOR'},
                {'Factor_Float': f, 'A_Vector': previous, 'B_Vector': ('in', name)})
         previous = (f'{name}.mix', 'Result_Vector')
@@ -44,6 +49,8 @@ def build(lib):
         t.socket('INPUT', name, 'NodeSocketColor', default_value=(*default, 1.0))
         if name != 'Color 1':
             t.socket('INPUT', f'{name} alpha', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
+    t.socket('INPUT', 'By alpha', 'NodeSocketFloat', default_value=1.0, min_value=0.0, max_value=1.0)
+    t.socket('INPUT', 'Alpha cut', 'NodeSocketFloat', default_value=0.5, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Light influence', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Shadow power', 'NodeSocketFloat', default_value=0.7, min_value=0.0, max_value=1.0)
     t.socket('INPUT', 'Light color', 'NodeSocketColor', default_value=(1.0, 1.0, 1.0, 1.0))
@@ -73,6 +80,7 @@ def build(lib):
         t.make('ShaderNodeVectorMath', f'{kind}.clamp', (700, y), {'operation': 'MINIMUM'},
                {'Vector': (f'{kind}.out', 'Vector'), 'Vector_001': (1.0, 1.0, 1.0)})
         t.link(f'{kind}.clamp', 'Vector', 'out', kind.capitalize())
-    cut = t.math('alpha.cut', 'GREATER_THAN', ('in', 'Texture alpha'), 0.4999, location=(500, -500))
+    cut = t.math('alpha.cut', 'GREATER_THAN', ('in', 'Texture alpha'),
+                 t.math('alpha.edge', 'SUBTRACT', ('in', 'Alpha cut'), 0.0001, location=(300, -600)), location=(500, -500))
     t.link(*t.math('alpha', 'MULTIPLY', cut, ('in', 'Texture alpha'), location=(700, -500)), 'out', 'Alpha')
     return t
