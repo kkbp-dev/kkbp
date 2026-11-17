@@ -660,3 +660,26 @@ def test_svs_cloth_gives_back_the_bakes(mid, limit):
         out = models.lif_main_cloth(col, create[..., 3], d1, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
                                     colors, f, light)
         assert difference(models.svs_baked(out), reference[::-1]) < limit
+
+
+@pytest.mark.parametrize("mid", ["m_cloth_cf_top_tshirt00", "m_cloth_cf_bot_denim00", "m_cloth_cf_bra_base00_03",
+                                 "m_cloths_cm_socks_00", "m_cm_shoes_01"])
+def test_svs_create_main_cloth_gives_back_the_composited_texture(mid):
+    """LIF/lif_create_main_cloth from the create material the exporter writes (extensions.svs.create)
+    gives back the lit material's _Create_main_texture."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    create = m["extensions"]["svs"]["create"]
+    reference = _svs_raw(sample, m, "_Create_main_texture")[::-1]
+    u, v = _uv(reference.shape[1::-1])
+    f, vec = create["floats"], create["vectors"]
+    at = lambda raw, uu, vv: _svs_at(sample, create, raw, uu, vv)  # noqa: E731
+    has = {t["raw"] for t in create["textures"]}
+    main = at("_Main_texture", u, v) if "_Main_texture" in has else np.ones(u.shape + (4,))
+    patterns = [at(f"_PatternMask_0{k}", *models.create_pattern_uv(u, v, f, k)) for k in (1, 2, 3, 4)]
+    paints = [at(f"_Paint_texture_0{k}", *models.create_paint_uv(u, v, vec[f"_Paint_position_0{k}"]))
+              if f"_Paint_texture_0{k}" in has else None for k in (1, 2, 3)]
+    rgb, _ = models.create_main_cloth(main, at("_Main_color_mask", u, v), patterns, paints, at("_Paint_mask", u, v),
+                                      _svs_colors(create))
+    opaque = reference[..., 3] > 0.5
+    assert float(np.abs(rgb - reference[..., :3])[opaque].mean()) < 0.004

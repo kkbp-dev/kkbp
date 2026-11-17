@@ -962,3 +962,73 @@ def lif_main_cloth(col, create_alpha, detail1, ramp1, ramp2, colors, floats, lig
         lit = _lerp(line, lit, np.round(create_alpha)[..., None])
     d = detail1[..., 0:1]
     return np.clip(lit + d * (d * line - lit), 0, 0.95)
+
+
+# --- SVS create shaders: lif_create_main_cloth ---------------------------------------------------
+
+def create_pattern_uv(u, v, floats, k):
+    """Where LIF/lif_create_main_cloth reads pattern mask `k` (1 to 4): moved by twice
+    `_PatternOffset_0k`, scaled by 20 - 19 * `_PatternScale_0k` and turned by `_PatternRotator_0k`
+    about the centre."""
+    f = floats
+    x = (u + 2 * f[f"_PatternOffset_0{k}u"] - 1) * (20 - 19 * f[f"_PatternScale_0{k}u"]) - 0.5
+    y = (v + 2 * f[f"_PatternOffset_0{k}v"] - 1) * (20 - 19 * f[f"_PatternScale_0{k}v"]) - 0.5
+    x, y = _turn(x, y, (f[f"_PatternRotator_0{k}"] - 0.5) * 2 * np.pi)
+    return x + 0.5, y + 0.5
+
+
+def create_paint_uv(u, v, position):
+    """Where the LIF create shaders read a paint: `_Paint_position_0k` moves it (xy), turns it (z, in
+    turns) and sizes it (w)."""
+    p = np.asarray(position, dtype=F)
+    s = 2 - 2 * p[3]
+    x = (u + p[0]) * 2 * s + 0.5 - s - 0.5
+    y = (v + p[1]) * 2 * s + 0.5 - s - 0.5
+    x, y = _turn(x, y, p[2] * 2 * np.pi)
+    return x + 0.5, y + 0.5
+
+
+def _pattern_layer(base, sub, pattern, amount):
+    """A pattern over a colour: toward `sub` times the pattern by `amount` times sub's alpha, then
+    toward the pattern itself where it is saturated."""
+    layer = _lerp(base[:3], sub[:3] * pattern[..., :3], (amount * sub[3])[..., None])
+    vivid = amount * np.clip(_saturation(pattern[..., :3]) * 10 - 0.05, 0, 1) * sub[3]
+    return _lerp(layer, pattern[..., :3], vivid[..., None])
+
+
+def svs_paints(col, paints, paint_mask, colors, on, prefix="_Paint_color_0"):
+    """The LIF create shaders' three paints over a colour: each tints toward its texture times
+    max(smoothstep of its saturation, its colour), by its alpha, its colour's alpha, its channel of
+    the paint mask and `on`."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    for k, ch in ((1, 0), (2, 1), (3, 2)):
+        pt = paints[k - 1]
+        if pt is None:
+            continue
+        pc = c[f"{prefix}{k}"]
+        f = np.minimum(pt[..., 3], _smooth01((_saturation(pt[..., :3]) - 0.3) * 2.5))
+        tint = np.maximum(f[..., None], pc[:3])
+        amount = pt[..., 3] * pc[3] * paint_mask[..., ch] * on
+        col = col + amount[..., None] * (pt[..., :3] * tint - col)
+    return col
+
+
+def create_main_cloth(main, mask, patterns, paints, paint_mask, colors):
+    """LIF/lif_create_main_cloth: the colour mask's channels pick `_Main_color_01..03` over
+    `_Main_color_04`, each with its pattern (where the mask's alpha is at least 0.5: `_pattern_layer`
+    with `_Sub_color_0k`); the three paints where the mask's alpha is 1; times the main texture.
+    `patterns` are the four masks read at create_pattern_uv, `paints` the three read at
+    create_paint_uv (None when missing). Returns linear rgb and alpha (the colours' alpha, its fourth
+    root, times the main texture's)."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    on = (mask[..., 3] >= 0.5).astype(F)
+    full = (mask[..., 3] >= 1.0).astype(F)
+    layers = [_pattern_layer(c[f"_Main_color_0{k}"], c[f"_Sub_color_0{k}"], patterns[k - 1], on * patterns[k - 1][..., 3])
+              for k in (1, 2, 3, 4)]
+    rgb = layers[3]
+    a = np.full(mask.shape[:2], c["_Main_color_04"][3])
+    for k, ch in ((1, 0), (2, 1), (3, 2)):
+        rgb = _lerp(rgb, layers[k - 1], mask[..., ch:ch + 1])
+        a = _lerp(a, c[f"_Main_color_0{k}"][3], mask[..., ch])
+    rgb = svs_paints(rgb, paints, paint_mask, colors, full)
+    return rgb * main[..., :3], np.sqrt(np.sqrt(a)) * main[..., 3]
