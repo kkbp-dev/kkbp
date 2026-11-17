@@ -105,6 +105,7 @@ What the adapters' authors learned the hard way. The safety rules for running th
 
 - `LoadFileLimited` doesn't tell a character card from anything else. KK and KKS report no error code for an outfit card or a plain picture and keep the Character they had; SVS's returns false even for a good card. So `Cards.Load` checks the card's mark first, the string after its PNG picture (`CardFile.Mark` in the AdapterKit): KK loads `【KoiKatuChara】`; KKS also `【KoiKatuCharaS】`, `【KoiKatuCharaSP】` and `【KoiKatuCharaSun】` (`Kks.CardMarks`, read from each game's own card reader); SVS `【SVChara】`. Outfit cards are `【KoiKatuClothes】` and `【SVClothes】`.
 - KK's `LoadFileLimited` doesn't keep the card's picture; `Cards.Load` always sets it from the loaded file.
+- SVS dresses the Character from its own copy of the current Outfit (`coorde.nowCoordinate`), which `LoadFileLimited` doesn't replace: without a refresh each card keeps the clothes of the one before (issue 20). `Cards.Load` points it at the loaded card's Outfit with `coorde.SetNowCoordinate` before `Reload`, as KK's `ChangeCoordinateType(true)` does. It keeps the Outfit the maker shows, or the first if the card has fewer.
 - KKS's maker runs at time scale 0, so waits use `WaitForSecondsRealtime`.
 
 ### IL2CPP (SVS)

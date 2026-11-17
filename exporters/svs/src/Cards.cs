@@ -34,7 +34,26 @@ namespace KKBP.Exporter
             {
                 human.data.SetPng(png);
             }
+            ShowLoadedOutfit(human);
             human.Reload();
+        }
+
+        /// <summary>
+        /// Points the Outfit the Character wears at the loaded card's. The game dresses the Character from
+        /// its own copy of the current Outfit (coorde.nowCoordinate), which loading the card's data doesn't
+        /// replace: without this every card in a batch kept the clothes of the one loaded before it.
+        /// Keeps the Outfit the maker shows, or the first if the new card has fewer Outfits.
+        /// </summary>
+        private static void ShowLoadedOutfit(Human human)
+        {
+            var outfits = human.data.Coordinates;
+            int outfit = human.fileStatus.coordinateType;
+            if (outfit < 0 || outfit >= outfits.Length)
+            {
+                outfit = 0;
+                human.coorde.ChangeCoordinateType((ChaFileDefine.CoordinateType)outfit);
+            }
+            human.coorde.SetNowCoordinate(outfits[outfit]);
         }
     }
 }
