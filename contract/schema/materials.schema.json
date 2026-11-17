@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.2/materials.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.3/materials.schema.json",
   "title": "materials.json",
   "description": "The materials of every Pass: shader values keyed by Raw Property, and textures.",
   "type": "object",
@@ -45,7 +45,7 @@
   "additionalProperties": false,
   "$defs": {
     "material_extensions": {
-      "description": "A material's Game Extensions. KK and KKS may give a material its create material; every other Game Extension stays empty.",
+      "description": "A material's Game Extensions. KK, KKS (kk) and SVS (svs, Schema Version 1.3) may give a material its create material; every other Game Extension stays empty.",
       "type": "object",
       "properties": {
         "kk": {
@@ -56,12 +56,18 @@
           "additionalProperties": false
         },
         "kks": { "$ref": "common.schema.json#/$defs/extensions/properties/kks" },
-        "svs": { "$ref": "common.schema.json#/$defs/extensions/properties/svs" }
+        "svs": {
+          "type": "object",
+          "properties": {
+            "create": { "$ref": "#/$defs/create" }
+          },
+          "additionalProperties": false
+        }
       },
       "additionalProperties": false
     },
     "create": {
-      "description": "The Create Material that composites this material's main texture from a base texture, masks and the Character's colours. It has the shape of a material's shader data; the material it sits on gives the Id, name, Material Role and Blend Mode. Its _MainTex is the uncoloured base the game colours.",
+      "description": "The Create Material that composites this material's main texture from a base texture, masks and the Character's colours. It has the shape of a material's shader data; the material it sits on gives the Id, name, Material Role and Blend Mode. In KK and KKS its _MainTex is the uncoloured base the game colours; SVS's create shaders name their own slots (_Main_texture, _Skin_mask, ...).",
       "type": "object",
       "properties": {
         "shader": {

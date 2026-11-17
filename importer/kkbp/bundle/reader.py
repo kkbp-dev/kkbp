@@ -370,13 +370,15 @@ def _material(r, v, where):
     if f is _BAD:
         return _BAD
     f["extensions"] = f["extensions"] or r.extensions({}, where)
-    kk = f["extensions"].get("kk")
-    if kk and "create" in kk:
-        f["create"] = _create(r, v["extensions"]["kk"]["create"], f"{where}.extensions.kk.create")
-        if f["create"] is _BAD:
-            return _BAD
-        f["extensions"] = MappingProxyType({**f["extensions"],
-                                            "kk": MappingProxyType({k: x for k, x in kk.items() if k != "create"})})
+    # The Create Material: KK's and KKS's in `kk`, SVS's in `svs` (Schema Version 1.3).
+    for game in ("kk", "svs"):
+        section = f["extensions"].get(game)
+        if section and "create" in section:
+            f["create"] = _create(r, v["extensions"][game]["create"], f"{where}.extensions.{game}.create")
+            if f["create"] is _BAD:
+                return _BAD
+            f["extensions"] = MappingProxyType({**f["extensions"],
+                                                game: MappingProxyType({k: x for k, x in section.items() if k != "create"})})
     return model.Material(**f)
 
 

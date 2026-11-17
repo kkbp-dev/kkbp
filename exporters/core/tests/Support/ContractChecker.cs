@@ -93,11 +93,16 @@ namespace KKBP.Exporter.Core.Tests.Support
                     problems.Add("material Id " + id + " appears twice");
                 }
                 materialSlots[id] = CheckTextures(problems, "material " + id, material.GetProperty("textures"), textureUnique, P);
-                if (material.TryGetProperty("extensions", out var extensions) && extensions.TryGetProperty("kk", out var kk)
-                    && kk.TryGetProperty("create", out var create))
+                if (material.TryGetProperty("extensions", out var extensions))
                 {
-                    CheckTextures(problems, "material " + id + " create", create.GetProperty("textures"), textureUnique, P);
-                    creates[id] = Optional(material, "role");
+                    foreach (string game in new[] { "kk", "svs" })
+                    {
+                        if (extensions.TryGetProperty(game, out var section) && section.TryGetProperty("create", out var create))
+                        {
+                            CheckTextures(problems, "material " + id + " create", create.GetProperty("textures"), textureUnique, P);
+                            creates[id] = Optional(material, "role");
+                        }
+                    }
                 }
             }
             CheckUnique(problems, "Material Role", materials.RootElement.GetProperty("materials").EnumerateArray().Select(m => Optional(m, "role")), ContractSchemas.SetUnique("material-role"));

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.2/sets/texture-role.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.3/sets/texture-role.schema.json",
   "title": "Texture Role",
   "description": "The meaning of a texture slot. Unique per material and Texture Variant and pattern, except overlay.",
   "type": "string",

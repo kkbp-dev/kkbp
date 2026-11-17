@@ -6,7 +6,7 @@ import bundle
 from bundle_builder import BundleBuilder
 
 
-def _files(version="1.2", game="KK"):
+def _files(version="1.3", game="KK"):
     b = BundleBuilder()
     b.schema_version, b.game = version, game
     return b.files()
@@ -14,12 +14,12 @@ def _files(version="1.2", game="KK"):
 
 def test_newer_minor_opens_with_a_warning(build):
     b = bundle.open_bundle(build(files=_files("1.4")))
-    assert b.warnings == ("The bundle's Schema Version 1.4 is newer than this importer's 1.2; "
+    assert b.warnings == ("The bundle's Schema Version 1.4 is newer than this importer's 1.3; "
                           "anything new in it is ignored.",)
 
 
 def test_newer_minor_keeps_unknown_set_values_with_a_warning(build):
-    files = _files("1.3")
+    files = _files("1.4")
     bones = files["skeleton.json"]["bones"]
     bones[1]["group"] = "tail"
     bones[2]["group"] = "tail"
@@ -52,7 +52,7 @@ def test_bad_version_string(build):
         bundle.open_bundle(build(files=_files("1.0.0")))
 
 
-@pytest.mark.parametrize("version", ["1.2", "1.3"])
+@pytest.mark.parametrize("version", ["1.3", "1.4"])
 def test_unknown_game_is_rejected(build, version):
     with pytest.raises(bundle.BundleError) as caught:
         bundle.open_bundle(build(files=_files(version, game="AC")))

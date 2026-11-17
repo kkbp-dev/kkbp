@@ -10,7 +10,7 @@ namespace KKBP.Exporter.Core.Tests.Support
     /// <summary>The JSON Schemas in contract/schema/, loaded once.</summary>
     public static class ContractSchemas
     {
-        public const string BaseUri = "https://schemas.kkbp.invalid/1.2/";
+        public const string BaseUri = "https://schemas.kkbp.invalid/1.3/";
 
         private static readonly Lazy<Dictionary<string, JsonSchema>> Schemas = new Lazy<Dictionary<string, JsonSchema>>(Load);
 

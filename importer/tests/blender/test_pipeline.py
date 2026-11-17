@@ -44,7 +44,7 @@ def test_import_bundle_with_no_steps(build, monkeypatch):
     assert ch.collection.name == "Test Chara"
     assert ch.collection.name in bpy.context.scene.collection.children
     assert result.log_path == path / "kkbp_cache" / "log" / "log.txt"
-    assert "Importing Test Chara (KK, Schema Version 1.2)" in result.log_path.read_text(encoding="utf-8")
+    assert "Importing Test Chara (KK, Schema Version 1.3)" in result.log_path.read_text(encoding="utf-8")
     assert result.summary()[0].startswith("Imported Test Chara")
 
 
@@ -72,7 +72,7 @@ def test_unknown_options_raise_before_anything_is_built(build):
 
 def test_newer_minor_bundle_warnings_reach_the_result(build):
     b = BundleBuilder()
-    b.schema_version = "1.3"
+    b.schema_version = "1.4"
     result = kkbp.api.import_bundle(build(b), hooks=[])
     assert result.ok and len(result.warnings) == 1 and "newer than this importer's" in result.warnings[0]
 

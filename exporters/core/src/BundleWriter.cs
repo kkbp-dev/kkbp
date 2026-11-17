@@ -10,7 +10,7 @@ namespace KKBP.Exporter.Core
     /// </summary>
     internal sealed class BundleWriter
     {
-        public const string SchemaVersion = "1.2";
+        public const string SchemaVersion = "1.3";
 
         private static readonly byte[] PngSignature = { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
 

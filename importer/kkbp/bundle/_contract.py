@@ -6,7 +6,7 @@ scripts/gen-importer-contract.sh after changing the schemas.
 
 # The Schema Version these sets come from.
 SCHEMA_MAJOR = 1
-SCHEMA_MINOR = 2
+SCHEMA_MINOR = 3
 
 ID_PATTERN = '^(?!.*__)[A-Za-z0-9.-](?:[A-Za-z0-9_.-]{0,61}[A-Za-z0-9.-])?$'
 

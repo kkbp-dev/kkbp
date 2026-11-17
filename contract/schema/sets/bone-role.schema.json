@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.2/sets/bone-role.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.3/sets/bone-role.schema.json",
   "title": "Bone Role",
   "description": "What a bone is for. Unity's HumanBodyBones in snake_case, then KKBP extras.",
   "type": "string",
