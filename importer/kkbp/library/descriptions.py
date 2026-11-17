@@ -200,6 +200,9 @@ _SVS_ACS_LIT = {"shadow_setting": "Shadow setting", "shadow_setting_w": "Shadow 
                 "line_color_intensity2": "Line color intensity 2", "line_color_intensity3": "Line color intensity 3",
                 "line_width_s": "Line width S", "line_width": "Line width", "line_width_ss": "Line width SS",
                 "line_texture_on": "Line texture on", "alpha_line": "Alpha line", "alpha": "Alpha"}
+_SVS_CREATE_CLOTH_SLOTS = {"create_main": "Main", "create_mask": "Mask", "create_paint_mask": "Paint mask",
+                          **{f"create_pattern{k}": f"Pattern {k}" for k in (1, 2, 3, 4)},
+                          **{f"create_paint{k}": f"Paint {k}" for k in (1, 2, 3)}}
 _SVS_CLOTH_LIT = ("shadow_setting", "shadow_setting_w", "shadow_power", "shadow_extend", "shadow_color_on", "type_select",
                   "shadow_color", "light_color", "ambient", "line_color", "line_power", "alpha_line")
 # What main_opaque and main_item share: the shadow colour and extends, the line switches, the
@@ -410,14 +413,29 @@ _EDIT_TEMPLATES = (
                          ("rotator", "Rotator"), ("clamp", "Clamp"))},
                      **{name: ("lit", socket) for name, socket in _SVS_ACS_LIT.items()}}),
     Template("SVS lif_main_cloth", graded=True,
-             textures={k: f"tex.{k}" for k in ("create", "color_mask", "detail_mask", "detail_mask2", "ramp", "ramp2")},
+             textures={k: f"tex.{k}" for k in ("create", "color_mask", "detail_mask", "detail_mask2", "ramp", "ramp2",
+                                                *_SVS_CREATE_CLOTH_SLOTS)},
              params={**_GAME_BAKE, "toon_shading": ("ndl", "Toon shading"), "ndl_light": ("ndl", "N.L light"),
                      "ndl_dark": ("ndl", "N.L dark"), "shadow_pull": ("ramp uv", "Pull"), "rim_scale": ("ramp uv", "Lift"),
                      **{f"main_color{k}": ("color", f"Main color {k}") for k in (1, 2, 3, 4)},
                      "color_switch": ("color", "Switch"), "curvature_color": ("color", "Curvature color"),
                      "curvature_color_alpha": ("color", "Curvature color alpha"),
                      **{name: ("lit", socket) for name, socket in _SVS_ACS_LIT.items()
-                        if name in _SVS_CLOTH_LIT}}),
+                        if name in _SVS_CLOTH_LIT},
+                     # The create material's, when it has one.
+                     "use_create": ("use create", "Value"),
+                     **{f"{slot}_present": ("create", f"{socket} present") for slot, socket in _SVS_CREATE_CLOTH_SLOTS.items()},
+                     **{f"create_{kind}{k}": ("create", f"{socket} {k}") for k in (1, 2, 3, 4)
+                        for kind, socket in (("main_color", "Main color"), ("sub_color", "Sub color"))},
+                     **{f"create_{kind}{k}_alpha": ("create", f"{socket} {k} alpha") for k in (1, 2, 3, 4)
+                        for kind, socket in (("main_color", "Main color"), ("sub_color", "Sub color"))},
+                     **{f"create_paint_color{k}": ("create", f"Paint color {k}") for k in (1, 2, 3)},
+                     **{f"create_paint_color{k}_alpha": ("create", f"Paint color {k} alpha") for k in (1, 2, 3)},
+                     **{f"create_pattern{k}_{p}": (f"pattern{k}", socket) for k in (1, 2, 3, 4) for p, socket in (
+                         ("offset_u", "Offset u"), ("offset_v", "Offset v"), ("scale_u", "Scale u"), ("scale_v", "Scale v"),
+                         ("rotator", "Rotator"))},
+                     **{f"create_paint{k}_position": (f"paint{k}", "Position") for k in (1, 2, 3)},
+                     **{f"create_paint{k}_position_w": (f"paint{k}", "Position w") for k in (1, 2, 3)}}),
 )
 EDIT_TEMPLATES = tuple(t.name for t in _EDIT_TEMPLATES)
 

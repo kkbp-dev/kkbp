@@ -101,3 +101,19 @@ def test_unedited_edit_materials_bake_close_to_the_game(game, golden_import):
             if was[kind] is not None and now[kind] is not None and now[kind] > was[kind] + MARGIN:
                 worse.append(f"{mid} {kind}: {now[kind]:.3f}, recorded {was[kind]:.3f}")
     assert not worse, "edit materials further from the game:\n" + "\n".join(worse)
+
+
+def test_svs_clothes_composite_their_create_material(golden_import):
+    """With a create material in the bundle (Schema Version 1.3), an SVS clothing edit material
+    composites it in nodes rather than taking the composited texture (ADR 0050)."""
+    ch = golden_import("svs")[1]
+    templates = submodule("templates")
+    bm = next(m for m in ch.bundle().materials if m.shader == "LIF/lif_main_cloth" and m.create is not None)
+    edit = edit_material.edit(ch, ch.material(bm.id), log=lambda *_: None)
+    try:
+        assert templates.param(edit, "use_create").default_value == 1.0
+        filled = set(edit[edit_material.FILLED])
+        assert {"create_main", "create_mask", "create"} <= filled
+        assert templates.param(edit, "create_main_color1").default_value[:3] != (1.0, 1.0, 1.0)
+    finally:
+        edit_material.cancel(edit)

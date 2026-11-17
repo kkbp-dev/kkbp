@@ -85,6 +85,11 @@ EDIT = {
         "pattern_mask1": ["own:_PatternMask_01"], "pattern_mask2": ["own:_PatternMask_02"], "pattern_mask3": ["own:_PatternMask_03"],
         "detail_mask": ["own:_Detail_mask_01"], "detail_mask2": ["own:_Detail_mask_02"],
         "create": ["own:_Create_main_texture"],
+        # The clothes' create material (Schema Version 1.3).
+        "create_main": ["create:_Main_texture"], "create_mask": ["create:_Main_color_mask"],
+        "create_paint_mask": ["create:_Paint_mask"],
+        **{f"create_pattern{k}": [f"create:_PatternMask_0{k}"] for k in (1, 2, 3, 4)},
+        **{f"create_paint{k}": [f"create:_Paint_texture_0{k}"] for k in (1, 2, 3)},
     },
     "saturated": [],
     "saturated_roles": [],
@@ -128,6 +133,17 @@ EDIT = {
                 ("color_switch", "_Main_color_switchtest"), ("rim_scale", "_RimScale"), ("type_select", "_TypeSelect"),
                 ("shadow_power", "_Shadow_power"), ("shadow_extend", "_shadowextend"), ("shadow_color_on", "_ShadowColorON"),
                 ("line_power", "_Line_power"), ("alpha_line", "_AlphaLine"))],
+            *[[f"create_{kind}{k}", [f"create:{raw}0{k}"], how] for k in (1, 2, 3, 4)
+              for kind, raw in (("main_color", "_Main_color_"), ("sub_color", "_Sub_color_")) for how in ("plain",)],
+            *[[f"create_{kind}{k}_alpha", [f"create:{raw}0{k}"], "alpha"] for k in (1, 2, 3, 4)
+              for kind, raw in (("main_color", "_Main_color_"), ("sub_color", "_Sub_color_"))],
+            *[[f"create_paint_color{k}", [f"create:_Paint_color_0{k}"], "plain"] for k in (1, 2, 3)],
+            *[[f"create_paint_color{k}_alpha", [f"create:_Paint_color_0{k}"], "alpha"] for k in (1, 2, 3)],
+            *[[f"create_pattern{k}_{p}", [f"create:{raw}0{k}{axis}"], "float"] for k in (1, 2, 3, 4) for p, raw, axis in (
+                ("offset_u", "_PatternOffset_", "u"), ("offset_v", "_PatternOffset_", "v"), ("scale_u", "_PatternScale_", "u"),
+                ("scale_v", "_PatternScale_", "v"), ("rotator", "_PatternRotator_", ""))],
+            *[[f"create_paint{k}_position", [f"create:_Paint_position_0{k}"], "vector"] for k in (1, 2, 3)],
+            *[[f"create_paint{k}_position_w", [f"create:_Paint_position_0{k}"], "vector_w"] for k in (1, 2, 3)],
         ],
         "SVS lif_main_hair": [
             *[[name, [f"own:{raw}"], "plain"] for name, raw in _HAIR_COLORS],
@@ -139,7 +155,9 @@ EDIT = {
         ],
     },
     # SVS's masks keep data of their own in their alpha (the hair's colour mask its Ex hair colour 2).
-    "channel_packed": ["main", "pattern_mask1", "pattern_mask2", "pattern_mask3", "detail_mask", "detail_mask2", "create", "color_mask", "iris_mask", "pupil", "highlight1", "highlight2", "highlight3", "shadow_mask",
+    "channel_packed": ["main", "pattern_mask1", "pattern_mask2", "pattern_mask3", "detail_mask", "detail_mask2", "create", "create_main", "create_mask", "create_paint_mask",
+                       "create_pattern1", "create_pattern2", "create_pattern3", "create_pattern4", "create_paint1", "create_paint2",
+                       "create_paint3", "color_mask", "iris_mask", "pupil", "highlight1", "highlight2", "highlight3", "shadow_mask",
                        "eyebrow", "eyelash_up", "eyelash_down", "detail1", "detail2"],
     "values": [
         # The eye white copies bake the eye white alone (ADR 0034).
@@ -149,6 +167,11 @@ EDIT = {
         *[[f"missing:{slot}", {f"{slot}_present": 0.0}] for slot in _EYE_TEXTURES],
         *[[f"missing:{slot}", {f"{slot}_present": 0.0}] for slot in
           ("main", "color_mask", "pattern_mask1", "pattern_mask2", "pattern_mask3")],
+        # The clothes composite their create material when the bundle carries one (Schema Version 1.3).
+        ["has:create_mask", {"use_create": 1.0}],
+        *[[f"missing:{slot}", {f"{slot}_present": 0.0}] for slot in
+          ("create_main", "create_mask", "create_paint_mask", *[f"create_pattern{k}" for k in (1, 2, 3, 4)],
+           *[f"create_paint{k}" for k in (1, 2, 3)])],
     ],
 }
 
