@@ -249,13 +249,14 @@ def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(legacy):
     assert not edit[edit_material.SATURATED]
 
 
-def test_tears_and_gag_eyes_and_svs_are_not_editable(ch, build):
+def test_tears_gag_eyes_and_svs_bodies_are_not_editable(ch, build):
     assert "has no edit template" in edit_material.editable(ch, ch.materials("tears")[0])
     with pytest.raises(edit_material.EditError):
         edit_material.edit(ch, ch.materials("gag_eyes")[0])
     result = kkbp.api.import_bundle(build(BundleBuilder("SVS")), hooks=[])
     svs = character.Character(result.character_key)
-    assert "isn't available for SVS" in edit_material.editable(svs, svs.material("cf_m_body"))
+    # SVS has edit templates (ADR 0050), but none for its body yet.
+    assert "has no edit template" in edit_material.editable(svs, svs.material("cf_m_body"))
 
 
 def test_save_bakes_light_and_dark_into_the_original(ch):
