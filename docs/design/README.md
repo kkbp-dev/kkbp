@@ -73,6 +73,7 @@ ADRs:
 - [0047 The exporter makes vertex copies one, and mirrors the Body](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)
 - [0048 The Body is skinned with mirrored skin matrices](../adr/0048-the-body-is-skinned-with-mirrored-skin-matrices.md)
 - [0049 The importer snaps mirror partners and lifts the upper eyeline](../adr/0049-the-importer-snaps-mirror-partners-and-lifts-the-upper-eyeline.md)
+- [0050 SVS's edit templates follow its LIF shaders under the maker's bake light, with no grade](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)
 
 ## Decisions
 
@@ -130,7 +131,7 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 - **D43** numpy, pinned to Blender's own version, is in the dev venv for the host tests.
 - **D44** Edit material, Cancel, Reset and Save. Save bakes light and dark with Eevee through an orthographic camera onto the mesh flattened into UV space, into the original Light Dark material; the edit copy goes; the alpha mask stays the Light Dark material's. The bake has its main texture's size and shape, and the body and face stay 4096 square ([ADR 0044](../adr/0044-bakes-keep-the-main-textures-shape-and-skin-stays-4096.md)). There is no backup material and no normal bake. Generated images go into the Cache (`kkbp_cache/edit/`, `kkbp_cache/baked/`).
 - **D45** Link hair puts every hair material of the object into edit and copies the active one's light and dark settings to them (for a template made from the game's shaders, its colours; each hair keeps its own shader's values, ADR 0041).
-- **D46** Edit material isn't available for SVS yet; KKS uses the KK templates.
+- **D46** KKS uses the KK templates. SVS has its own, which follow its LIF shaders and have no grade ([ADR 0050](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)); its eyelid, nails, body and face aren't editable yet.
 - **D47** A built-in Hook, Delete default scene (`delete_default_scene`, on), runs last of the built-in Hooks and deletes Blender's startup cube, camera and light when every other object in the file belongs to an imported Character.
 
 ### Checks and the release

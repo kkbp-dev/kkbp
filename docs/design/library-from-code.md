@@ -50,7 +50,7 @@ Every template and group carries `kkbp_template_version` (`TEMPLATE_VERSION` in 
 
 ## Edit templates from the games' shaders
 
-An edit template rebuilds a material's colouring in nodes, from the textures and colours the bundle carries, so the colours can be changed and baked again. Each one copies the game's own shaders. SVS has no edit templates (issue 62).
+An edit template rebuilds a material's colouring in nodes, from the textures and colours the bundle carries, so the colours can be changed and baked again. Each one copies the game's own shaders. SVS's are in "SVS" below ([ADR 0050](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)).
 
 ### How the games shade
 
@@ -192,3 +192,16 @@ Notes for writing the groups:
 - The render target clamps at 1, so the group output is clamped.
 - Pattern masks repeat (scale up to 20); overlays clamp. Missing decals and overlays are switched off by their colour's alpha.
 - `main_skin` reads the mesh's vertex colour for its overlays; the bake copies it to its flat mesh.
+
+### SVS
+
+SVS's templates (`SVS lif_main_eyebrow`, `lif_main_eyelash_up`, `lif_main_eye`, `lif_main_hair`, `lif_main_acs`, `lif_main_cloth`) follow its LIF shaders the same way, with three differences ([ADR 0050](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)):
+
+- **No grade.** A bake is the shader's output, sRGB-encoded: `edit_templates.begin(..., grade=False)` feeds `.Combine colors` directly.
+- **The maker's light, read from the game.** The SVS exporter's `probe_bake` request writes, for every light and dark render, the maker light, URP's globals and keywords, the ambient probe and the camera. On the bake quad (normal +z, camera at (0.5, 0.5, 1)): light colour (1, 1, 1), N.L 0.828 lit and -0.944 dark, the ambient `models.SVS_QUAD_AMBIENT`, no additional lights, no reflection. They are `models.SVS_LIGHT` and `SVS_DARK`, and the groups' input defaults.
+- **One N.L or two.** Templates whose shader reads its ramp at a place that depends on the pixel light once, at the N.L the bake's toon value picks (`.SVS toon ndl`, put between `.Toon shading` and `.Combine colors`); the face parts and the eye light both.
+
+The models are `svs_face_part`, `lif_main_eye` (and `pupil_layer`), `lif_main_hair`, `lif_main_acs`, `lif_main_cloth` in `models.py`, checked by the `test_svs_*` host tests. Shared groups: `.SVS face part light`, `.SVS item light` (the accessories' and clothes' light), `.SVS ramp uv`, `.SVS pattern uv`.
+
+To read a variant: run an export with `"probe_bake"`, then pick the `Forward` program whose keywords best match the render's material and pipeline keywords (the shadow keywords don't matter: the quad is unshadowed). A texture the bundle lacks reads its shader's default texture (UnityPy: `m_ParsedForm.m_PropInfo.m_Props[].m_DefTexture.m_DefaultName`).
+
