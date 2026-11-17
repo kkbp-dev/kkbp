@@ -68,7 +68,9 @@ EDIT = {
         "hair": "SVS lif_main_hair",
     },
     # Shader (after its last `/`) -> edit template, before the Role's.
-    "shader_templates": {"lif_main_acs": "SVS lif_main_acs", "lif_main_cloth": "SVS lif_main_cloth"},
+    "shader_templates": {"lif_main_acs": "SVS lif_main_acs", "lif_main_cloth": "SVS lif_main_cloth",
+                         # The socks' shader is the clothes' without their parallax and liquid.
+                         "lif_main_cloth_socks": "SVS lif_main_cloth"},
     "not_editable_blend_modes": ["glasses"],
     "textures": {
         "eyebrow": ["own:_eyebrow_texture"],

@@ -639,21 +639,24 @@ def test_svs_acs_gives_back_the_bakes(mid):
 
 @pytest.mark.parametrize("mid,limit", [("m_cloth_cf_top_tshirt00", 0.004), ("m_cloth_cf_bot_denim00", 0.004),
                                        ("m_cloth_cf_bra_base00_03", 0.004),
+                                       # lif_main_cloth_socks: the clothes' shader without parallax and liquid
+                                       ("m_cloths_cm_socks_00", 0.004),
                                        # its _Hight parallax, left out, moves the texture a little
                                        ("m_cm_shoes_01", 0.01)])
 def test_svs_cloth_gives_back_the_bakes(mid, limit):
     """LIF/lif_main_cloth from its composited texture (Phase 1: the create shader's output)."""
     sample = Sample("svs")
     m = sample.materials[mid]
+    colors = {"_Color_Cuvature": np.zeros(4), **_svs_colors(m)}
     light_ref, dark_ref, size = _bakes(sample, m)
     u, v = _uv(size)
     f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
     create, mask, d1, d2 = (_svs_at(sample, m, raw, u, v) for raw in
                             ("_Create_main_texture", "_Main_color_mask", "_Detail_mask_01", "_Detail_mask_02"))
-    col = models.cloth_color(create, mask, d2, _svs_colors(m), f)
+    col = models.cloth_color(create, mask, d2, colors, f)
     ramp = _svs_raw(sample, m, "_Lamp")[::-1]
     for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
         r1, r2 = models.cloth_ramp_uv(d1, d2, f, light)
         out = models.lif_main_cloth(col, create[..., 3], d1, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
-                                    _svs_colors(m), f, light)
+                                    colors, f, light)
         assert difference(models.svs_baked(out), reference[::-1]) < limit
