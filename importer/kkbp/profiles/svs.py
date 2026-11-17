@@ -68,7 +68,7 @@ EDIT = {
         "hair": "SVS lif_main_hair",
     },
     # Shader (after its last `/`) -> edit template, before the Role's.
-    "shader_templates": {"lif_main_acs": "SVS lif_main_acs"},
+    "shader_templates": {"lif_main_acs": "SVS lif_main_acs", "lif_main_cloth": "SVS lif_main_cloth"},
     "not_editable_blend_modes": ["glasses"],
     "textures": {
         "eyebrow": ["own:_eyebrow_texture"],
@@ -81,7 +81,8 @@ EDIT = {
         "ramp": ["own:_Lamp"], "ramp2": ["own:_Lamp"],
         "main": ["own:_Main_texture"],
         "pattern_mask1": ["own:_PatternMask_01"], "pattern_mask2": ["own:_PatternMask_02"], "pattern_mask3": ["own:_PatternMask_03"],
-        "detail_mask": ["own:_Detail_mask_01"],
+        "detail_mask": ["own:_Detail_mask_01"], "detail_mask2": ["own:_Detail_mask_02"],
+        "create": ["own:_Create_main_texture"],
     },
     "saturated": [],
     "saturated_roles": [],
@@ -115,6 +116,17 @@ EDIT = {
                 ("line_width_s", "_LineWidthS"), ("line_width", "_Line_width"), ("line_width_ss", "_LineWidthSS"),
                 ("line_texture_on", "_Line_texture_onoff"), ("alpha_line", "_AlphaLine"), ("alpha", "_alpha"))],
         ],
+        "SVS lif_main_cloth": [
+            *[[f"main_color{k}", [f"own:_Main_color_0{k}"], "plain"] for k in (1, 2, 3, 4)],
+            ["curvature_color", ["own:_Color_Cuvature"], "plain"], ["curvature_color_alpha", ["own:_Color_Cuvature"], "alpha"],
+            ["shadow_color", ["own:_ShadowColor"], "plain"], ["line_color", ["own:_Line_color"], "plain"],
+            ["shadow_setting", ["own:_ShadowSetting"], "vector"], ["shadow_setting_w", ["own:_ShadowSetting"], "vector_w"],
+            ["shadow_pull", ["own:_ShadowSetting"], "vector_z"],
+            *[[name, [f"own:{raw}"], "float"] for name, raw in (
+                ("color_switch", "_Main_color_switchtest"), ("rim_scale", "_RimScale"), ("type_select", "_TypeSelect"),
+                ("shadow_power", "_Shadow_power"), ("shadow_extend", "_shadowextend"), ("shadow_color_on", "_ShadowColorON"),
+                ("line_power", "_Line_power"), ("alpha_line", "_AlphaLine"))],
+        ],
         "SVS lif_main_hair": [
             *[[name, [f"own:{raw}"], "plain"] for name, raw in _HAIR_COLORS],
             *[[f"{name}_alpha", [f"own:{raw}"], "alpha"] for name, raw in _HAIR_COLORS
@@ -125,7 +137,7 @@ EDIT = {
         ],
     },
     # SVS's masks keep data of their own in their alpha (the hair's colour mask its Ex hair colour 2).
-    "channel_packed": ["main", "pattern_mask1", "pattern_mask2", "pattern_mask3", "detail_mask", "color_mask", "iris_mask", "pupil", "highlight1", "highlight2", "highlight3", "shadow_mask",
+    "channel_packed": ["main", "pattern_mask1", "pattern_mask2", "pattern_mask3", "detail_mask", "detail_mask2", "create", "color_mask", "iris_mask", "pupil", "highlight1", "highlight2", "highlight3", "shadow_mask",
                        "eyebrow", "eyelash_up", "eyelash_down", "detail1", "detail2"],
     "values": [
         # The eye white copies bake the eye white alone (ADR 0034).

@@ -200,6 +200,8 @@ _SVS_ACS_LIT = {"shadow_setting": "Shadow setting", "shadow_setting_w": "Shadow 
                 "line_color_intensity2": "Line color intensity 2", "line_color_intensity3": "Line color intensity 3",
                 "line_width_s": "Line width S", "line_width": "Line width", "line_width_ss": "Line width SS",
                 "line_texture_on": "Line texture on", "alpha_line": "Alpha line", "alpha": "Alpha"}
+_SVS_CLOTH_LIT = ("shadow_setting", "shadow_setting_w", "shadow_power", "shadow_extend", "shadow_color_on", "type_select",
+                  "shadow_color", "light_color", "ambient", "line_color", "line_power", "alpha_line")
 # What main_opaque and main_item share: the shadow colour and extends, the line switches, the
 # maker's ambient and line colour.
 _ITEM_LIGHT = {"shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend"),
@@ -407,6 +409,15 @@ _EDIT_TEMPLATES = (
                          ("remap_min", "Remap min"), ("remap_max", "Remap max"), ("offset_u", "Offset u"), ("offset_v", "Offset v"),
                          ("rotator", "Rotator"), ("clamp", "Clamp"))},
                      **{name: ("lit", socket) for name, socket in _SVS_ACS_LIT.items()}}),
+    Template("SVS lif_main_cloth", graded=True,
+             textures={k: f"tex.{k}" for k in ("create", "color_mask", "detail_mask", "detail_mask2", "ramp", "ramp2")},
+             params={**_GAME_BAKE, "toon_shading": ("ndl", "Toon shading"), "ndl_light": ("ndl", "N.L light"),
+                     "ndl_dark": ("ndl", "N.L dark"), "shadow_pull": ("ramp uv", "Pull"), "rim_scale": ("ramp uv", "Lift"),
+                     **{f"main_color{k}": ("color", f"Main color {k}") for k in (1, 2, 3, 4)},
+                     "color_switch": ("color", "Switch"), "curvature_color": ("color", "Curvature color"),
+                     "curvature_color_alpha": ("color", "Curvature color alpha"),
+                     **{name: ("lit", socket) for name, socket in _SVS_ACS_LIT.items()
+                        if name in _SVS_CLOTH_LIT}}),
 )
 EDIT_TEMPLATES = tuple(t.name for t in _EDIT_TEMPLATES)
 
