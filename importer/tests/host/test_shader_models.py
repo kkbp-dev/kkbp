@@ -523,3 +523,54 @@ def test_svs_eyebrow_gives_back_the_bakes():
         out, alpha = models.lif_main_eyebrow(tex, _svs_colors(m), m["floats"], light)
         assert difference(models.svs_baked(out), reference) < 0.004
         assert ((alpha > 0.5) == (reference[..., 3] > 0.5)).mean() > 0.999
+
+
+def test_svs_eyelash_gives_back_the_bakes():
+    """LIF/lif_main_eyelash_up: the eyebrow's light, its two textures blended, cut at 0.9 alpha."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_eyelash_up_00"]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    tex = models.eyelash_texture(_svs_raw(sample, m, "_Eyelash_up_texture", size), _svs_raw(sample, m, "_Eyelash_dw_texture", size))
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        out, alpha = models.lif_main_eyelash_up(tex, _svs_colors(m), m["floats"], light)
+        assert difference(models.svs_baked(out), reference) < 0.004
+        assert ((alpha > 0.5) == (reference[..., 3] > 0.5)).mean() > 0.999
+
+
+def _eye_textures(sample, m, size):
+    """Each LIF/lif_main_eye texture read at its eye_uvs place on a bake of `size`, rows bottom-up."""
+    w, h = size
+    v, u = np.mgrid[0:h, 0:w]
+    u, v = (u + 0.5) / w, (v + 0.5) / h
+    uvs = models.eye_uvs(u, v, m["floats"], m["vectors"])
+    uvs["shadow_mask"] = (u, v)
+
+    def read(raw, place):
+        t = next((t for t in m["textures"] if t["raw"] == raw and not t.get("variant")), None)
+        if t is None:
+            return None
+        image = _svs_raw(sample, m, raw)[::-1]
+        pu, pv = place
+        return models._bilinear(image, pu * t["scale"][0] + t["offset"][0], pv * t["scale"][1] + t["offset"][1])
+    names = {"shadow_mask": "_Shadow_mask", "iris": "_Eye_mask", "pupil": "_Pipil_texture", "grade": "_Grade_texture",
+             **{f"highlight{k}": f"_Highlight_texture_0{k}" for k in (1, 2, 3)}}
+    return {k: read(raw, uvs[k]) for k, raw in names.items()}
+
+
+@pytest.mark.parametrize("mid", ["cf_m_hitomi_00_L", "cf_m_hitomi_00_R", "cf_m_hitomi_00_L_white", "cf_m_hitomi_00_R_white"])
+def test_svs_eye_gives_back_the_bakes(mid):
+    """LIF/lif_main_eye: the eye white copies bake the eye white alone; the eyes bake the pupil layer
+    over transparency (ADR 0034), whose alpha is the eye white's coverage."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    textures = _eye_textures(sample, m, size)
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        out, white, coverage = models.lif_main_eye(textures, _svs_colors(m), m["floats"], light)
+        reference = reference[::-1]  # rows bottom-up, as the textures were read
+        if m["role"] == "eye_white":
+            assert difference(models.svs_baked(white), reference) < 0.004
+            continue
+        layer = models.pupil_layer(out, white, coverage)
+        assert difference(models.svs_baked(layer), reference) < 0.004
+        assert np.abs(coverage - reference[..., 3]).mean() < 0.01

@@ -566,11 +566,12 @@ def svs_shadow_tint(col):
     return _hsv_rgb(h, np.sqrt(s), v)
 
 
-def svs_face_part_light(col, shadow_power, light: SvsLight):
+def svs_face_part_light(col, shadow_power, light: SvsLight, cap=1.0):
     """The light the LIF face-part shaders (eyebrow, eyelash) multiply their colour by: a lit term
     from the light and ambient, a shadow term overlaying the tinted shadow colour on the ambient,
     blended by how far the normal turns from the light, plus any light over 1 and the additional
-    lights. Returns rgb, per pixel when `col` is."""
+    lights. `cap` caps how far into the shadow colour (the eye's `1 - 0.2 * highlights`). Returns
+    rgb, per pixel when `col` is."""
     L = np.asarray(light.color, dtype=F)
     sh = np.minimum(np.maximum(np.asarray(light.ambient, dtype=F), 0), 1)
     mean_light = L.sum() / 3
@@ -584,29 +585,49 @@ def svs_face_part_light(col, shadow_power, light: SvsLight):
     t = max(1 - light.ndl, shadowed) * over - 0.5 * (over - 1)
     mean_ambient = min(float(np.maximum(np.asarray(light.ambient, dtype=F), 0).mean()), 1.0)
     p = (0.75 - 0.65 * mean_ambient) + shadow_power * ((0.9 - 0.4 * mean_ambient) - (0.75 - 0.65 * mean_ambient))
-    t = min(max(float(np.clip(1 - mean_light, 0, 1)), p * t), 1.0)
+    t = np.minimum(max(float(np.clip(1 - mean_light, 0, 1)), p * t), cap)
+    t = np.asarray(t, dtype=F)[..., None] if np.ndim(t) else t
     mixed = lit + t * (shadow_col - lit)
     back = float(np.clip((0.2 - light.ndl) / 0.15, 0, 1))
     excess = np.clip(L - 1, 0, 99) * min(1 - back, lit_attenuation)
     return mixed + excess + np.asarray(light.additional, dtype=F)
 
 
-def lif_main_eyebrow(tex, colors, floats, light: SvsLight):
-    """LIF/lif_main_eyebrow: the texture's red, green and blue pick `_eyebrow_color02`, `03` and
-    `_Line_color` (each by its alpha) over `_eyebrow_color01`, tinted toward the light by
-    `_Ligjht_influence`, then lit as `svs_face_part_light`. `tex` is `_eyebrow_texture` read at
-    `eyebrow_uv`; `colors` are linear rgb with their alpha last. Returns linear rgb and alpha (the
-    texture's, cut at 0.5)."""
+def svs_face_part(tex, colors, floats, light: SvsLight, *, names, by_alpha, cut):
+    """LIF/lif_main_eyebrow and lif_main_eyelash_up: the texture's red, green and blue pick the 2nd,
+    3rd and 4th of `names` (each by its alpha, and with `by_alpha` by the texture's) over the 1st,
+    tinted toward the light by `_Ligjht_influence`, then lit as `svs_face_part_light`. `colors` are
+    linear rgb with their alpha last. Returns linear rgb and alpha (the texture's, 0 below `cut`)."""
     a = tex[..., 3:4]
-    c1, c2, c3, line = (np.asarray(colors[k], dtype=F) for k in
-                        ("_eyebrow_color01", "_eyebrow_color02", "_eyebrow_color03", "_Line_color"))
-    col = c1[:3] + tex[..., 0:1] * c2[3] * a * (c2[:3] - c1[:3])
-    col = col + tex[..., 1:2] * c3[3] * a * (c3[:3] - col)
-    col = col + tex[..., 2:3] * line[3] * a * (line[:3] - col)
+    w = a if by_alpha else 1.0
+    c1, c2, c3, line = (np.asarray(colors[k], dtype=F) for k in names)
+    col = c1[:3] + tex[..., 0:1] * c2[3] * w * (c2[:3] - c1[:3])
+    col = col + tex[..., 1:2] * c3[3] * w * (c3[:3] - col)
+    col = col + tex[..., 2:3] * line[3] * w * (line[:3] - col)
     L = np.asarray(light.color, dtype=F)
     col = np.clip(col + 0.7 * floats.get("_Ligjht_influence", 0) * (L * col - col), 0, 1)
     out = np.clip(col * svs_face_part_light(col, floats.get("_Shadow_power", 0), light), 0, 1.05)
-    return out, np.where(a[..., 0] >= 0.5, a[..., 0], 0)
+    return out, np.where(a[..., 0] >= cut, a[..., 0], 0)
+
+
+def lif_main_eyebrow(tex, colors, floats, light: SvsLight):
+    """LIF/lif_main_eyebrow: `tex` is `_eyebrow_texture` read at `eyebrow_uv`."""
+    return svs_face_part(tex, colors, floats, light, by_alpha=True, cut=0.5,
+                         names=("_eyebrow_color01", "_eyebrow_color02", "_eyebrow_color03", "_Line_color"))
+
+
+def eyelash_texture(up, down):
+    """LIF/lif_main_eyelash_up's texture: the lower eyelash's over the upper's by its alpha, with the
+    larger alpha."""
+    rgb = up[..., :3] + down[..., 3:4] * (down[..., :3] - up[..., :3])
+    return np.concatenate([rgb, np.maximum(up[..., 3:4], down[..., 3:4])], axis=-1)
+
+
+def lif_main_eyelash_up(tex, colors, floats, light: SvsLight):
+    """LIF/lif_main_eyelash_up: `tex` is `eyelash_texture` of its two textures. Drawn where the alpha
+    is at least 0.9."""
+    return svs_face_part(tex, colors, floats, light, by_alpha=False, cut=0.9,
+                         names=("_Eyelash_color01", "_Eyelash_color02", "_Eyelash_color03", "_Line_color"))
 
 
 def eyebrow_uv(u, v, length, width):
@@ -616,3 +637,118 @@ def eyebrow_uv(u, v, length, width):
     su = a + np.round(length) * (b - a)
     sv = 1.3 - 0.6 * width
     return u * su - 0.2 * (su - 1), v * sv - 0.5 * (0.3 - 0.6 * width)
+
+
+
+# --- SVS eyes: lif_main_eye ---------------------------------------------------------------------
+
+def _lerp(a, b, t):
+    return a + t * (b - a)
+
+
+def _turn(x, y, angle):
+    c, s = np.cos(angle), np.sin(angle)
+    return x * c + y * s, -x * s + y * c
+
+
+def bake_view(u, v):
+    """The view direction LIF/lif_main_eye's parallax reads on the bake quad, in tangent space: the
+    camera at (0.5, 0.5, 1) over the quad at (1 - u, v, 0), whose tangent is -x and bitangent +y.
+    Returns its x / (z + 0.42) and y / (z + 0.42), as the shader offsets by them."""
+    x, y, z = 0.5 - u, 0.5 - v, np.ones_like(u)
+    n = np.sqrt(x * x + y * y + 1)
+    x, y, z = x / n, y / n, z / n
+    return x / (z + 0.42), y / (z + 0.42)
+
+
+def eye_uvs(u, v, floats, vectors):
+    """Where LIF/lif_main_eye reads each texture: the UV turned by `_rotation` about the iris centre
+    (`_Eye_position.zw + _Eye_position_add.zw`), then scaled about it for the gradient, iris, pupil
+    and highlights, with the parallax offsets. Returns a dict of (u, v) pairs by texture, and the
+    view offsets for the parallax."""
+    f = floats
+    ep, epa = (np.asarray(vectors[k], dtype=F) for k in ("_Eye_position", "_Eye_position_add"))
+    c = epa[2:4] + ep[2:4]
+    turn = _lerp(1 - f["_rotation"], f["_rotation"], f["_Eye_postion_rebers"])
+    px, py = _turn(u - (0.5 - c[0]), v - (0.5 - c[1]), (turn * 0.1 - 0.05000001) * 2 * np.pi)
+    px, py = px + 0.5 - c[0], py + 0.5 - c[1]
+    ox, oy = bake_view(u, v)
+    sx, sy = (ep[0] + f["_Eye_open"]) * epa[0], (ep[1] + f["_Eye_open"]) * epa[1]
+    gx, gy = sx + 1 - 2 * f["_Grade_size"], sy + 1 - 2 * f["_Grade_size"]
+    out = {"grade": ((c[0] + px) * gx - gx / 2 + 0.5,
+                     (f["_Grade_position"] * 0.65 + ep[3] + py - 0.25) * gy - gy / 2 + 0.5)}
+    qx, qy = (c[0] + px) * sx - sx / 2 + 0.5, (c[1] + py) * sy - sy / 2 + 0.5
+    r = np.minimum(np.hypot(qx - 0.5, qy * 0.6 - 0.3) * 4 + 0.18, 1)
+    depth = (r * 0.2 - 0.2) * (f["_Parallax"] - 0.5)
+    out["iris"] = (qx + depth * ox, qy + depth * oy)
+    ps = np.asarray(vectors["_Pipil_size"], dtype=F)[:2] + f["_Eye_open"]
+    near = 0.05 - 0.1 * f["_Parallax"]
+    out["pupil"] = ((c[0] + px) * ps[0] - ps[0] / 2 + near * ox + 0.5, (c[1] + py) * ps[1] - ps[1] / 2 + near * oy + 0.5)
+    far = 0.1 * f["_Parallax"] - 0.05
+    for k in (1, 2, 3):
+        hp = np.asarray(vectors[f"_Highlight_0{k}_position"], dtype=F)
+        hx, hy = hp[2] * 0.5 + c[0] + px, hp[3] * 0.5 + c[1] + py
+        w, h = hp[0] * epa[0], hp[1] * epa[1]
+        hx, hy = _turn(hx * w - w / 2, hy * h - h / 2, (f[f"_Highlight_0{k}_rotation"] - 0.5) * 2 * np.pi)
+        out[f"highlight{k}"] = (hx + far * ox + 0.5, hy + far * oy + 0.5)
+    return out
+
+
+def lif_main_eye(textures, colors, floats, light: SvsLight):
+    """LIF/lif_main_eye: the eye white from `_Shadow_mask` and its two colours, and over it by the
+    iris mask's alpha the iris (two colours by its red, a linear-light third by its green), the pupil's
+    three colours and lines, the gradient's soft light, then three highlights and their lines, lit
+    as `svs_face_part_light` capped by the highlights. `textures` hold each texture read at its
+    `eye_uvs` place (None for a missing one, which reads black and transparent); `colors` linear rgb
+    with alpha last.
+
+    Returns the lit eye, the lit eye white alone, and the eye white's coverage as the exporter
+    measures it for the pupil layer (ADR 0034, LightBake.Pupil): the eye lit with its eye white
+    black and white, their difference over the lit white."""
+    col = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    shape = textures["shadow_mask"].shape[:2]
+    tex = {k: (np.zeros(shape + (4,)) if t is None else t) for k, t in textures.items()}
+    mk = tex["shadow_mask"]
+    w1, w2 = col["_Eye_white_color_01"], col["_Eye_white_color_02"]
+    white = _lerp(w1[:3], mk[..., :3] * w2[:3], (mk[..., 3] * w2[3])[..., None])
+    em, pp, gr = tex["iris"], tex["pupil"], tex["grade"]
+    iris = _lerp(col["_Eye_color_01"][:3], col["_Eye_color_02"][:3], (em[..., 0] * col["_Eye_color_02"][3] * em[..., 3])[..., None])
+    e3 = col["_Eye_color_03"]
+    iris = np.clip(_lerp(iris, iris + 2 * e3[:3] - 1, (em[..., 1] * e3[3] * em[..., 3])[..., None]), 0, 1)
+    c = _lerp(iris, col["_Piple_color_01"][:3], (pp[..., 3] * col["_Piple_color_01"][3])[..., None])
+    for k, ch in ((2, 0), (3, 1)):
+        c = _lerp(c, col[f"_Piple_color_0{k}"][:3], (pp[..., ch] * col[f"_Piple_color_0{k}"][3] * pp[..., 3])[..., None])
+    line = col["_Line_color"]
+    c = _lerp(c, line[:3], (pp[..., 2] * line[3] * pp[..., 3] + line[3] * em[..., 2])[..., None])
+    g, ga = gr[..., :3] * col["_Grade_color"][:3], gr[..., 0] * col["_Grade_color"][3]
+    c = np.clip(_lerp(c, 2 * c * g + c * c * (1 - 2 * g), ga[..., None]), 0, 1)
+    hs = [tex[f"highlight{k}"] for k in (1, 2, 3)]
+    ha = [col[f"_Highlight_color_0{k}"][3] for k in (1, 2, 3)]
+    amount = np.clip(sum(ha[k] * hs[k][..., 3] for k in range(3)), 0, 1) * floats["_Highlight_power"]
+    lines = sum(ha[k] * hs[k][..., 2] * line[3] * hs[k][..., 3] for k in range(3))
+    cap = 1 - 0.2 * np.clip(sum(h[..., 3] for h in hs), 0, 1)
+    power = floats["_Shadow_power"]
+
+    def lit(under):
+        """The eye over the eye white `under`, lit."""
+        eye = _lerp(under, c, em[..., 3:4])
+        top = eye
+        for k, h in enumerate(hs):
+            top = _lerp(top, col[f"_Highlight_color_0{k + 1}"][:3], (h[..., 3] * ha[k])[..., None])
+        top = _lerp(top, line[:3], lines[..., None])
+        eye = _lerp(eye, top, amount[..., None])
+        return np.clip(eye * svs_face_part_light(eye, power, light, cap), 0, 1.05)
+
+    out = lit(white)
+    white_out = np.clip(white * svs_face_part_light(white, power, light), 0, 1.05)
+    one = np.ones(3, dtype=F)
+    lit_white = np.minimum(one * svs_face_part_light(one, power, light), 1)
+    uncovered = (np.minimum(lit(np.ones_like(white)), 1) - np.minimum(lit(np.zeros_like(white)), 1)) / lit_white
+    return out, white_out, 1 - np.clip(uncovered.mean(axis=-1), 0, 1)
+
+
+def pupil_layer(out, white, coverage):
+    """The exporter's pupil layer from the eye and its eye white alone (LightBake.Pupil): the colour
+    that, laid over the eye white with `coverage` in linear light, gives back the eye."""
+    a = coverage[..., None]
+    return np.where(a > 0, np.clip((out - (1 - a) * white) / np.maximum(a, 1e-6), 0, 1), white)
