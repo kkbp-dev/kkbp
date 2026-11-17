@@ -195,13 +195,13 @@ Notes for writing the groups:
 
 ### SVS
 
-SVS's templates (`SVS lif_main_eyebrow`, `lif_main_eyelash_up`, `lif_main_eye`, `lif_main_hair`, `lif_main_acs`, `lif_main_cloth`) follow its LIF shaders the same way, with three differences ([ADR 0050](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)):
+SVS's templates (`SVS lif_main_eyebrow`, `lif_main_eyelash_up`, `lif_main_eye`, `lif_main_hair`, `lif_main_acs`, `lif_main_cloth`, `lif_main_nail`, `lif_main_skin_body`, `lif_main_skin_head`) follow its LIF shaders the same way, with three differences ([ADR 0050](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)):
 
 - **No grade.** A bake is the shader's output, sRGB-encoded: `edit_templates.begin(..., grade=False)` feeds `.Combine colors` directly.
 - **The maker's light, read from the game.** The SVS exporter's `probe_bake` request writes, for every light and dark render, the maker light, URP's globals and keywords, the ambient probe and the camera. On the bake quad (normal +z, camera at (0.5, 0.5, 1)): light colour (1, 1, 1), N.L 0.828 lit and -0.944 dark, the ambient `models.SVS_QUAD_AMBIENT`, no additional lights, no reflection. They are `models.SVS_LIGHT` and `SVS_DARK`, and the groups' input defaults.
 - **One N.L or two.** Templates whose shader reads its ramp at a place that depends on the pixel light once, at the N.L the bake's toon value picks (`.SVS toon ndl`, put between `.Toon shading` and `.Combine colors`); the face parts and the eye light both.
 
-The models are `svs_face_part`, `lif_main_eye` (and `pupil_layer`), `lif_main_hair`, `lif_main_acs`, `lif_main_cloth` in `models.py`, checked by the `test_svs_*` host tests. Shared groups: `.SVS face part light`, `.SVS item light` (the accessories' and clothes' light), `.SVS ramp uv`, `.SVS pattern uv`.
+The models are `svs_face_part`, `lif_main_eye` (and `pupil_layer`), `lif_main_hair`, `lif_main_acs`, `lif_main_cloth`, `lif_main_nail`, `lif_main_skin_body`, `lif_main_skin_head` and the create shaders `create_main_cloth`, `create_main_skin_body`, `create_main_skin_head` in `models.py`, checked by the `test_svs_*` host tests. Shared groups: `.SVS face part light`, `.SVS item light` (the accessories', clothes', nails' and skin's light; its Skin input picks the skin's shadow tint, its T output says how far into shadow), `.SVS ramp uv`, `.SVS pattern uv`, `.SVS paint uv`. The skin's mesh-placed layers read the flattened mesh's own UV maps (`uv_nipple_and_shine`, `uv_underhair`, `uv_eyeshadow`, the second to fourth) and are scaled by the vertex colour's alpha, which keeps them off the bake's plane as the game's quad has them cleared.
 
 To read a variant: run an export with `"probe_bake"`, then pick the `Forward` program whose keywords best match the render's material and pipeline keywords (the shadow keywords don't matter: the quad is unshadowed). A texture the bundle lacks reads its shader's default texture (UnityPy: `m_ParsedForm.m_PropInfo.m_Props[].m_DefTexture.m_DefaultName`).
 
