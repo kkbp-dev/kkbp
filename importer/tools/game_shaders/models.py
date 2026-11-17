@@ -798,3 +798,125 @@ def lif_main_hair(color_mask, detail1, detail2, ramp1, ramp2, colors, floats, li
     shadow = _overlay(np.clip(l5, 0, 1) * c["_Shadow_color"][:3], sh * 0.7 + 0.1)
     shadow = _lerp(shadow, c["_ShadowColor"][:3], f.get("_ShadowColorON", 0))
     return np.clip(col * _lerp(lit, shadow, t[..., None]), 0, 1.1)
+
+
+# --- SVS accessories, teeth, tongue: lif_main_acs ------------------------------------------------
+
+def acs_pattern_uv(u, v, floats, k):
+    """Where LIF/lif_main_acs reads pattern mask `k`: scaled by `_PatternScale_0k` (times the UV aspect,
+    remapped from 0..1 to `_PatternRemapMin`..`Max`), moved by twice `_PatternOffset_0k` and turned by
+    `_PatternRotator_0k` about the centre; with `_patternclampk` the place wraps into the tile."""
+    f = floats
+    span = f["_PatternRemapMax"] - f["_PatternRemapMin"]
+    su = min(max(f[f"_PatternScale_0{k}u"] * f["_UVAspectRatioU"] * span + f["_PatternRemapMin"], 0), 999)
+    sv = min(max(f[f"_PatternScale_0{k}v"] * f["_UVAspectRatioV"] * span + f["_PatternRemapMin"], 0), 999)
+    x = u * su + 2 * f[f"_PatternOffset_0{k}u"] - 1 - 0.5 * su
+    y = v * sv + 2 * f[f"_PatternOffset_0{k}v"] - 1 - 0.5 * sv
+    x, y = _turn(x, y, (f[f"_PatternRotator_0{k}"] - 0.5) * 2 * np.pi)
+    x, y = x + 0.5, y + 0.5
+    c = f.get(f"_patternclamp{k}", 0)
+    wrapped = (np.mod(np.clip(x, 0, 1), 1.0), np.mod(np.clip(y, 0, 1), 1.0))
+    inside = np.minimum(np.ceil(x), np.ceil(y))
+    return x + c * (wrapped[0] - x), y + c * (wrapped[1] - y), 1 + c * (inside - 1)
+
+
+def _saturation(c):
+    mx = c.max(axis=-1)
+    return (mx - c.min(axis=-1)) / (mx + 1e-10)
+
+
+def acs_color(mask, patterns, main, colors, inside1=1.0):
+    """LIF/lif_main_acs's colour: each colour mask channel picks `_Main_color_0k` over `_Main_color_04`,
+    with pattern k (where the mask's alpha is at least 0.5) tinting toward `_Sub_color_0k` times the
+    pattern, or toward the pattern itself where it is saturated; then times the main texture. Returns
+    linear rgba."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    on = (mask[..., 3] >= 0.5).astype(F)
+    rgb = c["_Main_color_04"][:3]
+    a = np.full(mask.shape[:2], c["_Main_color_04"][3])
+    for k, ch in ((1, 0), (2, 1), (3, 2)):
+        pm = patterns[k - 1]
+        w = pm[..., 3] * (inside1 if k == 1 else 1.0)
+        main_k, sub = c[f"_Main_color_0{k}"], c[f"_Sub_color_0{k}"]
+        amount = on * w
+        layer = _lerp(main_k[:3], sub[:3] * pm[..., :3], (amount * sub[3])[..., None])
+        vivid = amount * np.clip(_saturation(pm[..., :3]) * 10 - 0.05, 0, 1) * sub[3]
+        layer = _lerp(layer, pm[..., :3], vivid[..., None])
+        rgb = _lerp(rgb, layer, mask[..., ch:ch + 1])
+        a = _lerp(a, main_k[3], mask[..., ch])
+    return np.concatenate([rgb, a[..., None]], axis=-1) * main
+
+
+def svs_item_shadow_tint(c):
+    """The shadow colour the LIF item shaders (accessories, clothes) make from a colour `c` (the colour
+    times 0.95): its hue at saturation clamp(2 - 2v + sqrt(s), 0, 0.9) and value 0.99 v sqrt(1 - s),
+    pulled toward (0.095, 0.413, 1) where the colour is blue or dull."""
+    h, s, v = _rgb_hsv(c)
+    root = np.sqrt(s)
+    sat = np.clip(2 - 2 * v + root, 0, 0.9)
+    tint = _hsv_rgb(h, sat, np.sqrt(1 - s) * v * 0.99)
+    blue = np.clip(np.clip(c @ np.array([0.0642824322, 0.257129729, 0.964236498]) * 10 - 7.5, 0, 1) + 1 - root, 0, 1)
+    return _lerp(tint, np.array([0.0953074992, 0.413035095, 1.0]), blue[..., None])
+
+
+# The shadow tint the LIF item shaders' skin-face variant (`_TypeSelect` 3, the teeth) uses in place
+# of svs_item_shadow_tint.
+SVS_SKIN_FACE_TINT = np.array([0.357276797, 0.0573572218, 0.0388724506], dtype=F)
+
+
+def svs_item_light(col95, detail, ramp1, ramp2, floats, colors, light: SvsLight):
+    """The light the LIF item shaders give a colour: as the hair's (`lif_main_hair`), with the ramp
+    weighted by `_ShadowSetting` and the detail mask's green, the shadow colour from
+    `svs_item_shadow_tint` (`SVS_SKIN_FACE_TINT` for `_TypeSelect` 3), and `_shadowextend` pushing
+    the detail mask's green further into shadow. `col95` is the colour times 0.95. Returns rgb."""
+    f = floats
+    ss = np.asarray(f.get("_ShadowSetting", (1, 0, 0, 0)), dtype=F)
+    L = np.asarray(light.color, dtype=F)
+    sh = np.clip(np.asarray(light.ambient, dtype=F), 0, 1)
+    mean = L.sum() / 3
+    lum = min(max(float(L @ np.array([0.212672904, 0.715152204, 0.0721750036])), 1.0), 99.0)
+    power = f["_Shadow_power"]
+    p = sh.sum() * -0.1 + 0.5 + 0.4 * power
+    p = p + f.get("_ShadowColorON", 0) * (power - p)
+    d = detail[..., 1]
+    ramp = np.clip(np.maximum(ramp1[..., 1] * ss[0], ramp2[..., 2] * power * ss[1]) + d * ss[3], 0, 1)
+    t = np.clip(p * (np.maximum(ramp, np.clip(1 - mean, 0, 1)) * lum - 0.75 * (lum - 1)), 0, 1)
+    t = t + np.clip(d * f.get("_shadowextend", 0), 0, 1)
+    l5 = L * 0.75 + 0.25
+    luma = l5 @ np.array([0.299, 0.587, 0.114])
+    lit = l5 + (mean - 1) * -0.25 * (luma - l5) + sh * 0.5
+    if f.get("_TypeSelect") == 3:
+        shadow = _overlay(np.clip(l5, 0, 1) * SVS_SKIN_FACE_TINT, sh * 0.7 + 0.1)
+    else:
+        shadow = _overlay(np.clip(l5, 0, 1) * svs_item_shadow_tint(col95), sh * 0.7 + 0.1)
+    shadow = _lerp(shadow, np.asarray(colors["_ShadowColor"], dtype=F)[:3], f.get("_ShadowColorON", 0))
+    return _lerp(lit, shadow, t[..., None])
+
+
+def item_ramp_uv(detail, floats, light: SvsLight):
+    """Where the LIF item shaders read their ramp: as `hair_ramp_uv`, pulled toward 0 by the detail
+    mask's green times `_ShadowSetting.b`."""
+    k = 1 - detail[..., 1] * np.asarray(floats.get("_ShadowSetting", (1, 0, 0, 0)), dtype=F)[2]
+    return (np.clip(k * np.clip(light.ndl, 0, 1), 0, 1),
+            np.clip(k * np.clip(light.ndl * 0.4 + 0.3, 0, 1), 0, 1))
+
+
+def lif_main_acs(rgba, mask, detail, ramp1, ramp2, colors, floats, light: SvsLight):
+    """LIF/lif_main_acs as the bake draws it, from its colour (`acs_color`): lit by `svs_item_light`,
+    with the line colour (`_Line_color` by `_Line_power`, kept off by the mask's channels times
+    `_LineColorIntensityk`) where the colour's alpha is low and along the detail mask's red. The rim,
+    the matcaps and the specular (`_Smoothness`) give nothing on the bake quad. Returns linear rgb."""
+    f = floats
+    c95 = rgba[..., :3] * 0.95
+    col = np.clip(c95, 0, 0.95)
+    line = np.asarray(colors["_Line_color"], dtype=F)[:3]
+    lc = _lerp(c95, line, f.get("_Line_power", 1))
+    for k, ch in ((1, 0), (2, 1), (3, 2)):
+        lc = _lerp(lc, c95, (mask[..., ch] * f.get(f"_LineColorIntensity{k}", 0))[..., None])
+    lc = np.clip(lc, 0, 0.95)
+    lit = col * svs_item_light(c95, detail, ramp1, ramp2, f, colors, light)
+    shown = _lerp(lc, lit, rgba[..., 3:4])
+    w = f.get("_LineWidthS", 0) * f.get("_Line_width", 0) * f.get("_LineWidthSS", 1)
+    amount = np.minimum(np.clip(detail[..., 0] * (w * 3.9 + 0.1) + w * 0.35 - 0.35, 0, 0.9), f.get("_Line_texture_onoff", 0))
+    base = shown if f.get("_AlphaLine", 0) else lit
+    return np.maximum(np.clip(_lerp(base, lc, amount[..., None]), 0, 0.95), 0)

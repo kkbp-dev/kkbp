@@ -605,3 +605,33 @@ def test_svs_hair_gives_back_the_bakes(mid):
         out = models.lif_main_hair(mask, d1, d2, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
                                    _svs_colors(m), m["floats"], light)
         assert difference(models.svs_baked(out), reference[::-1]) < 0.004
+
+
+def _acs_inputs(sample, m, size):
+    u, v = _uv(size)
+    f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
+    mask, detail = (_svs_at(sample, m, raw, u, v) for raw in ("_Main_color_mask", "_Detail_mask_01"))
+    main = _svs_at(sample, m, "_Main_texture", u, v) if any(t["raw"] == "_Main_texture" for t in m["textures"]) \
+        else np.ones(mask.shape)  # lif_main_acs's default main texture is white
+    patterns, inside = [], 1.0
+    for k in (1, 2, 3):
+        pu, pv, i = models.acs_pattern_uv(u, v, f, k)
+        patterns.append(_svs_at(sample, m, f"_PatternMask_0{k}", pu, pv))
+        inside = i if k == 1 else inside
+    return f, mask, detail, models.acs_color(mask, patterns, main, _svs_colors(m), inside)
+
+
+@pytest.mark.parametrize("mid", ["cf_m_tooth", "cf_m_tango"])
+def test_svs_acs_gives_back_the_bakes(mid):
+    """LIF/lif_main_acs (the teeth in its skin-face variant, the tongue in its cloth one). The sample's
+    have no main texture, colour mask or patterns, so only the plain colour is checked."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    f, mask, detail, rgba = _acs_inputs(sample, m, size)
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        r1, r2 = models.item_ramp_uv(detail, f, light)
+        out = models.lif_main_acs(rgba, mask, detail, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
+                                  _svs_colors(m), f, light)
+        assert difference(models.svs_baked(out), reference[::-1]) < 0.004
