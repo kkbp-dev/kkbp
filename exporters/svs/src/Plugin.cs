@@ -56,6 +56,9 @@ namespace KKBP.Exporter
         /// <summary>Set by AutoExport: where the next export writes its SymmetryProbe file, or null.</summary>
         internal string ProbeSymmetry;
 
+        /// <summary>The auto-export request's "probe_bake" file (BakeProbe), or null.</summary>
+        internal string ProbeBake;
+
         /// <summary>The batch export running now, or null.</summary>
         internal CardBatch Batch { get; private set; }
 
@@ -165,6 +168,7 @@ namespace KKBP.Exporter
                 Directory.CreateDirectory(folder);
                 adapter = new SvsAdapter(CharacterCreation.HumanCustom.Instance.Human, options);
                 adapter.ProbeSymmetryPath = ProbeSymmetry;
+                adapter.ProbeBakePath = ProbeBake;
                 export = new BundleExport(adapter, folder);
             }
             catch (Exception e)

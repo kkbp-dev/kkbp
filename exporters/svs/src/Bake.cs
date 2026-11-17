@@ -67,6 +67,10 @@ namespace KKBP.Exporter
         private readonly List<Renderer> disabled = new List<Renderer>();
         private readonly List<GameObject> hidden = new List<GameObject>();
         private readonly Mesh quad;
+
+        /// <summary>Records each render's scene values when set (the "probe_bake" request).</summary>
+        public BakeProbe Probe;
+
         public Bake(Human cha)
         {
             light = Svs.MakerLight();
@@ -390,6 +394,10 @@ namespace KKBP.Exporter
             Graphics.DrawMesh(mesh, Matrix4x4.identity, material, renderer.gameObject.layer, camera, sub, block,
                 renderer.shadowCastingMode, renderer.receiveShadows, renderer.probeAnchor, renderer.lightProbeUsage != LightProbeUsage.Off);
             camera.Render();
+            if (Probe != null)
+            {
+                Probe.Record(material, ClearedTextures, light, mesh == quad, camera, renderer, width, height);
+            }
             var previous = RenderTexture.active;
             RenderTexture.active = rt;
             var read = new Texture2D(width, height, TextureFormat.RGBA32, false);

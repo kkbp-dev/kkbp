@@ -87,6 +87,11 @@ namespace KKBP.Exporter
         /// <summary>Where SymmetryProbe writes the Body Pass's skinning, or null for no probe.</summary>
         public string ProbeSymmetryPath;
 
+        /// <summary>Where BakeProbe writes every bake's scene values, or null for no probe.</summary>
+        public string ProbeBakePath;
+
+        private BakeProbe bakeProbe;
+
         public IList<PassInfo> Passes()
         {
             var passes = new List<PassInfo> { PassInfo.Body() };
@@ -367,7 +372,11 @@ namespace KKBP.Exporter
         /// <summary>Adds the baked light and dark Variants to every captured material but the tears' and gag eyes'.</summary>
         private void BakeLightAndDark(PassSink sink, List<CapturedMesh> captured)
         {
-            using (var bake = new Bake(cha))
+            if (ProbeBakePath != null && bakeProbe == null)
+            {
+                bakeProbe = new BakeProbe();
+            }
+            using (var bake = new Bake(cha) { Probe = bakeProbe })
             {
                 foreach (var m in captured)
                 {
@@ -398,6 +407,10 @@ namespace KKBP.Exporter
                         }
                     }
                 }
+            }
+            if (bakeProbe != null)
+            {
+                bakeProbe.Write(ProbeBakePath);  // each Pass rewrites it with every render so far
             }
         }
 
