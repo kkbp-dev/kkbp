@@ -920,3 +920,45 @@ def lif_main_acs(rgba, mask, detail, ramp1, ramp2, colors, floats, light: SvsLig
     amount = np.minimum(np.clip(detail[..., 0] * (w * 3.9 + 0.1) + w * 0.35 - 0.35, 0, 0.9), f.get("_Line_texture_onoff", 0))
     base = shown if f.get("_AlphaLine", 0) else lit
     return np.maximum(np.clip(_lerp(base, lc, amount[..., None]), 0, 0.95), 0)
+
+
+# --- SVS clothes: lif_main_cloth -----------------------------------------------------------------
+
+def cloth_color(create, mask, detail2, colors, floats):
+    """LIF/lif_main_cloth's colour: its composited texture (`_Create_main_texture`, the create shader's
+    output), times the colour mask's colours when `_Main_color_switchtest` is on, toward
+    `_Color_Cuvature` by `_Detail_mask_02`'s red. The liquid effects (off on a maker Character) are
+    left out. Returns linear rgb."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    col = create[..., :3]
+    if floats.get("_Main_color_switchtest"):
+        m = _lerp(c["_Main_color_04"][:3], c["_Main_color_01"][:3], mask[..., 0:1])
+        m = _lerp(m, c["_Main_color_02"][:3], mask[..., 1:2])
+        col = col * _lerp(m, c["_Main_color_03"][:3], mask[..., 2:3])
+    cuv = c["_Color_Cuvature"]
+    return _lerp(col, cuv[:3], (detail2[..., 0] * cuv[3])[..., None])
+
+
+def cloth_ramp_uv(detail1, detail2, floats, light: SvsLight):
+    """Where LIF/lif_main_cloth reads its ramp: as `item_ramp_uv`, each lifted by `_Detail_mask_02`'s
+    red times `_RimScale` (the second by half of it, after the pull)."""
+    k = 1 - detail1[..., 1] * np.asarray(floats.get("_ShadowSetting", (1, 0, 0, 0)), dtype=F)[2]
+    lift = detail2[..., 0] * floats.get("_RimScale", 0)
+    return (np.clip(k * np.clip(np.clip(light.ndl, 0, 1) + lift, 0, 1), 0, 1),
+            np.clip(lift * 0.5 + k * np.clip(light.ndl * 0.4 + 0.3, 0, 1), 0, 1))
+
+
+def lif_main_cloth(col, create_alpha, detail1, ramp1, ramp2, colors, floats, light: SvsLight):
+    """LIF/lif_main_cloth as the bake draws it, from its colour (`cloth_color`): lit as
+    `svs_item_light` (its shadow tinted from the colour itself), the line colour (`_Line_color` by
+    `_Line_power * 0.8 + 0.2`) where the composited texture's alpha rounds to 0 (with `_AlphaLine`)
+    and by `_Detail_mask_01`'s red squared. Rim and reflection give nothing on the bake quad. Returns
+    linear rgb."""
+    f = floats
+    shown = np.clip(col, 0, 0.95)
+    line = np.clip(_lerp(col, np.asarray(colors["_Line_color"], dtype=F)[:3], f.get("_Line_power", 1) * 0.8 + 0.2), 0, 0.95)
+    lit = shown * svs_item_light(col, detail1, ramp1, ramp2, f, colors, light)
+    if f.get("_AlphaLine", 0):
+        lit = _lerp(line, lit, np.round(create_alpha)[..., None])
+    d = detail1[..., 0:1]
+    return np.clip(lit + d * (d * line - lit), 0, 0.95)
