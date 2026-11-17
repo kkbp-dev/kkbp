@@ -14,8 +14,36 @@ RAW_TEXTURES = {
 # As KK's, with SVS's most common legacy aimed-bone length.
 BONES = {**kk.BONES, "aim_length": 0.077}
 
-# No edit templates yet (D46).
-EDIT = {**kk.EDIT, "templates": {}}
+# The edit material tool (D38-D41; profiles/kk.py says what each table holds). SVS's templates follow
+# its LIF shaders (issue 62, importer/tools/game_shaders/models.py); a shader none follows (the
+# `_alpha` and `_low` copies, modded shaders) isn't editable. SVS's materials carry their textures by
+# Raw Property, and their colours are the game's own, linear as its shaders see them.
+EDIT = {
+    "templates": {
+        "eyebrow": "SVS lif_main_eyebrow",
+    },
+    "shader_templates": {},
+    "not_editable_blend_modes": ["glasses"],
+    "textures": {
+        "eyebrow": ["own:_eyebrow_texture"],
+    },
+    "saturated": [],
+    "saturated_roles": [],
+    "plain_color_mask_shaders": [],
+    "shadow": ["own:_ShadowColor"],
+    "colors": {
+        "SVS lif_main_eyebrow": [
+            *[[name, [f"own:{raw}"], "plain"] for name, raw in (
+                ("color1", "_eyebrow_color01"), ("color2", "_eyebrow_color02"), ("color3", "_eyebrow_color03"),
+                ("line_color", "_Line_color"))],
+            *[[f"{name}_alpha", [f"own:{raw}"], "alpha"] for name, raw in (
+                ("color2", "_eyebrow_color02"), ("color3", "_eyebrow_color03"), ("line_color", "_Line_color"))],
+            ["length", ["own:_BrowLength"], "float"], ["width", ["own:_BrowWidth"], "float"],
+            ["light_influence", ["own:_Ligjht_influence"], "float"], ["shadow_power", ["own:_Shadow_power"], "float"],
+        ],
+    },
+    "values": [],
+}
 
 
 def _corrections():

@@ -1,6 +1,6 @@
 """How close an unedited edit material comes to the game (ADR 0026, issue 30).
 
-For every editable material of the kk and kks Golden Samples (copies), edit it with the profile's
+For every editable material of the kk, kks and svs Golden Samples (copies), edit it with the profile's
 default saturation, bake light and dark as Save does without saving, and compare each bake with the
 bundle's own `main.light` and `main.dark`: the mean absolute difference per channel, on the
 sRGB-encoded values, over pixels opaque in both. Each Game's numbers go to
@@ -82,7 +82,7 @@ def measure(ch, log=lambda *_: None):
     return out
 
 
-@pytest.mark.parametrize("game", ["kk", "kks"])
+@pytest.mark.parametrize("game", ["kk", "kks", "svs"])
 def test_unedited_edit_materials_bake_close_to_the_game(game, golden_import):
     numbers = measure(golden_import(game)[1])
     REPORT.mkdir(parents=True, exist_ok=True)

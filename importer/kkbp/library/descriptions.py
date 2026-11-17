@@ -157,6 +157,25 @@ _GAME_BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("shad
 # The Game's Maker Light as toon_eyew and Koikano/main_eyew shade with it; the defaults are KK's.
 _EYEW_LIGHT = {"ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength"),
                "shadow_floor": ("lit", "Shadow floor")}
+# SVS's maker light as the LIF templates see it (models.SVS_LIGHT, SVS_DARK); the defaults are the
+# Sample Card's probe.
+_SVS_LIGHT = {"light_color": ("lit", "Light color"), "ndl_light": ("lit", "N.L light"), "ndl_dark": ("lit", "N.L dark"),
+              "ambient": ("lit", "Ambient")}
+
+
+def _svs_colors(*names, alpha_from=0):
+    """`name` and (from the `alpha_from`th on) `name_alpha` params on the lit group's `Name` sockets:
+    `color1` is `Color 1`, `line_color` is `Line color`."""
+    out = {}
+    for i, name in enumerate(names):
+        socket = name.replace("_", " ").capitalize()
+        socket = socket[:-1] + " " + socket[-1] if socket[-1].isdigit() else socket
+        out[name] = ("lit", socket)
+        if i >= alpha_from:
+            out[f"{name}_alpha"] = ("lit", f"{socket} alpha")
+    return out
+
+
 # What main_opaque and main_item share: the shadow colour and extends, the line switches, the
 # maker's ambient and line colour.
 _ITEM_LIGHT = {"shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend"),
@@ -320,6 +339,12 @@ _EDIT_TEMPLATES = (
                      "hokuro": ("mole", "Paint"), "hokuro_w": ("mole", "Paint w")}),
     Template("KK toon_nose", graded=True, textures={"main": "tex.main"},
              params={**_GAME_BAKE, "color": ("lit", "Color"), "color_alpha": ("lit", "Color alpha")}),
+    # SVS's (issue 62): each follows a LIF shader under the maker's bake light (models.SVS_LIGHT), with
+    # no grade, as SVS's bake has none. `graded` keeps the edit tool from saturating them.
+    Template("SVS lif_main_eyebrow", graded=True, textures={"eyebrow": "tex.eyebrow"},
+             params={**_GAME_BAKE, **_SVS_LIGHT, "length": ("uv", "Length"), "width": ("uv", "Width"),
+                     **_svs_colors("color1", "color2", "color3", "line_color", alpha_from=1),
+                     "light_influence": ("lit", "Light influence"), "shadow_power": ("lit", "Shadow power")}),
 )
 EDIT_TEMPLATES = tuple(t.name for t in _EDIT_TEMPLATES)
 
