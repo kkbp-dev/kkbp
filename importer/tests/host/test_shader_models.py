@@ -756,3 +756,77 @@ def test_svs_create_main_skin_body_gives_back_the_composited_texture():
     rgb = models.create_main_skin_body(at("_Sunburn_texture", u, v), paints, _svs_at(sample, create, "_Paint_mask", u, v),
                                        _svs_colors(create))
     assert float(np.abs(rgb - reference[..., :3]).mean()) < 0.004
+
+
+def _face_layers(sample, m, size):
+    """The face's cheek, lip and nose textures read on the face mesh's second to fourth UV maps (the
+    cheek at its position), off the mesh transparent: the bake's quad clears them."""
+    r = _raster([sample.root / "body.glb"], m["id"], size, ["TEXCOORD_1", "TEXCOORD_2", "TEXCOORD_3"])
+    on = r["covered"][::-1][..., None]
+    uv = {k: np.nan_to_num(r[f"TEXCOORD_{k}"][::-1]) for k in (1, 2, 3)}
+    cu, cv = models.create_paint_uv(uv[1][..., 0], uv[1][..., 1], models.cheek_position(m["floats"], m["vectors"]))
+    read = lambda raw, uu, vv: np.where(on, _svs_at(sample, m, raw, uu, vv), 0)  # noqa: E731
+    return (read("_Cheek_texture", cu, cv), read("_Lip_texture", uv[2][..., 0], uv[2][..., 1]),
+            read("_Nose_texture", uv[3][..., 0], uv[3][..., 1]))
+
+
+def test_svs_skin_head_gives_back_the_bakes():
+    """LIF/lif_main_skin_head: its composited texture with the cheek, lips and nose on the mesh's
+    second to fourth UV maps, the shade matcap, lit with the skin-body shadow tint. At 512 pixels."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_head_00"]
+    size = (512, 512)
+    u, v = _uv(size)
+    f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
+    colors = _svs_colors(m)
+    cheek, lip, nose = _face_layers(sample, m, size)
+    at = lambda raw: _svs_at(sample, m, raw, u, v)  # noqa: E731
+    d1, d2 = at("_Detail_mask_01"), at("_Detail_mask_02")
+    base, col = models.skin_head_color(at("_Create_jm_main_skin_head"), cheek, lip, nose, colors)
+    matcap = _svs_at(sample, m, "_shadematcap", np.array(0.5), np.array(0.5))
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, variant in ((models.SVS_LIGHT, "light"), (models.SVS_DARK, "dark")):
+        reference = sample.texture(m, "main", variant, size)[::-1]
+        r1, r2 = models.face_ramp_uv(d1, d2, nose, f, light)
+        out = models.lif_main_skin_head(base, col, d1, d2, nose, matcap, models._bilinear(ramp, r1, r1),
+                                        models._bilinear(ramp, r2, r2), colors, f, light)
+        assert difference(models.svs_baked(out), reference) < 0.004
+
+
+@pytest.mark.parametrize("eyeshadow", [True, False])
+def test_svs_create_main_skin_head_gives_back_the_composited_texture(eyeshadow):
+    """LIF/lif_create_main_skin_head from the create material gives back the face's
+    _Create_jm_main_skin_head; with the eyeshadow's alpha at 0, the face's no-eyeshadow bakes are
+    the same lit face over it (SvsAdapter.BakeWithoutEyeshadow)."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_head_00"]
+    create = m["extensions"]["svs"]["create"]
+    size = (512, 512)
+    u, v = _uv(size)
+    has = {t["raw"] for t in create["textures"]}
+    at = lambda raw, uu=u, vv=v: _svs_at(sample, create, raw, uu, vv) if raw in has else None  # noqa: E731
+    vec = create["vectors"]
+    paints = [at(f"_Paint_texture_0{k}", *models.face_paint_uv(u, v, vec[f"_Paint_position_0{k}"])) for k in (1, 2, 3)]
+    mole = at("_Hokuro_texture", *models.face_paint_uv(u, v, vec["_Hokuro_position"], 2.4))
+    colors = _svs_colors(create)
+    if not eyeshadow:
+        colors["_Eyeshadow_color"] = np.r_[colors["_Eyeshadow_color"][:3], 0.0]
+    rgb = models.create_main_skin_head(at("_Skin_mask"), at("_Facetype_texture"), paints, mole, at("_Paint_mask"),
+                                       at("_Eyeshadow_texture"), colors)
+    if eyeshadow:
+        reference = _svs_raw(sample, m, "_Create_jm_main_skin_head", size)[::-1]
+        assert float(np.abs(rgb - reference[..., :3]).mean()) < 0.004
+        return
+    f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
+    lit_colors = _svs_colors(m)
+    cheek, lip, nose = _face_layers(sample, m, size)
+    d1, d2 = (_svs_at(sample, m, raw, u, v) for raw in ("_Detail_mask_01", "_Detail_mask_02"))
+    base, col = models.skin_head_color(np.concatenate([rgb, np.ones(u.shape + (1,))], -1), cheek, lip, nose, lit_colors)
+    matcap = _svs_at(sample, m, "_shadematcap", np.array(0.5), np.array(0.5))
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, variant in ((models.SVS_LIGHT, "light_no_eyeshadow"), (models.SVS_DARK, "dark_no_eyeshadow")):
+        reference = sample.texture(m, "main", variant, size)[::-1]
+        r1, r2 = models.face_ramp_uv(d1, d2, nose, f, light)
+        out = models.lif_main_skin_head(base, col, d1, d2, nose, matcap, models._bilinear(ramp, r1, r1),
+                                        models._bilinear(ramp, r2, r2), lit_colors, f, light)
+        assert difference(models.svs_baked(out), reference) < 0.004

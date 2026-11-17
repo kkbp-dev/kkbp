@@ -1182,3 +1182,100 @@ def create_main_skin_body(sunburn, paints, paint_mask, colors):
     burn = np.zeros(shape) if sunburn is None else sunburn[..., 0]
     col = _lerp(c["_Main_color"][:3], c["_Sunburn_color"][:3], (burn * c["_Sunburn_color"][3])[..., None])
     return svs_paints(col, paints, paint_mask, colors, 1.0, channels=(0, 0, 0))
+
+
+# --- SVS face: lif_main_skin_head ----------------------------------------------------------------
+
+def face_paint_uv(u, v, position, size=2.0):
+    """Where LIF/lif_create_main_skin_head reads a paint (`size` 2) or the mole (`size` 2.4): as
+    create_paint_uv, its v moved by 0.8 (y + 0.0966849998) and its size by `size * w`."""
+    p = np.asarray(position, dtype=F)
+    s = 2 - size * p[3]
+    x = (u + p[0]) * 2 * s + 0.5 - s - 0.5
+    y = (v + 0.8 * (p[1] + 0.0966849998)) * 2 * s + 0.5 - s - 0.5
+    x, y = _turn(x, y, p[2] * 2 * np.pi)
+    return x + 0.5, y + 0.5
+
+
+def cheek_position(floats, vectors):
+    """`_Cheek_position` and the cheek floats as the create_paint_uv position LIF/lif_main_skin_head
+    reads `_Cheek_texture` at, on the second UV map."""
+    f, cp = floats, np.asarray(vectors["_Cheek_position"], dtype=F)
+    return (f["_Cheek_position_x"] * 0.24 + cp[0] - 0.12, f["_Cheek_position_y"] * -0.2 + cp[1] + 0.1,
+            cp[2] - f["_Cheek_rotation"] + 0.5, f["_Cheek_size"] * 0.2 + cp[3] - 0.1)
+
+
+def create_main_skin_head(skin_mask, facetype, paints, mole, paint_mask, eyeshadow, colors):
+    """LIF/lif_create_main_skin_head: `_Main_color` toward `_Mouth_color` by the skin mask's red, times
+    the face type texture (white when missing); the three paints over it (by their alpha and their
+    colour's) and the mole (`_Hokuro_color` by its red), kept per channel by the paint mask; then the
+    eyeshadow (`_Eyeshadow_color` by its red). `paints` (read at face_paint_uv), `mole` (face_paint_uv
+    at 2.4) and `eyeshadow` are None when missing. Returns linear rgb; its alpha is 1."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    shape = paint_mask.shape[:-1]
+    red = np.zeros(shape) if skin_mask is None else skin_mask[..., 0]
+    base = _lerp(c["_Main_color"][:3], c["_Mouth_color"][:3], red[..., None])
+    base = base * (np.ones(3) if facetype is None else facetype[..., :3])
+    col = svs_paints(base, paints, np.ones(shape + (4,)), colors, 1.0)
+    if mole is not None:
+        col = _lerp(col, c["_Hokuro_color"][:3], (mole[..., 0] * c["_Hokuro_color"][3])[..., None])
+    col = base + paint_mask[..., :3] * (col - base)
+    if eyeshadow is not None:
+        col = _lerp(col, c["_Eyeshadow_color"][:3], (eyeshadow[..., 0] * c["_Eyeshadow_color"][3])[..., None])
+    return col
+
+
+def skin_head_color(create, cheek, lip, nose, colors):
+    """LIF/lif_main_skin_head's colour: its composited texture (`_Create_jm_main_skin_head`) over
+    `_MainColor` by its alpha, times 0.95; the cheek blush (`_Cheek_color` by the cheek texture's red,
+    `_Cheek_highlight_color` screened by its blue), the lips (`_Lip_color` by the lip texture's red, plus
+    `_Lip_highlight_color` by its blue) and the nose: a tint from the composited texture's hue (less
+    0.03), the root of its saturation and 0.75 + half the root of its value, by the nose texture's red
+    and `_Nose_color`'s alpha, with `_Nose_line_color` by its blue. `cheek`, `lip`, `nose` are read on
+    the mesh's second, third and fourth UV maps (the cheek at create_paint_uv of cheek_position).
+    Returns the base and the colour, linear rgb."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    base = _lerp(c["_MainColor"][:3], create[..., :3], create[..., 3:4])
+    cc, ch = c["_Cheek_color"], c["_Cheek_highlight_color"]
+    col = _lerp(base * 0.95, cc[:3], (cheek[..., 0] * cc[3])[..., None])
+    col = np.clip(_lerp(col, 1 - (1 - ch[:3]) * (1 - col), (cheek[..., 2] * ch[3])[..., None]), 0, 1)
+    lc, lh = c["_Lip_color"], c["_Lip_highlight_color"]
+    col = _lerp(col, lc[:3], (lip[..., 0] * lc[3])[..., None]) + (lip[..., 2] * lh[3])[..., None] * lh[:3]
+    h, s, v = _rgb_hsv(create[..., :3])
+    tint = (np.sqrt(v) * 0.5 + 0.75)[..., None] * _hsv_rgb(np.clip(np.abs(h) - 0.03, 0, 1), np.sqrt(s), np.ones_like(v))
+    col = col * _lerp(np.ones(3), tint, (nose[..., 0] * c["_Nose_color"][3])[..., None])
+    nl = c["_Nose_line_color"]
+    col = _lerp(col, nl[:3], (nose[..., 2] * nl[3])[..., None])
+    return base, np.clip(col, 0, 1)
+
+
+def lif_main_skin_head(base, col, detail1, detail2, nose, matcap, ramp1, ramp2, colors, floats, light: SvsLight):
+    """LIF/lif_main_skin_head as the bake draws it, from `skin_head_color`'s base and colour: tinted
+    toward `_Shadow_color` by the shade matcap's blue (read at the view normal: its centre) off
+    `_Detail_mask_02`'s blue, lit as `svs_item_mix` with the skin-body shadow tint of the base, the
+    larger of `_Detail_mask_01`'s and the nose texture's green as the detail. `ramp1` and `ramp2` are
+    read at face_ramp_uv. The liquid, sweat, blush expression (`_HohoakaIntensity`), specular map and
+    lip line (not in the bundle), rim (off: `_RimMask` 1) and reflection (no cubemap) are left out.
+    Returns linear rgb."""
+    f = floats
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    m = np.asarray(matcap, dtype=F)
+    sc = c["_Shadow_color"]
+    amount = m[2] * sc[3] * (1 - detail2[..., 2]) * (f["_Shadow_power"] * 0.35 + 0.35)
+    albedo = np.clip(col * _lerp(np.ones(3), sc[:3], amount[..., None]), 0, 0.95)
+    detail = np.zeros(col.shape[:-1] + (4,))
+    detail[..., 1] = np.maximum(detail1[..., 1], nose[..., 1])
+    t = svs_item_t(detail, ramp1, ramp2, f, light)
+    lit = svs_item_mix(t, svs_skin_shadow_tint(base), colors, f, light)
+    return np.clip(albedo * lit, 0, 1.01)
+
+
+def face_ramp_uv(detail1, detail2, nose, floats, light: SvsLight):
+    """Where LIF/lif_main_skin_head reads its ramp: N.L plus half `_Detail_mask_02`'s blue, pulled by
+    the larger of `_Detail_mask_01`'s and the nose's green times `_ShadowSetting.b`; and four times
+    N.L * 0.4 + 0.3."""
+    d = np.maximum(detail1[..., 1], nose[..., 1])
+    k = 1 - d * np.asarray(floats.get("_ShadowSetting", (1, 0, 0, 0)), dtype=F)[2]
+    a = np.clip(np.clip(light.ndl + 0.5 * detail2[..., 2], 0, 1) * k, 0, 1)
+    b = np.minimum(np.clip(light.ndl * 0.4 + 0.3, 0, 1) * 4, 1)
+    return a, np.full_like(a, b)
