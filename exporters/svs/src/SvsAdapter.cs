@@ -312,6 +312,7 @@ namespace KKBP.Exporter
             // After the expressions: they find captured meshes by renderer, and each copy shares its eye's.
             var baked = captured.FindAll(m => !Same(m.Renderer, riggedTongue));
             baked.AddRange(AddEyeWhites(sink, captured));
+            new Creates(cha, materials, Warnings).AttachBody(sink, captured);
             BakeLightAndDark(sink, baked);
             physics.Capture(cha.objTop.transform, sink, t => rig.OwnerOf(t) == Owner.Body);
             if (ProbeSymmetryPath != null)
@@ -522,6 +523,7 @@ namespace KKBP.Exporter
                 }
             }
             new Expressions(cha, table, materials, captured, Warnings).BakeOwnShapeKeys();
+            new Creates(cha, materials, Warnings).AttachClothes(sink, captured);
             BakeLightAndDark(sink, captured);
             physics.Capture(cha.objTop.transform, sink, t => rig.OwnerOf(t) != Owner.Body);
             AddBodyTextures(sink);
