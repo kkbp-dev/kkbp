@@ -7,6 +7,7 @@ from conftest import submodule
 
 character = submodule("character")
 export_prep = submodule("tools.export_prep")
+atlas = submodule("tools.export_prep.atlas")
 settings = submodule("settings")
 templates = submodule("templates")
 
@@ -43,27 +44,83 @@ def test_very_simple_merges_the_face_and_vrm_drops_the_hips(ch):
 def test_the_atlas_copy_uses_one_atlas_per_object(ch):
     collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
     outfit = next(o for o in collection.objects if o.type == "MESH" and o.name.startswith("Outfit 00"))
-    lights = {s.material.node_tree.nodes["tex.main.light"].image for s in outfit.material_slots
+    lights = {atlas.shown(s.material, "main.light") for s in outfit.material_slots
               if s.material and s.material.name.endswith(" Atlas")}
-    assert len(lights) == 1
-    assert (ch.bundle().cache_dir("atlas")).is_dir()
-    # The alpha mask is folded into the atlas, so no atlas material hides behind its empty slot.
-    atlases = {s.material for o in collection.objects for s in o.material_slots
-               if s.material and s.material.name.endswith(" Atlas")}
-    assert atlases and all(templates.param(m, "force_visibility").default_value == 0 for m in atlases)
+    assert len(lights) == 1 and None not in lights
+    folder = ch.bundle().cache_dir("atlas")
+    assert folder.is_dir()
+    # The dark atlas is a file for other programs; no atlas material shows it (ADR 0050).
+    assert list(folder.glob("* main.dark.png")) and not [i for i in bpy.data.images if i.filepath.endswith("main.dark.png")]
     assert all(not m.show_viewport for o in collection.objects for m in o.modifiers if m.type == "SOLIDIFY")
     assert ch.rig is None and "Outfit 00" in ch.outfits[0].name  # the original is untouched
 
 
-def test_the_face_atlas_holds_one_of_its_two_bakes(ch):
-    """ADR 0046: the atlas copy of the face shows the atlas whatever its eyeshadow inputs say, so no
-    bake in the face's own UV layout is left in it."""
+def _atlas_materials(collection):
+    return {s.material for o in collection.objects for s in o.material_slots
+            if s.material and s.material.get(atlas.ATLAS_OF)}
+
+
+def test_an_atlas_material_is_a_principled_bsdf_the_fbx_exporter_reads(ch):
+    """Issue 103, ADR 0050: Blender's FBX exporter finds a material's textures through this wrapper,
+    which sees only a Principled BSDF in the material's own tree."""
+    from bpy_extras.node_shader_utils import PrincipledBSDFWrapper
+
     collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
-    face = next(s.material for o in collection.objects for s in o.material_slots
-                if s.material and s.material.get("kkbp_atlas_of") == ch.materials(roles="face")[0][character.ID])
-    for variant in ("light", "dark"):
-        atlas = templates.texture(face, "main", variant).image
-        assert templates.texture(face, "main", f"{variant}_no_eyeshadow").image == atlas
+    materials = _atlas_materials(collection)
+    assert materials and not any(m.get(templates.TEMPLATE) for m in materials)
+    with_normal = 0
+    for material in materials:
+        wrapper = PrincipledBSDFWrapper(material, is_readonly=True)
+        light = atlas.shown(material, "main.light")
+        assert light is not None and light.packed_file is not None
+        assert wrapper.base_color_texture.image == light and wrapper.alpha_texture.image == light, material.name
+        normal = atlas.shown(material, "normal")
+        if normal is not None:
+            with_normal += 1
+            assert wrapper.normalmap_texture.image == normal and normal.colorspace_settings.name == "Non-Color"
+    assert with_normal
+    # Every mesh's faces use an atlas material or one the Character had no light texture for.
+    body = next(o for o in collection.objects if o.type == "MESH" and o.name.startswith("Body"))
+    assert sum(1 for s in body.material_slots if s.material in materials) > 3
+
+
+def test_the_fbx_holds_the_atlases(ch, tmp_path):
+    """Issue 103: the collection's exporter embeds the light and normal atlases in the FBX."""
+    collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
+    exporter = collection.exporters[0]
+    assert exporter.export_properties.embed_textures and exporter.export_properties.path_mode == "COPY"
+    path = tmp_path / "model.fbx"
+    exporter.export_properties.filepath = str(path)
+    with bpy.context.temp_override(collection=collection):
+        assert bpy.ops.collection.exporter_export(index=0) == {"FINISHED"}
+    fbx = path.read_bytes()
+    shown = {i for m in _atlas_materials(collection) for i in (atlas.shown(m, "main.light"), atlas.shown(m, "normal"))
+             if i is not None}
+    assert len(shown) > 2
+    for image in shown:
+        assert bytes(image.packed_file.data) in fbx, image.name
+    assert not list(tmp_path.glob("*.png"))  # embedded, not copied beside the FBX
+
+
+def test_atlas_without_the_eyes_gives_them_a_simple_material_of_their_own(ch):
+    collection = export_prep.prep(ch, "no_change", "none", "skip_eyes", log=lambda m: None)
+    eyes = {m[character.ID]: m for m in ch.materials(roles=["eye_l", "eye_r"])}
+    simple = [m for m in _atlas_materials(collection) if m[atlas.ATLAS_OF] in eyes]
+    assert len(simple) == len(eyes) == 2
+    for material in simple:
+        assert material.name.endswith(" Simple")
+        assert atlas.shown(material, "main.light") == templates.texture(eyes[material[atlas.ATLAS_OF]], "main", "light").image
+
+
+def test_the_face_atlas_holds_one_of_its_two_bakes(ch):
+    """ADR 0046: the atlas holds the face's bake with eyeshadow or the one without, by its Eyeshadow
+    input, and no bake in the face's own UV layout is left in the copy."""
+    face = ch.materials(roles="face")[0]
+    bakes = {templates.texture(face, "main", v).image for v in ("light", "dark", "light_no_eyeshadow", "dark_no_eyeshadow")}
+    collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
+    copy = next(m for m in _atlas_materials(collection) if m[atlas.ATLAS_OF] == face[character.ID])
+    images = {n.image for n in copy.node_tree.nodes if n.type == "TEX_IMAGE"}
+    assert images and not images & bakes
 
 
 def test_an_atlas_over_the_cap_is_split_into_several(ch):
@@ -76,7 +133,7 @@ def test_an_atlas_over_the_cap_is_split_into_several(ch):
     body = next(o for o in collection.objects if o.type == "MESH" and o.name.startswith("Body"))
     atlas_slots = {i: s.material for i, s in enumerate(body.material_slots)
                    if s.material and s.material.name.endswith(" Atlas")}
-    images = {m.node_tree.nodes["tex.main.light"].image for m in atlas_slots.values()}
+    images = {atlas.shown(m, "main.light") for m in atlas_slots.values()}
     assert len(images) > 1 and all(max(i.size) <= 4096 for i in images), [tuple(i.size) for i in images]
     assert any("atlases" in line and "4096 px" in line for line in said), said
     # Not scaled down: a material's texture takes as many atlas pixels as it has.
@@ -89,7 +146,7 @@ def test_an_atlas_over_the_cap_is_split_into_several(ch):
         assert -1e-4 <= box[0] and box[1] <= 1 + 1e-4 and -1e-4 <= box[2] and box[3] <= 1 + 1e-4, (material.name, box, said)
     face = next(m for m in atlas_slots.values() if m.name.startswith("cf_m_face_00"))
     assert sizes["cf_m_face_00"] == (4096, 4096)
-    assert tuple(face.node_tree.nodes["tex.main.light"].image.size) == (4096, 4096)  # an atlas of its own
+    assert tuple(atlas.shown(face, "main.light").size) == (4096, 4096)  # an atlas of its own
     names = sorted(i.filepath.replace("\\", "/").rsplit("/", 1)[-1] for i in images)
     assert names[0].endswith(" 1 main.light.png") and names[1].endswith(" 2 main.light.png"), names
 
