@@ -173,7 +173,8 @@ importer/.venv/bin/python -I importer/tools/game_shaders/dump.py "<name filter o
 
 - KK: `Koikatu_Data/globalgamemanagers.assets` (`toon_*`, `create_*` except `create_topN`), `abdata/chara/mm_base.unity3d` (`create_topN`), `abdata/chara/54/chara_data_00.unity3d` (`main_opaque`, `main_item`, `main_hair`), `54/chara_mat_00.unity3d` (`main_skin`), `co_bot_13.unity3d` (`main_alpha`), `bo_hair_b_13.unity3d` (`main_hair_front`).
 - KKS: `abdata/chara/mm_base.unity3d` (`create_*`), `bo_head_00.unity3d` (`main_skin`, `main_eye`, `main_eyew`, `main_nose`), `co_bot_00.unity3d` (`main_clothes_opaque`, `main_clothes_alpha`), `ao_arm_00.unity3d` (`main_clothes_item`), `bo_hair_b_00.unity3d` and `ao_head_00.unity3d` (`hair_main_sun_front`, `hair_main_sun`).
-- The program to read is the fragment one (type 17) whose keywords are `DIRECTIONAL` alone (KK) or the fewest (KKS).
+- SVS (Unity 2021.3): every `LIF/*` shader is in `SamabakeScramble_Data/globalgamemanagers.assets`. Unity 2021 keeps a program's constants in the pass and in a parameter blob per variant rather than after its bytecode, and its programs belong to passes, so each file is `<shader>.<pass>.<index>.<vs|ps>.txt`. The pass to read is `Forward` (`Universal2D` is a copy).
+- The program to read is the fragment one (type 17) whose keywords are `DIRECTIONAL` alone (KK) or the fewest (KKS). SVS's variants differ by material keywords (`_TYPESELECT_*`, `_MATCAPONOFF_ON`, `_EMISSIONTYPE_*`, …) and by the pipeline's (`_MAIN_LIGHT_SHADOWS`, `_ADDITIONAL_LIGHTS`, `FOG_LINEAR`, …); read the ones the bake uses (the SVS exporter's `probe_bake` request).
 
 ### Adding a shader
 
