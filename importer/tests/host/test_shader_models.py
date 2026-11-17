@@ -493,3 +493,33 @@ def test_kk_main_item_reads_its_other_ramp_and_loses_its_highlight_in_shadow(mid
                                np.zeros(size + (4,)), colors, m["floats"], models.color(m["colors"]["_ShadowColor"]), ramp,
                                another_ramp=(row[0], row[-1]))
         assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < 0.01
+
+
+# --- SVS ---------------------------------------------------------------------------------------
+
+def _svs_colors(m):
+    """A LIF material's colours as its shaders see them: linear rgb, alpha last."""
+    return {k: np.r_[models.lin(np.asarray(v[:3], dtype=np.float64)), v[3]] for k, v in m["colors"].items()}
+
+
+def _svs_raw(sample, m, raw, size=None):
+    t = next(t for t in m["textures"] if t["raw"] == raw and not t.get("variant"))
+    with Image.open(sample.root / t["file"]) as im:
+        im = im.convert("RGBA")
+        if size is not None and im.size != size:
+            im = im.resize(size, Image.BILINEAR)
+        return np.asarray(im, dtype=np.float64) / 255
+
+
+def test_svs_eyebrow_gives_back_the_bakes():
+    """LIF/lif_main_eyebrow with the maker's light and ambient (models.SVS_LIGHT, SVS_DARK). The
+    sample's _BrowLength and _BrowWidth are 0.5, which read the texture as it is."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_mayuge_00"]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    assert models.eyebrow_uv(0.3, 0.7, 0.5, 0.5) == (0.3, 0.7)
+    tex = _svs_raw(sample, m, "_eyebrow_texture", size)
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        out, alpha = models.lif_main_eyebrow(tex, _svs_colors(m), m["floats"], light)
+        assert difference(models.svs_baked(out), reference) < 0.004
+        assert ((alpha > 0.5) == (reference[..., 3] > 0.5)).mean() > 0.999

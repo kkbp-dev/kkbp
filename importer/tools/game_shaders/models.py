@@ -472,3 +472,147 @@ def main_alpha(main, detail_mask, floats, specular_color, shadow_color, ramp, li
     line = np.clip(1 - (2 - 2 * a) * (1 - main * tint) if a > 0.5 else 2 * a * main * tint, 0, 1)
     shows = ((1 - LINE_WIDTH) * 0.89 + 0.01) ** ((1 - detail_mask[..., 2:3]) * floats.get("_DetailBLineGA", 0))
     return line + shows * (col - line)
+
+
+# --- SVS: the LIF shaders under URP -----------------------------------------------------------
+#
+# SVS (Unity 2021, URP) bakes with its own camera, so no post-processing grade: a bake is
+# `srgb(out)`. Its light isn't a ramp end: the maker's directional light is turned to two fixed
+# rotations, and the shaders read its colour, N.L, the light probe's ambient and any additional
+# lights. `SvsLight` holds what one bake sees, read by the exporter's `probe_bake` request.
+
+@dataclass(frozen=True)
+class SvsLight:
+    """What a LIF shader sees in one SVS bake: `_MainLightColor.rgb`, N.L on the flat quad (its
+    normal faces the camera), the light probe's spherical harmonics evaluated at that normal
+    (`SampleSH`, before its clamps), the additional lights' summed colour times N.L, and the main
+    light's shadow attenuation (1: unshadowed)."""
+
+    color: tuple[float, float, float]
+    ndl: float
+    ambient: tuple[float, float, float]
+    additional: tuple[float, float, float] = (0.0, 0.0, 0.0)
+    shadow: float = 1.0
+
+
+def sh_eval(sh, n):
+    """A Unity SphericalHarmonicsL2 (27 floats, by colour then coefficient) at the unit normal `n`,
+    as URP's SampleSH reads it: the stored coefficients are the shader's constants, rearranged."""
+    c = np.asarray(sh, dtype=F).reshape(3, 9)
+    x, y, z = n
+    basis = np.array([1, y, z, x, x * y, y * z, 3 * z * z - 1, x * z, x * x - y * y], dtype=F)
+    return c @ basis
+
+
+# The SVS maker's scene during a bake, read by the exporter's `probe_bake` request on the Sample
+# Card (2026-11-17): RenderSettings.ambientProbe (trilight sky, equator and ground at 1.3, no light
+# probes in the scene, no reflection cubemap), `_MainLightColor` (1, 1, 1), no additional lights, and
+# the light's direction for `light` and `dark` against the bake quad's normal, +z.
+SVS_AMBIENT_PROBE = (
+    0.18112286925315857, -0.04479600861668587, 0, 0, 0, 0, 0.0037154555320739746, 0, 0.01114637590944767,
+    0.17080028355121613, 0.0020581278949975967, 0, 0, 0, 0, 0.005328360944986343, 0, 0.015985094010829926,
+    0.18112288415431976, 0.04479600861668587, 0, 0, 0, 0, 0.0037154555320739746, 0, 0.01114637590944767,
+)
+SVS_QUAD_AMBIENT = tuple(float(v) for v in sh_eval(SVS_AMBIENT_PROBE, (0.0, 0.0, 1.0)))
+SVS_LIGHT = SvsLight(color=(1.0, 1.0, 1.0), ndl=0.828421950340271, ambient=SVS_QUAD_AMBIENT)
+SVS_DARK = SvsLight(color=(1.0, 1.0, 1.0), ndl=-0.9444175958633423, ambient=SVS_QUAD_AMBIENT)
+
+
+def _smooth01(x):
+    x = np.clip(x, 0, 1)
+    return x * x * (3 - 2 * x)
+
+
+def _rgb_hsv(c):
+    """Amplify's RGBToHSV, as the shaders compile it: hue (0..1), saturation and value."""
+    c = np.asarray(c, dtype=F)
+    r, g, b = c[..., 0], c[..., 1], c[..., 2]
+    step = (g >= b)[..., None]
+    p = np.where(step, np.stack([g, b, np.zeros_like(r), np.full_like(r, -1 / 3)], -1),
+                 np.stack([b, g, np.full_like(r, -1.0), np.full_like(r, 2 / 3)], -1))
+    step = (r >= p[..., 0])[..., None]
+    q = np.where(step, np.stack([r, p[..., 1], p[..., 2], p[..., 0]], -1),
+                 np.stack([p[..., 0], p[..., 1], p[..., 3], r], -1))
+    d = q[..., 0] - np.minimum(q[..., 3], q[..., 1])
+    return np.abs(q[..., 2] + (q[..., 3] - q[..., 1]) / (6 * d + 1e-10)), d / (q[..., 0] + 1e-10), q[..., 0]
+
+
+def _hsv_rgb(h, s, v):
+    """Amplify's HSVToRGB."""
+    k = np.stack([h + 1, h + 2 / 3, h + 1 / 3], axis=-1)
+    p = np.clip(np.abs(np.mod(k, 1.0) * 6 - 3) - 1, 0, 1)
+    return v[..., None] * (1 + s[..., None] * (p - 1))
+
+
+def _overlay(a, b):
+    """`b > 0.5 ? 1 - 2(1 - b)(1 - a) : 2ab`, clamped."""
+    return np.clip(np.where(b > 0.5, 1 - 2 * (1 - b) * (1 - a), 2 * a * b), 0, 1)
+
+
+def svs_baked(out):
+    """A LIF model's linear output as the bundle's light or dark PNG holds it: no grade."""
+    return srgb(out)
+
+
+# The bluish constant LIF/lif_main_eyebrow (and its family) tints its shadow colour by.
+SVS_SHADOW_TINT = np.array([0.686577916, 0.797912478, 1.0], dtype=F)
+
+
+def svs_shadow_tint(col):
+    """The shadow colour the LIF face-part shaders make from a colour: the hue and saturation of
+    `(col + K) * K`, the saturation square-rooted, at the value of `col * K` (K = SVS_SHADOW_TINT)."""
+    h, s, _ = _rgb_hsv((col + SVS_SHADOW_TINT) * SVS_SHADOW_TINT)
+    _, _, v = _rgb_hsv(col * SVS_SHADOW_TINT)
+    return _hsv_rgb(h, np.sqrt(s), v)
+
+
+def svs_face_part_light(col, shadow_power, light: SvsLight):
+    """The light the LIF face-part shaders (eyebrow, eyelash) multiply their colour by: a lit term
+    from the light and ambient, a shadow term overlaying the tinted shadow colour on the ambient,
+    blended by how far the normal turns from the light, plus any light over 1 and the additional
+    lights. Returns rgb, per pixel when `col` is."""
+    L = np.asarray(light.color, dtype=F)
+    sh = np.minimum(np.maximum(np.asarray(light.ambient, dtype=F), 0), 1)
+    mean_light = L.sum() / 3
+    l5 = L * 0.75 + 0.25
+    luma = l5 @ np.array([0.299, 0.587, 0.114])
+    lit = np.clip(sh * 0.5 + l5 + (mean_light - 1) * -0.1 * (luma - l5), 0, 1)
+    shadow_col = np.minimum(_overlay(np.clip(l5, 0, 1) * svs_shadow_tint(col), sh * 0.6 + 0.3) + sh * 0.1, 1)
+    shadowed = _smooth01((0.8 - light.shadow) / 0.6)
+    lit_attenuation = _smooth01((light.shadow - 0.2) / 0.6)
+    over = min(max(mean_light, 1.0), 99.0)
+    t = max(1 - light.ndl, shadowed) * over - 0.5 * (over - 1)
+    mean_ambient = min(float(np.maximum(np.asarray(light.ambient, dtype=F), 0).mean()), 1.0)
+    p = (0.75 - 0.65 * mean_ambient) + shadow_power * ((0.9 - 0.4 * mean_ambient) - (0.75 - 0.65 * mean_ambient))
+    t = min(max(float(np.clip(1 - mean_light, 0, 1)), p * t), 1.0)
+    mixed = lit + t * (shadow_col - lit)
+    back = float(np.clip((0.2 - light.ndl) / 0.15, 0, 1))
+    excess = np.clip(L - 1, 0, 99) * min(1 - back, lit_attenuation)
+    return mixed + excess + np.asarray(light.additional, dtype=F)
+
+
+def lif_main_eyebrow(tex, colors, floats, light: SvsLight):
+    """LIF/lif_main_eyebrow: the texture's red, green and blue pick `_eyebrow_color02`, `03` and
+    `_Line_color` (each by its alpha) over `_eyebrow_color01`, tinted toward the light by
+    `_Ligjht_influence`, then lit as `svs_face_part_light`. `tex` is `_eyebrow_texture` read at
+    `eyebrow_uv`; `colors` are linear rgb with their alpha last. Returns linear rgb and alpha (the
+    texture's, cut at 0.5)."""
+    a = tex[..., 3:4]
+    c1, c2, c3, line = (np.asarray(colors[k], dtype=F) for k in
+                        ("_eyebrow_color01", "_eyebrow_color02", "_eyebrow_color03", "_Line_color"))
+    col = c1[:3] + tex[..., 0:1] * c2[3] * a * (c2[:3] - c1[:3])
+    col = col + tex[..., 1:2] * c3[3] * a * (c3[:3] - col)
+    col = col + tex[..., 2:3] * line[3] * a * (line[:3] - col)
+    L = np.asarray(light.color, dtype=F)
+    col = np.clip(col + 0.7 * floats.get("_Ligjht_influence", 0) * (L * col - col), 0, 1)
+    out = np.clip(col * svs_face_part_light(col, floats.get("_Shadow_power", 0), light), 0, 1.05)
+    return out, np.where(a[..., 0] >= 0.5, a[..., 0], 0)
+
+
+def eyebrow_uv(u, v, length, width):
+    """Where LIF/lif_main_eyebrow reads its texture: stretched along u by `_BrowLength` (two
+    formulas, picked by rounding it) and along v by `_BrowWidth`. Both 0.5 is the texture as it is."""
+    a, b = 2 - 2 * length, 1.2 - 0.4 * length
+    su = a + np.round(length) * (b - a)
+    sv = 1.3 - 0.6 * width
+    return u * su - 0.2 * (su - 1), v * sv - 0.5 * (0.3 - 0.6 * width)
