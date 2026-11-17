@@ -493,6 +493,7 @@ class SvsLight:
     ambient: tuple[float, float, float]
     additional: tuple[float, float, float] = (0.0, 0.0, 0.0)
     shadow: float = 1.0
+    xy: tuple[float, float] = (0.0, 0.0)  # the direction toward the light along x and y (_MainLightPosition)
 
 
 def sh_eval(sh, n):
@@ -514,8 +515,10 @@ SVS_AMBIENT_PROBE = (
     0.18112288415431976, 0.04479600861668587, 0, 0, 0, 0, 0.0037154555320739746, 0, 0.01114637590944767,
 )
 SVS_QUAD_AMBIENT = tuple(float(v) for v in sh_eval(SVS_AMBIENT_PROBE, (0.0, 0.0, 1.0)))
-SVS_LIGHT = SvsLight(color=(1.0, 1.0, 1.0), ndl=0.828421950340271, ambient=SVS_QUAD_AMBIENT)
-SVS_DARK = SvsLight(color=(1.0, 1.0, 1.0), ndl=-0.9444175958633423, ambient=SVS_QUAD_AMBIENT)
+SVS_LIGHT = SvsLight(color=(1.0, 1.0, 1.0), ndl=0.828421950340271, ambient=SVS_QUAD_AMBIENT,
+                     xy=(0.3629303574562073, 0.4266132414340973))
+SVS_DARK = SvsLight(color=(1.0, 1.0, 1.0), ndl=-0.9444175958633423, ambient=SVS_QUAD_AMBIENT,
+                    xy=(0.05610156059265137, 0.32392600178718567))
 
 
 def _smooth01(x):
@@ -864,11 +867,11 @@ def svs_item_shadow_tint(c):
 SVS_SKIN_FACE_TINT = np.array([0.357276797, 0.0573572218, 0.0388724506], dtype=F)
 
 
-def svs_item_light(col95, detail, ramp1, ramp2, floats, colors, light: SvsLight):
-    """The light the LIF item shaders give a colour: as the hair's (`lif_main_hair`), with the ramp
-    weighted by `_ShadowSetting` and the detail mask's green, the shadow colour from
-    `svs_item_shadow_tint` (`SVS_SKIN_FACE_TINT` for `_TypeSelect` 3), and `_shadowextend` pushing
-    the detail mask's green further into shadow. `col95` is the colour times 0.95. Returns rgb."""
+def svs_item_t(detail, ramp1, ramp2, floats, light: SvsLight):
+    """How far into the shadow colour the LIF item and skin shaders go: the ramp (`ramp1`'s green times
+    `_ShadowSetting.x`, `ramp2`'s blue times `_Shadow_power` and `.y`, plus the detail mask's green times
+    `.w`) against the light's mean and luminance, weighted by `_Shadow_power`; then `_shadowextend`
+    pushes the detail mask's green further in."""
     f = floats
     ss = np.asarray(f.get("_ShadowSetting", (1, 0, 0, 0)), dtype=F)
     L = np.asarray(light.color, dtype=F)
@@ -881,16 +884,30 @@ def svs_item_light(col95, detail, ramp1, ramp2, floats, colors, light: SvsLight)
     d = detail[..., 1]
     ramp = np.clip(np.maximum(ramp1[..., 1] * ss[0], ramp2[..., 2] * power * ss[1]) + d * ss[3], 0, 1)
     t = np.clip(p * (np.maximum(ramp, np.clip(1 - mean, 0, 1)) * lum - 0.75 * (lum - 1)), 0, 1)
-    t = t + np.clip(d * f.get("_shadowextend", 0), 0, 1)
+    return t + np.clip(d * f.get("_shadowextend", 0), 0, 1)
+
+
+def svs_item_mix(t, tint, colors, floats, light: SvsLight):
+    """The light the LIF item and skin shaders give: the lit term (the light desaturated toward its
+    luma as it dims, plus half the ambient) toward the shadow colour (`tint` overlaid on the ambient,
+    or `_ShadowColor`) by `t`. Returns rgb."""
+    L = np.asarray(light.color, dtype=F)
+    sh = np.clip(np.asarray(light.ambient, dtype=F), 0, 1)
+    mean = L.sum() / 3
     l5 = L * 0.75 + 0.25
     luma = l5 @ np.array([0.299, 0.587, 0.114])
     lit = l5 + (mean - 1) * -0.25 * (luma - l5) + sh * 0.5
-    if f.get("_TypeSelect") == 3:
-        shadow = _overlay(np.clip(l5, 0, 1) * SVS_SKIN_FACE_TINT, sh * 0.7 + 0.1)
-    else:
-        shadow = _overlay(np.clip(l5, 0, 1) * svs_item_shadow_tint(col95), sh * 0.7 + 0.1)
-    shadow = _lerp(shadow, np.asarray(colors["_ShadowColor"], dtype=F)[:3], f.get("_ShadowColorON", 0))
-    return _lerp(lit, shadow, t[..., None])
+    shadow = _overlay(np.clip(l5, 0, 1) * tint, sh * 0.7 + 0.1)
+    shadow = _lerp(shadow, np.asarray(colors["_ShadowColor"], dtype=F)[:3], floats.get("_ShadowColorON", 0))
+    return _lerp(lit, shadow, np.asarray(t)[..., None])
+
+
+def svs_item_light(col95, detail, ramp1, ramp2, floats, colors, light: SvsLight):
+    """The light the LIF item shaders give a colour: `svs_item_mix` at `svs_item_t`, the shadow colour
+    from `svs_item_shadow_tint` (`SVS_SKIN_FACE_TINT` for `_TypeSelect` 3). `col95` is the colour
+    times 0.95. Returns rgb."""
+    tint = SVS_SKIN_FACE_TINT if floats.get("_TypeSelect") == 3 else svs_item_shadow_tint(col95)
+    return svs_item_mix(svs_item_t(detail, ramp1, ramp2, floats, light), tint, colors, floats, light)
 
 
 def item_ramp_uv(detail, floats, light: SvsLight):
@@ -996,12 +1013,12 @@ def _pattern_layer(base, sub, pattern, amount):
     return _lerp(layer, pattern[..., :3], vivid[..., None])
 
 
-def svs_paints(col, paints, paint_mask, colors, on, prefix="_Paint_color_0"):
+def svs_paints(col, paints, paint_mask, colors, on, prefix="_Paint_color_0", channels=(0, 1, 2)):
     """The LIF create shaders' three paints over a colour: each tints toward its texture times
     max(smoothstep of its saturation, its colour), by its alpha, its colour's alpha, its channel of
-    the paint mask and `on`."""
+    the paint mask (`channels`) and `on`."""
     c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
-    for k, ch in ((1, 0), (2, 1), (3, 2)):
+    for k, ch in zip((1, 2, 3), channels):
         pt = paints[k - 1]
         if pt is None:
             continue
@@ -1032,3 +1049,136 @@ def create_main_cloth(main, mask, patterns, paints, paint_mask, colors):
         a = _lerp(a, c[f"_Main_color_0{k}"][3], mask[..., ch])
     rgb = svs_paints(rgb, paints, paint_mask, colors, full)
     return rgb * main[..., :3], np.sqrt(np.sqrt(a)) * main[..., 3]
+
+
+# --- SVS nails: lif_main_nail --------------------------------------------------------------------
+
+def svs_skin_shadow_tint(col):
+    """The shadow colour LIF's skin-body shaders (nails, body) make from a colour: its hue at
+    saturation sqrt(s) + 0.1 and value 0.8 - 0.1 sqrt(v)."""
+    h, s, v = _rgb_hsv(col)
+    return _hsv_rgb(h, np.sqrt(s) + 0.1, 0.8 - 0.1 * np.sqrt(v))
+
+
+def nail_color(mask, main, paints, colors):
+    """LIF/lif_main_nail's colour: the colour mask's channels pick `_Nail_main_color_01..03` over white,
+    the main texture is added by `_Nail_main_color_01`'s alpha, then the three paints (`paints`, read
+    at create_paint_uv of `_Paint_position_offset_0k`; None when missing) over it by their alpha and
+    their colour's. Returns linear rgb."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    col = _lerp(np.ones(3), c["_Nail_main_color_01"][:3], mask[..., 0:1])
+    col = _lerp(col, c["_Nail_main_color_02"][:3], mask[..., 1:2])
+    col = _lerp(col, c["_Nail_main_color_03"][:3], mask[..., 2:3])
+    col = col + main[..., :3] * c["_Nail_main_color_01"][3]
+    for k, pt in enumerate(paints, 1):
+        if pt is not None:
+            pc = c[f"_Paint_color_0{k}"]
+            col = _lerp(col, pt[..., :3] * pc[:3], (pt[..., 3] * pc[3])[..., None])
+    return col
+
+
+def lif_main_nail(col, matcap, ramp1, ramp2, colors, floats, light: SvsLight):
+    """LIF/lif_main_nail as the bake draws it, from its colour (`nail_color`): the matcap (`_Mat_cap`,
+    not cleared, read at the quad's view normal: its centre) screened over it by `_Nail_gloss_power`,
+    lit as `svs_item_mix` with the skin-body shadow tint and the ramp alone, plus a gloss of the
+    matcap's red times the power where the light reaches. `ramp1`, `ramp2` are read at item_ramp_uv
+    with no detail. The rim (off: `_RimMask` 1) and the line texture (off unless
+    `_Line_textureonoff`, and not in the bundle) are left out. Returns linear rgb."""
+    f = floats
+    g = min(max(f.get("_Nail_gloss_power", 0), 0), 10)
+    m = np.asarray(matcap, dtype=F)[..., :3]
+    c = np.clip(_lerp(col, 1 - (1 - m) * (1 - col), g), 0, 0.95)
+    t = svs_item_t(np.zeros(col.shape[:-1] + (4,)), ramp1, ramp2, f, light)
+    lit = svs_item_mix(t, svs_skin_shadow_tint(col), colors, f, light)
+    gloss = np.asarray(matcap, dtype=F)[..., 0] * f.get("_Nail_gloss_power", 0)
+    spec = (gloss * np.minimum(gloss, np.maximum(1 - t, 0)))[..., None] * np.asarray(light.color, dtype=F)
+    return np.clip(c * (lit + spec), 0, 1.01)
+
+
+# --- SVS body: lif_main_skin_body ----------------------------------------------------------------
+#
+# The exporter bakes the skin from its mesh flattened into UV space, every normal toward the camera
+# as on the quad (Bake.Flatten), with the quad's render under it where the mesh leaves gaps, its
+# mesh-placed layers (nipples, under-hair) cleared.
+
+def skin_nipple_uv(uv2, nip_size):
+    """Where LIF/lif_main_skin_body reads `_Nip`: the second UV map scaled about its centre by
+    `_Nip_size` (to 0.65 at 0.5), out to where the scaling fades, |uv2 - 0.5| = 0.015."""
+    k = nip_size * 0.27 + 0.54
+    reach = np.clip((np.linalg.norm(uv2 - 0.5, axis=-1, keepdims=True) + 0.15) * 6.060606 - 1, 0, 1)
+    return _lerp(uv2 * (2 - 2 * k) + nip_size * 0.27 + 0.04, uv2, reach)
+
+
+def highlight_uv(u, v, floats, light: SvsLight):
+    """Where LIF/lif_main_skin_body reads its highlight (`_Detail_mask_01`'s blue): moved toward the
+    light by `_SpeclarHeight` (`0.8 (h - 1)` times half the light's x and y; the view's part, under a
+    camera 10 away, is left out)."""
+    k = 0.8 * (floats.get("_SpeclarHeight", 1) - 1) * 0.5
+    return u + k * light.xy[0], v + k * light.xy[1]
+
+
+def skin_body_color(create, nip, underhair, detail2, vertex, colors, floats):
+    """LIF/lif_main_skin_body's colour: its composited texture (`_Create_main_texture`) over `_MainColor`
+    by its alpha; the nipples (`nip`, read at skin_nipple_uv: `_Nip_color_01` by its red, times
+    `_Nip_color_02` by its green, by its alpha where the vertex colour's red is low) and the under-hair
+    (`underhair`, read at the second UV map, where the red is high); times 0.95, toward `_Detail_color_02`
+    by `_Detail_mask_02`'s red, `_Skin_red_power` and the base's value. Returns the base and the colour,
+    linear rgb."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    base = _lerp(c["_MainColor"][:3], create[..., :3], create[..., 3:4])
+    n1, n2 = c["_Nip_color_01"], c["_Nip_color_02"]
+    nipped = _lerp(base, n1[:3], nip[..., 0:1])
+    nipped = np.clip(_lerp(nipped, nipped * n1[:3] * n2[:3], nip[..., 1:2]), 0, 1)
+    vr = vertex[..., 0:1]
+    col = _lerp(base, nipped, nip[..., 3:4] * n1[3] * (1 - vr))
+    uh = c["_Under_hair_color"]
+    col = _lerp(col, underhair[..., :3] * uh[:3], underhair[..., 3:4] * uh[3] * vr)
+    _, _, value = _rgb_hsv(base)
+    d = c["_Detail_color_02"]
+    red = detail2[..., 0] * floats.get("_Skin_red_power", 0) * d[3] * (value * 0.67 + 0.33)
+    return base, np.clip(_lerp(col * 0.95, d[:3], red[..., None]), 0, 1)
+
+
+def lif_main_skin_body(base, col, detail1, detail1_at_highlight, detail2, matcap, underhair_amount, ramp1, ramp2,
+                       highlight_ramp, colors, floats, light: SvsLight):
+    """LIF/lif_main_skin_body as the bake draws it, from `skin_body_color`'s base and colour: tinted
+    toward `_Shadow_color` by the shade matcap's blue (`matcap`, read at the view normal: its centre);
+    plus `_Highlight_color` where `_Detail_mask_01`'s blue (read at highlight_uv) and its alpha (times
+    the matcap's red, off the under-hair) shine; lit as `svs_item_mix` with the skin-body shadow tint of
+    the base, `_Detail_mask_02` as the detail; plus a gloss of the highlight where the light reaches.
+    `ramp1`, `ramp2` are read at item_ramp_uv of `_Detail_mask_02`, `highlight_ramp` at N.L less 0.4
+    times `_Detail_mask_01`'s green. The liquid, sweat, dents, bust shadow, rim (off: `_RimMask` 1),
+    reflection (no cubemap) and line texture (off: `_linetexon`) are left out. Returns linear rgb."""
+    f = floats
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    m = np.asarray(matcap, dtype=F)
+    sc = c["_Shadow_color"]
+    strength = f["_Shadow_power"] * 0.35 + 0.35
+    tint = _lerp(np.ones(3), sc[:3], m[2] * sc[3] * strength)
+    shaded = col * tint
+    hl_ramp = np.maximum(np.maximum(detail2[..., 1] * f.get("_SkinIntensity", 1), highlight_ramp[..., 1]),
+                         m[1] * sc[3] * strength)
+    h = np.clip(detail1_at_highlight[..., 2] * 1.6666666, 0, 1) * f.get("_Highlight_power", 0) * (1 - hl_ramp)
+    hc = c["_Highlight_color"]
+    q = detail1[..., 3] * m[0]
+    off_hair = 1 - underhair_amount
+    mean = min(max(float(np.mean(light.color)), 0), 1)
+    shine = np.clip((h * f.get("_High_light_power", 1) * (1 - q))[..., None] * hc[:3] * mean
+                    + (q * (1 - q) * off_hair * mean)[..., None] * hc[:3], 0, 1)
+    albedo = np.clip(shaded + hc[3] * shine, 0, 0.95)
+    t = svs_item_t(detail2, ramp1, ramp2, f, light)
+    lit = svs_item_mix(t, svs_skin_shadow_tint(base), colors, f, light)
+    gloss = np.maximum(h * hc[:3].sum() * hc[3] * f.get("_High_light_power", 1) / 3, off_hair * q * hc[3])
+    spec = (gloss * np.minimum(gloss, np.maximum(1 - t, 0)))[..., None] * np.asarray(light.color, dtype=F)
+    return np.clip(albedo * (lit + spec), 0, 1.01)
+
+
+def create_main_skin_body(sunburn, paints, paint_mask, colors):
+    """LIF/lif_create_main_skin_body: `_Main_color` toward `_Sunburn_color` by the sunburn texture's red
+    and its colour's alpha, then the three paints (svs_paints, all by the paint mask's red). `sunburn`
+    is None when the bundle has none (the game's default, black). Returns linear rgb; its alpha is 1."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    shape = paint_mask.shape[:-1]
+    burn = np.zeros(shape) if sunburn is None else sunburn[..., 0]
+    col = _lerp(c["_Main_color"][:3], c["_Sunburn_color"][:3], (burn * c["_Sunburn_color"][3])[..., None])
+    return svs_paints(col, paints, paint_mask, colors, 1.0, channels=(0, 0, 0))
