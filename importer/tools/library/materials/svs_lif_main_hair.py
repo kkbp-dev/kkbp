@@ -13,8 +13,8 @@ def build(lib):
     edit_templates.clamp(t, "ramp", "ramp2")
     t.make('ShaderNodeGroup', 'ndl', (-1700, -1000), {'node_tree': lib.group('.SVS toon ndl')})
     edit_templates.toon_through(t, 'ndl')
-    t.make('ShaderNodeGroup', 'ramp uv', (-1700, -700), {'node_tree': lib.group('.SVS hair ramp uv')},
-           {'Detail 1': ('encode.detail1', 'Color'), 'N.L': ('ndl', 'N.L')})
+    t.make('ShaderNodeGroup', 'ramp uv', (-1700, -700), {'node_tree': lib.group('.SVS ramp uv')},
+           {'Detail': ('encode.detail1', 'Color'), 'Pull': 0.5, 'N.L': ('ndl', 'N.L')})
     t.link('ramp uv', 'Ramp 1', 'tex.ramp', 'Vector')
     t.link('ramp uv', 'Ramp 2', 'tex.ramp2', 'Vector')
     t.make('ShaderNodeGroup', 'lit', (-600, 100), {'node_tree': lib.group('.SVS lif_main_hair'), 'width': 260.0},

@@ -193,6 +193,13 @@ _SVS_EYE_UV = {"eye_position": "Eye position", "eye_position_w": "Eye position w
 _SVS_HAIR_COLORS = {"main_color": "Main color", "sub_color1": "Sub color 1", "sub_color2": "Sub color 2",
                     "add_skin_color": "Add skin color", "ex_hair_color": "Ex hair color", "ex_hair_color2": "Ex hair color 2",
                     "shadow_color": "Shadow color", "shadow_color2": "Shadow color 2"}
+_SVS_ACS_LIT = {"shadow_setting": "Shadow setting", "shadow_setting_w": "Shadow setting w", "shadow_power": "Shadow power",
+                "shadow_extend": "Shadow extend", "shadow_color_on": "Shadow color on", "type_select": "Type select",
+                "shadow_color": "Shadow color", "light_color": "Light color", "ambient": "Ambient", "line_color": "Line color",
+                "line_power": "Line power", "line_color_intensity1": "Line color intensity 1",
+                "line_color_intensity2": "Line color intensity 2", "line_color_intensity3": "Line color intensity 3",
+                "line_width_s": "Line width S", "line_width": "Line width", "line_width_ss": "Line width SS",
+                "line_texture_on": "Line texture on", "alpha_line": "Alpha line", "alpha": "Alpha"}
 # What main_opaque and main_item share: the shadow colour and extends, the line switches, the
 # maker's ambient and line colour.
 _ITEM_LIGHT = {"shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend"),
@@ -383,6 +390,23 @@ _EDIT_TEMPLATES = (
                         if name not in ("main_color", "shadow_color", "shadow_color2")},
                      "ex_hair_color_on": ("lit", "Ex hair color on"), "ex_hair_color2_on": ("lit", "Ex hair color 2 on"),
                      "shadow_power": ("lit", "Shadow power"), "shadow_color_on": ("lit", "Shadow color on")}),
+    Template("SVS lif_main_acs", graded=True,
+             textures={k: f"tex.{k}" for k in ("main", "color_mask", "pattern_mask1", "pattern_mask2", "pattern_mask3",
+                                                "detail_mask", "ramp", "ramp2")},
+             params={**_GAME_BAKE, "toon_shading": ("ndl", "Toon shading"), "ndl_light": ("ndl", "N.L light"),
+                     "ndl_dark": ("ndl", "N.L dark"), "shadow_pull": ("ramp uv", "Pull"),
+                     **{f"{k}_present": ("color", f"{socket} present") for k, socket in (
+                         ("main", "Main"), ("color_mask", "Mask"), ("pattern_mask1", "Pattern 1"), ("pattern_mask2", "Pattern 2"),
+                         ("pattern_mask3", "Pattern 3"))},
+                     **{f"main_color{k}": ("color", f"Main color {k}") for k in (1, 2, 3, 4)},
+                     **{f"main_color{k}_alpha": ("color", f"Main color {k} alpha") for k in (1, 2, 3, 4)},
+                     **{f"sub_color{k}": ("color", f"Sub color {k}") for k in (1, 2, 3)},
+                     **{f"sub_color{k}_alpha": ("color", f"Sub color {k} alpha") for k in (1, 2, 3)},
+                     **{f"pattern{k}_{p}": (f"pattern{k}", socket) for k in (1, 2, 3) for p, socket in (
+                         ("scale_u", "Scale u"), ("scale_v", "Scale v"), ("aspect_u", "Aspect u"), ("aspect_v", "Aspect v"),
+                         ("remap_min", "Remap min"), ("remap_max", "Remap max"), ("offset_u", "Offset u"), ("offset_v", "Offset v"),
+                         ("rotator", "Rotator"), ("clamp", "Clamp"))},
+                     **{name: ("lit", socket) for name, socket in _SVS_ACS_LIT.items()}}),
 )
 EDIT_TEMPLATES = tuple(t.name for t in _EDIT_TEMPLATES)
 

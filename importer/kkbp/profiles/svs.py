@@ -67,7 +67,8 @@ EDIT = {
         "eye_l": "SVS lif_main_eye", "eye_r": "SVS lif_main_eye", "eye_white": "SVS lif_main_eye",
         "hair": "SVS lif_main_hair",
     },
-    "shader_templates": {},
+    # Shader (after its last `/`) -> edit template, before the Role's.
+    "shader_templates": {"lif_main_acs": "SVS lif_main_acs"},
     "not_editable_blend_modes": ["glasses"],
     "textures": {
         "eyebrow": ["own:_eyebrow_texture"],
@@ -78,6 +79,9 @@ EDIT = {
         "detail1": ["own:_md_01"], "detail2": ["own:_md_02"],
         # The ramp, read at two places (lif_main_hair).
         "ramp": ["own:_Lamp"], "ramp2": ["own:_Lamp"],
+        "main": ["own:_Main_texture"],
+        "pattern_mask1": ["own:_PatternMask_01"], "pattern_mask2": ["own:_PatternMask_02"], "pattern_mask3": ["own:_PatternMask_03"],
+        "detail_mask": ["own:_Detail_mask_01"],
     },
     "saturated": [],
     "saturated_roles": [],
@@ -91,6 +95,26 @@ EDIT = {
         ],
         "SVS lif_main_eyelash_up": [*_face_part_colors("_Eyelash_color0"), ["shadow_power", ["own:_Shadow_power"], "float"]],
         "SVS lif_main_eye": _EYE_COLORS,
+        "SVS lif_main_acs": [
+            *[[f"main_color{k}", [f"own:_Main_color_0{k}"], "plain"] for k in (1, 2, 3, 4)],
+            *[[f"main_color{k}_alpha", [f"own:_Main_color_0{k}"], "alpha"] for k in (1, 2, 3, 4)],
+            *[[f"sub_color{k}", [f"own:_Sub_color_0{k}"], "plain"] for k in (1, 2, 3)],
+            *[[f"sub_color{k}_alpha", [f"own:_Sub_color_0{k}"], "alpha"] for k in (1, 2, 3)],
+            ["shadow_color", ["own:_ShadowColor"], "plain"], ["line_color", ["own:_Line_color"], "plain"],
+            ["shadow_setting", ["own:_ShadowSetting"], "vector"], ["shadow_setting_w", ["own:_ShadowSetting"], "vector_w"],
+            ["shadow_pull", ["own:_ShadowSetting"], "vector_z"], ["type_select", ["own:_TypeSelect"], "float"],
+            *[[f"pattern{k}_{p}", [f"own:{raw.format(k=k)}"], "float"] for k in (1, 2, 3) for p, raw in (
+                ("scale_u", "_PatternScale_0{k}u"), ("scale_v", "_PatternScale_0{k}v"), ("aspect_u", "_UVAspectRatioU"),
+                ("aspect_v", "_UVAspectRatioV"), ("remap_min", "_PatternRemapMin"), ("remap_max", "_PatternRemapMax"),
+                ("offset_u", "_PatternOffset_0{k}u"), ("offset_v", "_PatternOffset_0{k}v"), ("rotator", "_PatternRotator_0{k}"),
+                ("clamp", "_patternclamp{k}"))],
+            *[[name, [f"own:{raw}"], "float"] for name, raw in (
+                ("shadow_power", "_Shadow_power"), ("shadow_extend", "_shadowextend"), ("shadow_color_on", "_ShadowColorON"),
+                ("line_power", "_Line_power"), ("line_color_intensity1", "_LineColorIntensity1"),
+                ("line_color_intensity2", "_LineColorIntensity2"), ("line_color_intensity3", "_LineColorIntensity3"),
+                ("line_width_s", "_LineWidthS"), ("line_width", "_Line_width"), ("line_width_ss", "_LineWidthSS"),
+                ("line_texture_on", "_Line_texture_onoff"), ("alpha_line", "_AlphaLine"), ("alpha", "_alpha"))],
+        ],
         "SVS lif_main_hair": [
             *[[name, [f"own:{raw}"], "plain"] for name, raw in _HAIR_COLORS],
             *[[f"{name}_alpha", [f"own:{raw}"], "alpha"] for name, raw in _HAIR_COLORS
@@ -101,7 +125,7 @@ EDIT = {
         ],
     },
     # SVS's masks keep data of their own in their alpha (the hair's colour mask its Ex hair colour 2).
-    "channel_packed": ["color_mask", "iris_mask", "pupil", "highlight1", "highlight2", "highlight3", "shadow_mask",
+    "channel_packed": ["main", "pattern_mask1", "pattern_mask2", "pattern_mask3", "detail_mask", "color_mask", "iris_mask", "pupil", "highlight1", "highlight2", "highlight3", "shadow_mask",
                        "eyebrow", "eyelash_up", "eyelash_down", "detail1", "detail2"],
     "values": [
         # The eye white copies bake the eye white alone (ADR 0034).
@@ -109,6 +133,8 @@ EDIT = {
         # An image node without an image reads black and opaque; the game's missing texture is
         # transparent.
         *[[f"missing:{slot}", {f"{slot}_present": 0.0}] for slot in _EYE_TEXTURES],
+        *[[f"missing:{slot}", {f"{slot}_present": 0.0}] for slot in
+          ("main", "color_mask", "pattern_mask1", "pattern_mask2", "pattern_mask3")],
     ],
 }
 
