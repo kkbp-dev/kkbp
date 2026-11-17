@@ -20,6 +20,7 @@ import bpy
 import numpy as np
 
 from .. import profiles, shading, templates
+from ..bundle.rules import NO_EYESHADOW
 from ..character import ID
 
 EDIT_OF = "kkbp_edit_of"  # on an edit material: the name of the material it edits
@@ -160,7 +161,22 @@ def save(ch, edit_material, *, log=print):
     current = templates.texture(source, "main", "light")
     size = tuple(current.image.size) if current is not None and current.image is not None else (0, 0)
     light, dark = bake.bake(ch, edit_material, source.name, at_least=size, log=log)
-    for variant, image in (("light", light), ("dark", dark)):
+    baked = {"light": light, "dark": dark}
+    # A face baked again without its eyeshadow (ADR 0046) keeps that pair in step when its template can
+    # draw it without (an `eyeshadow` param, and `separates_eyeshadow` on); otherwise the pair stays.
+    if all(templates.texture(source, "main", v) is not None for v in NO_EYESHADOW):
+        params = templates.template_of(edit_material).params
+        if "eyeshadow" in params and templates.param(edit_material, "separates_eyeshadow").default_value > 0.5:
+            eyeshadow = templates.param(edit_material, "eyeshadow")
+            was = eyeshadow.default_value
+            eyeshadow.default_value = 0.0
+            try:
+                baked.update(zip(NO_EYESHADOW, bake.bake(ch, edit_material, f"{source.name} no eyeshadow", at_least=size, log=log)))
+            finally:
+                eyeshadow.default_value = was
+        else:
+            log(f"{source.name}'s bakes without eyeshadow are kept as they were: its edit material can't leave the eyeshadow out")
+    for variant, image in baked.items():
         node = templates.texture(source, "main", variant)
         if node is not None:
             node.image = image
@@ -348,7 +364,8 @@ def _holds(term, bm, raws, filled):
     kind, _, value = term.partition(":")
     return {"role": lambda: bm.role == value, "raw": lambda: value in raws,
             "shader": lambda: (bm.shader or "").rpartition("/")[2] == value,
-            "missing": lambda: value not in filled, "has": lambda: value in filled}[kind]()
+            "missing": lambda: value not in filled, "has": lambda: value in filled,
+            "create": lambda: bm.create is not None and (bm.create.shader or "").rpartition("/")[2] == value}[kind]()
 
 
 def _set(mat, name, value):

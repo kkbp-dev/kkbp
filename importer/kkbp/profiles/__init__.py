@@ -100,7 +100,7 @@ class EditRules:
 
 _WHERE = ("create", "own", "current")
 _HOW = ("item", "skin", "light", "dark", "eyew_dark", "plain", "alpha", "float", "vector", "vector_z", "vector_w")
-_CONDITIONS = ("role", "raw", "shader", "missing", "has")
+_CONDITIONS = ("role", "raw", "shader", "missing", "has", "create")
 
 
 @dataclass(frozen=True)
@@ -189,7 +189,7 @@ def _edit_rules(game, data):
         for when, params in data["values"]:
             terms = tuple(when.split())
             if any(t.partition(":")[0] not in _CONDITIONS for t in terms):
-                raise ProfileError(f"profile {game}: EDIT condition {when!r} isn't role:, raw:, shader:, missing: or has:")
+                raise ProfileError(f"profile {game}: EDIT condition {when!r} isn't role:, raw:, shader:, missing:, has: or create:")
             values.append((terms, MappingProxyType(dict(params))))
         return EditRules(
             templates=MappingProxyType(dict(data["templates"])),

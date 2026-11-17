@@ -1,16 +1,17 @@
-"""`.SVS item light`: the light SVS's item shaders (accessories, teeth, tongue) give a colour, at one N.L
-(models.svs_item_light, issue 62).
+"""`.SVS item light`: the light SVS's item and skin shaders (accessories, teeth, tongue, clothes, nails,
+body, face) give a colour, at one N.L (models.svs_item_t, svs_item_mix, issue 62).
 
     ramp   = clamp(max(Ramp 1.g * SS.x, Ramp 2.b * Shadow power * SS.y) + Detail.g * SS.w)
     t      = clamp(P * (max(ramp, clamp(1 - mean(L))) * lum - 0.75 * (lum - 1))) + clamp(Detail.g * Shadow extend)
     tint   = Type select 3 (skin face) ? (0.357, 0.057, 0.039) : the colour's hue at saturation clamp(2 - 2v + sqrt(s), 0, 0.9)
-             and value 0.99 v sqrt(1 - s), toward (0.095, 0.413, 1) by clamp(clamp(blue * 10 - 7.5) + 1 - sqrt(s))
+             and value 0.99 v sqrt(1 - s), toward (0.095, 0.413, 1) by clamp(clamp(blue * 10 - 7.5) + 1 - sqrt(s));
+             with Skin, the colour's hue at saturation sqrt(s) + 0.1 and value 0.8 - 0.1 sqrt(v) (svs_skin_shadow_tint)
     shadow = mix(overlay(Ambient' * 0.7 + 0.1, clamp(l5) * tint), Shadow color, Shadow color on)
     Light  = mix(l5 + (mean(L) - 1) * -0.25 * (luma(l5) - l5) + Ambient' * 0.5, shadow, t)
 
 SS is Shadow setting (`_ShadowSetting`, its w apart), P and lum as `.SVS lif_main_hair`'s, blue the
-colour's dot with (0.064, 0.257, 0.964). Color is the colour times 0.95. Linear colours. Written by
-hand."""
+colour's dot with (0.064, 0.257, 0.964). Color is the colour times 0.95 (the items'), or the base the
+skin's tint comes from. T is t, for the skin's gloss. Linear colours. Written by hand."""
 
 NAME = '.SVS item light'
 KIND = 'ShaderNodeTree'
@@ -19,6 +20,7 @@ KIND = 'ShaderNodeTree'
 def build(lib):
     t = lib.new_group(NAME, KIND, props={})
     t.socket('OUTPUT', 'Light', 'NodeSocketVector')
+    t.socket('OUTPUT', 'T', 'NodeSocketFloat')
     t.socket('INPUT', 'Color', 'NodeSocketVector', default_value=(0.5, 0.5, 0.5))
     for name in ('Detail', 'Ramp 1', 'Ramp 2'):
         t.socket('INPUT', name, 'NodeSocketColor', default_value=(0.0, 0.0, 0.0, 1.0))
@@ -30,6 +32,7 @@ def build(lib):
     t.socket('INPUT', 'Shadow color', 'NodeSocketColor', default_value=(0.18, 0.29, 0.51, 1.0))
     t.socket('INPUT', 'Light color', 'NodeSocketColor', default_value=(1.0, 1.0, 1.0, 1.0))
     t.socket('INPUT', 'Ambient', 'NodeSocketColor', default_value=(0.18855378, 0.18145701, 0.1885538, 1.0))
+    t.socket('INPUT', 'Skin', 'NodeSocketFloat', default_value=0.0, min_value=0.0, max_value=1.0)
     t.make('NodeGroupInput', 'in', (-2000, 0))
     t.make('NodeGroupOutput', 'out', (1400, 0))
     m = t.math
@@ -80,11 +83,18 @@ def build(lib):
     t.make('ShaderNodeMix', 'tint', (-300, 200), {'data_type': 'RGBA'},
            {'Factor_Float': m('skin.face', 'COMPARE', ('in', 'Type select'), 3.0, 0.5, location=(-450, 50)), 'A_Color': ('tint.blue', 'Result_Color'),
             'B_Color': (0.357276797, 0.0573572218, 0.0388724506, 1.0)})
+    # The skin-body shaders' tint.
+    t.make('ShaderNodeCombineColor', 'skin.hsv', (-600, 500), {'mode': 'HSV'},
+           {'Red': ('hsv', 'Red'), 'Green': m('skin.s', 'ADD', root, 0.1, location=(-750, 550)),
+            'Blue': m('skin.v', 'MULTIPLY_ADD', m('skin.vroot', 'SQRT', ('hsv', 'Blue'), location=(-900, 500)), -0.1, 0.8,
+                      location=(-750, 450))})
+    t.make('ShaderNodeMix', 'tint.skin', (-150, 300), {'data_type': 'RGBA'},
+           {'Factor_Float': ('in', 'Skin'), 'A_Color': ('tint', 'Result_Color'), 'B_Color': ('skin.hsv', 'Color')})
     l5 = vec('l5', 'MULTIPLY_ADD', light, (0.75, 0.75, 0.75), (0.25, 0.25, 0.25), location=(-1500, -100))
     l5c = vec('l5c', 'MINIMUM', vec('l5c.low', 'MAXIMUM', l5, (0.0, 0.0, 0.0), location=(-1350, -250)), (1.0, 1.0, 1.0), location=(-1200, -250))
     t.make('ShaderNodeMix', 'shadow.overlay', (-100, -200), {'data_type': 'RGBA', 'blend_type': 'OVERLAY', 'clamp_result': True},
            {'Factor_Float': 1.0, 'A_Color': vec('shadow.base', 'MULTIPLY_ADD', sh, (0.7, 0.7, 0.7), (0.1, 0.1, 0.1), location=(-300, -400)),
-            'B_Color': vec('shadow.top', 'MULTIPLY', l5c, ('tint', 'Result_Color'), location=(-250, -200))})
+            'B_Color': vec('shadow.top', 'MULTIPLY', l5c, ('tint.skin', 'Result_Color'), location=(-250, -200))})
     t.make('ShaderNodeMix', 'shadow', (100, -200), {'data_type': 'VECTOR'},
            {'Factor_Float': ('in', 'Shadow color on'), 'A_Vector': ('shadow.overlay', 'Result_Color'), 'B_Vector': ('in', 'Shadow color')})
     luma = vec('luma', 'DOT_PRODUCT', l5, (0.299, 0.587, 0.114), location=(-1350, -100))
@@ -95,4 +105,5 @@ def build(lib):
     t.make('ShaderNodeMix', 'light', (400, 0), {'data_type': 'VECTOR', 'clamp_factor': False},
            {'Factor_Float': tt, 'A_Vector': lit, 'B_Vector': ('shadow', 'Result_Vector')})
     t.link('light', 'Result_Vector', 'out', 'Light')
+    t.link(tt[0], tt[1], 'out', 'T')
     return t

@@ -205,6 +205,21 @@ _SVS_CREATE_CLOTH_SLOTS = {"create_main": "Main", "create_mask": "Mask", "create
                           **{f"create_paint{k}": f"Paint {k}" for k in (1, 2, 3)}}
 _SVS_CLOTH_LIT = ("shadow_setting", "shadow_setting_w", "shadow_power", "shadow_extend", "shadow_color_on", "type_select",
                   "shadow_color", "light_color", "ambient", "line_color", "line_power", "alpha_line")
+# The skin and nail templates' light: N.L by the toon value, the lit group's light and shadow inputs.
+_SVS_SKIN_BAKE = {"toon_shading": ("ndl", "Toon shading"), "ndl_light": ("ndl", "N.L light"), "ndl_dark": ("ndl", "N.L dark"),
+                  **{name: ("lit", socket) for name, socket in (
+                      ("light_color", "Light color"), ("ambient", "Ambient"), ("shadow_color", "Shadow color"),
+                      ("shadow_setting", "Shadow setting"), ("shadow_setting_w", "Shadow setting w"),
+                      ("shadow_power", "Shadow power"), ("shadow_color_on", "Shadow color on"))}}
+# The body's and face's create paints (`.SVS create skin body`, `.SVS create skin head`).
+_SVS_CREATE_PAINTS = {
+    **{f"create_paint{k}_present": ("create", f"Paint {k} present") for k in (1, 2, 3)},
+    **{f"create_paint_color{k}": ("create", f"Paint color {k}") for k in (1, 2, 3)},
+    **{f"create_paint_color{k}_alpha": ("create", f"Paint color {k} alpha") for k in (1, 2, 3)},
+    **{f"create_paint{k}_position": (f"paint{k}", "Position") for k in (1, 2, 3)},
+    **{f"create_paint{k}_position_w": (f"paint{k}", "Position w") for k in (1, 2, 3)},
+    "use_create": ("use create", "Value"),
+}
 # What main_opaque and main_item share: the shadow colour and extends, the line switches, the
 # maker's ambient and line colour.
 _ITEM_LIGHT = {"shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend"),
@@ -412,6 +427,62 @@ _EDIT_TEMPLATES = (
                          ("remap_min", "Remap min"), ("remap_max", "Remap max"), ("offset_u", "Offset u"), ("offset_v", "Offset v"),
                          ("rotator", "Rotator"), ("clamp", "Clamp"))},
                      **{name: ("lit", socket) for name, socket in _SVS_ACS_LIT.items()}}),
+    Template("SVS lif_main_nail", graded=True,
+             textures={k: f"tex.{k}" for k in ("color_mask", "main", "paint1", "paint2", "paint3", "matcap", "ramp", "ramp2")},
+             params={**_GAME_BAKE, **_SVS_SKIN_BAKE, "gloss_power": ("lit", "Gloss power"),
+                     **{f"nail_color{k}": ("color", f"Nail color {k}") for k in (1, 2, 3)},
+                     "nail_color1_alpha": ("color", "Nail color 1 alpha"),
+                     **{f"paint{k}_present": ("color", f"Paint {k} present") for k in (1, 2, 3)},
+                     **{f"paint_color{k}": ("color", f"Paint color {k}") for k in (1, 2, 3)},
+                     **{f"paint_color{k}_alpha": ("color", f"Paint color {k} alpha") for k in (1, 2, 3)},
+                     **{f"paint{k}_position": (f"paint{k}", "Position") for k in (1, 2, 3)},
+                     **{f"paint{k}_position_w": (f"paint{k}", "Position w") for k in (1, 2, 3)}}),
+    Template("SVS lif_main_skin_body", graded=True,
+             textures={k: f"tex.{k}" for k in ("create", "nip", "underhair", "detail_mask", "detail_mask2", "detail_mask_highlight",
+                                                "matcap", "ramp", "ramp2", "ramp3", "create_sunburn", "create_paint1",
+                                                "create_paint2", "create_paint3", "create_paint_mask")},
+             params={**_GAME_BAKE, **_SVS_SKIN_BAKE, "shadow_extend": ("lit", "Shadow extend"), "shadow_pull": ("ramp uv", "Pull"),
+                     "nip_size": ("nip uv", "Nip size"), "speclar_height": ("highlight uv", "Height"),
+                     "light_xy": ("highlight uv", "Light xy"), "dark_xy": ("highlight uv", "Dark xy"),
+                     **{name: ("color", socket) for name, socket in (
+                         ("main_color", "Main color"), ("nip_color1", "Nip color 1"), ("nip_color1_alpha", "Nip color 1 alpha"),
+                         ("nip_color2", "Nip color 2"), ("under_hair_color", "Under hair color"),
+                         ("under_hair_color_alpha", "Under hair color alpha"), ("detail_color2", "Detail color 2"),
+                         ("detail_color2_alpha", "Detail color 2 alpha"), ("skin_red_power", "Skin red power"),
+                         ("nip_present", "Nip present"), ("underhair_present", "Underhair present"))},
+                     **{name: ("lit", socket) for name, socket in (
+                         ("shadow_color2", "Shadow color 2"), ("shadow_color2_alpha", "Shadow color 2 alpha"),
+                         ("highlight_color", "Highlight color"), ("highlight_color_alpha", "Highlight color alpha"),
+                         ("highlight_power", "Highlight power"), ("high_light_power", "High light power"))},
+                     "create_main_color": ("create", "Main color"), "create_sunburn_color": ("create", "Sunburn color"),
+                     "create_sunburn_color_alpha": ("create", "Sunburn color alpha"), **_SVS_CREATE_PAINTS}),
+    Template("SVS lif_main_skin_head", graded=True,
+             textures={k: f"tex.{k}" for k in ("create", "cheek", "lip", "nose", "detail_mask", "detail_mask2", "matcap", "ramp",
+                                                "ramp2", "create_skin_mask", "create_facetype", "create_paint1", "create_paint2",
+                                                "create_paint3", "create_mole", "create_paint_mask", "create_eyeshadow")},
+             params={**_GAME_BAKE, **_SVS_SKIN_BAKE, "shadow_extend": ("lit", "Shadow extend"), "shadow_pull": ("ramp uv", "Pull"),
+                     "shadow_color2": ("lit", "Shadow color 2"), "shadow_color2_alpha": ("lit", "Shadow color 2 alpha"),
+                     **{name: ("color", socket) for name, socket in (
+                         ("main_color", "Main color"), ("cheek_color", "Cheek color"), ("cheek_color_alpha", "Cheek color alpha"),
+                         ("cheek_highlight_color", "Cheek highlight color"),
+                         ("cheek_highlight_color_alpha", "Cheek highlight color alpha"), ("lip_color", "Lip color"),
+                         ("lip_color_alpha", "Lip color alpha"), ("lip_highlight_color", "Lip highlight color"),
+                         ("lip_highlight_color_alpha", "Lip highlight color alpha"), ("nose_color_alpha", "Nose color alpha"),
+                         ("nose_line_color", "Nose line color"), ("nose_line_color_alpha", "Nose line color alpha"))},
+                     **{name: ("cheek uv", socket) for name, socket in (
+                         ("cheek_position", "Cheek position"), ("cheek_position_w", "Cheek position w"),
+                         ("cheek_position_x", "Position x"), ("cheek_position_y", "Position y"),
+                         ("cheek_rotation", "Rotation"), ("cheek_size", "Size"))},
+                     **{name: ("create", socket) for name, socket in (
+                         ("create_main_color", "Main color"), ("create_mouth_color", "Mouth color"),
+                         ("create_mole_color", "Mole color"), ("create_mole_color_alpha", "Mole color alpha"),
+                         ("create_eyeshadow_color", "Eyeshadow color"), ("create_eyeshadow_color_alpha", "Eyeshadow color alpha"),
+                         ("create_facetype_present", "Facetype present"))},
+                     "create_mole_position": ("mole", "Position"), "create_mole_position_w": ("mole", "Position w"),
+                     # Save bakes the face's no-eyeshadow pair with `eyeshadow` at 0 when the face composites
+                     # its create material (`separates_eyeshadow`, ADR 0046).
+                     "eyeshadow": ("create", "Eyeshadow"), "separates_eyeshadow": ("use create", "Value"),
+                     **_SVS_CREATE_PAINTS}),
     Template("SVS lif_main_cloth", graded=True,
              textures={k: f"tex.{k}" for k in ("create", "color_mask", "detail_mask", "detail_mask2", "ramp", "ramp2",
                                                 *_SVS_CREATE_CLOTH_SLOTS)},

@@ -56,6 +56,37 @@ _HAIR_COLORS = (("main_color", "_Main_color"), ("sub_color1", "_Sub_color_01"), 
                 ("shadow_color", "_Shadow_color"), ("shadow_color2", "_ShadowColor"))
 
 
+def _plain(*pairs, alpha=()):
+    """Colour rows: `[name, own:raw, plain]` for each (name, raw), and `name_alpha` for those in `alpha`.
+    A raw starting `create:` reads the create material."""
+    src = lambda raw: raw if raw.startswith("create:") else f"own:{raw}"  # noqa: E731
+    return [*[[n, [src(r)], "plain"] for n, r in pairs], *[[f"{n}_alpha", [src(r)], "alpha"] for n, r in pairs if n in alpha]]
+
+
+def _floats(*pairs):
+    return [[n, [r if r.startswith("create:") else f"own:{r}"], "float"] for n, r in pairs]
+
+
+def _vectors(*pairs):
+    return [[f"{n}{tail}", [r if r.startswith("create:") else f"own:{r}"], how] for n, r in pairs
+            for tail, how in (("", "vector"), ("_w", "vector_w"))]
+
+
+# What the skin and nail shaders light with, as lif_main_acs's.
+_SKIN_LIGHT = [
+    *_plain(("shadow_color", "_ShadowColor")),
+    ["shadow_setting", ["own:_ShadowSetting"], "vector"], ["shadow_setting_w", ["own:_ShadowSetting"], "vector_w"],
+    *_floats(("shadow_power", "_Shadow_power"), ("shadow_color_on", "_ShadowColorON")),
+]
+# The skin's, which also pull and push the shadow by a detail mask.
+_SKIN_DETAIL = [["shadow_pull", ["own:_ShadowSetting"], "vector_z"], *_floats(("shadow_extend", "_shadowextend"))]
+_CREATE_PAINTS = [
+    *_plain(*[(f"create_paint_color{k}", f"create:_Paint_color_0{k}") for k in (1, 2, 3)],
+            alpha=[f"create_paint_color{k}" for k in (1, 2, 3)]),
+    *_vectors(*[(f"create_paint{k}_position", f"create:_Paint_position_0{k}") for k in (1, 2, 3)]),
+]
+
+
 # The edit material tool (D38-D41; profiles/kk.py says what each table holds). SVS's templates follow
 # its LIF shaders (issue 62, importer/tools/game_shaders/models.py); a shader none follows (the
 # `_alpha` and `_low` copies, modded shaders) isn't editable. SVS's materials carry their textures by
@@ -66,11 +97,14 @@ EDIT = {
         "eyelash": "SVS lif_main_eyelash_up",
         "eye_l": "SVS lif_main_eye", "eye_r": "SVS lif_main_eye", "eye_white": "SVS lif_main_eye",
         "hair": "SVS lif_main_hair",
+        "body": "SVS lif_main_skin_body", "face": "SVS lif_main_skin_head",
     },
     # Shader (after its last `/`) -> edit template, before the Role's.
     "shader_templates": {"lif_main_acs": "SVS lif_main_acs", "lif_main_cloth": "SVS lif_main_cloth",
                          # The socks' shader is the clothes' without their parallax and liquid.
-                         "lif_main_cloth_socks": "SVS lif_main_cloth"},
+                         "lif_main_cloth_socks": "SVS lif_main_cloth",
+                         # The nails have no Role.
+                         "lif_main_nail": "SVS lif_main_nail"},
     "not_editable_blend_modes": ["glasses"],
     "textures": {
         "eyebrow": ["own:_eyebrow_texture"],
@@ -84,7 +118,17 @@ EDIT = {
         "main": ["own:_Main_texture"],
         "pattern_mask1": ["own:_PatternMask_01"], "pattern_mask2": ["own:_PatternMask_02"], "pattern_mask3": ["own:_PatternMask_03"],
         "detail_mask": ["own:_Detail_mask_01"], "detail_mask2": ["own:_Detail_mask_02"],
-        "create": ["own:_Create_main_texture"],
+        "create": ["own:_Create_main_texture", "own:_Create_jm_main_skin_head"],
+        # The matcap the nails and skin read at the bake's view normal; the ramp the body's highlight dims by.
+        "matcap": ["own:_Mat_cap", "own:_shadematcap"], "ramp3": ["own:_Lamp"],
+        **{f"paint{k}": [f"own:_Paint_texture_0{k}"] for k in (1, 2, 3)},
+        # The skin's mesh-placed layers, and the body's highlight (its first detail mask, moved).
+        "nip": ["own:_Nip"], "underhair": ["own:_Under_hair_texture"], "cheek": ["own:_Cheek_texture"],
+        "lip": ["own:_Lip_texture"], "nose": ["own:_Nose_texture"], "detail_mask_highlight": ["own:_Detail_mask_01"],
+        # The body's and face's create materials.
+        "create_sunburn": ["create:_Sunburn_texture"], "create_skin_mask": ["create:_Skin_mask"],
+        "create_facetype": ["create:_Facetype_texture"], "create_mole": ["create:_Hokuro_texture"],
+        "create_eyeshadow": ["create:_Eyeshadow_texture"],
         # The clothes' create material (Schema Version 1.3).
         "create_main": ["create:_Main_texture"], "create_mask": ["create:_Main_color_mask"],
         "create_paint_mask": ["create:_Paint_mask"],
@@ -145,6 +189,41 @@ EDIT = {
             *[[f"create_paint{k}_position", [f"create:_Paint_position_0{k}"], "vector"] for k in (1, 2, 3)],
             *[[f"create_paint{k}_position_w", [f"create:_Paint_position_0{k}"], "vector_w"] for k in (1, 2, 3)],
         ],
+        "SVS lif_main_nail": [
+            *_plain(*[(f"nail_color{k}", f"_Nail_main_color_0{k}") for k in (1, 2, 3)], alpha=["nail_color1"]),
+            *_plain(*[(f"paint_color{k}", f"_Paint_color_0{k}") for k in (1, 2, 3)], alpha=[f"paint_color{k}" for k in (1, 2, 3)]),
+            *_vectors(*[(f"paint{k}_position", f"_Paint_position_offset_0{k}") for k in (1, 2, 3)]),
+            *_floats(("gloss_power", "_Nail_gloss_power")), *_SKIN_LIGHT,
+        ],
+        "SVS lif_main_skin_body": [
+            *_plain(("main_color", "_MainColor"), ("nip_color1", "_Nip_color_01"), ("nip_color2", "_Nip_color_02"),
+                    ("under_hair_color", "_Under_hair_color"), ("detail_color2", "_Detail_color_02"),
+                    ("shadow_color2", "_Shadow_color"), ("highlight_color", "_Highlight_color"),
+                    alpha=["nip_color1", "under_hair_color", "detail_color2", "shadow_color2", "highlight_color"]),
+            *_floats(("skin_red_power", "_Skin_red_power"), ("nip_size", "_Nip_size"), ("highlight_power", "_Highlight_power"),
+                     ("high_light_power", "_High_light_power"), ("speclar_height", "_SpeclarHeight")),
+            *_SKIN_LIGHT, *_SKIN_DETAIL,
+            *_plain(("create_main_color", "create:_Main_color"), ("create_sunburn_color", "create:_Sunburn_color"),
+                    alpha=["create_sunburn_color"]),
+            *_CREATE_PAINTS,
+        ],
+        "SVS lif_main_skin_head": [
+            *_plain(("main_color", "_MainColor"), ("cheek_color", "_Cheek_color"), ("cheek_highlight_color", "_Cheek_highlight_color"),
+                    ("lip_color", "_Lip_color"), ("lip_highlight_color", "_Lip_highlight_color"),
+                    ("nose_line_color", "_Nose_line_color"), ("shadow_color2", "_Shadow_color"),
+                    alpha=["cheek_color", "cheek_highlight_color", "lip_color", "lip_highlight_color", "nose_line_color",
+                           "shadow_color2"]),
+            ["nose_color_alpha", ["own:_Nose_color"], "alpha"],
+            *_vectors(("cheek_position", "_Cheek_position")),
+            *_floats(("cheek_position_x", "_Cheek_position_x"), ("cheek_position_y", "_Cheek_position_y"),
+                     ("cheek_rotation", "_Cheek_rotation"), ("cheek_size", "_Cheek_size")),
+            *_SKIN_LIGHT, *_SKIN_DETAIL,
+            *_plain(("create_main_color", "create:_Main_color"), ("create_mouth_color", "create:_Mouth_color"),
+                    ("create_mole_color", "create:_Hokuro_color"), ("create_eyeshadow_color", "create:_Eyeshadow_color"),
+                    alpha=["create_mole_color", "create_eyeshadow_color"]),
+            *_vectors(("create_mole_position", "create:_Hokuro_position")),
+            *_CREATE_PAINTS,
+        ],
         "SVS lif_main_hair": [
             *[[name, [f"own:{raw}"], "plain"] for name, raw in _HAIR_COLORS],
             *[[f"{name}_alpha", [f"own:{raw}"], "alpha"] for name, raw in _HAIR_COLORS
@@ -158,7 +237,9 @@ EDIT = {
     "channel_packed": ["main", "pattern_mask1", "pattern_mask2", "pattern_mask3", "detail_mask", "detail_mask2", "create", "create_main", "create_mask", "create_paint_mask",
                        "create_pattern1", "create_pattern2", "create_pattern3", "create_pattern4", "create_paint1", "create_paint2",
                        "create_paint3", "color_mask", "iris_mask", "pupil", "highlight1", "highlight2", "highlight3", "shadow_mask",
-                       "eyebrow", "eyelash_up", "eyelash_down", "detail1", "detail2"],
+                       "eyebrow", "eyelash_up", "eyelash_down", "detail1", "detail2", "matcap", "paint1", "paint2", "paint3", "nip",
+                       "underhair", "cheek", "lip", "nose", "detail_mask_highlight", "create_sunburn", "create_skin_mask",
+                       "create_facetype", "create_mole", "create_eyeshadow"],
     "values": [
         # The eye white copies bake the eye white alone (ADR 0034).
         ["role:eye_white", {"eye_white_only": 1.0}],
@@ -169,6 +250,11 @@ EDIT = {
           ("main", "color_mask", "pattern_mask1", "pattern_mask2", "pattern_mask3")],
         # The clothes composite their create material when the bundle carries one (Schema Version 1.3).
         ["has:create_mask", {"use_create": 1.0}],
+        # The body and face composite theirs too; it lets Save bake the face without its eyeshadow.
+        ["create:lif_create_main_skin_body", {"use_create": 1.0}],
+        ["create:lif_create_main_skin_head", {"use_create": 1.0}],
+        *[[f"missing:{slot}", {f"{slot}_present": 0.0}] for slot in
+          ("paint1", "paint2", "paint3", "nip", "underhair", "create_facetype")],
         *[[f"missing:{slot}", {f"{slot}_present": 0.0}] for slot in
           ("create_main", "create_mask", "create_paint_mask", *[f"create_pattern{k}" for k in (1, 2, 3, 4)],
            *[f"create_paint{k}" for k in (1, 2, 3)])],
