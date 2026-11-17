@@ -193,6 +193,8 @@ def _fill_textures(ch, mat, material, bm, profile, saturate, log):
         else:
             templates.set_texture(ch, mat, slot, hit, owner=owner)
             templates.set_position(mat, slot, hit.offset, hit.scale)
+            if slot in rules.channel_packed:
+                templates.texture_node(mat, slot).image.alpha_mode = "CHANNEL_PACKED"
     if "main" in found and "main.dark" in slots and not isinstance(found["main"], bpy.types.Image):
         main, shadow = found["main"], _shadow(bm, profile)
         tag = "saturated." if saturate else ""

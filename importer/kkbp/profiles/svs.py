@@ -51,6 +51,11 @@ _EYE_COLORS = [
 ]
 
 
+_HAIR_COLORS = (("main_color", "_Main_color"), ("sub_color1", "_Sub_color_01"), ("sub_color2", "_Sub_color_02"),
+                ("add_skin_color", "_Add_skin_color"), ("ex_hair_color", "_Ex_hair_color"), ("ex_hair_color2", "_Ex_hair_color2"),
+                ("shadow_color", "_Shadow_color"), ("shadow_color2", "_ShadowColor"))
+
+
 # The edit material tool (D38-D41; profiles/kk.py says what each table holds). SVS's templates follow
 # its LIF shaders (issue 62, importer/tools/game_shaders/models.py); a shader none follows (the
 # `_alpha` and `_low` copies, modded shaders) isn't editable. SVS's materials carry their textures by
@@ -60,6 +65,7 @@ EDIT = {
         "eyebrow": "SVS lif_main_eyebrow",
         "eyelash": "SVS lif_main_eyelash_up",
         "eye_l": "SVS lif_main_eye", "eye_r": "SVS lif_main_eye", "eye_white": "SVS lif_main_eye",
+        "hair": "SVS lif_main_hair",
     },
     "shader_templates": {},
     "not_editable_blend_modes": ["glasses"],
@@ -68,6 +74,10 @@ EDIT = {
         "eyelash_up": ["own:_Eyelash_up_texture"],
         "eyelash_down": ["own:_Eyelash_dw_texture"],
         **_EYE_TEXTURES,
+        "color_mask": ["own:_Hair_color_mask", "own:_Main_color_mask"],
+        "detail1": ["own:_md_01"], "detail2": ["own:_md_02"],
+        # The ramp, read at two places (lif_main_hair).
+        "ramp": ["own:_Lamp"], "ramp2": ["own:_Lamp"],
     },
     "saturated": [],
     "saturated_roles": [],
@@ -81,7 +91,18 @@ EDIT = {
         ],
         "SVS lif_main_eyelash_up": [*_face_part_colors("_Eyelash_color0"), ["shadow_power", ["own:_Shadow_power"], "float"]],
         "SVS lif_main_eye": _EYE_COLORS,
+        "SVS lif_main_hair": [
+            *[[name, [f"own:{raw}"], "plain"] for name, raw in _HAIR_COLORS],
+            *[[f"{name}_alpha", [f"own:{raw}"], "alpha"] for name, raw in _HAIR_COLORS
+              if name not in ("main_color", "shadow_color", "shadow_color2")],
+            *[[name, [f"own:{raw}"], "float"] for name, raw in (
+                ("ex_hair_color_on", "_Ex_hair_color_onoff"), ("ex_hair_color2_on", "_Ex_hair_color2_onoff"),
+                ("shadow_power", "_Shadow_power"), ("shadow_color_on", "_ShadowColorON"))],
+        ],
     },
+    # SVS's masks keep data of their own in their alpha (the hair's colour mask its Ex hair colour 2).
+    "channel_packed": ["color_mask", "iris_mask", "pupil", "highlight1", "highlight2", "highlight3", "shadow_mask",
+                       "eyebrow", "eyelash_up", "eyelash_down", "detail1", "detail2"],
     "values": [
         # The eye white copies bake the eye white alone (ADR 0034).
         ["role:eye_white", {"eye_white_only": 1.0}],

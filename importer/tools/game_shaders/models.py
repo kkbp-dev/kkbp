@@ -752,3 +752,49 @@ def pupil_layer(out, white, coverage):
     that, laid over the eye white with `coverage` in linear light, gives back the eye."""
     a = coverage[..., None]
     return np.where(a > 0, np.clip((out - (1 - a) * white) / np.maximum(a, 1e-6), 0, 1), white)
+
+
+# --- SVS hair: lif_main_hair ----------------------------------------------------------------------
+
+def hair_ramp_uv(detail1, light: SvsLight):
+    """Where LIF/lif_main_hair reads its ramp (`_Lamp`, along its diagonal) for the bake quad, whose
+    normal has no y: by N.L, and by N.L * 0.4 + 0.3, each pulled toward 0 by `_md_01`'s green."""
+    k = 1 - 0.5 * detail1[..., 1]
+    return (np.clip(k * np.clip(light.ndl, 0, 1), 0, 1),
+            np.clip(k * np.clip(light.ndl * 0.4 + 0.3, 0, 1), 0, 1))
+
+
+def lif_main_hair(color_mask, detail1, detail2, ramp1, ramp2, colors, floats, light: SvsLight):
+    """LIF/lif_main_hair as the bake draws it: the colour mask's green and blue pick `_Sub_color_02`
+    and `_Sub_color_01` over `_Main_color`, `_md_02`'s blue `_Add_skin_color`, and with their switches
+    the mask's alpha (smoothstepped) `_Ex_hair_color2` and its red `_Ex_hair_color`; clamped to 0.95.
+    It is lit by a mix of the light (with half the ambient) and the shadow colour (`_Shadow_color`
+    overlaid on the ambient, or `_ShadowColor`), by how far the ramp says (`ramp1`, `ramp2` read at
+    hair_ramp_uv). The rim, the reflection and the highlight (its texture cleared to black) give
+    nothing on the bake quad. Returns linear rgb."""
+    c = {k: np.asarray(v, dtype=F) for k, v in colors.items()}
+    f = floats
+    col = _lerp(c["_Main_color"][:3], c["_Sub_color_02"][:3], (color_mask[..., 1] * c["_Sub_color_02"][3])[..., None])
+    col = _lerp(col, c["_Sub_color_01"][:3], (color_mask[..., 2] * c["_Sub_color_01"][3])[..., None])
+    col = _lerp(col, c["_Add_skin_color"][:3], (detail2[..., 2] * c["_Add_skin_color"][3])[..., None])
+    if f.get("_Ex_hair_color2_onoff"):
+        s = _smooth01((color_mask[..., 3] - 0.05) / 0.9) - 1
+        col = _lerp(col, c["_Ex_hair_color2"][:3], (np.clip(-2 * s, 0, 1) * c["_Ex_hair_color2"][3])[..., None])
+    if f.get("_Ex_hair_color_onoff"):
+        col = _lerp(col, c["_Ex_hair_color"][:3], (color_mask[..., 0] * c["_Ex_hair_color"][3])[..., None])
+    col = np.clip(col, 0, 0.95)
+    L = np.asarray(light.color, dtype=F)
+    sh = np.clip(np.asarray(light.ambient, dtype=F), 0, 1)
+    mean = L.sum() / 3
+    lum = min(max(float(L @ np.array([0.212672904, 0.715152204, 0.0721750036])), 1.0), 99.0)
+    power = f["_Shadow_power"]
+    p = sh.sum() * -0.1 + 0.5 + 0.4 * power
+    p = p + f.get("_ShadowColorON", 0) * (power - p)
+    ramp = np.clip(np.maximum(ramp2[..., 2] * power * 0.5, ramp1[..., 1]) + detail1[..., 1], 0, 1)
+    t = np.clip(p * (np.maximum(ramp, np.clip(1 - mean, 0, 1)) * lum - 0.75 * (lum - 1)), 0, 1)
+    l5 = L * 0.75 + 0.25
+    luma = l5 @ np.array([0.299, 0.587, 0.114])
+    lit = l5 + (mean - 1) * -0.25 * (luma - l5) + sh * 0.5
+    shadow = _overlay(np.clip(l5, 0, 1) * c["_Shadow_color"][:3], sh * 0.7 + 0.1)
+    shadow = _lerp(shadow, c["_ShadowColor"][:3], f.get("_ShadowColorON", 0))
+    return np.clip(col * _lerp(lit, shadow, t[..., None]), 0, 1.1)

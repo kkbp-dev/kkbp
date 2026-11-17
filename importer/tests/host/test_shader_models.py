@@ -574,3 +574,34 @@ def test_svs_eye_gives_back_the_bakes(mid):
         layer = models.pupil_layer(out, white, coverage)
         assert difference(models.svs_baked(layer), reference) < 0.004
         assert np.abs(coverage - reference[..., 3]).mean() < 0.01
+
+
+def _svs_at(sample, m, raw, u, v, size=None):
+    """A LIF material's texture read at (u, v), rows bottom-up, its own offset and scale applied."""
+    t = next((t for t in m["textures"] if t["raw"] == raw and not t.get("variant")), None)
+    if t is None:
+        return np.zeros(np.shape(u) + (4,))
+    image = _svs_raw(sample, m, raw)[::-1]
+    return models._bilinear(image, u * t["scale"][0] + t["offset"][0], v * t["scale"][1] + t["offset"][1])
+
+
+def _uv(size):
+    w, h = size
+    v, u = np.mgrid[0:h, 0:w]
+    return (u + 0.5) / w, (v + 0.5) / h
+
+
+@pytest.mark.parametrize("mid", ["cf_hair_b_m_o_12_00", "cf_hair_f_m_o_03_00"])
+def test_svs_hair_gives_back_the_bakes(mid):
+    """LIF/lif_main_hair: the colour mask's layers lit through its ramp."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    u, v = _uv(size)
+    mask, d1, d2 = (_svs_at(sample, m, raw, u, v) for raw in ("_Hair_color_mask", "_md_01", "_md_02"))
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        r1, r2 = models.hair_ramp_uv(d1, light)
+        out = models.lif_main_hair(mask, d1, d2, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
+                                   _svs_colors(m), m["floats"], light)
+        assert difference(models.svs_baked(out), reference[::-1]) < 0.004

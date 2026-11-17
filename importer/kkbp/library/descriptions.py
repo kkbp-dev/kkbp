@@ -190,6 +190,9 @@ _SVS_EYE_UV = {"eye_position": "Eye position", "eye_position_w": "Eye position w
                **{f"highlight{k}_position": f"Highlight {k} position" for k in (1, 2, 3)},
                **{f"highlight{k}_position_w": f"Highlight {k} position w" for k in (1, 2, 3)},
                **{f"highlight{k}_rotation": f"Highlight {k} rotation" for k in (1, 2, 3)}}
+_SVS_HAIR_COLORS = {"main_color": "Main color", "sub_color1": "Sub color 1", "sub_color2": "Sub color 2",
+                    "add_skin_color": "Add skin color", "ex_hair_color": "Ex hair color", "ex_hair_color2": "Ex hair color 2",
+                    "shadow_color": "Shadow color", "shadow_color2": "Shadow color 2"}
 # What main_opaque and main_item share: the shadow colour and extends, the line switches, the
 # maker's ambient and line colour.
 _ITEM_LIGHT = {"shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend"),
@@ -371,6 +374,15 @@ _EDIT_TEMPLATES = (
                      **{f"{name}_alpha": ("lit", f"{socket} alpha") for name, socket in _SVS_EYE_COLORS.items()
                         if name not in ("eye_white1", "eye1")},
                      **{name: ("uv", socket) for name, socket in _SVS_EYE_UV.items()}}),
+    Template("SVS lif_main_hair", graded=True,
+             textures={k: f"tex.{k}" for k in ("color_mask", "detail1", "detail2", "ramp", "ramp2")},
+             params={**_GAME_BAKE, "toon_shading": ("ndl", "Toon shading"), "ndl_light": ("ndl", "N.L light"),
+                     "ndl_dark": ("ndl", "N.L dark"), "light_color": ("lit", "Light color"), "ambient": ("lit", "Ambient"),
+                     **{name: ("lit", socket) for name, socket in _SVS_HAIR_COLORS.items()},
+                     **{f"{name}_alpha": ("lit", f"{socket} alpha") for name, socket in _SVS_HAIR_COLORS.items()
+                        if name not in ("main_color", "shadow_color", "shadow_color2")},
+                     "ex_hair_color_on": ("lit", "Ex hair color on"), "ex_hair_color2_on": ("lit", "Ex hair color 2 on"),
+                     "shadow_power": ("lit", "Shadow power"), "shadow_color_on": ("lit", "Shadow color on")}),
 )
 EDIT_TEMPLATES = tuple(t.name for t in _EDIT_TEMPLATES)
 

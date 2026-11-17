@@ -93,6 +93,9 @@ class EditRules:
     shadow: tuple[Source, ...]
     colors: Mapping[str, tuple[EditColor, ...]]
     values: tuple[tuple[tuple[str, ...], Mapping[str, object]], ...]
+    # Edit slots whose image keeps independent data in its alpha, which Blender must not associate
+    # with the colour (alpha mode Channel Packed), as the game samples them.
+    channel_packed: frozenset[str] = frozenset()
 
 
 _WHERE = ("create", "own", "current")
@@ -200,6 +203,7 @@ def _edit_rules(game, data):
             shadow=tuple(_source(game, x) for x in data["shadow"]),
             colors=MappingProxyType(colors),
             values=tuple(values),
+            channel_packed=frozenset(data.get("channel_packed", ())),
         )
     except (KeyError, TypeError, ValueError) as ex:
         raise ProfileError(f"profile {game}: EDIT is malformed ({ex})") from None
