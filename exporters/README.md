@@ -113,6 +113,7 @@ What the adapters' authors learned the hard way. The safety rules for running th
 - Use `TryCast`, never `is`.
 - Key dictionaries and sets by `GetInstanceID()`: two wrapper objects for one game object don't compare equal.
 - Methods that fill arrays (`GetBlendShapeFrameVertices`) take `Il2CppStructArray`.
+- An unreadable mesh's stored vertices come from its GPU vertex buffer (`Mesh.GetVertexBuffer`). Read it with `GraphicsBuffer.InternalGetData`, not `GetData`: `GetData(Array)` needs `Il2CppSystem.Object.GetType`, which the game's build strips (ADR 0052).
 - Step coroutines yourself and pass on what they yield; the IL2CPP wrapper can't be handed a nested coroutine.
 - Cast window callbacks to `GUI.WindowFunction` and pass explicit `GUILayoutOption` arrays.
 - URP won't render from a disabled camera.

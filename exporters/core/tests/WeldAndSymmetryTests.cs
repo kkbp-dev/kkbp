@@ -136,6 +136,43 @@ namespace KKBP.Exporter.Core.Tests
         }
 
         [Fact]
+        public void A_cluster_groups_the_same_way_wherever_physics_leaves_it()
+        {
+            // Vertex 0 is within the distance of 1 and of 2, which share a triangle, so it can join only
+            // one of them: always 1, the lower index. In the first mesh 2 sits in the grid cell before 0's,
+            // as a few micrometres of hair physics can leave it; in the second, in 0's own cell.
+            foreach (float x2 in new[] { -2e-6f, 1e-6f })
+            {
+                var p = new[]
+                {
+                    new Vec3(5e-6f, 0, 0), new Vec3(2e-6f, 0, 0), new Vec3(x2, 0, 0),
+                    new Vec3(0, 0.01f, 0), new Vec3(0.01f, 0, 0.01f), new Vec3(0, 0.01f, 0.01f),
+                };
+                var mesh = TestMeshes.Make("m", p, new[] { 1, 2, 3, 0, 4, 5 }, new[] { "a" }, new int[6], "mat");
+                Assert.Equal(1, Welds.Weld(new[] { mesh }, NoRoles).Groups);
+                Assert.Equal(mesh.Positions[0], mesh.Positions[1]);
+                Assert.NotEqual(mesh.Positions[0], mesh.Positions[2]);
+            }
+        }
+
+        [Fact]
+        public void Copies_are_found_by_their_unposed_positions()
+        {
+            // Physics left the copies 1 and 3 farther apart than the distance, and 2 and 4 nearer: their
+            // unposed positions, where the copies are 1 µm apart and 2 and 4 aren't copies, decide.
+            var mesh = Seam(2e-5f);
+            mesh.Positions[4] = mesh.Positions[2];
+            mesh.UnposedPositions = (Vec3[])mesh.Positions.Clone();
+            mesh.UnposedPositions[3] = new Vec3(0.01f + 1e-6f, 0, 0);
+            mesh.UnposedPositions[4] = new Vec3(0, 0.01f, 5e-5f);
+
+            Assert.Equal(1, Welds.Weld(new[] { mesh }, NoRoles).Groups);
+            Assert.Equal(mesh.Positions[1], mesh.Positions[3]);
+            Assert.Equal(0.01f + 1e-5f, mesh.Positions[1].X, 7); // the mean of where physics left them
+            Assert.Equal(new Vec3(0, 0.01f, 0), mesh.Positions[2]);
+        }
+
+        [Fact]
         public void The_neck_joins_the_face_to_the_body_with_the_bodys_weights()
         {
             var face = TestMeshes.Make("face", new[] { new Vec3(0, 1.4f, 0), new Vec3(0.01f, 1.4f, 0), new Vec3(0, 1.41f, 0) },
