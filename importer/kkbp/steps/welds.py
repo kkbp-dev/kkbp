@@ -90,8 +90,10 @@ def _groups(mesh, first=None, second=None):
         members[ra] = ma + mb
         members.pop(rb, None)
 
+    # In index order, not the tree's nearest-first: where a cluster can't all be one, the pair joined
+    # first wins, and distances a few nanometres apart would let physics pick a different pair each export.
     for v in (range(count) if first is None else sorted(first)):
-        for _, other, _ in tree.find_range(co[v], WELD_DISTANCE):
+        for other in sorted(i for _, i, _ in tree.find_range(co[v], WELD_DISTANCE)):
             if other != v:
                 unite(v, other)
 
