@@ -92,6 +92,31 @@ def test_a_face_is_never_collapsed():
     assert len(obj.data.vertices) == 4 and len(obj.data.polygons) == 1
 
 
+def test_a_cluster_welds_by_index_not_by_distance():
+    """Vertex 0 is within the distance of 1 and of 2, which share a face, so it can weld onto only one:
+    always 1, the lower index, though 2 is nearer. The nearer one changes with physics between exports."""
+    ch = character.Character.new("Chika", "KK", "/nowhere")
+    mesh = bpy.data.meshes.new("m")
+    bm = bmesh.new()
+    d = welds.WELD_DISTANCE
+    vs = [bm.verts.new(co) for co in ((0, 0, 0), (0.6 * d, 0, 0), (-0.3 * d, 0, 0),
+                                      (0, 0, 1), (1, 0, 0), (1, 0, 1))]
+    bm.faces.new((vs[1], vs[2], vs[3]))
+    bm.faces.new((vs[0], vs[4], vs[5]))
+    bm.to_mesh(mesh)
+    bm.free()
+    mat = bpy.data.materials.new("body")
+    mat["id"] = "body"
+    mesh.materials.append(mat)
+    obj = bpy.data.objects.new("m", mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    ch.add_part(obj, "body")
+    welds.weld_copies(fake_ctx(ch, _bundle({"body": "body"})))
+    assert len(mesh.vertices) == 5 and len(mesh.polygons) == 2
+    xs = sorted(v.co.x for v in mesh.vertices if abs(v.co.x) < 0.5 and v.co.z == 0)
+    assert xs == pytest.approx([-0.3 * d, 0], abs=d / 100)  # 2 kept its place; 1 went onto 0
+
+
 def test_the_back_of_a_double_sided_card_stays():
     ch = character.Character.new("Chika", "KK", "/nowhere")
     obj = _object(ch, [(0, 0, 0), (0, 0, 0)])

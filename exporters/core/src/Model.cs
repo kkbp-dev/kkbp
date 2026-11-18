@@ -103,6 +103,14 @@ namespace KKBP.Exporter.Core
 
         /// <summary>Vertex positions in model space, already in the skeleton's rest pose (ADR 0006).</summary>
         public Vec3[] Positions;
+
+        /// <summary>
+        /// Optional, and never written: each vertex as the game's mesh stores it, at the renderer's scale,
+        /// where no bone and so no physics moves it. Welds finds copies by these (ADR 0052); without them,
+        /// by <see cref="Positions"/>.
+        /// </summary>
+        public Vec3[] UnposedPositions;
+
         public Vec3[] Normals;
 
         /// <summary>Optional. W is the bitangent sign.</summary>

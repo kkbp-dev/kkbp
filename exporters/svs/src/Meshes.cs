@@ -94,6 +94,8 @@ namespace KKBP.Exporter
             }
 
             var basis = mesh.vertices;
+            // As the mesh stores them, before any shape key or bone moves them (ADR 0052).
+            data.UnposedPositions = Unposed(basis, renderer.transform.lossyScale);
             var normals = mesh.normals;
             var tangents = mesh.tangents;
             if (freezeShapeKeys && smr != null)
@@ -190,6 +192,7 @@ namespace KKBP.Exporter
                 var normals = baked.normals;
                 var tangents = baked.tangents;
                 data.Positions = new Vec3[count];
+                data.UnposedPositions = StoredPositions(mesh, count, t.lossyScale);
                 data.Normals = normals.Length == count ? new Vec3[count] : null;
                 data.Tangents = tangents.Length == count ? new Vec4[count] : null;
                 data.Joints = new int[count * 4];
@@ -288,6 +291,71 @@ namespace KKBP.Exporter
                     m[k] = rows[i][(k % 4) * 4 + k / 4];
                 }
                 skin[i] = m;
+            }
+        }
+
+        /// <summary>
+        /// A mesh's stored vertices at the renderer's scale, where no bone and so no physics moves them:
+        /// Welds finds copies by these (ADR 0052).
+        /// </summary>
+        private static Vec3[] Unposed(Vector3[] stored, Vector3 scale)
+        {
+            var result = new Vec3[stored.Length];
+            for (int v = 0; v < stored.Length; v++)
+            {
+                result[v] = Seam.V3(Vector3.Scale(stored[v], scale));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// The vertices an unreadable mesh stores, read back from its vertex buffer on the GPU, at the
+        /// renderer's scale; null if they can't be read. BakeMesh gives them where physics left them, and
+        /// Welds finds copies by these instead (ADR 0052).
+        /// </summary>
+        private static Vec3[] StoredPositions(Mesh mesh, int count, Vector3 scale)
+        {
+            var position = UnityEngine.Rendering.VertexAttribute.Position;
+            int stream = mesh.GetVertexAttributeStream(position);
+            if (stream < 0 || mesh.GetVertexAttributeFormat(position) != UnityEngine.Rendering.VertexAttributeFormat.Float32
+                || mesh.GetVertexAttributeDimension(position) != 3)
+            {
+                return null;
+            }
+            int stride = mesh.GetVertexBufferStride(stream);
+            int offset = mesh.GetVertexAttributeOffset(position);
+            GraphicsBuffer buffer = null;
+            try
+            {
+                buffer = mesh.GetVertexBuffer(stream);
+                if (buffer == null)
+                {
+                    return null;
+                }
+                var raw = new Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppStructArray<byte>(count * stride);
+                // GetData(Array) needs Il2CppSystem.Object.GetType, which the game's build strips.
+                buffer.InternalGetData(new Il2CppSystem.Array(raw.Pointer), 0, 0, count * stride, 1);
+                var bytes = Seam.Bytes(raw);
+                var stored = new Vector3[count];
+                for (int v = 0; v < count; v++)
+                {
+                    int at = v * stride + offset;
+                    stored[v] = new Vector3(System.BitConverter.ToSingle(bytes, at), System.BitConverter.ToSingle(bytes, at + 4),
+                        System.BitConverter.ToSingle(bytes, at + 8));
+                }
+                return Unposed(stored, scale);
+            }
+            catch (System.Exception e)
+            {
+                Plugin.Logger.LogWarning("Couldn't read the stored vertices of " + mesh.name + "; its copies are found where physics left them: " + e.Message);
+                return null;
+            }
+            finally
+            {
+                if (buffer != null)
+                {
+                    buffer.Dispose();
+                }
             }
         }
 

@@ -94,6 +94,8 @@ namespace KKBP.Exporter
             }
 
             var basis = mesh.vertices;
+            // As the mesh stores them, before any shape key or bone moves them (ADR 0052).
+            data.UnposedPositions = Unposed(basis, renderer.transform.lossyScale);
             var normals = mesh.normals;
             var tangents = mesh.tangents;
             if (freezeShapeKeys && smr != null)
@@ -289,6 +291,20 @@ namespace KKBP.Exporter
                 }
                 skin[i] = m;
             }
+        }
+
+        /// <summary>
+        /// A mesh's stored vertices at the renderer's scale, where no bone and so no physics moves them:
+        /// Welds finds copies by these (ADR 0052).
+        /// </summary>
+        private static Vec3[] Unposed(Vector3[] stored, Vector3 scale)
+        {
+            var result = new Vec3[stored.Length];
+            for (int v = 0; v < stored.Length; v++)
+            {
+                result[v] = Seam.V3(Vector3.Scale(stored[v], scale));
+            }
+            return result;
         }
 
         /// <summary>The skin matrices of the mesh just captured, for baking its shape keys; null if it has none.</summary>

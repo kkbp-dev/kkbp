@@ -10,7 +10,8 @@ namespace KKBP.Exporter.Core
     /// group of copies gets one position, one set of weights and one offset per shape key, so the importer
     /// can weld them without choosing between them; normals, tangents, UVs and colours stay per copy.
     ///
-    /// Copies are grouped within <see cref="Distance"/> inside one mesh, and between a face and a body
+    /// Copies are grouped within <see cref="Distance"/> inside one mesh, by their unposed positions where
+    /// the adapter gives them, so physics can't change which vertices are copies (ADR 0052), and between a face and a body
     /// mesh within <see cref="SeamDistance"/>, where the neck meets: SVS writes those pairs up to 0.026 mm
     /// apart. Two vertices of one triangle are never grouped (that would collapse it), and nor are the
     /// vertices of two triangles that would then be the same triangle (a double-sided card's back).
@@ -110,6 +111,9 @@ namespace KKBP.Exporter.Core
             private readonly int[] offset;
             private readonly int[] meshOf;
             private readonly Vec3[] position;
+
+            /// <summary>Where each vertex is found from: its unposed position, or its position without one.</summary>
+            private readonly Vec3[] found;
             private readonly bool[] onFace;
             private readonly bool[] onBody;
             private readonly List<int>[] neighbours;
@@ -128,6 +132,7 @@ namespace KKBP.Exporter.Core
                 int n = offset[meshes.Count];
                 meshOf = new int[n];
                 position = new Vec3[n];
+                found = new Vec3[n];
                 onFace = new bool[n];
                 onBody = new bool[n];
                 neighbours = new List<int>[n];
@@ -137,11 +142,14 @@ namespace KKBP.Exporter.Core
                 for (int m = 0; m < meshes.Count; m++)
                 {
                     var mesh = meshes[m];
+                    var unposed = mesh.UnposedPositions != null && mesh.UnposedPositions.Length == mesh.Positions.Length
+                        ? mesh.UnposedPositions : mesh.Positions;
                     for (int v = 0; v < mesh.Positions.Length; v++)
                     {
                         int g = offset[m] + v;
                         meshOf[g] = m;
                         position[g] = mesh.Positions[v];
+                        found[g] = unposed[v];
                         parent[g] = g;
                     }
                     foreach (var sub in mesh.SubMeshes)
@@ -175,22 +183,34 @@ namespace KKBP.Exporter.Core
                 (neighbours[b] ?? (neighbours[b] = new List<int>())).Add(a);
             }
 
-            /// <summary>Groups the copies inside mesh m.</summary>
+            /// <summary>
+            /// Groups the copies inside mesh m, by their unposed positions (ADR 0052): physics moves SVS hair
+            /// copies a few micrometres between exports, which carried some across the distance. Each vertex
+            /// joins its candidates in index order, not the grid's: where a cluster can't all be one (it would
+            /// collapse a triangle), the pair joined first wins.
+            /// </summary>
             public void GroupWithin(int m)
             {
                 var grid = new Grid(Distance);
                 for (int g = offset[m]; g < offset[m + 1]; g++)
                 {
-                    grid.Add(position[g], g);
+                    grid.Add(found[g], g);
                 }
+                var near = new List<int>();
                 for (int g = offset[m]; g < offset[m + 1]; g++)
                 {
-                    foreach (int other in grid.Near(position[g]))
+                    near.Clear();
+                    foreach (int other in grid.Near(found[g]))
                     {
-                        if (other > g && (position[other] - position[g]).Length <= Distance)
+                        if (other > g && (found[other] - found[g]).Length <= Distance)
                         {
-                            Unite(g, other);
+                            near.Add(other);
                         }
+                    }
+                    near.Sort();
+                    foreach (int other in near)
+                    {
+                        Unite(g, other);
                     }
                 }
             }
