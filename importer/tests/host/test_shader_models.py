@@ -493,3 +493,340 @@ def test_kk_main_item_reads_its_other_ramp_and_loses_its_highlight_in_shadow(mid
                                np.zeros(size + (4,)), colors, m["floats"], models.color(m["colors"]["_ShadowColor"]), ramp,
                                another_ramp=(row[0], row[-1]))
         assert difference(models.baked(out, lut), sample.texture(m, "main", variant, size)) < 0.01
+
+
+# --- SVS ---------------------------------------------------------------------------------------
+
+def _svs_colors(m):
+    """A LIF material's colours as its shaders see them: linear rgb, alpha last."""
+    return {k: np.r_[models.lin(np.asarray(v[:3], dtype=np.float64)), v[3]] for k, v in m["colors"].items()}
+
+
+def _svs_raw(sample, m, raw, size=None):
+    t = next(t for t in m["textures"] if t["raw"] == raw and not t.get("variant"))
+    with Image.open(sample.root / t["file"]) as im:
+        im = im.convert("RGBA")
+        if size is not None and im.size != size:
+            im = im.resize(size, Image.BILINEAR)
+        return np.asarray(im, dtype=np.float64) / 255
+
+
+def test_svs_eyebrow_gives_back_the_bakes():
+    """LIF/lif_main_eyebrow with the maker's light and ambient (models.SVS_LIGHT, SVS_DARK). The
+    sample's _BrowLength and _BrowWidth are 0.5, which read the texture as it is."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_mayuge_00"]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    assert models.eyebrow_uv(0.3, 0.7, 0.5, 0.5) == (0.3, 0.7)
+    tex = _svs_raw(sample, m, "_eyebrow_texture", size)
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        out, alpha = models.lif_main_eyebrow(tex, _svs_colors(m), m["floats"], light)
+        assert difference(models.svs_baked(out), reference) < 0.004
+        assert ((alpha > 0.5) == (reference[..., 3] > 0.5)).mean() > 0.999
+
+
+def test_svs_eyelash_gives_back_the_bakes():
+    """LIF/lif_main_eyelash_up: the eyebrow's light, its two textures blended, cut at 0.9 alpha."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_eyelash_up_00"]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    tex = models.eyelash_texture(_svs_raw(sample, m, "_Eyelash_up_texture", size), _svs_raw(sample, m, "_Eyelash_dw_texture", size))
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        out, alpha = models.lif_main_eyelash_up(tex, _svs_colors(m), m["floats"], light)
+        assert difference(models.svs_baked(out), reference) < 0.004
+        assert ((alpha > 0.5) == (reference[..., 3] > 0.5)).mean() > 0.999
+
+
+def _eye_textures(sample, m, size):
+    """Each LIF/lif_main_eye texture read at its eye_uvs place on a bake of `size`, rows bottom-up."""
+    w, h = size
+    v, u = np.mgrid[0:h, 0:w]
+    u, v = (u + 0.5) / w, (v + 0.5) / h
+    uvs = models.eye_uvs(u, v, m["floats"], m["vectors"])
+    uvs["shadow_mask"] = (u, v)
+
+    def read(raw, place):
+        t = next((t for t in m["textures"] if t["raw"] == raw and not t.get("variant")), None)
+        if t is None:
+            return None
+        image = _svs_raw(sample, m, raw)[::-1]
+        pu, pv = place
+        return models._bilinear(image, pu * t["scale"][0] + t["offset"][0], pv * t["scale"][1] + t["offset"][1])
+    names = {"shadow_mask": "_Shadow_mask", "iris": "_Eye_mask", "pupil": "_Pipil_texture", "grade": "_Grade_texture",
+             **{f"highlight{k}": f"_Highlight_texture_0{k}" for k in (1, 2, 3)}}
+    return {k: read(raw, uvs[k]) for k, raw in names.items()}
+
+
+@pytest.mark.parametrize("mid", ["cf_m_hitomi_00_L", "cf_m_hitomi_00_R", "cf_m_hitomi_00_L_white", "cf_m_hitomi_00_R_white"])
+def test_svs_eye_gives_back_the_bakes(mid):
+    """LIF/lif_main_eye: the eye white copies bake the eye white alone; the eyes bake the pupil layer
+    over transparency (ADR 0034), whose alpha is the eye white's coverage."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    textures = _eye_textures(sample, m, size)
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        out, white, coverage = models.lif_main_eye(textures, _svs_colors(m), m["floats"], light)
+        reference = reference[::-1]  # rows bottom-up, as the textures were read
+        if m["role"] == "eye_white":
+            assert difference(models.svs_baked(white), reference) < 0.004
+            continue
+        layer = models.pupil_layer(out, white, coverage)
+        assert difference(models.svs_baked(layer), reference) < 0.004
+        assert np.abs(coverage - reference[..., 3]).mean() < 0.01
+
+
+def _svs_at(sample, m, raw, u, v, size=None):
+    """A LIF material's texture read at (u, v), rows bottom-up, its own offset and scale applied."""
+    t = next((t for t in m["textures"] if t["raw"] == raw and not t.get("variant")), None)
+    if t is None:
+        return np.zeros(np.shape(u) + (4,))
+    image = _svs_raw(sample, m, raw)[::-1]
+    return models._bilinear(image, u * t["scale"][0] + t["offset"][0], v * t["scale"][1] + t["offset"][1])
+
+
+def _uv(size):
+    w, h = size
+    v, u = np.mgrid[0:h, 0:w]
+    return (u + 0.5) / w, (v + 0.5) / h
+
+
+@pytest.mark.parametrize("mid", ["cf_hair_b_m_o_12_00", "cf_hair_f_m_o_03_00"])
+def test_svs_hair_gives_back_the_bakes(mid):
+    """LIF/lif_main_hair: the colour mask's layers lit through its ramp."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    u, v = _uv(size)
+    mask, d1, d2 = (_svs_at(sample, m, raw, u, v) for raw in ("_Hair_color_mask", "_md_01", "_md_02"))
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        r1, r2 = models.hair_ramp_uv(d1, light)
+        out = models.lif_main_hair(mask, d1, d2, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
+                                   _svs_colors(m), m["floats"], light)
+        assert difference(models.svs_baked(out), reference[::-1]) < 0.004
+
+
+def _acs_inputs(sample, m, size):
+    u, v = _uv(size)
+    f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
+    mask, detail = (_svs_at(sample, m, raw, u, v) for raw in ("_Main_color_mask", "_Detail_mask_01"))
+    main = _svs_at(sample, m, "_Main_texture", u, v) if any(t["raw"] == "_Main_texture" for t in m["textures"]) \
+        else np.ones(mask.shape)  # lif_main_acs's default main texture is white
+    patterns, inside = [], 1.0
+    for k in (1, 2, 3):
+        pu, pv, i = models.acs_pattern_uv(u, v, f, k)
+        patterns.append(_svs_at(sample, m, f"_PatternMask_0{k}", pu, pv))
+        inside = i if k == 1 else inside
+    return f, mask, detail, models.acs_color(mask, patterns, main, _svs_colors(m), inside)
+
+
+@pytest.mark.parametrize("mid", ["cf_m_tooth", "cf_m_tango"])
+def test_svs_acs_gives_back_the_bakes(mid):
+    """LIF/lif_main_acs (the teeth in its skin-face variant, the tongue in its cloth one). The sample's
+    have no main texture, colour mask or patterns, so only the plain colour is checked."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    f, mask, detail, rgba = _acs_inputs(sample, m, size)
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        r1, r2 = models.item_ramp_uv(detail, f, light)
+        out = models.lif_main_acs(rgba, mask, detail, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
+                                  _svs_colors(m), f, light)
+        assert difference(models.svs_baked(out), reference[::-1]) < 0.004
+
+
+@pytest.mark.parametrize("mid,limit", [("m_cloth_cf_top_tshirt00", 0.004), ("m_cloth_cf_bot_denim00", 0.004),
+                                       ("m_cloth_cf_bra_base00_03", 0.004),
+                                       # lif_main_cloth_socks: the clothes' shader without parallax and liquid
+                                       ("m_cloths_cm_socks_00", 0.004),
+                                       # its _Hight parallax, left out, moves the texture a little
+                                       ("m_cm_shoes_01", 0.01)])
+def test_svs_cloth_gives_back_the_bakes(mid, limit):
+    """LIF/lif_main_cloth from its composited texture (Phase 1: the create shader's output)."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    colors = {"_Color_Cuvature": np.zeros(4), **_svs_colors(m)}
+    light_ref, dark_ref, size = _bakes(sample, m)
+    u, v = _uv(size)
+    f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
+    create, mask, d1, d2 = (_svs_at(sample, m, raw, u, v) for raw in
+                            ("_Create_main_texture", "_Main_color_mask", "_Detail_mask_01", "_Detail_mask_02"))
+    col = models.cloth_color(create, mask, d2, colors, f)
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        r1, r2 = models.cloth_ramp_uv(d1, d2, f, light)
+        out = models.lif_main_cloth(col, create[..., 3], d1, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
+                                    colors, f, light)
+        assert difference(models.svs_baked(out), reference[::-1]) < limit
+
+
+@pytest.mark.parametrize("mid", ["m_cloth_cf_top_tshirt00", "m_cloth_cf_bot_denim00", "m_cloth_cf_bra_base00_03",
+                                 "m_cloths_cm_socks_00", "m_cm_shoes_01"])
+def test_svs_create_main_cloth_gives_back_the_composited_texture(mid):
+    """LIF/lif_create_main_cloth from the create material the exporter writes (extensions.svs.create)
+    gives back the lit material's _Create_main_texture."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    create = m["extensions"]["svs"]["create"]
+    reference = _svs_raw(sample, m, "_Create_main_texture")[::-1]
+    u, v = _uv(reference.shape[1::-1])
+    f, vec = create["floats"], create["vectors"]
+    at = lambda raw, uu, vv: _svs_at(sample, create, raw, uu, vv)  # noqa: E731
+    has = {t["raw"] for t in create["textures"]}
+    main = at("_Main_texture", u, v) if "_Main_texture" in has else np.ones(u.shape + (4,))
+    patterns = [at(f"_PatternMask_0{k}", *models.create_pattern_uv(u, v, f, k)) for k in (1, 2, 3, 4)]
+    paints = [at(f"_Paint_texture_0{k}", *models.create_paint_uv(u, v, vec[f"_Paint_position_0{k}"]))
+              if f"_Paint_texture_0{k}" in has else None for k in (1, 2, 3)]
+    rgb, _ = models.create_main_cloth(main, at("_Main_color_mask", u, v), patterns, paints, at("_Paint_mask", u, v),
+                                      _svs_colors(create))
+    opaque = reference[..., 3] > 0.5
+    assert float(np.abs(rgb - reference[..., :3])[opaque].mean()) < 0.004
+
+
+@pytest.mark.parametrize("mid", ["cf_m_nail_def_00", "cf_m_nail_def_01"])
+def test_svs_nail_gives_back_the_bakes(mid):
+    """LIF/lif_main_nail: the colour mask's colours, the main texture and paints, the matcap screened
+    over them (read at the bake quad's view normal, the texture's centre) and its gloss."""
+    sample = Sample("svs")
+    m = sample.materials[mid]
+    light_ref, dark_ref, size = _bakes(sample, m)
+    u, v = _uv(size)
+    f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
+    has = {t["raw"] for t in m["textures"]}
+    paints = [_svs_at(sample, m, f"_Paint_texture_0{k}", *models.create_paint_uv(u, v, m["vectors"][f"_Paint_position_offset_0{k}"]))
+              if f"_Paint_texture_0{k}" in has else None for k in (1, 2, 3)]
+    col = models.nail_color(_svs_at(sample, m, "_Main_color_mask", u, v), _svs_at(sample, m, "_Main_texture", u, v), paints,
+                            _svs_colors(m))
+    matcap = _svs_at(sample, m, "_Mat_cap", np.array(0.5), np.array(0.5))
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, reference in ((models.SVS_LIGHT, light_ref), (models.SVS_DARK, dark_ref)):
+        r1, r2 = models.item_ramp_uv(np.zeros(u.shape + (4,)), f, light)
+        out = models.lif_main_nail(col, matcap, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
+                                   _svs_colors(m), f, light)
+        assert difference(models.svs_baked(out), reference[::-1]) < 0.004
+
+
+def test_svs_skin_body_gives_back_the_bakes():
+    """LIF/lif_main_skin_body: its composited texture, the nipples and under-hair on the mesh's second
+    UV map by its vertex colour, the shade matcap and highlights, lit with the skin-body shadow tint.
+    At 512 pixels; off the mesh, the bake's quad, whose nipple and under-hair layers are cleared."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_body_00"]
+    size = (512, 512)
+    light_ref, dark_ref = (sample.texture(m, "main", k, size)[::-1] for k in ("light", "dark"))
+    u, v = _uv(size)
+    r = _raster([sample.root / "body.glb"], "cf_m_body_00", size, ["TEXCOORD_1", "COLOR_0"])
+    on = r["covered"][::-1][..., None]
+    uv2 = np.nan_to_num(r["TEXCOORD_1"][::-1])
+    vertex = np.nan_to_num(r["COLOR_0"][::-1], nan=0.0)
+    f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
+    colors = _svs_colors(m)
+    at = lambda raw, uu, vv: _svs_at(sample, m, raw, uu, vv)  # noqa: E731
+    nuv = models.skin_nipple_uv(uv2, f["_Nip_size"])
+    nip = np.where(on, at("_Nip", nuv[..., 0], nuv[..., 1]), 0)
+    underhair = np.where(on, at("_Under_hair_texture", uv2[..., 0], uv2[..., 1]), 0)
+    d1, d2 = at("_Detail_mask_01", u, v), at("_Detail_mask_02", u, v)
+    base, col = models.skin_body_color(at("_Create_main_texture", u, v), nip, underhair, d2, vertex, colors, f)
+    matcap = at("_shadematcap", np.array(0.5), np.array(0.5))
+    amount = underhair[..., 3] * colors["_Under_hair_color"][3] * vertex[..., 0]
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, reference, limit in ((models.SVS_LIGHT, light_ref, 0.004), (models.SVS_DARK, dark_ref, 0.004)):
+        r1, r2 = models.item_ramp_uv(d2, f, light)
+        hr = np.clip(light.ndl - 0.4 * d1[..., 1], 0, 1)
+        out = models.lif_main_skin_body(base, col, d1, at("_Detail_mask_01", *models.highlight_uv(u, v, f, light)), d2, matcap,
+                                        amount, models._bilinear(ramp, r1, r1), models._bilinear(ramp, r2, r2),
+                                        models._bilinear(ramp, hr, hr), colors, f, light)
+        assert difference(models.svs_baked(out), reference) < limit
+
+
+def test_svs_create_main_skin_body_gives_back_the_composited_texture():
+    """LIF/lif_create_main_skin_body from the create material the exporter writes gives back the
+    body's _Create_main_texture."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_body_00"]
+    create = m["extensions"]["svs"]["create"]
+    reference = _svs_raw(sample, m, "_Create_main_texture", (512, 512))[::-1]
+    u, v = _uv((512, 512))
+    has = {t["raw"] for t in create["textures"]}
+    at = lambda raw, uu, vv: _svs_at(sample, create, raw, uu, vv) if raw in has else None  # noqa: E731
+    paints = [at(f"_Paint_texture_0{k}", *models.create_paint_uv(u, v, create["vectors"][f"_Paint_position_0{k}"]))
+              for k in (1, 2, 3)]
+    rgb = models.create_main_skin_body(at("_Sunburn_texture", u, v), paints, _svs_at(sample, create, "_Paint_mask", u, v),
+                                       _svs_colors(create))
+    assert float(np.abs(rgb - reference[..., :3]).mean()) < 0.004
+
+
+def _face_layers(sample, m, size):
+    """The face's cheek, lip and nose textures read on the face mesh's second to fourth UV maps (the
+    cheek at its position), off the mesh transparent: the bake's quad clears them."""
+    r = _raster([sample.root / "body.glb"], m["id"], size, ["TEXCOORD_1", "TEXCOORD_2", "TEXCOORD_3"])
+    on = r["covered"][::-1][..., None]
+    uv = {k: np.nan_to_num(r[f"TEXCOORD_{k}"][::-1]) for k in (1, 2, 3)}
+    cu, cv = models.create_paint_uv(uv[1][..., 0], uv[1][..., 1], models.cheek_position(m["floats"], m["vectors"]))
+    read = lambda raw, uu, vv: np.where(on, _svs_at(sample, m, raw, uu, vv), 0)  # noqa: E731
+    return (read("_Cheek_texture", cu, cv), read("_Lip_texture", uv[2][..., 0], uv[2][..., 1]),
+            read("_Nose_texture", uv[3][..., 0], uv[3][..., 1]))
+
+
+def test_svs_skin_head_gives_back_the_bakes():
+    """LIF/lif_main_skin_head: its composited texture with the cheek, lips and nose on the mesh's
+    second to fourth UV maps, the shade matcap, lit with the skin-body shadow tint. At 512 pixels."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_head_00"]
+    size = (512, 512)
+    u, v = _uv(size)
+    f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
+    colors = _svs_colors(m)
+    cheek, lip, nose = _face_layers(sample, m, size)
+    at = lambda raw: _svs_at(sample, m, raw, u, v)  # noqa: E731
+    d1, d2 = at("_Detail_mask_01"), at("_Detail_mask_02")
+    base, col = models.skin_head_color(at("_Create_jm_main_skin_head"), cheek, lip, nose, colors)
+    matcap = _svs_at(sample, m, "_shadematcap", np.array(0.5), np.array(0.5))
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, variant in ((models.SVS_LIGHT, "light"), (models.SVS_DARK, "dark")):
+        reference = sample.texture(m, "main", variant, size)[::-1]
+        r1, r2 = models.face_ramp_uv(d1, d2, nose, f, light)
+        out = models.lif_main_skin_head(base, col, d1, d2, nose, matcap, models._bilinear(ramp, r1, r1),
+                                        models._bilinear(ramp, r2, r2), colors, f, light)
+        assert difference(models.svs_baked(out), reference) < 0.004
+
+
+@pytest.mark.parametrize("eyeshadow", [True, False])
+def test_svs_create_main_skin_head_gives_back_the_composited_texture(eyeshadow):
+    """LIF/lif_create_main_skin_head from the create material gives back the face's
+    _Create_jm_main_skin_head; with the eyeshadow's alpha at 0, the face's no-eyeshadow bakes are
+    the same lit face over it (SvsAdapter.BakeWithoutEyeshadow)."""
+    sample = Sample("svs")
+    m = sample.materials["cf_m_head_00"]
+    create = m["extensions"]["svs"]["create"]
+    size = (512, 512)
+    u, v = _uv(size)
+    has = {t["raw"] for t in create["textures"]}
+    at = lambda raw, uu=u, vv=v: _svs_at(sample, create, raw, uu, vv) if raw in has else None  # noqa: E731
+    vec = create["vectors"]
+    paints = [at(f"_Paint_texture_0{k}", *models.face_paint_uv(u, v, vec[f"_Paint_position_0{k}"])) for k in (1, 2, 3)]
+    mole = at("_Hokuro_texture", *models.face_paint_uv(u, v, vec["_Hokuro_position"], 2.4))
+    colors = _svs_colors(create)
+    if not eyeshadow:
+        colors["_Eyeshadow_color"] = np.r_[colors["_Eyeshadow_color"][:3], 0.0]
+    rgb = models.create_main_skin_head(at("_Skin_mask"), at("_Facetype_texture"), paints, mole, at("_Paint_mask"),
+                                       at("_Eyeshadow_texture"), colors)
+    if eyeshadow:
+        reference = _svs_raw(sample, m, "_Create_jm_main_skin_head", size)[::-1]
+        assert float(np.abs(rgb - reference[..., :3]).mean()) < 0.004
+        return
+    f = {**m["floats"], "_ShadowSetting": m["vectors"]["_ShadowSetting"]}
+    lit_colors = _svs_colors(m)
+    cheek, lip, nose = _face_layers(sample, m, size)
+    d1, d2 = (_svs_at(sample, m, raw, u, v) for raw in ("_Detail_mask_01", "_Detail_mask_02"))
+    base, col = models.skin_head_color(np.concatenate([rgb, np.ones(u.shape + (1,))], -1), cheek, lip, nose, lit_colors)
+    matcap = _svs_at(sample, m, "_shadematcap", np.array(0.5), np.array(0.5))
+    ramp = _svs_raw(sample, m, "_Lamp")[::-1]
+    for light, variant in ((models.SVS_LIGHT, "light_no_eyeshadow"), (models.SVS_DARK, "dark_no_eyeshadow")):
+        reference = sample.texture(m, "main", variant, size)[::-1]
+        r1, r2 = models.face_ramp_uv(d1, d2, nose, f, light)
+        out = models.lif_main_skin_head(base, col, d1, d2, nose, matcap, models._bilinear(ramp, r1, r1),
+                                        models._bilinear(ramp, r2, r2), lit_colors, f, light)
+        assert difference(models.svs_baked(out), reference) < 0.004

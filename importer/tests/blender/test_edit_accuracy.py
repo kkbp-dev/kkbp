@@ -1,6 +1,6 @@
 """How close an unedited edit material comes to the game (ADR 0026, issue 30).
 
-For every editable material of the kk and kks Golden Samples (copies), edit it with the profile's
+For every editable material of the kk, kks and svs Golden Samples (copies), edit it with the profile's
 default saturation, bake light and dark as Save does without saving, and compare each bake with the
 bundle's own `main.light` and `main.dark`: the mean absolute difference per channel, on the
 sRGB-encoded values, over pixels opaque in both. Each Game's numbers go to
@@ -82,7 +82,7 @@ def measure(ch, log=lambda *_: None):
     return out
 
 
-@pytest.mark.parametrize("game", ["kk", "kks"])
+@pytest.mark.parametrize("game", ["kk", "kks", "svs"])
 def test_unedited_edit_materials_bake_close_to_the_game(game, golden_import):
     numbers = measure(golden_import(game)[1])
     REPORT.mkdir(parents=True, exist_ok=True)
@@ -101,3 +101,39 @@ def test_unedited_edit_materials_bake_close_to_the_game(game, golden_import):
             if was[kind] is not None and now[kind] is not None and now[kind] > was[kind] + MARGIN:
                 worse.append(f"{mid} {kind}: {now[kind]:.3f}, recorded {was[kind]:.3f}")
     assert not worse, "edit materials further from the game:\n" + "\n".join(worse)
+
+
+def test_svs_clothes_composite_their_create_material(golden_import):
+    """With a create material in the bundle (Schema Version 1.3), an SVS clothing edit material
+    composites it in nodes rather than taking the composited texture (ADR 0051)."""
+    ch = golden_import("svs")[1]
+    templates = submodule("templates")
+    bm = next(m for m in ch.bundle().materials if m.shader == "LIF/lif_main_cloth" and m.create is not None)
+    edit = edit_material.edit(ch, ch.material(bm.id), log=lambda *_: None)
+    try:
+        assert templates.param(edit, "use_create").default_value == 1.0
+        filled = set(edit[edit_material.FILLED])
+        assert {"create_main", "create_mask", "create"} <= filled
+        assert templates.param(edit, "create_main_color1").default_value[:3] != (1.0, 1.0, 1.0)
+    finally:
+        edit_material.cancel(edit)
+
+
+def test_saving_the_svs_face_bakes_it_again_without_its_eyeshadow(golden_import):
+    """The face composites its create material (Schema Version 1.3), so Save bakes it a second time
+    with the eyeshadow left out, into the Light Dark Face's no-eyeshadow pair (ADR 0046, 0050), close
+    to the game's own."""
+    ch = golden_import("svs")[1]
+    templates = submodule("templates")
+    no_eyeshadow = submodule("bundle.rules").NO_EYESHADOW
+    bm = next(m for m in ch.bundle().materials if m.role == "face")
+    material = ch.material(bm.id)
+    before = {v: templates.texture(material, "main", v).image for v in ("light", *no_eyeshadow)}
+    edit = edit_material.edit(ch, material, log=lambda *_: None)
+    assert templates.param(edit, "separates_eyeshadow").default_value == 1.0
+    source = edit_material.save(ch, edit, log=lambda *_: None)
+    after = {v: templates.texture(source, "main", v).image for v in before}
+    assert all(after[v] is not before[v] for v in before)
+    for v in no_eyeshadow:
+        assert difference(after[v], _load(bm.texture("main", v).file)) < 0.01
+    assert np.abs(_pixels(after["light"]) - _pixels(after["light_no_eyeshadow"])).max() > 0.05

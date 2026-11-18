@@ -157,7 +157,7 @@ class _Textured:
 
 @dataclass(frozen=True)
 class CreateMaterial(_Textured):
-    """The KK or KKS game material that composites a material's main texture (`extensions.kk.create`).
+    """The game material that composites a material's main texture (`extensions.kk.create` in KK and KKS, `extensions.svs.create` in SVS).
 
     Its `main` texture is the uncoloured base the game colours; its colours, masks and layers are what
     the game composites onto it.
@@ -182,7 +182,7 @@ class Material(_Extensible, _Textured):
     vectors: Mapping[str, tuple[float, float, float, float]]
     textures: tuple[Texture, ...]
     extensions: Mapping[str, Mapping]
-    # Read from `extensions.kk.create`, which then no longer holds it. None if the material has none.
+    # Read from `extensions.kk.create` or `extensions.svs.create`, which then no longer holds it. None if the material has none.
     create: CreateMaterial | None = None
 
 

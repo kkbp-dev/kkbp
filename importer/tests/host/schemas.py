@@ -26,7 +26,7 @@ def _registry():
 
 
 _REGISTRY, _BY_ID = _registry()
-_BASE = "https://schemas.kkbp.invalid/1.2/"
+_BASE = "https://schemas.kkbp.invalid/1.3/"
 
 
 def problems(bundle_dir):

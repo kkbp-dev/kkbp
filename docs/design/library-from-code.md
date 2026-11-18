@@ -50,7 +50,7 @@ Every template and group carries `kkbp_template_version` (`TEMPLATE_VERSION` in 
 
 ## Edit templates from the games' shaders
 
-An edit template rebuilds a material's colouring in nodes, from the textures and colours the bundle carries, so the colours can be changed and baked again. Each one copies the game's own shaders. SVS has no edit templates (issue 62).
+An edit template rebuilds a material's colouring in nodes, from the textures and colours the bundle carries, so the colours can be changed and baked again. Each one copies the game's own shaders. SVS's are in "SVS" below ([ADR 0051](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)).
 
 ### How the games shade
 
@@ -173,7 +173,8 @@ importer/.venv/bin/python -I importer/tools/game_shaders/dump.py "<name filter o
 
 - KK: `Koikatu_Data/globalgamemanagers.assets` (`toon_*`, `create_*` except `create_topN`), `abdata/chara/mm_base.unity3d` (`create_topN`), `abdata/chara/54/chara_data_00.unity3d` (`main_opaque`, `main_item`, `main_hair`), `54/chara_mat_00.unity3d` (`main_skin`), `co_bot_13.unity3d` (`main_alpha`), `bo_hair_b_13.unity3d` (`main_hair_front`).
 - KKS: `abdata/chara/mm_base.unity3d` (`create_*`), `bo_head_00.unity3d` (`main_skin`, `main_eye`, `main_eyew`, `main_nose`), `co_bot_00.unity3d` (`main_clothes_opaque`, `main_clothes_alpha`), `ao_arm_00.unity3d` (`main_clothes_item`), `bo_hair_b_00.unity3d` and `ao_head_00.unity3d` (`hair_main_sun_front`, `hair_main_sun`).
-- The program to read is the fragment one (type 17) whose keywords are `DIRECTIONAL` alone (KK) or the fewest (KKS).
+- SVS (Unity 2021.3): every `LIF/*` shader is in `SamabakeScramble_Data/globalgamemanagers.assets`. Unity 2021 keeps a program's constants in the pass and in a parameter blob per variant rather than after its bytecode, and its programs belong to passes, so each file is `<shader>.<pass>.<index>.<vs|ps>.txt`. The pass to read is `Forward` (`Universal2D` is a copy).
+- The program to read is the fragment one (type 17) whose keywords are `DIRECTIONAL` alone (KK) or the fewest (KKS). SVS's variants differ by material keywords (`_TYPESELECT_*`, `_MATCAPONOFF_ON`, `_EMISSIONTYPE_*`, …) and by the pipeline's (`_MAIN_LIGHT_SHADOWS`, `_ADDITIONAL_LIGHTS`, `FOG_LINEAR`, …); read the ones the bake uses (the SVS exporter's `probe_bake` request).
 
 ### Adding a shader
 
@@ -191,3 +192,16 @@ Notes for writing the groups:
 - The render target clamps at 1, so the group output is clamped.
 - Pattern masks repeat (scale up to 20); overlays clamp. Missing decals and overlays are switched off by their colour's alpha.
 - `main_skin` reads the mesh's vertex colour for its overlays; the bake copies it to its flat mesh.
+
+### SVS
+
+SVS's templates (`SVS lif_main_eyebrow`, `lif_main_eyelash_up`, `lif_main_eye`, `lif_main_hair`, `lif_main_acs`, `lif_main_cloth`, `lif_main_nail`, `lif_main_skin_body`, `lif_main_skin_head`) follow its LIF shaders the same way, with three differences ([ADR 0051](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)):
+
+- **No grade.** A bake is the shader's output, sRGB-encoded: `edit_templates.begin(..., grade=False)` feeds `.Combine colors` directly.
+- **The maker's light, read from the game.** The SVS exporter's `probe_bake` request writes, for every light and dark render, the maker light, URP's globals and keywords, the ambient probe and the camera. On the bake quad (normal +z, camera at (0.5, 0.5, 1)): light colour (1, 1, 1), N.L 0.828 lit and -0.944 dark, the ambient `models.SVS_QUAD_AMBIENT`, no additional lights, no reflection. They are `models.SVS_LIGHT` and `SVS_DARK`, and the groups' input defaults.
+- **One N.L or two.** Templates whose shader reads its ramp at a place that depends on the pixel light once, at the N.L the bake's toon value picks (`.SVS toon ndl`, put between `.Toon shading` and `.Combine colors`); the face parts and the eye light both.
+
+The models are `svs_face_part`, `lif_main_eye` (and `pupil_layer`), `lif_main_hair`, `lif_main_acs`, `lif_main_cloth`, `lif_main_nail`, `lif_main_skin_body`, `lif_main_skin_head` and the create shaders `create_main_cloth`, `create_main_skin_body`, `create_main_skin_head` in `models.py`, checked by the `test_svs_*` host tests. Shared groups: `.SVS face part light`, `.SVS item light` (the accessories', clothes', nails' and skin's light; its Skin input picks the skin's shadow tint, its T output says how far into shadow), `.SVS ramp uv`, `.SVS pattern uv`, `.SVS paint uv`. The skin's mesh-placed layers read the flattened mesh's own UV maps (`uv_nipple_and_shine`, `uv_underhair`, `uv_eyeshadow`, the second to fourth) and are scaled by the vertex colour's alpha, which keeps them off the bake's plane as the game's quad has them cleared.
+
+To read a variant: run an export with `"probe_bake"`, then pick the `Forward` program whose keywords best match the render's material and pipeline keywords (the shadow keywords don't matter: the quad is unshadowed). A texture the bundle lacks reads its shader's default texture (UnityPy: `m_ParsedForm.m_PropInfo.m_Props[].m_DefTexture.m_DefaultName`).
+

@@ -74,6 +74,7 @@ ADRs:
 - [0048 The Body is skinned with mirrored skin matrices](../adr/0048-the-body-is-skinned-with-mirrored-skin-matrices.md)
 - [0049 The importer snaps mirror partners and lifts the upper eyeline](../adr/0049-the-importer-snaps-mirror-partners-and-lifts-the-upper-eyeline.md)
 - [0050 The atlas copy has plain Principled materials](../adr/0050-the-atlas-copy-has-plain-principled-materials.md)
+- [0051 SVS's edit templates follow its LIF shaders under the maker's bake light, with no grade](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)
 
 ## Decisions
 
@@ -129,9 +130,9 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 - **D41** Eye highlight colours and strengths come from `_overcolor1`/`_overcolor2`, and pupil and highlight positions from the offsets and scales of `_MainTex`, `_overtex1` and `_overtex2`.
 - **D42** The LUT saturation and the dark-texture code have no `bpy`. Whether edit materials saturate was decided by measurement: an unedited edit material baked with and without it, against the bundle's `light` texture. Only hair and eyebrows saturate by default ([ADR 0026](../adr/0026-edit-materials-dont-saturate-by-default.md)); a template made from the game's shaders never saturates (D67).
 - **D43** numpy, pinned to Blender's own version, is in the dev venv for the host tests.
-- **D44** Edit material, Cancel, Reset and Save. Save bakes light and dark with Eevee through an orthographic camera onto the mesh flattened into UV space, into the original Light Dark material; the edit copy goes; the alpha mask stays the Light Dark material's. The bake has its main texture's size and shape, and the body and face stay 4096 square ([ADR 0044](../adr/0044-bakes-keep-the-main-textures-shape-and-skin-stays-4096.md)). There is no backup material and no normal bake. Generated images go into the Cache (`kkbp_cache/edit/`, `kkbp_cache/baked/`).
+- **D44** Edit material, Cancel, Reset and Save. Save bakes light and dark (and a face's pair without eyeshadow, when its template can leave the eyeshadow out: SVS's) with Eevee through an orthographic camera onto the mesh flattened into UV space, into the original Light Dark material; the edit copy goes; the alpha mask stays the Light Dark material's. The bake has its main texture's size and shape, and the body and face stay 4096 square ([ADR 0044](../adr/0044-bakes-keep-the-main-textures-shape-and-skin-stays-4096.md)). There is no backup material and no normal bake. Generated images go into the Cache (`kkbp_cache/edit/`, `kkbp_cache/baked/`).
 - **D45** Link hair puts every hair material of the object into edit and copies the active one's light and dark settings to them (for a template made from the game's shaders, its colours; each hair keeps its own shader's values, ADR 0041).
-- **D46** Edit material isn't available for SVS yet; KKS uses the KK templates.
+- **D46** KKS uses the KK templates. SVS has its own, which follow its LIF shaders and have no grade, and composite the body's, face's and clothes' create materials ([ADR 0051](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)); its eyelid isn't editable.
 - **D47** A built-in Hook, Delete default scene (`delete_default_scene`, on), runs last of the built-in Hooks and deletes Blender's startup cube, camera and light when every other object in the file belongs to an imported Character.
 
 ### Checks and the release

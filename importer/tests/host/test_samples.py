@@ -63,8 +63,15 @@ def test_opening_never_loads_bpy():
 def test_create_materials(sample):
     sample_id, b = sample
     creates = {m.id: m.create for m in b.materials if m.create is not None}
-    assert len(creates) == {"kk": 14, "kks": 12, "svs": 0}[sample_id]
-    if creates:
+    assert len(creates) == {"kk": 14, "kks": 12, "svs": 7}[sample_id]
+    if sample_id == "svs":
+        # SVS's create shaders name their own slots; the body, face and every clothing material have one.
+        assert all(m.create for role in ("body", "face") for m in b.materials_with_role(role))
+        assert {c.shader for c in creates.values()} == {"LIF/lif_create_main_skin_body", "LIF/lif_create_main_skin_head",
+                                                        "LIF/lif_create_main_cloth"}
+        for create in creates.values():
+            assert all(t.file.is_file() for t in create.textures)
+    elif creates:
         for role in ("body", "face", "eye_white", "eye_l", "eye_r"):
             assert all(m.create for m in b.materials_with_role(role)), role
         for create in creates.values():

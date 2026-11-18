@@ -18,7 +18,7 @@ def test_default_bundle_opens_without_warnings(build, game):
 def test_manifest(build):
     path = build()
     m = bundle.open_bundle(path).manifest
-    assert (m.schema_version, m.character_name, m.exported_at) == ("1.2", "Test Chara", "2026-11-01T12:00:00Z")
+    assert (m.schema_version, m.character_name, m.exported_at) == ("1.3", "Test Chara", "2026-11-01T12:00:00Z")
     assert m.card == path / "card.png"
     assert m.options.physics is True and m.options.all_outfits is False
     assert [(p.kind, p.outfit, p.mesh, p.data) for p in m.passes] == [
@@ -92,9 +92,16 @@ def test_create_materials(build, game):
     assert b.material("cf_m_body").extension("kk") == {}  # create is read out of the Game Extension
 
 
-def test_svs_has_no_create_materials(build):
-    b = bundle.open_bundle(build(BundleBuilder("SVS")))
-    assert all(m.create is None for m in b.materials)
+def test_svs_create_materials(build):
+    """SVS's create materials are its own Game Extension's (Schema Version 1.3)."""
+    builder = BundleBuilder("SVS")
+    assert all("extensions" not in m for m in builder.materials)
+    builder.materials[0]["extensions"] = {"svs": {"create": builder.add_create("LIF/lif_create_main_skin_body")}}
+    b = bundle.open_bundle(build(builder))
+    create = b.material("cf_m_body").create
+    assert create.shader == "LIF/lif_create_main_skin_body" and create.texture("main") is not None
+    assert b.material("cf_m_body").extension("svs") == {}  # create is read out of the Game Extension
+    assert all(m.create is None for m in b.materials if m.id != "cf_m_body")
 
 
 def test_passes(build):

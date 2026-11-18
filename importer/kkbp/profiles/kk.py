@@ -340,7 +340,8 @@ EDIT = {
     },
     # Values set when every condition holds: `role:R`, `raw:P` (the material has slot P), `shader:S`
     # (the material's shader is S, after its last `/`),
-    # `missing:S` and `has:S` (edit slot S is or isn't filled). Params a template lacks are skipped.
+    # `missing:S` and `has:S` (edit slot S is or isn't filled), `create:S` (the material's create
+    # material's shader is S, after its last `/`). Params a template lacks are skipped.
     "values": [
         ["role:tongue", {"maintex_saturation": 0.6, "detail_intensity_green": 0.01,
                          "color_mask_base": [1.0, 1.0, 1.0, 1.0]}],

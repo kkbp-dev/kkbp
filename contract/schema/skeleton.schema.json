@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.kkbp.invalid/1.2/skeleton.schema.json",
+  "$id": "https://schemas.kkbp.invalid/1.3/skeleton.schema.json",
   "title": "skeleton.json",
   "description": "Every bone of every Pass, with its rest pose relative to its parent, in glTF space.",
   "type": "object",

@@ -81,6 +81,47 @@ namespace KKBP.Exporter
             return data;
         }
 
+        /// <summary>
+        /// A create material (Creates) as the svs "create" section: every property its shader has, by
+        /// Raw Property. SVS's create shaders name their own base and mask slots (_Main_texture, _Skin_mask, ...).
+        /// </summary>
+        public MaterialSection CaptureCreate(Material create)
+        {
+            var section = new MaterialSection
+            {
+                Extension = "svs",
+                Field = "create",
+                Shader = create.shader != null ? create.shader.name : "",
+            };
+            foreach (var p in Svs.Properties(create.shader))
+            {
+                if (!create.HasProperty(p.Name))
+                {
+                    continue;
+                }
+                switch (p.Kind)
+                {
+                    case 'c':
+                        section.Colors[p.Name] = Seam.C(create.GetColor(p.Name));
+                        break;
+                    case 'f':
+                        section.Floats[p.Name] = create.GetFloat(p.Name);
+                        break;
+                    case 'v':
+                        section.Vectors[p.Name] = Seam.V4(create.GetVector(p.Name));
+                        break;
+                    case 't':
+                        var texture = create.GetTexture(p.Name);
+                        if (texture != null)
+                        {
+                            section.Textures.Add(Texture(p.Name, texture, create.GetTextureOffset(p.Name), create.GetTextureScale(p.Name), null));
+                        }
+                        break;
+                }
+            }
+            return section;
+        }
+
         /// <summary>A texture for a slot, as PNG. Normal maps are unpacked from Unity's format first.</summary>
         public TextureData Texture(string raw, Texture texture, Vector2 offset, Vector2 scale, string pattern)
         {
