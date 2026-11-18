@@ -45,13 +45,16 @@ def test_the_atlas_copy_uses_one_atlas_per_object(ch):
     collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
     outfit = next(o for o in collection.objects if o.type == "MESH" and o.name.startswith("Outfit 00"))
     lights = {atlas.shown(s.material, "main.light") for s in outfit.material_slots
-              if s.material and s.material.name.endswith(" Atlas")}
+              if s.material and s.material.get(atlas.ATLAS_OF)}
     assert len(lights) == 1 and None not in lights
     folder = ch.bundle().cache_dir("atlas")
     assert folder.is_dir()
     # The dark atlas is a file for other programs; no atlas material shows it (ADR 0050).
     assert list(folder.glob("* main.dark.png")) and not [i for i in bpy.data.images if i.filepath.endswith("main.dark.png")]
-    assert all(not m.show_viewport for o in collection.objects for m in o.modifiers if m.type == "SOLIDIFY")
+    # No outlines: no Solidify modifier, no outline material (the Character has both).
+    assert any(m.type == "SOLIDIFY" for o in ch.parts() for m in getattr(o, "modifiers", ()))
+    assert not any(m.type == "SOLIDIFY" for o in collection.objects for m in o.modifiers)
+    assert not any(s.material and s.material.get(atlas.OUTLINE) for o in collection.objects for s in o.material_slots)
     assert ch.rig is None and "Outfit 00" in ch.outfits[0].name  # the original is untouched
 
 
@@ -79,9 +82,32 @@ def test_an_atlas_material_is_a_principled_bsdf_the_fbx_exporter_reads(ch):
             with_normal += 1
             assert wrapper.normalmap_texture.image == normal and normal.colorspace_settings.name == "Non-Color"
     assert with_normal
-    # Every mesh's faces use an atlas material or one the Character had no light texture for.
+    for obj in [o for o in collection.objects if o.type == "MESH"]:
+        used = [s.material for s in obj.material_slots]
+        assert len(used) == len(set(used)), obj.name  # one slot per material
+
+
+def _original_material(ch, obj, polygon):
+    """The Character's material on `polygon` of the atlas copy `obj` (the copy keeps the faces' order)."""
+    # obj.copy() names the copy after its original, with a number added
+    original = max((o for o in ch.parts() if o.type == "MESH" and obj.name.startswith(o.name)), key=lambda o: len(o.name))
+    return original.material_slots[original.data.polygons[polygon].material_index].material
+
+
+def test_the_materials_of_an_atlas_are_merged_by_render_method(ch):
+    """An atlas gets one material for its dithered materials and one for its blended ones, and every
+    face keeps its material's render method."""
+    collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
     body = next(o for o in collection.objects if o.type == "MESH" and o.name.startswith("Body"))
-    assert sum(1 for s in body.material_slots if s.material in materials) > 3
+    atlased = {s.material for s in body.material_slots if s.material and s.material.get(atlas.ATLAS_OF)}
+    assert {m.surface_render_method for m in atlased} == {"DITHERED", "BLENDED"}
+    assert len(atlased) == 2 and {m.name for m in atlased} == {f"{atlas._safe(body.name)} Atlas", f"{atlas._safe(body.name)} Atlas Blended"}
+    for polygon in body.data.polygons:
+        copy = body.material_slots[polygon.material_index].material
+        if copy in atlased:
+            original = _original_material(ch, body, polygon.index)
+            assert copy.surface_render_method == original.surface_render_method, original.name
+            assert original[character.ID] in atlas.sources(copy)
 
 
 def test_the_fbx_holds_the_atlases(ch, tmp_path):
@@ -105,7 +131,7 @@ def test_the_fbx_holds_the_atlases(ch, tmp_path):
 def test_atlas_without_the_eyes_gives_them_a_simple_material_of_their_own(ch):
     collection = export_prep.prep(ch, "no_change", "none", "skip_eyes", log=lambda m: None)
     eyes = {m[character.ID]: m for m in ch.materials(roles=["eye_l", "eye_r"])}
-    simple = [m for m in _atlas_materials(collection) if m[atlas.ATLAS_OF] in eyes]
+    simple = [m for m in _atlas_materials(collection) if m[atlas.ATLAS_OF] in eyes]  # one source each
     assert len(simple) == len(eyes) == 2
     for material in simple:
         assert material.name.endswith(" Simple")
@@ -118,7 +144,7 @@ def test_the_face_atlas_holds_one_of_its_two_bakes(ch):
     face = ch.materials(roles="face")[0]
     bakes = {templates.texture(face, "main", v).image for v in ("light", "dark", "light_no_eyeshadow", "dark_no_eyeshadow")}
     collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
-    copy = next(m for m in _atlas_materials(collection) if m[atlas.ATLAS_OF] == face[character.ID])
+    copy = next(m for m in _atlas_materials(collection) if face[character.ID] in atlas.sources(m))
     images = {n.image for n in copy.node_tree.nodes if n.type == "TEX_IMAGE"}
     assert images and not images & bakes
 
@@ -132,19 +158,24 @@ def test_an_atlas_over_the_cap_is_split_into_several(ch):
     collection = export_prep.prep(ch, "no_change", "none", "atlas", log=said.append, max_atlas=4096)
     body = next(o for o in collection.objects if o.type == "MESH" and o.name.startswith("Body"))
     atlas_slots = {i: s.material for i, s in enumerate(body.material_slots)
-                   if s.material and s.material.name.endswith(" Atlas")}
+                   if s.material and s.material.get(atlas.ATLAS_OF)}
     images = {atlas.shown(m, "main.light") for m in atlas_slots.values()}
     assert len(images) > 1 and all(max(i.size) <= 4096 for i in images), [tuple(i.size) for i in images]
     assert any("atlases" in line and "4096 px" in line for line in said), said
     # Not scaled down: a material's texture takes as many atlas pixels as it has.
     uv = body.data.uv_layers["uv_main"].data
-    for index, material in atlas_slots.items():
-        if not material.name.startswith(("cf_m_face_00", "cf_m_body")):
+    by_original = {}
+    for p in body.data.polygons:
+        if p.material_index in atlas_slots:
+            by_original.setdefault(_original_material(ch, body, p.index).name, []).extend(p.loop_indices)
+    for name, loops in by_original.items():
+        if not name.startswith(("cf_m_face_00", "cf_m_body")):
             continue  # the tongue's UVs go below 0, which no atlas, split or not, makes room for
-        coords = [uv[i].uv for p in body.data.polygons if p.material_index == index for i in p.loop_indices]
+        coords = [uv[i].uv for i in loops]
         box = (min(c.x for c in coords), max(c.x for c in coords), min(c.y for c in coords), max(c.y for c in coords))
-        assert -1e-4 <= box[0] and box[1] <= 1 + 1e-4 and -1e-4 <= box[2] and box[3] <= 1 + 1e-4, (material.name, box, said)
-    face = next(m for m in atlas_slots.values() if m.name.startswith("cf_m_face_00"))
+        assert -1e-4 <= box[0] and box[1] <= 1 + 1e-4 and -1e-4 <= box[2] and box[3] <= 1 + 1e-4, (name, box, said)
+    face_id = ch.materials(roles="face")[0][character.ID]
+    face = next(m for m in atlas_slots.values() if face_id in atlas.sources(m))
     assert sizes["cf_m_face_00"] == (4096, 4096)
     assert tuple(atlas.shown(face, "main.light").size) == (4096, 4096)  # an atlas of its own
     names = sorted(i.filepath.replace("\\", "/").rsplit("/", 1)[-1] for i in images)

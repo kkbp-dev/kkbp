@@ -6,7 +6,8 @@ applies the UVs and makes the atlas materials.
 
 An atlas material is a plain Principled BSDF with the light atlas as its colour and alpha and the
 normal atlas as its normal map (ADR 0050, issue 103): Blender's FBX exporter only finds the textures
-of such a material, and embeds them. The other atlases are files in the folder only."""
+of such a material, and embeds them. The other atlases are files in the folder only. The materials
+of one atlas with the same render method become one material, and the copy has no outlines."""
 
 from __future__ import annotations
 
@@ -30,7 +31,8 @@ UV_MAP = "uv_main"
 SHOWN = ("main.light", "normal")
 NORMALS = ("normal", "detail_normal")
 FLAT_NORMAL = (128, 128, 255, 255)  # what a material without a normal map gets in a normal atlas
-ATLAS_OF = "kkbp_atlas_of"
+ATLAS_OF = "kkbp_atlas_of"  # on an atlas material: the bundle Ids of the materials it stands in for, one a line
+OUTLINE = "kkbp_outline"  # what the Outlines Hook tags its outline materials with
 
 
 def build(ch, mode: str, folder: Path, log, max_side: int | None = None):
@@ -43,11 +45,33 @@ def build(ch, mode: str, folder: Path, log, max_side: int | None = None):
     bpy.context.scene.collection.children.link(collection)
     copies = _copy(ch, collection)
     for obj in [o for o in copies if o.type == "MESH"]:
+        for modifier in [m for m in obj.modifiers if m.type == "SOLIDIFY"]:  # the outlines
+            obj.modifiers.remove(modifier)
         _atlas_object(ch, obj, mode, folder, log, max_side)
-        for modifier in obj.modifiers:
-            if modifier.type == "SOLIDIFY":  # the outlines
-                modifier.show_viewport = modifier.show_render = False
+        _tidy_slots(obj)
     return collection
+
+
+def sources(material) -> list[str]:
+    """The bundle Ids of the Character's materials an atlas material stands in for."""
+    return material.get(ATLAS_OF, "").split("\n")
+
+
+def _tidy_slots(obj):
+    """Drops the outline materials' slots and gives each material one slot, moving the faces with
+    them. Only the outlines' Solidify modifier used the outline slots."""
+    mesh = obj.data
+    old = [s.material for s in obj.material_slots]
+    kept = list(dict.fromkeys(m for m in old if m is None or not m.get(OUTLINE)))
+    if kept == old:
+        return
+    index = [kept.index(m) if m in kept else 0 for m in old]
+    faces = [0] * len(mesh.polygons)
+    mesh.polygons.foreach_get("material_index", faces)
+    mesh.materials.clear()
+    for material in kept:
+        mesh.materials.append(material)
+    mesh.polygons.foreach_set("material_index", [index[min(i, len(index) - 1)] for i in faces])
 
 
 def _copy(ch, collection):
@@ -74,7 +98,7 @@ def _atlas_object(ch, obj, mode, folder, log, max_side=None):
     from ... import atlas
 
     materials = [s.material for s in obj.material_slots
-                 if s.material is not None and s.material.get(templates.TEMPLATE)
+                 if s.material is not None and s.material.get(templates.TEMPLATE) and not s.material.get(OUTLINE)
                  and "main.light" in templates.template_of(s.material).textures]
     materials = [m for m in dict.fromkeys(materials) if _image(m, "main.light") is not None]
     if mode == "skip_eyes":
@@ -83,7 +107,7 @@ def _atlas_object(ch, obj, mode, folder, log, max_side=None):
         for slot in obj.material_slots:
             if slot.material in eyes:  # their own texture, in a material the FBX exporter reads too
                 own = {"main.light": _image(slot.material, "main.light")}
-                slot.material = _simple_material(slot.material, " Simple", own)
+                slot.material = _simple_material(f"{slot.material.name} Simple", own, [slot.material])
     if not materials:
         return
     uv = obj.data.uv_layers.get(UV_MAP) or obj.data.uv_layers.active
@@ -130,9 +154,14 @@ def _atlas_object(ch, obj, mode, folder, log, max_side=None):
             for i in loops[mat]:
                 u, v = uv.data[i].uv
                 uv.data[i].uv = atlas.remap(layout, mat.name, u, v)
+        # One material per render method: the materials of one atlas differ in nothing else.
+        merged = {}
+        for method in dict.fromkeys(m.surface_render_method for m in group):
+            name = f"{label} Atlas" + (" Blended" if method == "BLENDED" else "")
+            merged[method] = _simple_material(name, atlas_images, [m for m in group if m.surface_render_method == method])
         for slot in obj.material_slots:
             if slot.material in group:
-                slot.material = _simple_material(slot.material, " Atlas", atlas_images)
+                slot.material = merged[slot.material.surface_render_method]
     sizes = ", ".join(f"{l.size[0]} x {l.size[1]}" for l in layouts)
     if len(layouts) == 1:
         log(f"{obj.name}: {len(materials)} materials in one atlas of {sizes}")
@@ -145,16 +174,14 @@ def _atlas_object(ch, obj, mode, folder, log, max_side=None):
                 f"limit; it isn't scaled down, so its atlas is that size")
 
 
-def _simple_material(mat, suffix, images):
-    """A Principled BSDF material standing in for `mat`: `images["main.light"]` is its colour and
-    alpha, `images["normal"]` its normal map. Blender's FBX exporter reads textures only from a
-    Principled BSDF in the material's own tree, wired to the output (ADR 0050)."""
-    name = f"{mat.name}{suffix}"
-    found = bpy.data.materials.get(name)
-    if found is not None and found.get(ATLAS_OF) == mat.get(ID):
-        return found
+def _simple_material(name, images, originals):
+    """A Principled BSDF material standing in for `originals`, which share a render method:
+    `images["main.light"]` is its colour and alpha, `images["normal"]` its normal map. Blender's FBX
+    exporter reads textures only from a Principled BSDF in the material's own tree, wired to the
+    output (ADR 0050)."""
     simple = bpy.data.materials.new(name)
-    simple[ATLAS_OF] = mat.get(ID, mat.name)
+    simple[ATLAS_OF] = "\n".join(m.get(ID, m.name) for m in originals)
+    simple.surface_render_method = originals[0].surface_render_method
     if simple.node_tree is None:
         simple.use_nodes = True
     tree = simple.node_tree
