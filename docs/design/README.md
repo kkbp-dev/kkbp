@@ -75,6 +75,7 @@ ADRs:
 - [0049 The importer snaps mirror partners and lifts the upper eyeline](../adr/0049-the-importer-snaps-mirror-partners-and-lifts-the-upper-eyeline.md)
 - [0050 The atlas copy has plain Principled materials](../adr/0050-the-atlas-copy-has-plain-principled-materials.md)
 - [0051 SVS's edit templates follow its LIF shaders under the maker's bake light, with no grade](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)
+- [0052 Vertex copies are found where the mesh stores them, not where physics leaves them](../adr/0052-vertex-copies-are-found-where-the-mesh-stores-them.md)
 
 ## Decisions
 
@@ -102,7 +103,7 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 
 - **D14** `BUILTIN_HOOKS`: Convert shaders → Separate meshes → Outlines → Face cards → SFW → Rigify → Separate Eyes → Delete default scene. Switches and defaults: `convert_shaders` (`off`, `eevee_mod`, `cycles`, `cycles_classic`, `principled`) off; `separation_type` (`off` "One object per outfit", `by_material` "Separate all clothing") off; `use_outlines` on; `use_face_cards` off (issue 102's PR); `sfw_mode` off; `use_rigify` on; `separate_eyes` off; `delete_default_scene` on. Built-ins pass their switch to `kkbp.hook`. Outlines skips itself for the Cycles and Principled variants.
 - **D15** The Hooks live in `importer/kkbp/builtin/`. Each asset file has a description with no `bpy`, checked against the file by a harness test, and is built from code by `scripts/build-library.sh` (D66): `rigify.blend` (widgets), `face_cards.blend` (its mouth atlas stored as WebP at quality 95), `outlines.blend`.
-- **D16** There is no Fix body seams Hook: the Exporter Core makes each group of vertex copies the same, and the Core Import's weld Steps weld them, keeping each face corner's custom normal (issues 85 and 100, [ADR 0047](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)).
+- **D16** There is no Fix body seams Hook: the Exporter Core makes each group of vertex copies the same, and the Core Import's weld Steps weld them, keeping each face corner's custom normal (issues 85 and 100, [ADR 0047](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)). Copies are found by the mesh's stored vertices, where physics can't move them, and joined in index order, so every export of a card groups them the same way ([ADR 0052](../adr/0052-vertex-copies-are-found-where-the-mesh-stores-them.md)).
 - **D17** Separate meshes splits each `outfit` Part into one Part per material, named by material Id, through a Compat helper.
 - **D18** Convert shaders goes through `templates.swap`, with rules by Material Role; the Eevee Mod inputs are per-variant template params; Principled is a `.Principled` variant group. SVS Light Dark gets the KK variants, with a warning that its bottom alpha mask is lost.
 - **D19** Outlines: a Solidify modifier and black copies of the materials, found through templates; the face outline mask is chosen by the face material's template. There is no `outline` Part Role.

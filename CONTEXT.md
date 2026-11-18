@@ -115,7 +115,7 @@ _Avoid_: scene light, lighting preset
 ### Exporting
 
 **Vertex Copy**:
-One of the vertices a mesh holds at one place because their corners differ, at a UV seam or a hard edge. The Exporter Core gives each group of copies one position, weights and shape keys, and the Core Import welds them into one vertex.
+One of the vertices a mesh holds at one place because their corners differ, at a UV seam or a hard edge. The Exporter Core finds them where the mesh stores them, not where physics leaves them (ADR 0052), gives each group of copies one position, weights and shape keys, and the Core Import welds them into one vertex.
 _Avoid_: double, duplicate vertex, seam
 
 **Skin Matrix**:

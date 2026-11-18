@@ -15866,7 +15866,7 @@
     "color_attributes": [
      "Color"
     ],
-    "edges": 49235,
+    "edges": 49237,
     "faces": 32598,
     "material_slots": [
      "cf_m_head_00",
@@ -16038,7 +16038,7 @@
    ],
    "mesh": {
     "color_attributes": [],
-    "edges": 24913,
+    "edges": 24908,
     "faces": 16312,
     "material_slots": [
      "cf_hair_b_m_o_12_00",
@@ -16052,7 +16052,7 @@
      "uv_underhair"
     ],
     "vertex_groups": 819,
-    "vertices": 8555
+    "vertices": 8556
    },
    "modifiers": [
     {
