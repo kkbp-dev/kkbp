@@ -21,7 +21,7 @@ What works in which game.
 | [Expressions](expressions.md), emotion grid, gag eyes | Yes | Yes | Yes |
 | Tongue during mouth expressions | Moves | Moves | Stays still in most, as in the game |
 | Face cards, Separate eyes | Yes | Yes | Yes |
-| [Edit Material](edit-material.md) | Yes | Yes, partly approximated | No |
+| [Edit Material](edit-material.md) | Yes | Yes, partly approximated | Yes, except the eyelids |
 | [Export Prep](export-prep.md) | Yes | Yes | Yes |
 | [Import Animation](animation.md) (Koikatsu animations) | Yes | Yes, untested | Yes, untested |
 | [Hooks](hooks.md), Bulk Import | Yes | Yes | Yes |

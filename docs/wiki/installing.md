@@ -31,18 +31,18 @@ The exporter is now in `BepInEx/plugins/KKBP/` in the game's folder.
 2. Open the menu at the top right and choose Install from Disk.
 3. Pick `kkbp-<version>.zip`. Don't unzip it.
 4. Close Preferences, press N in the 3D viewport and open the KKBP tab.
-5. The panel says "Pillow is required". Click Install Pillow and wait a moment. The Import Export Bundle button then appears.
+5. The panel says "Pillow is required". Click Download Pillow and wait a moment. The Import Export Bundle button then appears.
 
 > **Picture to come:** `images/installing/install-from-disk.jpg`, the Get Extensions menu with Install from Disk.
 
-> **Picture to come:** `images/installing/install-pillow.jpg`, the KKBP tab before and after Install Pillow.
+> **Picture to come:** `images/installing/install-pillow.jpg`, the KKBP tab before and after Download Pillow.
 
-Pillow is an image library KKBP uses for its texture atlases. On a computer with no internet connection, download the Pillow wheel for your system on another computer and use Install Pillow from File (search for it with F3).
+Pillow is an image library KKBP uses for its texture atlases. On a computer with no internet connection, download the Pillow wheel (`.whl`) for your Blender's Python and system on another computer, and click Install Pillow from local file, under Download Pillow.
 
 ## Updating
 
 - **Exporter:** close the game and repeat the exporter steps, replacing the old file.
-- **Importer:** install the new zip with Install from Disk, then restart Blender. If the panel asks for Pillow again, click Install Pillow again.
+- **Importer:** install the new zip with Install from Disk, then restart Blender. If the panel asks for Pillow again, click Download Pillow again.
 
 An export made by an older exporter still imports as long as the importer supports its format; the importer says so when it doesn't.
 

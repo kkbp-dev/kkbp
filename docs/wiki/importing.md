@@ -21,7 +21,6 @@ The options apply to the next import, so set them before clicking the button.
 
 | Option | Default | What it does | More |
 |---|---|---|---|
-| Fix body seams | on | Merges the face and body vertices that sit on top of each other. It can change the weights around the neck; without it, seams may show around the neck and down the chest when outlines are on | |
 | Shader | Eevee | Which shaders the materials use: Eevee, Eevee+, Cycles (toon), Cycles (classic) or Principled BSDF | [Shaders](shaders.md) |
 | Separation type | One object per outfit | "Separate all clothing" makes each piece of clothing its own object | [Outfits](outfits.md#separate-all-clothing) |
 | Use outlines | on | Gives the body, hair and clothes an outline | [Shaders](shaders.md#outlines) |

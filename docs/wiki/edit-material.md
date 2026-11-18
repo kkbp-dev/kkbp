@@ -6,7 +6,7 @@ Edit Material lets you change a material's colours, then bakes the result back i
 
 An imported material is a pair of finished textures, light and dark, which is fast but fixed. Edit Material swaps it for a version built from the game's original layers and colours, following the game's own shaders, so the colours can be changed and still look like the game.
 
-Edit Material is available for Koikatsu and Koikatsu Sunshine characters, not for Summer Vacation Scramble. It needs the character's export folder to still be where it was imported from.
+Edit Material works in all three games. It needs the character's export folder to still be where it was imported from.
 
 ## Changing a colour
 
@@ -31,9 +31,14 @@ Hair is usually several materials. Edit one, click Link Hair to copy its light a
 
 ## What can be edited
 
-The body, face, hair, eyes, eye whites, eyebrows, eyelines, nose line, teeth, tongue and clothes. For the eyes, the highlight colours and the pupil and highlight positions can be changed too.
+| Game | What can be edited |
+|---|---|
+| Koikatsu, Koikatsu Sunshine | The body, face, hair, eyes, eye whites, eyebrows, eyelines, nose line, teeth, tongue and clothes. For the eyes, the highlight colours and the pupil and highlight positions can be changed too |
+| Summer Vacation Scramble | The body, face, hair, eyes, eye whites, eyebrows, eyelashes, nails, teeth, tongue, clothes, socks and accessories |
 
-Tears, gag eyes, face cards and glasses can't be edited.
+Tears, gag eyes, face cards and glasses can't be edited in any game, nor Summer Vacation Scramble's eyelids. A material from a modded shader may not be editable.
+
+In Summer Vacation Scramble, saving the face also bakes its version without eyeshadow.
 
 ## The Saturate choice
 
@@ -47,4 +52,4 @@ The baked textures are saved in the export folder's `kkbp_cache/` and packed int
 
 | | Koikatsu | Koikatsu Sunshine | Summer Vacation Scramble |
 |---|---|---|---|
-| Edit Material | Yes | Yes. Clothes, teeth, tongue and skin are close but approximated | No |
+| Edit Material | Yes | Yes. Clothes, teeth, tongue and skin are close but approximated | Yes, except the eyelids |

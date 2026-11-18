@@ -43,7 +43,7 @@ The Blender panel is in English, Chinese (Simplified), French, German, Indonesia
 |---|---|---|---|
 | Koikatsu | BepInEx (HF Patch installs it) | the "Show KKBP Exporter" toggle in the maker's sidebar | |
 | Koikatsu Sunshine | BepInEx (HF Patch installs it) | the "Show KKBP Exporter" toggle in the maker's sidebar | |
-| Summer Vacation Scramble | BepInEx (HF Patch installs it) | Ctrl+Tab in the maker | [Edit Material](docs/wiki/edit-material.md) |
+| Summer Vacation Scramble | BepInEx (HF Patch installs it) | Ctrl+Tab in the maker | |
 
 Blender 5.2 or newer. The differences between the games are listed in [Game support](docs/wiki/game-support.md).
 
@@ -68,7 +68,7 @@ Download two files from the [latest release](../../releases/latest): `kkbp-expor
 1. Open Edit > Preferences > Get Extensions, open the menu at the top right and choose Install from Disk.
 2. Pick `kkbp-<version>.zip`. Don't unzip it.
 3. Press N in the 3D viewport and open the KKBP tab.
-4. Click Install Pillow. This is needed once, and needs an internet connection.
+4. Click Download Pillow. This is needed once, and needs an internet connection.
 
 [Installing](docs/wiki/installing.md) has the same steps with pictures, and how to update.
 
