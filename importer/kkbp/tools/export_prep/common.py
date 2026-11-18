@@ -86,11 +86,13 @@ def reparent(armature, parents: dict[str, str | None]):
 
 
 def fbx_exporter(collection, filepath):
-    """A collection exporter for FBX on `collection`, with the legacy prep's settings."""
+    """A collection exporter for FBX on `collection`, with the legacy prep's settings, but for the
+    textures: they go into the FBX (issue 103). Blender embeds only with the "COPY" path mode, and only
+    the textures of a Principled BSDF, which the atlas materials are (ADR 0050)."""
     compat.add_collection_exporter(collection, "IO_FH_fbx", filepath, {
         "object_types": {"EMPTY", "ARMATURE", "MESH", "OTHER"}, "use_mesh_modifiers": False,
         "add_leaf_bones": False, "bake_anim": False, "apply_scale_options": "FBX_SCALE_ALL", "path_mode": "COPY",
-        "embed_textures": False, "mesh_smooth_type": "OFF"})
+        "embed_textures": True, "mesh_smooth_type": "OFF"})
 
 
 def _subtree(skeleton, root_id):

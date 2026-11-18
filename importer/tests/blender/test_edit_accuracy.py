@@ -105,7 +105,7 @@ def test_unedited_edit_materials_bake_close_to_the_game(game, golden_import):
 
 def test_svs_clothes_composite_their_create_material(golden_import):
     """With a create material in the bundle (Schema Version 1.3), an SVS clothing edit material
-    composites it in nodes rather than taking the composited texture (ADR 0050)."""
+    composites it in nodes rather than taking the composited texture (ADR 0051)."""
     ch = golden_import("svs")[1]
     templates = submodule("templates")
     bm = next(m for m in ch.bundle().materials if m.shader == "LIF/lif_main_cloth" and m.create is not None)

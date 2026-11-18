@@ -50,7 +50,7 @@ Every template and group carries `kkbp_template_version` (`TEMPLATE_VERSION` in 
 
 ## Edit templates from the games' shaders
 
-An edit template rebuilds a material's colouring in nodes, from the textures and colours the bundle carries, so the colours can be changed and baked again. Each one copies the game's own shaders. SVS's are in "SVS" below ([ADR 0050](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)).
+An edit template rebuilds a material's colouring in nodes, from the textures and colours the bundle carries, so the colours can be changed and baked again. Each one copies the game's own shaders. SVS's are in "SVS" below ([ADR 0051](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)).
 
 ### How the games shade
 
@@ -195,7 +195,7 @@ Notes for writing the groups:
 
 ### SVS
 
-SVS's templates (`SVS lif_main_eyebrow`, `lif_main_eyelash_up`, `lif_main_eye`, `lif_main_hair`, `lif_main_acs`, `lif_main_cloth`, `lif_main_nail`, `lif_main_skin_body`, `lif_main_skin_head`) follow its LIF shaders the same way, with three differences ([ADR 0050](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)):
+SVS's templates (`SVS lif_main_eyebrow`, `lif_main_eyelash_up`, `lif_main_eye`, `lif_main_hair`, `lif_main_acs`, `lif_main_cloth`, `lif_main_nail`, `lif_main_skin_body`, `lif_main_skin_head`) follow its LIF shaders the same way, with three differences ([ADR 0051](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)):
 
 - **No grade.** A bake is the shader's output, sRGB-encoded: `edit_templates.begin(..., grade=False)` feeds `.Combine colors` directly.
 - **The maker's light, read from the game.** The SVS exporter's `probe_bake` request writes, for every light and dark render, the maker light, URP's globals and keywords, the ambient probe and the camera. On the bake quad (normal +z, camera at (0.5, 0.5, 1)): light colour (1, 1, 1), N.L 0.828 lit and -0.944 dark, the ambient `models.SVS_QUAD_AMBIENT`, no additional lights, no reflection. They are `models.SVS_LIGHT` and `SVS_DARK`, and the groups' input defaults.

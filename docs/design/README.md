@@ -73,7 +73,8 @@ ADRs:
 - [0047 The exporter makes vertex copies one, and mirrors the Body](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)
 - [0048 The Body is skinned with mirrored skin matrices](../adr/0048-the-body-is-skinned-with-mirrored-skin-matrices.md)
 - [0049 The importer snaps mirror partners and lifts the upper eyeline](../adr/0049-the-importer-snaps-mirror-partners-and-lifts-the-upper-eyeline.md)
-- [0050 SVS's edit templates follow its LIF shaders under the maker's bake light, with no grade](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)
+- [0050 The atlas copy has plain Principled materials](../adr/0050-the-atlas-copy-has-plain-principled-materials.md)
+- [0051 SVS's edit templates follow its LIF shaders under the maker's bake light, with no grade](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)
 
 ## Decisions
 
@@ -113,7 +114,7 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 - **D25** Rigify re-aims the joint-correction bones upright (ADR 0017), builds the eye controller and the Left and Right Eye vertex groups from Bone and Material Roles, rigs the single tongue on Body (ADR 0020, D65), and builds the emotion grid from the Expression Names present.
 - **D26** Tools go through Character, `ch.bundle()` and templates, and write into the Cache. Export prep refuses a Character with a rig.
 - **D27** The edit templates are in `library.blend` with descriptions and "edit" rows chosen by Material Role; the profile's `EDIT` tables map colours; the dark-texture code has no `bpy`. Bake renders with Eevee through an orthographic camera.
-- **D28** Export prep: one module per target (VRM, VRChat, Unreal, Koikatsu, no change), built by Bone Role; simplification by Bone Group; the atlas's layout and Pillow compositing have no `bpy` and are tested with pytest (Pillow pinned in the dev venv). Merge Weights works on the data API. The user picks the largest atlas (2048, 4096, 8192 by default, or 16384 px): an object whose atlas would be over it gets several atlases, each material going in the first it fits in, and nothing is scaled down, so a material over the limit on its own keeps an atlas of its own size (issue 12).
+- **D28** Export prep: one module per target (VRM, VRChat, Unreal, Koikatsu, no change), built by Bone Role; simplification by Bone Group; the atlas's layout and Pillow compositing have no `bpy` and are tested with pytest (Pillow pinned in the dev venv). Merge Weights works on the data API. The user picks the largest atlas (2048, 4096, 8192 by default, or 16384 px): an object whose atlas would be over it gets several atlases, each material going in the first it fits in, and nothing is scaled down, so a material over the limit on its own keeps an atlas of its own size (issue 12). An atlas material is a plain Principled BSDF with the light atlas as colour and alpha and the normal atlas as normal map, and the FBX exporter embeds the two; the other atlases are files only. An atlas has one material per render method (dithered, blended), and the copy has no outlines (ADR 0050, issue 103).
 - **D29** `join_armatures` tags each bone added from an Outfit Pass with its Outfit, so Rigify can put later Outfits' hair and accessory bones in their own collections.
 - **D30** The Run Hook tool runs any Hook on an imported Character.
 - **D31** The panel's tools are bulk import, Run Hook, Export Prep, Import Animation and Snap IKs; the material panel has Edit Material and Link Hair.
@@ -131,7 +132,7 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 - **D43** numpy, pinned to Blender's own version, is in the dev venv for the host tests.
 - **D44** Edit material, Cancel, Reset and Save. Save bakes light and dark (and a face's pair without eyeshadow, when its template can leave the eyeshadow out: SVS's) with Eevee through an orthographic camera onto the mesh flattened into UV space, into the original Light Dark material; the edit copy goes; the alpha mask stays the Light Dark material's. The bake has its main texture's size and shape, and the body and face stay 4096 square ([ADR 0044](../adr/0044-bakes-keep-the-main-textures-shape-and-skin-stays-4096.md)). There is no backup material and no normal bake. Generated images go into the Cache (`kkbp_cache/edit/`, `kkbp_cache/baked/`).
 - **D45** Link hair puts every hair material of the object into edit and copies the active one's light and dark settings to them (for a template made from the game's shaders, its colours; each hair keeps its own shader's values, ADR 0041).
-- **D46** KKS uses the KK templates. SVS has its own, which follow its LIF shaders and have no grade, and composite the body's, face's and clothes' create materials ([ADR 0050](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)); its eyelid isn't editable.
+- **D46** KKS uses the KK templates. SVS has its own, which follow its LIF shaders and have no grade, and composite the body's, face's and clothes' create materials ([ADR 0051](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)); its eyelid isn't editable.
 - **D47** A built-in Hook, Delete default scene (`delete_default_scene`, on), runs last of the built-in Hooks and deletes Blender's startup cube, camera and light when every other object in the file belongs to an imported Character.
 
 ### Checks and the release

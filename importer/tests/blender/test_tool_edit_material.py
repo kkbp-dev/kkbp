@@ -255,7 +255,7 @@ def test_tears_and_gag_eyes_are_not_editable_but_svs_bodies_are(ch, build):
         edit_material.edit(ch, ch.materials("gag_eyes")[0])
     result = kkbp.api.import_bundle(build(BundleBuilder("SVS")), hooks=[])
     svs = character.Character(result.character_key)
-    # SVS's body follows lif_main_skin_body (ADR 0050).
+    # SVS's body follows lif_main_skin_body (ADR 0051).
     assert edit_material.editable(svs, svs.material("cf_m_body")) is None
 
 

@@ -10,7 +10,7 @@ A rendered material's own slots hold the composited result but not what it was m
 
 The importer's edit material tool (D27, D37) rebuilds the game's colouring in Blender so the colours can be changed and baked again. It needs exactly those inputs.
 
-SVS's lit shaders carry only the create shaders' output (`_Create_main_texture`, `_Create_jm_main_skin_head`). Its create materials (`LIF/lif_create_main_cloth`, `lif_create_main_skin_body`, `lif_create_main_skin_head`) came later, in Schema Version 1.3, as `extensions.svs.create` in the same shape (issue 62, [ADR 0050](../adr/0050-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)).
+SVS's lit shaders carry only the create shaders' output (`_Create_main_texture`, `_Create_jm_main_skin_head`). Its create materials (`LIF/lif_create_main_cloth`, `lif_create_main_skin_body`, `lif_create_main_skin_head`) came later, in Schema Version 1.3, as `extensions.svs.create` in the same shape (issue 62, [ADR 0051](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)).
 
 ## The change
 

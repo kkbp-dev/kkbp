@@ -2,7 +2,12 @@
 (light, dark, normal; with "all_textures" the detail, alpha and colour masks too), or several where
 one would be over the size limit. The layout,
 the UV maths and the painting are kkbp/atlas, which has no bpy; this module reads the images,
-applies the UVs and makes the atlas materials."""
+applies the UVs and makes the atlas materials.
+
+An atlas material is a plain Principled BSDF with the light atlas as its colour and alpha and the
+normal atlas as its normal map (ADR 0050, issue 103): Blender's FBX exporter only finds the textures
+of such a material, and embeds them. The other atlases are files in the folder only. The materials
+of one atlas with the same render method become one material, and the copy has no outlines."""
 
 from __future__ import annotations
 
@@ -22,6 +27,12 @@ SLOTS = {"atlas": ("main.light", "main.dark", "normal"),
                           "detail_mask")}
 EYES = ("eye_l", "eye_r")  # "skip_eyes" leaves these with their own textures, so the eyes can still move
 UV_MAP = "uv_main"
+# The slots an atlas material shows, and so the only atlases loaded into Blender.
+SHOWN = ("main.light", "normal")
+NORMALS = ("normal", "detail_normal")
+FLAT_NORMAL = (128, 128, 255, 255)  # what a material without a normal map gets in a normal atlas
+ATLAS_OF = "kkbp_atlas_of"  # on an atlas material: the bundle Ids of the materials it stands in for, one a line
+OUTLINE = "kkbp_outline"  # what the Outlines Hook tags its outline materials with
 
 
 def build(ch, mode: str, folder: Path, log, max_side: int | None = None):
@@ -34,11 +45,33 @@ def build(ch, mode: str, folder: Path, log, max_side: int | None = None):
     bpy.context.scene.collection.children.link(collection)
     copies = _copy(ch, collection)
     for obj in [o for o in copies if o.type == "MESH"]:
+        for modifier in [m for m in obj.modifiers if m.type == "SOLIDIFY"]:  # the outlines
+            obj.modifiers.remove(modifier)
         _atlas_object(ch, obj, mode, folder, log, max_side)
-        for modifier in obj.modifiers:
-            if modifier.type == "SOLIDIFY":  # the outlines
-                modifier.show_viewport = modifier.show_render = False
+        _tidy_slots(obj)
     return collection
+
+
+def sources(material) -> list[str]:
+    """The bundle Ids of the Character's materials an atlas material stands in for."""
+    return material.get(ATLAS_OF, "").split("\n")
+
+
+def _tidy_slots(obj):
+    """Drops the outline materials' slots and gives each material one slot, moving the faces with
+    them. Only the outlines' Solidify modifier used the outline slots."""
+    mesh = obj.data
+    old = [s.material for s in obj.material_slots]
+    kept = list(dict.fromkeys(m for m in old if m is None or not m.get(OUTLINE)))
+    if kept == old:
+        return
+    index = [kept.index(m) if m in kept else 0 for m in old]
+    faces = [0] * len(mesh.polygons)
+    mesh.polygons.foreach_get("material_index", faces)
+    mesh.materials.clear()
+    for material in kept:
+        mesh.materials.append(material)
+    mesh.polygons.foreach_set("material_index", [index[min(i, len(index) - 1)] for i in faces])
 
 
 def _copy(ch, collection):
@@ -65,10 +98,16 @@ def _atlas_object(ch, obj, mode, folder, log, max_side=None):
     from ... import atlas
 
     materials = [s.material for s in obj.material_slots
-                 if s.material is not None and s.material.get(templates.TEMPLATE)
-                 and "main.light" in templates.template_of(s.material).textures
-                 and not (mode == "skip_eyes" and s.material.get("kkbp_role") in EYES)]
+                 if s.material is not None and s.material.get(templates.TEMPLATE) and not s.material.get(OUTLINE)
+                 and "main.light" in templates.template_of(s.material).textures]
     materials = [m for m in dict.fromkeys(materials) if _image(m, "main.light") is not None]
+    if mode == "skip_eyes":
+        eyes = [m for m in materials if m.get("kkbp_role") in EYES]
+        materials = [m for m in materials if m not in eyes]
+        for slot in obj.material_slots:
+            if slot.material in eyes:  # their own texture, in a material the FBX exporter reads too
+                own = {"main.light": _image(slot.material, "main.light")}
+                slot.material = _simple_material(f"{slot.material.name} Simple", own, [slot.material])
     if not materials:
         return
     uv = obj.data.uv_layers.get(UV_MAP) or obj.data.uv_layers.active
@@ -97,12 +136,17 @@ def _atlas_object(ch, obj, mode, folder, log, max_side=None):
                 if picture is not None and slot in ("main.light", "main.dark") and mat.name in alpha \
                         and _keeps_alpha(mat):
                     picture = atlas.apply_alpha_mask(picture, alpha[mat.name])
-                pictures[mat.name] = picture if picture is not None else (0, 0, 0, 0)
+                blank = FLAT_NORMAL if slot in NORMALS else (0, 0, 0, 0)
+                pictures[mat.name] = picture if picture is not None else blank
             if all(isinstance(p, tuple) for p in pictures.values()):
                 continue
             path = folder / f"{label} {slot}.png"
             atlas.compose(layout, pictures).save(path)
+            if slot not in SHOWN:
+                continue
             image = bpy.data.images.load(str(path), check_existing=False)
+            if slot in NORMALS:
+                image.colorspace_settings.name = "Non-Color"  # a Normal Map node reads the values as they are
             image.pack()
             image[KEY] = ch.key
             atlas_images[slot] = image
@@ -110,9 +154,14 @@ def _atlas_object(ch, obj, mode, folder, log, max_side=None):
             for i in loops[mat]:
                 u, v = uv.data[i].uv
                 uv.data[i].uv = atlas.remap(layout, mat.name, u, v)
+        # One material per render method: the materials of one atlas differ in nothing else.
+        merged = {}
+        for method in dict.fromkeys(m.surface_render_method for m in group):
+            name = f"{label} Atlas" + (" Blended" if method == "BLENDED" else "")
+            merged[method] = _simple_material(name, atlas_images, [m for m in group if m.surface_render_method == method])
         for slot in obj.material_slots:
             if slot.material in group:
-                slot.material = _atlas_material(slot.material, atlas_images)
+                slot.material = merged[slot.material.surface_render_method]
     sizes = ", ".join(f"{l.size[0]} x {l.size[1]}" for l in layouts)
     if len(layouts) == 1:
         log(f"{obj.name}: {len(materials)} materials in one atlas of {sizes}")
@@ -125,35 +174,52 @@ def _atlas_object(ch, obj, mode, folder, log, max_side=None):
                 f"limit; it isn't scaled down, so its atlas is that size")
 
 
-def _atlas_material(mat, atlas_images):
-    name = f"{mat.name} Atlas"
-    found = bpy.data.materials.get(name)
-    if found is not None and found.get("kkbp_atlas_of") == mat.get(ID):
-        return found
-    copy = mat.copy()
-    copy.name = name
-    copy.pop(ID, None)
-    copy["kkbp_atlas_of"] = mat.get(ID, mat.name)
-    for slot in templates.template_of(copy).textures:
-        node = templates.texture_node(copy, slot)
-        if node is None:
-            continue
-        if slot in atlas_images:
-            node.image = atlas_images[slot]
-        elif slot == "alpha_mask":
-            node.image = None  # folded into the light and dark atlases
-    # The atlas holds the face with or without its eyeshadow (_image), so both pairs show it.
-    for slot, plain in WITHOUT_EYESHADOW.items():
-        node = templates.texture_node(copy, plain)
-        if node is not None and slot in atlas_images:
-            node.image = atlas_images[slot]
-    if "main.dark" not in atlas_images and "main.light" in atlas_images:
-        templates.texture_node(copy, "main.dark").image = atlas_images["main.light"]
-    # The alpha mask is in the atlases now and its slot is empty, which the shader would read as
-    # "hide everything"; force visibility 0 makes it ignore the mask.
-    if "force_visibility" in templates.template_of(copy).params:
-        templates.param(copy, "force_visibility").default_value = 0
-    return copy
+def _simple_material(name, images, originals):
+    """A Principled BSDF material standing in for `originals`, which share a render method:
+    `images["main.light"]` is its colour and alpha, `images["normal"]` its normal map. Blender's FBX
+    exporter reads textures only from a Principled BSDF in the material's own tree, wired to the
+    output (ADR 0050)."""
+    simple = bpy.data.materials.new(name)
+    simple[ATLAS_OF] = "\n".join(m.get(ID, m.name) for m in originals)
+    simple.surface_render_method = originals[0].surface_render_method
+    if simple.node_tree is None:
+        simple.use_nodes = True
+    tree = simple.node_tree
+    tree.nodes.clear()
+    output = tree.nodes.new("ShaderNodeOutputMaterial")
+    output.location = (300, 0)
+    bsdf = tree.nodes.new("ShaderNodeBsdfPrincipled")
+    bsdf.inputs["Roughness"].default_value = 1.0  # matte: the colours are the bake's, not a lit surface's
+    bsdf.inputs["Specular IOR Level"].default_value = 0.0
+    tree.links.new(bsdf.outputs["BSDF"], output.inputs["Surface"])
+    light = images.get("main.light")
+    if light is not None:
+        node = _image_node(tree, "main.light", light, (-400, 150))
+        tree.links.new(node.outputs["Color"], bsdf.inputs["Base Color"])
+        tree.links.new(node.outputs["Alpha"], bsdf.inputs["Alpha"])
+    normal = images.get("normal")
+    if normal is not None:
+        node = _image_node(tree, "normal", normal, (-650, -250))
+        normal_map = tree.nodes.new("ShaderNodeNormalMap")
+        normal_map.location = (-300, -250)
+        normal_map.uv_map = UV_MAP
+        tree.links.new(node.outputs["Color"], normal_map.inputs["Color"])
+        tree.links.new(normal_map.outputs["Normal"], bsdf.inputs["Normal"])
+    return simple
+
+
+def _image_node(tree, slot, image, location):
+    node = tree.nodes.new("ShaderNodeTexImage")
+    node.name = node.label = f"tex.{slot}"
+    node.image = image
+    node.location = location
+    return node
+
+
+def shown(mat, slot):
+    """The image an atlas material shows for `slot` ("main.light" or "normal"), or None."""
+    node = mat.node_tree.nodes.get(f"tex.{slot}")
+    return node.image if node is not None else None
 
 
 def _keeps_alpha(mat):
