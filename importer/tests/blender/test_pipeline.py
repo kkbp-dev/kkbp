@@ -15,6 +15,7 @@ run = submodule("pipeline.run")
 settings = submodule("settings")
 character = submodule("character")
 Option, Step = pipeline.Option, pipeline.Step
+BUILTINS = {k: h for k, h in hooks._registry.items() if h.builtin}  # the built-in Hooks, for a full import
 
 
 @pytest.fixture(autouse=True)
@@ -294,8 +295,9 @@ def test_hook_interface_version(build):
     result = _run(build(), [], [ok, major, minor, old])
     assert ran == ["ok"]
     assert [h.status for h in result.hooks] == ["ran", "skipped", "skipped", "skipped"]
-    assert result.hooks[1].reason == "it needs hook interface 3.0; this KKBP has 2.0"
-    assert result.hooks[3].reason == "it needs hook interface 1.0; this KKBP has 2.0"
+    assert hooks.HOOK_API_VERSION.startswith("2.")  # 2.0 runs on any 2.x; 2.9 is newer than this one
+    assert result.hooks[1].reason == f"it needs hook interface 3.0; this KKBP has {hooks.HOOK_API_VERSION}"
+    assert result.hooks[3].reason == f"it needs hook interface 1.0; this KKBP has {hooks.HOOK_API_VERSION}"
     with pytest.raises(ValueError, match="should be major.minor"):
         hooks.register_hook(lambda ctx: None, name="bad", source="tests", requires_api="1")
 
@@ -389,30 +391,36 @@ def test_folder_scripts_get_kkbp_and_run_on_import(build, tmp_path, monkeypatch)
     assert "kkbp" not in __import__("sys").modules
 
 
-def test_the_hook_interface_docs_first_hook_runs_on_a_sample(tmp_path, monkeypatch):
-    """The example in docs/hook-interface.md, run from a hooks folder on a copy of the KK sample."""
+@pytest.mark.parametrize("rigify", [True, False], ids=["rigify", "no-rigify"])
+def test_the_hook_interface_docs_first_hook_runs_on_a_sample(tmp_path, monkeypatch, rigify):
+    """The example in docs/hook-interface.md, run from a hooks folder on a copy of the KK sample after
+    the built-in Hooks, with Use Rigify armature on (the default) and off."""
     from conftest import REPO, golden
 
     doc = (REPO / "docs" / "hook-interface.md").read_text(encoding="utf-8")
     example = doc.split("## A first Hook", 1)[1].split("```python\n", 1)[1].split("```", 1)[0]
+    monkeypatch.setattr(hooks, "_registry", dict(BUILTINS))
     monkeypatch.setattr(settings, "hooks_folder", lambda: str(_folder(tmp_path, {"example.py": example})))
     settings.reload_hooks()
     copy = tmp_path / "kk"
     copy_bundle(golden("kk"), copy)
-    result = kkbp.api.import_bundle(copy, options={"portrait_camera_framing": "face", "portrait_camera_lens": 50.0},
-                                    hooks=["Portrait camera"])
-    assert [(h.name, h.status) for h in result.hooks] == [("Portrait camera", "ran")]
+    result = kkbp.api.import_bundle(copy, options={"portrait_camera_framing": "face", "portrait_camera_lens": 50.0,
+                                                   "use_rigify": rigify})  # every Hook, as the panel runs them
+    assert [(h.name, h.status) for h in result.hooks][-1] == ("Portrait camera", "ran"), result.hooks
+    assert not [w for w in result.warnings if "Portrait camera" in w]
 
     from bpy_extras.object_utils import world_to_camera_view
 
     ch = character.Character(result.character_key)
+    assert (ch.rig is not None) == rigify
     cameras = [o for o in ch.collection.objects if o.type == "CAMERA"]
     assert len(cameras) == 1 and cameras[0].data.lens == 50.0
-    camera, armature, skeleton = cameras[0], ch.armature, kkbp.bundle.open_bundle(copy).skeleton
+    camera, control, skeleton = cameras[0], ch.control, kkbp.bundle.open_bundle(copy).skeleton
+    assert camera.constraints[0].target == control
     bpy.context.view_layer.update()
 
     def point(role):
-        return armature.matrix_world @ armature.pose.bones[skeleton.by_role(role).id].head
+        return control.matrix_world @ control.pose.bones[ch.bone(skeleton.by_role(role).id)].head
 
     head, eyes = point("head"), (point("left_eye") + point("right_eye")) / 2
     x, y, depth = world_to_camera_view(bpy.context.scene, camera, head)

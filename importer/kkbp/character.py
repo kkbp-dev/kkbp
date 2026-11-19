@@ -30,6 +30,8 @@ GAME = "kkbp_game"
 BUNDLE = "kkbp_bundle"
 ID = "kkbp_id"
 SUB_COLLECTION = "kkbp_collection"  # on the Collections inside the Character's own: which one it is
+# Rigify's prefix for the rig's copies of the metarig bones, which keep their rest pose: `bone` prefers them.
+RIGIFY_ORIGINAL_PREFIX = "ORG-"
 
 
 class CharacterError(Exception):
@@ -152,6 +154,27 @@ class Character:
     def control(self):
         """The rig if there is one, else the armature: what animation and posing tools act on."""
         return self.rig or self.armature
+
+    def bone(self, id: str) -> str | None:
+        """The name of the bone in `control` that follows the bundle's bone `id`, or None.
+
+        Every bone carries its bundle Id as the custom property `id` (glTF extras), and the Rigify Hook
+        copies it onto the rig bones it made from that bone. Of those, Rigify's ORG- copy keeps the
+        bone's rest pose and follows the pose; a bone Rigify copied as it is keeps the Id as its name."""
+        armature = self.control
+        if armature is None:
+            return None
+        found = [b.name for b in armature.data.bones if b.get("id") == id]
+        for name in (RIGIFY_ORIGINAL_PREFIX + id, id):
+            if name in found:
+                return name
+        original = [n for n in found if n.startswith(RIGIFY_ORIGINAL_PREFIX)]
+        if len(original) == 1:  # a bone the Rigify Hook renamed (D23): ORG-Head
+            return original[0]
+        if len(found) > 1:
+            raise CharacterError(f"{self.name} has {len(found)} bones with Id {id} ({', '.join(sorted(found))}); "
+                                 "there should be one.")
+        return found[0] if found else None
 
     def outfit(self, index: int) -> list:
         """Every Part of Outfit `index`."""

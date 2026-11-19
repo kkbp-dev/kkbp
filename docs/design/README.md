@@ -77,6 +77,7 @@ ADRs:
 - [0051 SVS's edit templates follow its LIF shaders under the maker's bake light, with no grade](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)
 - [0052 Vertex copies are found where the mesh stores them, not where physics leaves them](../adr/0052-vertex-copies-are-found-where-the-mesh-stores-them.md)
 - [0053 Import Animation uses Blender's C++ FBX importer](../adr/0053-import-animation-uses-blenders-cpp-fbx-importer.md)
+- [0054 `ch.bone(id)` finds a bundle bone in the rig by its Id, and prefers Rigify's ORG- copy](../adr/0054-ch-bone-finds-the-rigs-org-copy.md)
 
 ## Decisions
 
