@@ -6,6 +6,7 @@ import pytest
 from conftest import submodule
 
 character = submodule("character")
+editing = submodule("editing").editing
 Character, CharacterError = character.Character, character.CharacterError
 
 
@@ -63,6 +64,47 @@ def test_the_rig_is_the_control():
     ch.add_part(_obj("Rig", bpy.data.armatures.new("Rig")), "rig")
     assert ch.control.name == "Rig"
     assert ch.armature.name == "Armature"
+
+
+def _bones(obj, bones):
+    """Gives armature `obj` a bone for each (name, bundle Id or None)."""
+    with editing(obj, "EDIT"):
+        for name, _ in bones:
+            obj.data.edit_bones.new(name).tail = (0.0, 0.0, 0.1)
+    for name, id in bones:
+        if id is not None:
+            obj.data.bones[name]["id"] = id
+
+
+def test_bone_finds_a_bundle_bone_in_the_armature_by_its_id():
+    ch = _chika()
+    _bones(ch.armature, [("cf_j_head", "cf_j_head"), ("JC-F cf_j_head", "cf_j_head"), ("Eyes target", None)])
+    assert ch.bone("cf_j_head") == "cf_j_head"  # the bone named by the Id, not the other one carrying it
+    assert ch.bone("cf_j_neck") is None
+
+
+def test_bone_finds_a_bundle_bone_in_the_rig():
+    ch = _chika()
+    _bones(ch.armature, [("Head", "cf_j_head")])  # the metarig, renamed (D23)
+    rig = _obj("Rig", bpy.data.armatures.new("Rig"))
+    ch.add_part(rig, "rig")
+    _bones(rig, [("Head", None), ("ORG-Head", "cf_j_head"), ("DEF-Head", "cf_j_head"),
+                 ("cf_j_tang_02", "cf_j_tang_02"), ("ORG-cf_j_tang_02", "cf_j_tang_02"),
+                 ("DEF-cf_j_tang_02", "cf_j_tang_02"), ("cf_j_hair_01", "cf_j_hair_01"),
+                 ("Left Eye", "cf_J_hitomi_tx_L"), ("A", "two"), ("B", "two")])
+    assert ch.bone("cf_j_head") == "ORG-Head"  # in ch.control, the rig, not the metarig
+    assert ch.bone("cf_j_tang_02") == "ORG-cf_j_tang_02"
+    assert ch.bone("cf_j_hair_01") == "cf_j_hair_01"  # copied unchanged
+    assert ch.bone("cf_J_hitomi_tx_L") == "Left Eye"  # the only bone with the Id
+    assert ch.bone("cf_j_neck") is None
+    with pytest.raises(CharacterError, match="2 bones with Id two"):
+        ch.bone("two")
+
+
+def test_bone_without_an_armature_is_none():
+    ch = Character.new("Chika", "KK", "/nowhere")
+    ch.add_part(_mesh("Body"), "body")
+    assert ch.bone("cf_j_head") is None
 
 
 def test_names_and_collections_dont_count():

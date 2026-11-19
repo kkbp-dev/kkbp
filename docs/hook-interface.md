@@ -1,6 +1,6 @@
-# Hook interface 2.0
+# Hook interface 2.1
 
-How to write a Hook: a script that KKBP runs on each Character it imports, after the Core Import has rebuilt it. This is version **2.0** of the hook interface (`kkbp.HOOK_API_VERSION`). The design behind it is in [design/import-pipeline.md](design/import-pipeline.md#hooks); terms are defined in [CONTEXT.md](../CONTEXT.md).
+How to write a Hook: a script that KKBP runs on each Character it imports, after the Core Import has rebuilt it. This is version **2.1** of the hook interface (`kkbp.HOOK_API_VERSION`). The design behind it is in [design/import-pipeline.md](design/import-pipeline.md#hooks); terms are defined in [CONTEXT.md](../CONTEXT.md).
 
 ## A first Hook
 
@@ -133,6 +133,7 @@ A Hook doesn't get the Game Profile; what a Hook needs to know about the Charact
 | `ch.key`, `ch.name`, `ch.game` | The Character Key, the Character's name and its Game |
 | `ch.body`, `ch.armature`, `ch.rig`, `ch.tears`, `ch.gag_eyes` | The one Part with that role, or None. More than one raises `kkbp.CharacterError`, naming them |
 | `ch.control` | `ch.rig` if Rigify made one, else `ch.armature`: what to pose and animate |
+| `ch.bone(id)` | The name of the bone in `ch.control` that follows the bundle's bone `id`, or None if it has none. Without Rigify it is the bone named `id`; in Rigify's rig, its `ORG-` copy, which keeps the bone's rest pose and follows the pose, or the bone itself where Rigify copied it unchanged (hair, accessories) |
 | `ch.hairs`, `ch.outfits`, `ch.alt_outfits` | Lists of Parts |
 | `ch.outfit(index)` | Every Part of Outfit `index` |
 | `ch.parts(roles=None, outfit=None)` | Parts, filtered by Part Role (a name or a list) and Outfit |
@@ -143,7 +144,7 @@ A Hook doesn't get the Game Profile; what a Hook needs to know about the Charact
 | `ch.bundle()` | Reopens the Export Bundle the Character came from |
 | `kkbp.Character.of(obj)`, `kkbp.Character.all(scene)` | The Character an object belongs to, and every Character in a scene |
 
-Part Roles: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows`. The tongue is part of Body: find its faces by the `tongue` Material Role. The armature's bones are named by bundle Id, except that the Rigify Hook gives the rig and its metarig readable names (`Left arm`, `Head`).
+Part Roles: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows`. The tongue is part of Body: find its faces by the `tongue` Material Role. The armature's bones are named by bundle Id, except that the Rigify Hook gives the rig and its metarig readable names (`Left arm`, `Head`); `ch.bone(id)` finds a bone either way.
 
 ## Bundle
 
@@ -196,5 +197,6 @@ Part Roles: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armatu
 
 - The hook interface has its own `major.minor` version, separate from KKBP's. Everything on this page is the interface: the names in `kkbp`, `ctx`, the starting state, Character, Bundle and `kkbp.templates`. Anything else in KKBP's modules is internal and may change in any release.
 - Adding to the interface raises the minor version. Changing or removing anything raises the major version, and so does a major Schema Version change in the Export Bundle contract, because `ctx.bundle` follows it.
-- A Hook that declares `requires_api="2.0"` runs on every 2.x.
+- A Hook that declares `requires_api="2.0"` runs on every 2.x, and one that declares `"2.1"` on 2.1 and later.
 - 2.0 removed the `tongue` Part Role and `ch.tongue`: the tongue is part of Body ([ADR 0039](adr/0039-the-tongue-is-part-of-body.md)). A 1.x Hook is skipped; one that used neither runs again once it declares 2.0.
+- 2.1 added `ch.bone(id)`.

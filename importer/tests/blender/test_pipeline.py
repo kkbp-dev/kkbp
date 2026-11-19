@@ -294,8 +294,9 @@ def test_hook_interface_version(build):
     result = _run(build(), [], [ok, major, minor, old])
     assert ran == ["ok"]
     assert [h.status for h in result.hooks] == ["ran", "skipped", "skipped", "skipped"]
-    assert result.hooks[1].reason == "it needs hook interface 3.0; this KKBP has 2.0"
-    assert result.hooks[3].reason == "it needs hook interface 1.0; this KKBP has 2.0"
+    assert hooks.HOOK_API_VERSION.startswith("2.")  # 2.0 runs on any 2.x; 2.9 is newer than this one
+    assert result.hooks[1].reason == f"it needs hook interface 3.0; this KKBP has {hooks.HOOK_API_VERSION}"
+    assert result.hooks[3].reason == f"it needs hook interface 1.0; this KKBP has {hooks.HOOK_API_VERSION}"
     with pytest.raises(ValueError, match="should be major.minor"):
         hooks.register_hook(lambda ctx: None, name="bad", source="tests", requires_api="1")
 

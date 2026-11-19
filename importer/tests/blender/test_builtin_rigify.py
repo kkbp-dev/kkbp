@@ -122,3 +122,22 @@ def test_an_empty_hidden_custom_collection_sits_right_of_nsfw(ch):
     assert custom.rigify_ui_row == nsfw.rigify_ui_row > 0
     row = [c.name for c in _panel_order(ch.rig.data.collections) if c.rigify_ui_row == nsfw.rigify_ui_row]
     assert row[row.index(nsfw.name) + 1] == custom.name
+
+
+def test_bone_finds_every_bundle_bone_where_the_metarig_has_it(ch):
+    """ch.bone (ADR 0053) gives each bundle bone the rig has a bone that starts where the metarig's
+    bone with that Id does, and the Role bones Rigify's ORG- copies."""
+    skeleton, rig, metarig = ch.bundle().skeleton, ch.rig, ch.armature
+    found = 0
+    for bone in skeleton.bones:
+        name = ch.bone(bone.id)  # raises if it can't pick one
+        source = next((b for b in metarig.data.bones if b.get("id") == bone.id), None)
+        if name is None or source is None:
+            continue
+        found += 1
+        # within 1 mm: grounding the rig moves it a little (finish/ground.py)
+        assert (rig.data.bones[name].head_local - source.head_local).length < 1e-3, (bone.id, name)
+    assert found > 300
+    for bone in skeleton.bones:
+        if bone.role in ("head", "neck", "hips", "left_upper_arm"):
+            assert ch.bone(bone.id).startswith("ORG-"), bone.role
