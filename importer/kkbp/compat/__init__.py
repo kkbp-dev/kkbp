@@ -143,14 +143,67 @@ def _layer_collection(layer, collection):
     return None
 
 
+# Blender's C++ FBX importer (`wm.fbx_import`), with every option it has set here. The Python one
+# (`import_scene.fbx`, "Legacy" in Blender 5.3's menu) switches modes with `object.mode_set`, which acts
+# on the context's active object: called under a context override that names another object (a
+# script's `temp_override(active_object=rig)`), it left its armature in Edit Mode with no pose bones
+# and raised (ADR 0053). The C++ one builds the armature through the data API. Both give the game's
+# animation FBXs the same bones, rest and pose.
+FBX_OPTIONS = {
+    "use_anim": True,
+    "anim_offset": 1.0,  # the first key on frame 1, as the game's clips are numbered
+    "ignore_leaf_bones": False,
+    "use_custom_props": False,  # the retarget reads only the pose
+    "use_custom_props_enum_as_string": True,
+    "use_custom_normals": True,
+    "import_subdivision": False,
+    "validate_meshes": True,
+    "mtl_name_collision_mode": "MAKE_UNIQUE",
+    "import_colors": "SRGB",
+}
+# The operator's file-browser properties (and its `filter_` ones) and the scale, which import_fbx
+# passes itself: not import options.
+FBX_UI_PROPERTIES = {"rna_type", "filepath", "directory", "files", "check_existing", "filemode", "display_type",
+                     "sort_method", "global_scale"}
+
+
 def import_fbx(path, scale: float) -> list:
-    """Imports an FBX file with Blender's FBX importer and returns the objects it made."""
+    """Imports an FBX file with Blender's FBX importer and returns the objects it made. If the import
+    fails, what it made is removed and Blender is back in Object Mode before the error is raised."""
     before = set(bpy.data.objects)
-    with bpy.context.temp_override(view_layer=bpy.context.view_layer):
-        result = bpy.ops.import_scene.fbx(filepath=str(path), global_scale=scale)
-    if "FINISHED" not in result:
-        raise RuntimeError(f"Blender couldn't import {path}")
+    try:
+        result = _run_fbx_importer(str(path), scale)
+        if "FINISHED" not in result:
+            raise RuntimeError(f"Blender couldn't import {path}")
+    except BaseException:
+        remove_imported([o for o in bpy.data.objects if o not in before])
+        raise
     return [o for o in bpy.data.objects if o not in before]
+
+
+def _run_fbx_importer(path: str, scale: float):
+    with bpy.context.temp_override(view_layer=bpy.context.view_layer):
+        return bpy.ops.wm.fbx_import(filepath=path, global_scale=scale, **FBX_OPTIONS)
+
+
+def remove_imported(objects):
+    """Removes `objects` (what import_fbx made) with their data and actions, once nothing else uses
+    them, leaving Object Mode first if one of them is in another mode."""
+    from ..editing import object_mode, switch
+
+    if any(o.mode != "OBJECT" for o in objects):
+        object_mode()
+        for obj in (o for o in objects if o.mode != "OBJECT"):  # in a mode but not the active object
+            switch(obj, "OBJECT")
+    for obj in objects:
+        data = obj.data
+        action = obj.animation_data.action if obj.animation_data else None
+        bpy.data.objects.remove(obj)
+        if data is not None and data.users == 0:
+            bpy.data.batch_remove([data])
+        # The C++ importer gives its action a fake user.
+        if action is not None and action.users == int(action.use_fake_user):
+            bpy.data.actions.remove(action)
 
 
 def rigify_ik_to_fk(rig, **limb):

@@ -1,8 +1,9 @@
 """Import Animation: a walk FBX onto a copy of the KK Golden Sample's Rigify rig (D34).
 
-The walk is made here, not committed (ADR 0031): an armature whose bones carry the game's names, at the
-rest positions of the bones the Rigify Hook renamed, with a 24-frame swing on the hips, spine, arms and
-legs, written with Blender's FBX exporter at 1/FBX_SCALE, the scale the game's own FBX animations come in.
+The walk is made here, not committed (ADR 0031): shaped like the game's FBX animations, an armature
+object "Armature" whose root bone is `p_cf_body_bone` and whose other bones carry the game's names, at
+the rest positions of the bones the Rigify Hook renamed, with a 24-frame swing on the hips, spine, arms
+and legs, written with Blender's FBX exporter at 1/FBX_SCALE, the scale the game's own come in.
 """
 
 import math
@@ -13,6 +14,7 @@ from mathutils import Vector
 
 from conftest import submodule
 
+ROOT = "p_cf_body_bone"  # the root bone of every FBX animation the game's exporter writes
 character = submodule("character")
 animation = submodule("tools.animation")
 bone_names = submodule("bone_names")
@@ -47,9 +49,10 @@ def walked(scenes, golden_import):
     return character.Character(key), path, bpy.data.actions[name]
 
 
-def _write_walk(rigged, folder):
+def _write_walk(rigged, folder, frames=FRAMES):
     """Writes the walk FBX for `rigged`'s skeleton into `folder` and returns its path; the armature
-    it was made from is gone again."""
+    it was made from is gone again. Each cycle of the walk takes FRAMES; `frames` is how many are
+    written."""
     skeleton = rigged.bundle().skeleton
     metarig = rigged.armature.data.bones
     by_id = {b.id: b for b in skeleton.bones}
@@ -68,20 +71,21 @@ def _write_walk(rigged, folder):
     bpy.context.scene.collection.objects.link(source)
     source.matrix_world = rigged.armature.matrix_world
     with editing.editing(source):
+        root = data.edit_bones.new(ROOT)
+        root.head, root.tail = (0.0, 0.0, 0.0), (0.0, 0.0, 0.1)
         for bone_id, role in roles.items():
             rest = metarig[bone_names.ROLE_NAMES[role]]
             eb = data.edit_bones.new(bone_id)
             eb.head, eb.tail, eb.roll = rest.head_local, rest.tail_local, 0.0
             eb.matrix = rest.matrix_local
         for bone_id in roles:
-            if parent(bone_id) is not None:
-                data.edit_bones[bone_id].parent = data.edit_bones[parent(bone_id)]
+            data.edit_bones[bone_id].parent = data.edit_bones[parent(bone_id) or ROOT]
 
     source.animation_data_create()
     source.animation_data.action = bpy.data.actions.new("walk")
     swinging = {b: SWING[r] for b, r in roles.items() if r in SWING}
-    for frame in range(1, FRAMES + 1):
-        phase = math.sin(2 * math.pi * (frame - 1) / FRAMES)
+    for frame in range(frames):  # from time 0, as the game's clips, which import from frame 1
+        phase = math.sin(2 * math.pi * frame / FRAMES)
         for bone_id, amount in swinging.items():
             pb = source.pose.bones[bone_id]
             pb.rotation_mode = "XYZ"
@@ -95,10 +99,14 @@ def _write_walk(rigged, folder):
     for obj in bpy.context.view_layer.objects:
         obj.select_set(obj == source)
     bpy.context.view_layer.objects.active = source
+    scene = bpy.context.scene
+    range_was = scene.frame_start, scene.frame_end
+    scene.frame_start, scene.frame_end = 0, frames - 1  # the exporter bakes the scene's frames
     result = bpy.ops.export_scene.fbx(filepath=str(path), use_selection=True, object_types={"ARMATURE"},
                                       global_scale=1 / animation.FBX_SCALE, add_leaf_bones=False, bake_anim=True,
                                       bake_anim_use_all_actions=False, bake_anim_use_nla_strips=False,
                                       bake_anim_force_startend_keying=True)
+    scene.frame_start, scene.frame_end = range_was
     assert result == {"FINISHED"}
     action = source.animation_data.action
     bpy.data.objects.remove(source)
@@ -176,3 +184,59 @@ def test_ik_snap_switches_the_limbs_to_ik(walked):
     bpy.context.scene.frame_set(10)
     animation.ik_snap(rigged.rig)
     assert all(rigged.rig.pose.bones[f"{limb}_parent"]["IK_FK"] == 0 for limb in animation.LIMBS)
+
+
+def test_the_fbx_importer_gets_every_option_it_has():
+    """As the Mesh Loader's glTF options: a Blender update that adds an option fails here, so that it
+    gets a deliberate value in compat.FBX_OPTIONS."""
+    properties = [p.identifier for p in bpy.ops.wm.fbx_import.get_rna_type().properties]
+    assert [o for o in compat.FBX_OPTIONS if o not in properties] == []
+    assert [p for p in properties if p not in compat.FBX_OPTIONS and p not in compat.FBX_UI_PROPERTIES
+            and not p.startswith("filter_")] == []
+
+
+def _armatures():
+    return {o.name for o in bpy.data.objects if o.type == "ARMATURE"}
+
+
+def test_import_animation_works_under_a_context_override_from_pose_mode(golden_import, tmp_path):
+    """ADR 0053: a script ran Import Animation under `temp_override(active_object=rig)` with the rig in
+    Pose Mode, and Blender's Python FBX importer, whose mode changes follow the context's active
+    object, left the FBX's armature in Edit Mode with no pose bones and raised."""
+    result, rigged = golden_import("kk", hooks=["Rigify"])
+    path = _write_walk(rigged, tmp_path, frames=3)
+    rig, before, actions = rigged.rig, _armatures(), set(bpy.data.actions)
+    editing.switch(rig, "POSE")
+    with bpy.context.temp_override(object=rig, active_object=rig):
+        assert bpy.ops.kkbp.import_animation(filepath=str(path)) == {"FINISHED"}
+    action = rig.animation_data.action
+    assert action.name == "walk" and tuple(action.frame_range) == (1, 3)
+    assert _armatures() == before and set(bpy.data.actions) == actions | {action}  # the FBX's are gone
+    assert all(o.mode in ("OBJECT", "POSE") for o in bpy.data.objects)
+
+
+def test_a_failed_import_leaves_nothing_behind(golden_import, tmp_path, monkeypatch):
+    """An FBX import that fails part way, with its armature in Edit Mode (as the Python importer
+    did), leaves no armature behind and Blender in Object Mode, so Import Animation can run again."""
+    result, rigged = golden_import("kk", hooks=["Rigify"])
+    path = _write_walk(rigged, tmp_path, frames=3)
+    rig, before, actions = rigged.rig, _armatures(), set(bpy.data.actions)
+
+    def fails_half_way(filepath, scale):
+        arm = bpy.data.objects.new("Armature", bpy.data.armatures.new("Armature"))
+        bpy.context.view_layer.active_layer_collection.collection.objects.link(arm)
+        arm.animation_data_create().action = bpy.data.actions.new("Armature|clip|Base Layer")
+        editing.switch(arm, "EDIT")
+        arm.data.edit_bones.new(ROOT)
+        raise RuntimeError("Error: Python: KeyError: 'bpy_prop_collection[key]: key \"p_cf_body_bone\" not found'")
+
+    monkeypatch.setattr(compat, "_run_fbx_importer", fails_half_way)
+    editing.switch(rig, "POSE")
+    # bpy.ops raises the operator's error report.
+    with bpy.context.temp_override(object=rig, active_object=rig), pytest.raises(RuntimeError, match="p_cf_body_bone"):
+        bpy.ops.kkbp.import_animation(filepath=str(path))
+    assert _armatures() == before and set(bpy.data.actions) == actions
+    assert bpy.context.mode == "OBJECT" and all(o.mode in ("OBJECT", "POSE") for o in bpy.data.objects)
+    monkeypatch.undo()
+    with bpy.context.temp_override(object=rig, active_object=rig):
+        assert bpy.ops.kkbp.import_animation.poll()

@@ -72,14 +72,7 @@ def import_animation(ch, path, stretch_arms: bool = True, log=print):
         if slow:
             log(f"{slow} frames were posed the slower way, one update for each bone depth")
     finally:
-        for obj in imported:
-            data, actions = obj.data, [obj.animation_data.action] if obj.animation_data and obj.animation_data.action else []
-            bpy.data.objects.remove(obj)
-            if data is not None and data.users == 0:
-                getattr(bpy.data, "armatures" if isinstance(data, bpy.types.Armature) else "meshes").remove(data)
-            for a in actions:
-                if a.users == 0:
-                    bpy.data.actions.remove(a)
+        compat.remove_imported(imported)
     return action
 
 
