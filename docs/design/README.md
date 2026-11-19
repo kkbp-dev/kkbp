@@ -76,6 +76,7 @@ ADRs:
 - [0050 The atlas copy has plain Principled materials](../adr/0050-the-atlas-copy-has-plain-principled-materials.md)
 - [0051 SVS's edit templates follow its LIF shaders under the maker's bake light, with no grade](../adr/0051-svs-edit-templates-follow-the-lif-shaders-with-no-grade.md)
 - [0052 Vertex copies are found where the mesh stores them, not where physics leaves them](../adr/0052-vertex-copies-are-found-where-the-mesh-stores-them.md)
+- [0053 Import Animation uses Blender's C++ FBX importer](../adr/0053-import-animation-uses-blenders-cpp-fbx-importer.md)
 
 ## Decisions
 
@@ -121,7 +122,7 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 - **D31** The panel's tools are bulk import, Run Hook, Export Prep, Import Animation and Snap IKs; the material panel has Edit Material and Link Hair.
 - **D32** The harness imports the samples with every built-in Hook (`run.py hooks`) and compares each scene with `<sample>.defaults.json`; `run.py hooks --each` runs each Hook alone and fails if it changes anything it doesn't own.
 - **D33** One commit per Hook and tool.
-- **D34** Import Animation retargets Koikatsu FBX animations onto the Rigify rig with KKBP's own retargeting, mapped by Bone Role (the FBX bones carry the game's names, which are the bundle's Ids). It needs no other add-on. Mixamo animations and an animation library aren't supported. The test writes a synthetic walk FBX (D55).
+- **D34** Import Animation retargets Koikatsu FBX animations onto the Rigify rig with KKBP's own retargeting, mapped by Bone Role (the FBX bones carry the game's names, which are the bundle's Ids). It needs no other add-on. Mixamo animations and an animation library aren't supported. The FBX is read with Blender's C++ FBX importer, which works under a caller's context override; a failed read leaves nothing behind ([ADR 0053](../adr/0053-import-animation-uses-blenders-cpp-fbx-importer.md)). The test writes a synthetic walk FBX shaped like the game's (D55).
 - **D35** Separate Eyes moves the eye and eyebrow materials into new Parts with Part Roles `eyes` and `eyebrows`, parented to Body with their keys driven from Body's; the Rigify eye UV-warp modifiers move with them (D60).
 - **D36** Bulk import runs one background Blender per bundle folder and saves `<folder>.blend` (or `Error - <folder>.blend`) beside it.
 - **D37** Edit material copies its edit template's texture group for each material being edited, an exception to shared groups ([ADR 0025](../adr/0025-edit-materials-copy-their-texture-group.md)); the edited material is baked back into its Light Dark material. For KK and KKS face, body, eyes and clothes it reads the game's create materials from the bundle ([contract-change-create-materials.md](contract-change-create-materials.md)).
