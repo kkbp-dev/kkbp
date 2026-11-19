@@ -16,7 +16,7 @@ from mathutils import Vector
 FRAMINGS = {"face": ("head", 0.45), "bust": ("neck", 0.75), "full": ("hips", 2.0)}
 
 
-@kkbp.hook(name="Portrait camera", requires_api="2.0", options=[
+@kkbp.hook(name="Portrait camera", requires_api="2.1", options=[
     kkbp.Option("portrait_camera_framing", str, "bust", "Framing",
                 choices=["face", ("bust", "Bust"), ("full", "Full body", "From head to toe")]),
     kkbp.Option("portrait_camera_lens", float, 85.0, "Focal length", min=20.0, max=200.0,
@@ -26,11 +26,12 @@ def portrait_camera(ctx):
     ch = ctx.character
     role, height = FRAMINGS[ctx.options.portrait_camera_framing]
     bone = ctx.bundle.skeleton.by_role(role)  # the bundle's bone with that Bone Role, in any Game
-    armature = ch.armature
-    if bone is None or armature is None:
+    armature = ch.control  # the Rigify rig, or the armature when there is none
+    name = ch.bone(bone.id) if bone is not None else None  # that bone's name in it
+    if name is None:
         ctx.log.warning(f"{ch.name} has no {role} bone, so no camera was added")
         return
-    target = armature.matrix_world @ armature.pose.bones[bone.id].head  # the armature's bones are named by Id
+    target = armature.matrix_world @ armature.pose.bones[name].head
 
     camera = bpy.data.objects.new(f"{ch.name} camera", bpy.data.cameras.new(f"{ch.name} camera"))
     camera.data.lens = ctx.options.portrait_camera_lens
@@ -39,7 +40,7 @@ def portrait_camera(ctx):
     distance = height * camera.data.lens / camera.data.sensor_height
     camera.location = target + Vector((0.0, -distance, 0.0))
     aim = camera.constraints.new("TRACK_TO")  # keeps the bone in the middle of the frame when it's posed
-    aim.target, aim.subtarget = armature, bone.id
+    aim.target, aim.subtarget = armature, name
     aim.track_axis, aim.up_axis = "TRACK_NEGATIVE_Z", "UP_Y"
     ch.collection.objects.link(camera)
     if bpy.context.scene.camera is None:
@@ -51,7 +52,7 @@ The Hook appears in Preferences, where it can be switched off and moved up or do
 
 - **Import Options:** each `kkbp.Option` becomes a control in the import panel and a value in `ctx.options`. Their names start with the Hook's own prefix, because every Step and Hook shares one set of names ([Import Options](#import-options)).
 - **The bundle:** `ctx.bundle` holds the game's data. The Hook finds the bone by its Bone Role rather than by name, so it works on every Game.
-- **The Character:** `ctx.character` finds the Character's armature and Collection by their tags, so it keeps working after the user renames them. The armature's bones are named by the bundle's bone Ids, which is how the Hook gets from the bundle to Blender.
+- **The Character:** `ctx.character` finds the Character's rig and Collection by their tags, so it keeps working after the user renames them. `ch.bone` gets from the bundle's bone to the rig's, with Rigify's rig or without it.
 - **The log:** `ctx.log` writes to the KKBP log. A warning also counts in the import's summary.
 
 ## Registering
