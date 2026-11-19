@@ -32,7 +32,7 @@ ch.bundle()                  # reopens the Export Bundle this Character came fro
 ```
 
 - `ch.armature` is always the deform armature from the import. `ch.rig` is the Rigify control rig, or None. `ch.control` is for animation and posing tools.
-- `ch.bone(id)` finds a bundle bone in `ch.control` by the `id` custom property every bone carries, preferring Rigify's `ORG-` copy, so a Hook can aim at or pose a bone with Rigify's rig or without it ([ADR 0053](../adr/0053-ch-bone-finds-the-rigs-org-copy.md)).
+- `ch.bone(id)` finds a bundle bone in `ch.control` by the `id` custom property every bone carries, preferring Rigify's `ORG-` copy, so a Hook can aim at or pose a bone with Rigify's rig or without it ([ADR 0054](../adr/0054-ch-bone-finds-the-rigs-org-copy.md)).
 - Character only looks things up and tags Parts. Operations such as separating hair stay in Steps and Hooks.
 - In the pipeline, `ctx.character` is the Character being imported.
 

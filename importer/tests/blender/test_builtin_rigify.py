@@ -125,7 +125,7 @@ def test_an_empty_hidden_custom_collection_sits_right_of_nsfw(ch):
 
 
 def test_bone_finds_every_bundle_bone_where_the_metarig_has_it(ch):
-    """ch.bone (ADR 0053) gives each bundle bone the rig has a bone that starts where the metarig's
+    """ch.bone (ADR 0054) gives each bundle bone the rig has a bone that starts where the metarig's
     bone with that Id does, and the Role bones Rigify's ORG- copies."""
     skeleton, rig, metarig = ch.bundle().skeleton, ch.rig, ch.armature
     found = 0
