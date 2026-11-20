@@ -2,6 +2,8 @@
 
 The architecture of the KKBP exporters and importer. Terms are defined in [CONTEXT.md](../../CONTEXT.md). Decisions that would be surprising without context are in [docs/adr/](../adr/).
 
+How to use KKBP is in the [wiki](../wiki/README.md); this folder is for people changing it.
+
 Released as importer 10.0.0 and exporters 6.0.0 (git tag `v10.0.0`). Supported Games: KK, KKS and SVS.
 
 ## Designs

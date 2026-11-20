@@ -14,3 +14,7 @@
 *.gz    filter=lfs diff=lfs merge=lfs -text
 *.exr   filter=lfs diff=lfs merge=lfs -text
 *.webp  filter=lfs diff=lfs merge=lfs -text
+
+# The user documentation's pictures stay out of LFS, so that showing the README and the wiki doesn't
+# use LFS bandwidth. Keep them small (docs/wiki/images/README.md).
+docs/wiki/images/** !filter !diff !merge -text
