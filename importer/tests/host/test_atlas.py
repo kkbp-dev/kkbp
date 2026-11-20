@@ -38,6 +38,41 @@ def test_uvs_land_inside_their_piece():
             assert p.x <= px <= p.x + p.size[0] and p.y <= py <= p.y + p.size[1], (key, u, v, px, py)
 
 
+def test_a_smaller_picture_is_scaled_up_to_fill_its_place():
+    # The KK body: a 4096 px light texture sets the place, its normal map is 1024 px (scaled down here).
+    layout = atlas.plan([atlas.Piece("body", (64, 64))])
+    normal = Image.new("RGBA", (16, 16), (62, 125, 237, 255))
+    out = atlas.compose(layout, {"body": normal})
+    for xy in ((2, 2), (40, 10), (10, 60), (63, 63)):  # far from the 16 px a corner paste would cover
+        assert out.getpixel(xy) == (62, 125, 237, 255), xy
+
+
+def test_a_larger_picture_is_scaled_down_to_its_place():
+    layout = atlas.plan([atlas.Piece("small", (32, 32)), atlas.Piece("big", (64, 64))])
+    picture = Image.new("RGBA", (128, 128), (10, 200, 30, 255))
+    out = atlas.compose(layout, {"small": picture, "big": (0, 0, 0, 255)})
+    small, big = layout.pieces["small"], layout.pieces["big"]
+    assert out.getpixel((int(small.x) + 16, int(small.y) + 16)) == (10, 200, 30, 255)
+    assert out.getpixel((int(big.x) + 5, int(big.y) + 5)) == (0, 0, 0, 255)
+    below = (int(small.x) + 5, int(small.y + small.size[1]) + 5)  # the atlas's unused space under it
+    assert below[1] < out.size[1] and out.getpixel(below) == (0, 0, 0, 0)  # the picture didn't spill out
+
+
+def test_a_tiled_piece_repeats_its_picture_at_the_place_s_tile_size():
+    layout = atlas.plan([atlas.Piece("tiled", (32, 32), max_uv=(2.0, 1.0))])
+    picture = Image.new("RGBA", (8, 8), (0, 0, 255, 255))
+    picture.putpixel((0, 0), (255, 255, 0, 255))  # marks each repeat's top left corner
+    out = atlas.compose(layout, {"tiled": picture})
+    assert out.getpixel((0, 0))[:3] == out.getpixel((32, 0))[:3]  # two repeats, 32 px apart
+    assert out.getpixel((20, 20)) == (0, 0, 255, 255) and out.getpixel((52, 20)) == (0, 0, 255, 255)
+
+
+def test_a_picture_for_a_piece_without_an_image_fills_its_swatch():
+    layout = atlas.plan([atlas.Piece("plain", None)])
+    out = atlas.compose(layout, {"plain": Image.new("RGBA", (4, 4), (9, 8, 7, 255))})
+    assert out.getpixel((SWATCH - 1, SWATCH - 1)) == (9, 8, 7, 255)
+
+
 def test_a_material_without_an_image_gets_its_colour():
     layout = atlas.plan([atlas.Piece("plain", None)])
     out = atlas.compose(layout, {"plain": (10, 20, 30, 255)})
