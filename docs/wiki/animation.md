@@ -2,7 +2,7 @@
 
 Import Animation puts a Koikatsu animation on the character's Rigify rig, with no other add-on.
 
-> **Picture to come:** `images/animation/walk.jpg`, frames of an imported animation.
+![Frames of an imported animation](images/animation/walk.jpg)
 
 ## What you need
 

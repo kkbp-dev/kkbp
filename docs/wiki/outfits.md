@@ -2,23 +2,23 @@
 
 A card's outfits all come into Blender in one import, each in its own collection.
 
-> **Picture to come:** `images/outfits/outfits.jpg`, one character in three of its outfits.
+![One character in two of its outfits](images/outfits/outfits.jpg)
 
 ## Changing outfits
 
 Tick Export All Outfits when [exporting](exporting.md#options). In Blender's Outliner each outfit then has a collection (`Outfit 00`, `Outfit 01`, …), and only the first is visible. To change clothes, hide one collection and show another.
 
-> **Picture to come:** `images/outfits/outliner.jpg`, the outfit collections in the Outliner.
+![The outfit collections in the Outliner](images/outfits/outliner.jpg)
 
 Hair and accessories that belong to an outfit change with it.
 
 ## Variations
 
-With Export Variations ticked when exporting, the half-off states of the clothes (an unbuttoned shirt, a lifted top) are imported as hidden objects of their own beside the normal clothes. Show one and hide the piece it replaces.
+With Export Variations ticked when exporting, the half-off states of the clothes (an unbuttoned shirt, a lifted top) are imported into an `Alts 00`, `Alts 01`… collection beside each outfit's collection, hidden. Show the one you want and hide the piece it replaces.
 
 ## Separate all clothing
 
-By default each outfit's clothes are one object. With Separation type set to "Separate all clothing" in the [Import Options](importing.md#import-options), each piece of clothing is its own object, named by its material, so a jacket can be hidden or shoes swapped.
+By default each outfit's clothes are one object. With Separate meshes set to "Separate all clothing" in the [Import Options](importing.md#import-options), each piece of clothing is its own object, named by its material, so a jacket can be hidden or shoes swapped.
 
 ## SFW mode
 

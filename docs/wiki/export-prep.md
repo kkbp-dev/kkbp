@@ -2,7 +2,7 @@
 
 Export Prep readies a character for another program: it renames and simplifies the skeleton for the target and packs the textures into an atlas.
 
-> **Picture to come:** `images/export-prep/atlas.jpg`, a character beside its light atlas.
+![A character beside its light atlas](images/export-prep/atlas.jpg)
 
 ## Before you start
 
@@ -15,7 +15,7 @@ Import the character with **Use Rigify armature off**. Export Prep refuses a cha
 3. Choose the options and confirm.
 4. Export with Blender's own exporters. Export Prep sets up an FBX exporter on the character's collection for you (Collection properties > Exporters), which embeds the textures in the `.fbx`; for VRM, use a VRM add-on.
 
-> **Picture to come:** `images/export-prep/dialog.jpg`, the Export Prep options.
+![The Export Prep options](images/export-prep/dialog.jpg)
 
 ## Options
 

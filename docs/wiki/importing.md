@@ -11,18 +11,18 @@ The importer rebuilds a character in Blender from an export folder.
 
 When the import ends, the panel shows a summary. If something went wrong, a button there opens the log.
 
-> **Picture to come:** `images/importing/panel.jpg`, the KKBP tab with Import Options open and the summary of a finished import.
+![The KKBP tab with Import Options open and the summary of a finished import](images/importing/panel.jpg)
 
 A new file's default cube, camera and light are removed for you. Several characters can be imported into one file.
 
 ## Import Options
 
-The options apply to the next import, so set them before clicking the button.
+The options apply to the next import, so set them before clicking the button. In the panel each row starts with the name of the step it belongs to; the two dropdowns are labelled only by that name.
 
 | Option | Default | What it does | More |
 |---|---|---|---|
-| Shader | Eevee | Which shaders the materials use: Eevee, Eevee+, Cycles (toon), Cycles (classic) or Principled BSDF | [Shaders](shaders.md) |
-| Separation type | One object per outfit | "Separate all clothing" makes each piece of clothing its own object | [Outfits](outfits.md#separate-all-clothing) |
+| Convert shaders | Eevee | Which shaders the materials use: Eevee, Eevee+, Cycles (toon), Cycles (classic) or Principled BSDF | [Shaders](shaders.md) |
+| Separate meshes | One object per outfit | "Separate all clothing" makes each piece of clothing its own object | [Outfits](outfits.md#separate-all-clothing) |
 | Use outlines | on | Gives the body, hair and clothes an outline | [Shaders](shaders.md#outlines) |
 | Face cards | off | Adds 2D eye and mouth cards in front of the face, in a hidden collection | [Expressions](expressions.md#face-cards) |
 | SFW mode | off | Attempts to cover up some NSFW things | [Outfits](outfits.md#sfw-mode) |
@@ -37,9 +37,9 @@ Your own [Hooks](hooks.md) can add options to this list.
 | You want to | Use |
 |---|---|
 | Pose and animate in Blender | The defaults |
-| Render in Cycles | Shader: Cycles (toon) or Cycles (classic). Outlines are left out for these |
+| Render in Cycles | Convert shaders: Cycles (toon) or Cycles (classic). Outlines are left out for these |
 | Send the character to VRM, VRChat or Unreal | Use Rigify armature off, then [Export Prep](export-prep.md) |
-| Hide or swap single pieces of clothing | Separation type: Separate all clothing |
+| Hide or swap single pieces of clothing | Separate meshes: Separate all clothing |
 | Share the file or show your screen | SFW mode on |
 
 ### Saving your defaults

@@ -2,7 +2,7 @@
 
 Every eye and mouth expression of the game comes into Blender as a shape key with an English name, and the rig has a grid of controls for them.
 
-> **Picture to come:** `images/expressions/grid.jpg`, a few expressions made with the emotion grid.
+![A few expressions made with the emotion grid](images/expressions/grid.jpg)
 
 ## Shape keys
 
@@ -12,27 +12,31 @@ The body's shape keys are named by what they do, with their category first: `Eye
 
 With the [Rigify rig](rig.md), the face has controls for the mouth, the eyes and custom keys. Show them with the Emotions row of Rig Layers, then drag a control to blend between expressions.
 
-> **Picture to come:** `images/expressions/controls.jpg`, the emotion grid's controls beside the face.
+![The emotion grid's controls beside the face](images/expressions/controls.jpg)
 
 ## Gag eyes
 
 The game's gag eyes (spirals, hearts, fiery eyes and so on) are one shape key, `Gag eyes`, and a dropdown:
 
-1. Select the gag eyes object and open its first material.
-2. Pick the expression in the `Gag expression` dropdown.
+1. Select the gag eyes object and open the Material tab, with its first material selected.
+2. Under Surface, expand **Expression** and pick the expression in the `Gag expression` dropdown.
 3. Raise the `Gag eyes` shape key on the body.
 
 To change the gag expression during an animation, keyframe the `Number` value beside the dropdown.
 
-> **Picture to come:** `images/expressions/gag-eyes.jpg`, three gag expressions and the dropdown.
+![Three gag expressions and the dropdown](images/expressions/gag-eyes.jpg)
 
 The gag eyes and the tears are hidden until an expression shows them, and the normal eyes hide while the gag eyes show.
 
 ## Face cards
 
-Face cards (off by default) adds flat 2D eye and mouth cards in front of the face, with the character's eye textures, for a drawn look. They are in a collection that starts hidden: show it in the Outliner to use them.
+Face cards (off by default) adds flat 2D eye and mouth cards in front of the face, with the character's eye textures. Potentially useful for a more 2D look, a side face, or for goofy expressions. They are in a collection that starts switched off: tick its checkbox in the Outliner to use them.
 
-> **Picture to come:** `images/expressions/face-cards.jpg`, the face cards in use.
+![The same face with face cards, with its normal eyes, and with the eyes hidden](images/expressions/face-cards.jpg)
+
+From left to right: the face cards, the character's normal eyes with the face cards hidden, and the face with both hidden.
+
+The cards sit in front of the character's own eyes and cover them. Where the eyes would still show around the cards, as when the head is turned, hide them too: separate them with [Separate eyes](#separate-eyes), hide the `Eyes` object, then set the `Eyeshadow` slider in the face material to a value of zero to hide the eyeshadow. Hiding both leaves the face without eyes, for drawing them another way.
 
 ## Separate eyes
 

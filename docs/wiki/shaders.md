@@ -1,12 +1,12 @@
 # Shaders and outlines
 
-The Shader option decides how the character's materials are built, and Use outlines adds the game's black outline.
+The Convert shaders option decides how the character's materials are built, and Use outlines adds the game's black outline.
 
-> **Picture to come:** `images/shaders/compare.jpg`, the same character in the five shaders, side by side.
+![The same character in the five shaders, side by side](images/shaders/compare.jpg)
 
 ## Choosing a shader
 
-Set Shader in the [Import Options](importing.md#import-options) before importing.
+Set Convert shaders in the [Import Options](importing.md#import-options) before importing.
 
 | Shader | Renderer | What you get |
 |---|---|---|
@@ -28,7 +28,7 @@ Each material has a light and a dark version of its texture, baked by the game w
 
 Use outlines (on by default) gives the body, hair and clothes a Solidify modifier and a black outline material for each of their materials. The face's outline is masked so it doesn't draw inside the face.
 
-> **Picture to come:** `images/shaders/outlines.jpg`, a character with and without outlines.
+![A character with and without outlines](images/shaders/outlines.jpg)
 
 Outlines are left out for the Cycles and Principled shaders, which draw them badly.
 

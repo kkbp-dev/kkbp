@@ -2,7 +2,7 @@
 
 With Use Rigify armature on (the default), the character gets a Rigify control rig with IK arms and legs, face controls and the game's own joint corrections.
 
-> **Picture to come:** `images/rig/rig.jpg`, a posed character with the rig's controls showing.
+![A posed character with the rig's controls showing](images/rig/rig.jpg)
 
 ## Posing
 
@@ -11,7 +11,7 @@ With Use Rigify armature on (the default), the character gets a Rigify control r
 
 It is a standard Rigify rig, so Rigify's own panels work: in the sidebar's Item tab, Rig Layers shows and hides groups of controls (fingers, skirt, hair, face and so on), and Rig Main Properties switches a limb between IK and FK.
 
-> **Picture to come:** `images/rig/rig-layers.jpg`, the Rig Layers panel.
+![The Rig Layers panel](images/rig/rig-layers.jpg)
 
 The controls have readable names (`Left arm`, `Hips`). Hair and accessory bones of each outfit are in their own bone collections, and an empty Custom collection is there for bones you add yourself.
 
@@ -21,7 +21,9 @@ The rig stands the character's lowest point on the floor. IK stretch is off.
 
 The game moves small helper bones to keep the elbows, knees, shoulders and hips from collapsing as they bend. KKBP copies the game's own rules for them, so the joints hold their shape as they do in the game's Studio.
 
-> **Picture to come:** `images/rig/joint-corrections.jpg`, a fully bent elbow and knee holding their shape.
+![A bent elbow and knee with the joint corrections, and the same elbow and knee without them](images/rig/joint-corrections.jpg)
+
+The same bent elbow and knee with the joint corrections (left) and with them turned off (right).
 
 Every import has them, with or without Rigify.
 

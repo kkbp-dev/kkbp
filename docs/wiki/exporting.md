@@ -11,7 +11,7 @@ The exporter saves the character in the game's maker to a folder, which the impo
 3. Set the options.
 4. Click Export Model for KKBP. The game freezes while it works, for up to a few minutes.
 
-> **Picture to come:** `images/exporting/window.jpg`, the exporter window in the Koikatsu maker.
+![The exporter window in the Koikatsu maker](images/exporting/window.jpg)
 
 ## Options
 
@@ -32,7 +32,7 @@ All five are off to begin with.
 
 Each `.png` directly in the folder is loaded into the maker in name order and exported with the window's options, one export each. A file that isn't a character card (an outfit card, a plain picture) is skipped. The window shows the progress ("Card 3 of 12"), and Stop after this card ends the batch early. At the end it shows how many exported and how many failed; the BepInEx log names each failure. The last card stays loaded in the maker.
 
-> **Picture to come:** `images/exporting/batch.jpg`, the folder browser with the Export them button.
+![The folder browser with the Export them button](images/exporting/batch.jpg)
 
 ## What an export holds
 

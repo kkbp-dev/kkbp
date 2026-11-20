@@ -23,19 +23,19 @@ KKBP is two downloads from the release page: the exporter for the game (`kkbp-ex
 
 The exporter is now in `BepInEx/plugins/KKBP/` in the game's folder.
 
-> **Picture to come:** `images/installing/exporter-zip.jpg`, the zip's three game folders beside a game's main folder.
+![The zip's three game folders beside a game's main folder](images/installing/exporter-zip.jpg)
 
 ## The importer
 
-1. In Blender, open Edit > Preferences > Get Extensions.
+1. In Blender, open Edit > Preferences > Add-ons.
 2. Open the menu at the top right and choose Install from Disk.
 3. Pick `kkbp-<version>.zip`. Don't unzip it.
 4. Close Preferences, press N in the 3D viewport and open the KKBP tab.
 5. The panel says "Pillow is required". Click Download Pillow and wait a moment. The Import Export Bundle button then appears.
 
-> **Picture to come:** `images/installing/install-from-disk.jpg`, the Get Extensions menu with Install from Disk.
+![The Add-ons menu with Install from Disk](images/installing/install-from-disk.jpg)
 
-> **Picture to come:** `images/installing/install-pillow.jpg`, the KKBP tab before and after Download Pillow.
+![The KKBP tab before and after Download Pillow](images/installing/install-pillow.jpg)
 
 Pillow is an image library KKBP uses for its texture atlases. On a computer with no internet connection, download the Pillow wheel (`.whl`) for your Blender's Python and system on another computer, and click Install Pillow from local file, under Download Pillow.
 

@@ -16,7 +16,7 @@ Run Hook, in the Tools panel, runs any Hook on a character already in the file. 
 2. Open KKBP in Preferences > Add-ons and set Hooks folder to it. The Hooks section of the KKBP panel shows the folder too.
 3. The scripts are loaded when Blender starts, when you click Reload Hooks, and before each import.
 
-> **Picture to come:** `images/hooks/panel.jpg`, the Hooks section of the panel with a loaded script.
+![The Hooks section of the panel with a loaded script](images/hooks/panel.jpg)
 
 Your Hooks run after the built-in ones, in the order shown in Preferences, where each can be switched off or moved. A Hook can declare options of its own, which appear among the Import Options. A script that fails to load is shown in the panel with the reason, and a Hook that fails during an import is reported in the log without stopping the import.
 

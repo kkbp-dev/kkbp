@@ -2,7 +2,7 @@
 
 Edit Material lets you change a material's colours, then bakes the result back into fast textures.
 
-> **Picture to come:** `images/edit-material/before-after.jpg`, a character before and after a hair and clothes recolour.
+![A character before and after a hair and clothes recolour](images/edit-material/before-after.jpg)
 
 An imported material is a pair of finished textures, light and dark, which is fast but fixed. Edit Material swaps it for a version built from the game's original layers and colours, following the game's own shaders, so the colours can be changed and still look like the game.
 
@@ -12,10 +12,12 @@ Edit Material works in all three games. It needs the character's export folder t
 
 1. In Object Mode, select the object and open the Material tab of the Properties editor.
 2. Select the material in the list and click Edit Material under it.
-3. Change the colours in the material's settings.
+3. Change the colours under Surface. They sit a few levels down:
+   - Hair: expand **Main texture**. The colours are Color, Color 2 and Color 3.
+   - Clothes: expand **Light colors**, then **Color**, then **Main**. The colours are Color, Color 2 and Color 3, each with a pattern colour.
 4. Click Save. The colours are baked into the material's light and dark textures.
 
-> **Picture to come:** `images/edit-material/buttons.jpg`, the Material tab with Edit Material, then with Reset, Cancel and Save.
+![The Material tab with Edit Material, then with Reset, Cancel and Save](images/edit-material/buttons.jpg)
 
 | Button | What it does |
 |---|---|
