@@ -34,6 +34,36 @@ namespace KKBP.Exporter.Core.Tests
             NormalMaps.UnpackUnity(pixels);
             Assert.Equal(128, pixels[2]);
         }
+
+        [Fact]
+        public void Unity_5_6_dxt5nm_takes_x_from_alpha_alone()
+        {
+            // KK's flat normal: Y copied into R, G and B, X in A (cf_body_00_n reads (126, 126, 126, 127)).
+            var pixels = new byte[] { 128, 128, 128, 128 };
+            NormalMaps.UnpackDxt5nm(pixels);
+            Assert.Equal(new byte[] { 128, 128, 255, 255 }, pixels);
+        }
+
+        [Fact]
+        public void Unity_5_6_dxt5nm_ignores_red()
+        {
+            // A KK pixel tilted towards +X; R holds Y, so R times A would tilt it towards -X instead.
+            var pixels = new byte[] { 100, 100, 100, 200 };
+            NormalMaps.UnpackDxt5nm(pixels);
+            Assert.Equal(200, pixels[0]);
+            Assert.Equal(100, pixels[1]);
+            Assert.InRange(pixels[2], 228, 230); // Z = sqrt(1 - 0.569^2 - 0.216^2) = 0.794
+            Assert.Equal(255, pixels[3]);
+        }
+
+        [Fact]
+        public void Unity_2017_rule_would_tilt_kk_s_flat_normal()
+        {
+            // Why KK needs its own unpacking: the KKS rule reads KK's flat normal as X = -0.5.
+            var pixels = new byte[] { 128, 128, 128, 128 };
+            NormalMaps.UnpackUnity(pixels);
+            Assert.InRange(pixels[0], 63, 65);
+        }
     }
 
     public class DeltaTests

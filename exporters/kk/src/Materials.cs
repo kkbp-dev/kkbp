@@ -148,7 +148,7 @@ namespace KKBP.Exporter
                     bytes[i * 4 + 2] = pixels[i].b;
                     bytes[i * 4 + 3] = pixels[i].a;
                 }
-                NormalMaps.UnpackUnity(bytes);
+                Kks.UnpackNormals(bytes);
                 for (int i = 0; i < pixels.Length; i++)
                 {
                     pixels[i] = new Color32(bytes[i * 4], bytes[i * 4 + 1], bytes[i * 4 + 2], bytes[i * 4 + 3]);

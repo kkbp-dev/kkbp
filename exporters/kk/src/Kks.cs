@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using ChaCustom;
 using KKBP.Exporter.Core;
+using KKBP.Exporter.Core.AdapterKit;
 using UnityEngine;
 
 namespace KKBP.Exporter
@@ -29,6 +30,20 @@ namespace KKBP.Exporter
 
         /// <summary>The maker's pose list entry that is the T-pose.</summary>
         public const string TPoseState = "tpose";
+
+        /// <summary>
+        /// Unpacks a normal map's RGBA32 pixels in place the way the game's Unity reads them: KKS's
+        /// Unity 2019 multiplies R by A for X, KK's Unity 5.6 takes X from A alone (its DXT5nm maps have
+        /// Y in R, G and B).
+        /// </summary>
+        public static void UnpackNormals(byte[] rgba)
+        {
+#if KKS
+            NormalMaps.UnpackUnity(rgba);
+#else
+            NormalMaps.UnpackDxt5nm(rgba);
+#endif
+        }
 
         public static byte[] EncodePng(Texture2D texture)
         {
