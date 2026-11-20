@@ -172,6 +172,29 @@ def test_swap_puts_a_variant_in_place_of_the_shader(build):
         templates.swap(mat, "toon")
 
 
+def test_swap_keeps_every_link_on_the_input_of_the_same_name(build):
+    # Blender carries a group node's links over by socket identifier, which each variant numbers on its
+    # own: the Principled variant's two extra bottom alpha mask inputs once put Hidden's link on
+    # Light alpha, and the expression-driven eyes went transparent.
+    bundle, ch = _open(build)
+    for variant in ("principled", "eevee_mod", "cycles", "cycles_classic", "cycles_no_shadows"):
+        mat = _apply(ch, bundle, "cf_m_body")
+        tree = mat.node_tree
+        held = tree.nodes.new("ShaderNodeValue")  # stands in for an expression's driven Hidden value
+        tree.links.new(held.outputs[0], templates.param(mat, "hidden"))
+        shader = tree.nodes[templates.template_of(mat).shader]
+
+        def links():
+            return sorted((l.from_node.name, l.from_socket.name, l.to_socket.name) for l in tree.links
+                          if l.to_node == shader)
+
+        before = links()
+        dropped = templates.swap(mat, variant)
+        kept = [link for link in before if link[2] not in dropped]
+        assert links() == kept, variant
+        assert templates.param(mat, "hidden").links[0].from_node == held, variant
+
+
 def test_svs_gets_the_kk_variants_and_loses_its_bottom_alpha_mask(build):
     svs_bundle, svs = _open(build, "SVS")
     mat = _apply(svs, svs_bundle, "cf_m_body")

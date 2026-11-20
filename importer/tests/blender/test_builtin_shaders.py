@@ -62,6 +62,10 @@ def test_principled(build):
     output = next(n for n in mat.node_tree.nodes if n.type == "OUTPUT_MATERIAL" and n.is_active_output)
     assert any(l.from_node == shader for l in output.inputs["Surface"].links)
     assert templates.param(mat, "light").is_linked
+    # The eye's alpha is its light texture's, not the value its expressions drive Hidden with.
+    eye = ch.material("cf_m_hitomi_00")
+    light_alpha = templates.param(eye, "light_alpha").links[0].from_socket
+    assert light_alpha.node == templates.texture(eye, "main", "light") and light_alpha.name == "Alpha"
 
 
 def test_svs_loses_its_bottom_alpha_mask_with_a_warning(build):

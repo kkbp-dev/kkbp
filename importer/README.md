@@ -72,6 +72,7 @@ Traps met while writing the importer and its tests. The rules they led to are in
 - `bpy.data.materials`, `.objects` and the other collections are sorted by name: compare sets, not orders.
 - A PropertyGroup already has `name` and `rna_type`, so those can't be Import Option names.
 - `ShaderNodeMix` has duplicate socket names: look its sockets up by identifier.
+- Giving a group node another `node_tree` keeps its links by socket identifier, and each node group numbers its sockets on its own, so a link can land on an input of another name (the Principled variant's eyes once got their Hidden value as their alpha). `templates.swap` removes every kept link and relinks by name.
 - `Material.use_nodes` is deprecated in 5.x; new materials already have a node tree.
 - Appending from the library makes `.001` copies of node groups and images the file already has; `templates.py` and `appending.py` remap them.
 - Driver expressions are capped at 256 characters, and in background runs drivers only evaluate after `scene.frame_set(...)`.

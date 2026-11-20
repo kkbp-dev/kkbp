@@ -472,18 +472,22 @@ def swap(material, variant: str) -> list[str]:
     tree = material.node_tree
     node = tree.nodes[template.shader]
     # Blender keeps a group node's links across a swap by socket identifier, which each group in
-    # library.blend numbers on its own (ADR 0040), so a variant doesn't share .KK's; they are put back by name.
+    # library.blend numbers on its own (ADR 0040), so a variant doesn't share .KK's: a kept link can land
+    # on another input (.Principled's extra inputs once put Hidden's link on Light alpha). Every link
+    # Blender kept goes, and each is put back on the socket with its old name.
     inputs = [(l.from_socket, l.to_socket.name) for l in tree.links if l.to_node == node]
     outputs = [(l.from_socket.name, l.to_socket) for l in tree.links if l.from_node == node]
     node.node_tree = _library_group(template.variants[variant])
     material[VARIANT] = variant
+    for link in [l for l in tree.links if l.to_node == node or l.from_node == node]:
+        tree.links.remove(link)
     for from_socket, name in inputs:
         socket = node.inputs.get(name)
-        if socket is not None and not socket.is_linked:
+        if socket is not None:
             tree.links.new(from_socket, socket)
     for name, to_socket in outputs:
         socket = node.outputs.get(name)
-        if socket is not None and not any(l.from_socket == socket and l.to_socket == to_socket for l in tree.links):
+        if socket is not None:
             tree.links.new(socket, to_socket)
     return sorted({name for _, name in inputs} - {s.name for s in node.inputs})
 
