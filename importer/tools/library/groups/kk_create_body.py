@@ -5,9 +5,11 @@
     base  = decals Paint 1 (Color 3) and Paint 2 (Color 6), each by the paint mask's red
     Color = mix(base, Color 5 * base, mask.b)                       the nails
 
-Linear colours; textures are their stored values. Written by hand."""
+Linear colours; textures are their stored values.
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
 
 import decals
+import shown_colors
 
 NAME = '.KK create_body'
 KIND = 'ShaderNodeTree'
@@ -59,4 +61,5 @@ def build(lib):
     t.make('ShaderNodeMix', 'nails', (1150, 200), {'data_type': 'RGBA'},
            {'Factor_Float': ('mask', 'Blue'), 'A_Color': base, 'B_Color': ('nails.color', 'Vector')})
     t.link('nails', 'Result_Color', 'out', 'Color')
+    shown_colors.route(t, lib, 'Color', *(f'Color {k}' for k in range(2, 7)))
     return t

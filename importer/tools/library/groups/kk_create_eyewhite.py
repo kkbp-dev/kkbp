@@ -1,6 +1,9 @@
 """`.KK create_eyewhite`: KK's create_eyewhite and KKS's Koikano/create_eyew, which composite the eye
 white's texture: its two colours by the base texture's red, `lerp(Color 2, Color, main.r)`
-(models.create_eyewhite). Colours are linear; Main is the texture's stored value. Written by hand."""
+(models.create_eyewhite). Colours are linear; Main is the texture's stored value.
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
+
+import shown_colors
 
 NAME = '.KK create_eyewhite'
 KIND = 'ShaderNodeTree'
@@ -18,4 +21,5 @@ def build(lib):
     t.make('ShaderNodeMix', 'mix', (100, 0), {'data_type': 'RGBA'},
            {'Factor_Float': ('main', 'Red'), 'A_Color': ('in', 'Color 2'), 'B_Color': ('in', 'Color')})
     t.link('mix', 'Result_Color', 'out', 'Color')
+    shown_colors.route(t, lib, 'Color', 'Color 2')
     return t

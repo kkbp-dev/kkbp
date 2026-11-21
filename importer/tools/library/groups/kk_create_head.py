@@ -4,9 +4,11 @@
     base  = decals Texture 4 (Color 4), Texture 5 (Color 5), Paint 1 (Color 3) and Paint 2 (Color 7)
             by the paint mask's red, then the Mole (Color 6)
 
-Linear colours; textures are their stored values. Written by hand."""
+Linear colours; textures are their stored values.
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
 
 import decals
+import shown_colors
 
 NAME = '.KK create_head'
 KIND = 'ShaderNodeTree'
@@ -51,4 +53,5 @@ def build(lib):
         base = decals.decal(t, name, base, ('in', tex), ('in', f'{tex} alpha'), ('in', color), ('in', f'{color} alpha'),
                             mask, location=(-50 + i * 450, 300))
     t.link(base[0], base[1], 'out', 'Color')
+    shown_colors.route(t, lib, 'Color', *(f'Color {k}' for k in range(2, 8)))
     return t

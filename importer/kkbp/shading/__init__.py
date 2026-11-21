@@ -5,7 +5,9 @@ Blender's `Image.pixels`) and colours, and puts what it returns into images and 
 the legacy `editmaterial.py`'s numpy code, written as whole-array operations:
 
 - `saturate` and `saturate_color` look colours up in the game's `Lut_TimeDay.png` colour grade, a
-  1024 x 32 strip of 32 blue slices;
+  1024 x 32 strip of 32 blue slices, as legacy did; `grade` reads it as the graded edit templates'
+  `.KK grade` does (and, given the grade's inverse table, `.KK ungrade`), and `shown_color`
+  gives a colour's Shown Colour (ADR 0056);
 - `dark_pixels` and `dark_color` are the clothes and hair shadow of the game's item shader
   (`ShadeAdjustItem` in xukmi's KKShadersPlus and KKShadersRecreated, credited in NOTICE), `skin_dark_color`
   the skin shadow (`MapValuesMain`), and `eyew_dark_color` the eyebrows' (`toon_eyew`).
@@ -85,7 +87,66 @@ def skin_dark_color(color) -> tuple[float, float, float, float]:
     return (*(float(v) for v in rgb), 1.0)
 
 
+def shown_color(color, lut: np.ndarray, inverse: np.ndarray) -> tuple[float, float, float, float]:
+    """One sRGB colour's Shown Colour (ADR 0056), linear for a Blender colour input (alpha 1): the
+    colour that `.KK shown color` turns back into it, through the grade's inverse table `inverse`
+    (`Lut_TimeDay inverse.exr`, read as `grade` reads a LUT). It is the colour graded, to within the
+    table's interpolation (a few 1/255); solving for it rather than taking the graded colour makes
+    an unedited edit give back the game's colour exactly, which the shadow's tint, taken from the
+    colour's hue, needs for near-grey colours. Where the table can't reach the colour, the closest."""
+    target = np.clip(np.array(color[:3], dtype=np.float64), 0, 1)
+    s = grade(target, lut)
+    best, best_error = s, np.inf
+    for _ in range(30):
+        miss = grade(s, inverse) - target
+        error = np.abs(miss).max()
+        if error < best_error:
+            best, best_error = s, error
+        if error < 1e-7:
+            break
+        s = np.clip(s - np.linalg.lstsq(_jacobian(s, inverse), miss, rcond=None)[0], 0, 1)
+    return (*(float(v) for v in _srgb_to_linear(best)), 1.0)
+
+
+def _jacobian(s, table, h=1e-4):
+    """d grade(s, table) / d s, by central differences inside the unit cube."""
+    out = np.empty((3, 3))
+    for j in range(3):
+        lo, hi = s.copy(), s.copy()
+        lo[j], hi[j] = max(s[j] - h, 0.0), min(s[j] + h, 1.0)
+        out[:, j] = (grade(hi, table) - grade(lo, table)) / (hi[j] - lo[j])
+    return out
+
+
 # --- the LUT ----------------------------------------------------------------------------------
+
+def grade(rgb, lut: np.ndarray) -> np.ndarray:
+    """sRGB colours (..., 3) through the LUT strip (32, 1024, 4) as `.KK grade` reads it: the GPU's
+    bilinear sampling within the two blue slices around the colour, blended by blue
+    (models.grade, which a host test holds this to). Unlike `_lookup`, no legacy nudges."""
+    lut = np.asarray(lut, dtype=np.float64)
+    rgb = np.clip(np.asarray(rgb, dtype=np.float64), 0, 1)
+    blue = rgb[..., 2] * 31
+    low = np.floor(blue)
+    frac = (blue - low)[..., None]
+    high = np.minimum(low + 1, 31)
+    x = rgb[..., 0] * 31 + 0.5
+    y = rgb[..., 1] * 31 + 0.5
+    return (_texel(lut, x + low * 32, y) * (1 - frac) + _texel(lut, x + high * 32, y) * frac)[..., :3]
+
+
+def _texel(lut, x, y):
+    """Bilinear sampling at texel coordinates (x, y), texel centres at i + 0.5, edges clamped."""
+    h, w = lut.shape[:2]
+    x, y = x - 0.5, y - 0.5
+    x0, y0 = np.floor(x), np.floor(y)
+    fx, fy = (x - x0)[..., None], (y - y0)[..., None]
+    xi0, xi1 = np.clip(x0.astype(int), 0, w - 1), np.clip(x0.astype(int) + 1, 0, w - 1)
+    yi0, yi1 = np.clip(y0.astype(int), 0, h - 1), np.clip(y0.astype(int) + 1, 0, h - 1)
+    top = lut[yi0, xi0] * (1 - fx) + lut[yi0, xi1] * fx
+    bottom = lut[yi1, xi0] * (1 - fx) + lut[yi1, xi1] * fx
+    return top * (1 - fy) + bottom * fy
+
 
 def _lookup(rgb, lut, linear=False):
     """Trilinear lookup of rgb (..., 3) in the LUT strip: bilinear within the two nearest blue

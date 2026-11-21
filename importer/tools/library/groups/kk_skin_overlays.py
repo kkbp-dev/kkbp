@@ -1,9 +1,11 @@
 """`.KK skin overlays`: main_skin's three overlays over the skin (models.skin_overlays): the nipples
 (Overlay 1 times its colour, or with Tex1 mask its red times the colour plus a third of its green times
 Nip specular), the underhair (Overlay 2) and the face's eyeshadow (Overlay 3), each by its alpha times
-its colour's. Linear colours; textures are their stored values. Written by hand."""
+its colour's. Linear colours; textures are their stored values.
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
 
 import decals
+import shown_colors
 
 NAME = '.KK skin overlays'
 KIND = 'ShaderNodeTree'
@@ -45,4 +47,5 @@ def build(lib):
     base = decals.decal(t, 'eyeshadow', base, ('in', 'Overlay 3'), ('in', 'Overlay 3 alpha'),
                         ('in', 'Overlay color 3'), ('in', 'Overlay color 3 alpha'), location=(1100, 300))
     t.link(base[0], base[1], 'out', 'Color')
+    shown_colors.route(t, lib, 'Overlay color 1', 'Overlay color 2', 'Overlay color 3')
     return t

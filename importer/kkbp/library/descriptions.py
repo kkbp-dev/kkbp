@@ -15,7 +15,8 @@
 - `positions`: a slot whose placement is a `Scale Vector` group node in place of the image node's own
   mapping (the edit eyes' pupil and highlights, D41).
 - `graded`: an edit template made from a game's shaders, which grades its light and dark itself as
-  the game's bake did; the edit tool never saturates its textures (issue 30).
+  the game's bake did; the edit tool never saturates its textures (issue 30). One with a
+  `shown_colors` param takes Shown Colours unless the menu is Off (ADR 0056).
 
 A node is named by its path: `textures/_CM.png` is the node `_CM.png` in the group of the material's
 node `textures`.
@@ -154,6 +155,8 @@ def _in(group, **slots):
 _BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("textures/shade", "Use Normals?")}
 # The templates made from the games' shaders bake the same way, through their own nodes.
 _GAME_BAKE = {"toon_shading": ("combine", "Toon shading"), "use_normals": ("shade", "Use Normals?")}
+# KK's and KKS's graded templates: on, their drawn colours are Shown Colours (ADR 0056).
+_SHOWN = {"shown_colors": ("shown colors", "Value")}
 # The Game's Maker Light as toon_eyew and Koikano/main_eyew shade with it; the defaults are KK's.
 _EYEW_LIGHT = {"ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength"),
                "shadow_floor": ("lit", "Shadow floor")}
@@ -327,22 +330,22 @@ _EDIT_TEMPLATES = (
     # The edit templates made from the games' shaders (issue 30, importer/tools/game_shaders/models.py):
     # each slot's image node by name at the top level, shared groups, and the game's colours linear.
     Template("KK toon_eyew", graded=True, textures={"main": "tex.main"},
-             params={**_GAME_BAKE, **_EYEW_LIGHT, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color")}),
+             params={**_GAME_BAKE, **_SHOWN, **_EYEW_LIGHT, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color")}),
     Template("KK create_eyewhite", graded=True, textures={"create_main": "tex.create_main"},
-             params={**_GAME_BAKE, **_EYEW_LIGHT, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color"),
+             params={**_GAME_BAKE, **_SHOWN, **_EYEW_LIGHT, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color"),
                      "create_color": ("create", "Color"), "create_color2": ("create", "Color 2")}),
     Template("KK main_hair", graded=True,
              textures={"main": "tex.main", "color_mask": "tex.color_mask", "detail_mask": "tex.detail_mask",
                        "hair_gloss": "tex.hair_gloss"},
-             params={**_GAME_BAKE, "toon_shading": ("gloss", "Toon shading"), "front": ("gloss", "Front"),
+             params={**_GAME_BAKE, **_SHOWN, "toon_shading": ("gloss", "Toon shading"), "front": ("gloss", "Front"),
                      "ambient": ("lit", "Ambient"), "ambient_strength": ("lit", "Ambient strength"),
                      "use_main_texture": ("lit", "Use main texture"), "color": ("lit", "Color"),
                      "color2": ("lit", "Color 2"), "color3": ("lit", "Color 3"),
                      "shadow_color": ("lit", "Shadow color"), "shadow_extend": ("lit", "Shadow extend")}),
     Template("KK main_opaque", graded=True, textures=_CLOTHES_TEXTURES,
-             params={**_GAME_BAKE, **_ITEM_LIGHT, **_CLOTHES_CREATE, "line_width": ("lit", "Line width")}),
+             params={**_GAME_BAKE, **_SHOWN, **_ITEM_LIGHT, **_CLOTHES_CREATE, "line_width": ("lit", "Line width")}),
     Template("KK main_alpha", graded=True, textures=_CLOTHES_TEXTURES,
-             params={**_GAME_BAKE, **_CLOTHES_CREATE, "shadow_color": ("lit", "Shadow color"),
+             params={**_GAME_BAKE, **_SHOWN, **_CLOTHES_CREATE, "shadow_color": ("lit", "Shadow color"),
                      "shadow_extend": ("lit", "Shadow extend"), "specular_color": ("lit", "Specular color"),
                      "detail_b_line_ga": ("lit", "Detail B line GA"), "line_color_alpha": ("lit", "Line color alpha"),
                      "line_width": ("lit", "Line width"), "ambient": ("lit", "Ambient"),
@@ -351,21 +354,21 @@ _EDIT_TEMPLATES = (
     Template("KK main_item", graded=True,
              textures={"main": "tex.main", "color_mask": "tex.color_mask", "detail_mask": "tex.detail_mask",
                        "line_mask": "tex.line_mask", "another_ramp": "tex.another_ramp"},
-             params={**_GAME_BAKE, **_ITEM_LIGHT, "toon_shading": ("ramp", "Toon shading"),
+             params={**_GAME_BAKE, **_SHOWN, **_ITEM_LIGHT, "toon_shading": ("ramp", "Toon shading"),
                      "use_another_ramp": ("lit", "Use another ramp"), "use_main_texture": ("lit", "Use main texture"),
                      "color": ("lit", "Color"), "color2": ("lit", "Color 2"), "color3": ("lit", "Color 3"),
                      "another_ramp_full": ("lit", "Another ramp full"), "line_blue": ("lit", "Line blue"),
                      "not_use_tex_specular": ("lit", "Not use tex specular")}),
     Template("KK toon_eye", graded=True,
              textures={"main": "tex.main", "overlay1": "tex.overlay1", "overlay2": "tex.overlay2"},
-             params={**_GAME_BAKE, "rotation": ("iris", "Rotation"), "highlight": ("lit", "Highlight"),
+             params={**_GAME_BAKE, **_SHOWN, "rotation": ("iris", "Rotation"), "highlight": ("lit", "Highlight"),
                      "overlay_color1": ("lit", "Overlay color 1"), "overlay_color1_alpha": ("lit", "Overlay color 1 alpha"),
                      "overlay_color2": ("lit", "Overlay color 2"), "overlay_color2_alpha": ("lit", "Overlay color 2 alpha"),
                      "shadow_color": ("lit", "Shadow color"), "ambient": ("lit", "Ambient"),
                      "ambient_strength": ("lit", "Ambient strength")}),
     Template("KK create_body", graded=True,
              textures={**_SKIN_TEXTURES, "texture4": "tex.texture4", "texture3": "tex.texture3", "texture6": "tex.texture6"},
-             params={**_GAME_BAKE, **_SKIN_LIT, "tan_present": ("create", "Tan present"),
+             params={**_GAME_BAKE, **_SHOWN, **_SKIN_LIT, "tan_present": ("create", "Tan present"),
                      **{("color" if k == 1 else f"color{k}"): ("create", "Color" if k == 1 else f"Color {k}") for k in range(1, 7)},
                      **{f"color{k}_alpha": ("create", f"Color {k} alpha") for k in (2, 3, 4, 6)},
                      "paint1": ("paint1", "Paint"), "paint1_w": ("paint1", "Paint w"),
@@ -373,7 +376,7 @@ _EDIT_TEMPLATES = (
     Template("KK create_head", graded=True,
              textures={**_SKIN_TEXTURES, "texture4": "tex.texture4", "texture5": "tex.texture5", "texture3": "tex.texture3",
                        "texture7": "tex.texture7", "texture6": "tex.texture6"},
-             params={**_GAME_BAKE, **_SKIN_LIT,
+             params={**_GAME_BAKE, **_SHOWN, **_SKIN_LIT,
                      **{("color" if k == 1 else f"color{k}"): ("create", "Color" if k == 1 else f"Color {k}") for k in range(1, 8)},
                      **{f"color{k}_alpha": ("create", f"Color {k} alpha") for k in range(3, 8)},
                      "tex4uv": ("place4", "Place"), "tex4uv_w": ("place4", "Place w"),
@@ -382,7 +385,7 @@ _EDIT_TEMPLATES = (
                      "paint2": ("paint2", "Paint"), "paint2_w": ("paint2", "Paint w"),
                      "hokuro": ("mole", "Paint"), "hokuro_w": ("mole", "Paint w")}),
     Template("KK toon_nose", graded=True, textures={"main": "tex.main"},
-             params={**_GAME_BAKE, "color": ("lit", "Color"), "color_alpha": ("lit", "Color alpha")}),
+             params={**_GAME_BAKE, **_SHOWN, "color": ("lit", "Color"), "color_alpha": ("lit", "Color alpha")}),
     # SVS's (issue 62): each follows a LIF shader under the maker's bake light (models.SVS_LIGHT), with
     # no grade, as SVS's bake has none. `graded` keeps the edit tool from saturating them.
     Template("SVS lif_main_eyebrow", graded=True, textures={"eyebrow": "tex.eyebrow"},

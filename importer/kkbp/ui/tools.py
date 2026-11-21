@@ -205,17 +205,43 @@ def _active_material(context):
     return obj.active_material if obj is not None and context.mode == "OBJECT" else None
 
 
-# Edit Material's Saturate option (ADR 0026), on the operator and, for the material panel to show
-# beside the button, on the scene (`scene.kkbp_edit_saturate`).
+# Edit Material's Saturate menu, on the operator and, for the material panel to show beside the
+# button, on the scene (`scene.kkbp_edit_saturate`). It does what the active material's edit template
+# takes (edit_material.menu): Shown Colours for one made from a game's shaders, on by default
+# (ADR 0056), or saturation for a legacy one (ADR 0026). Its label and tooltips follow; the
+# identifiers and numbers are the same in both, so a choice stays put when the material changes.
+_SHOWN_ITEMS = [
+    ("DEFAULT", "Default", "Each colour is the colour as it shows, so the eyedropper can pick it", 0),
+    ("ON", "On", "Each colour is the colour as it shows, so the eyedropper can pick it", 1),
+    ("OFF", "Off", "Each colour is the game's own value, which shows graded and stronger", 2)]
+_SATURATE_ITEMS = [("DEFAULT", "Default", "Don't saturate", 0), ("ON", "On", "Saturate", 1),
+                   ("OFF", "Off", "Don't saturate", 2)]
+_MENU_LABELS = {"shown": "Shown colours", "saturate": "Saturate"}
+
+
+def _menu(context) -> str | None:
+    """What the menu does for the active material (edit_material.menu), or None."""
+    obj = getattr(context, "active_object", None) if context is not None else None
+    mat = getattr(context, "material", None) or (obj.active_material if obj is not None else None)
+    ch = Character.of(obj) if obj is not None else None
+    if ch is None or mat is None or edit_material.is_edit(mat):
+        return None
+    return edit_material.menu(ch, mat)
+
+
+def _saturate_items(self, context):
+    return _SHOWN_ITEMS if _menu(context) == "shown" else _SATURATE_ITEMS
+
+
 _SATURATE = dict(
     name="Saturate",
-    description="Whether the textures and colours go through the game's colour grade, as the legacy importer did",
-    items=[("DEFAULT", "Default", "Hair and eyebrows saturate, everything else doesn't"),
-           ("ON", "On", "Saturate"), ("OFF", "Off", "Don't saturate")])
+    description="What Edit Material does with the colours: Shown colours for a material that follows the game's "
+                "shaders, Saturate for one from a modded shader",
+    items=_saturate_items)
 
 
 def register_properties():
-    bpy.types.Scene.kkbp_edit_saturate = bpy.props.EnumProperty(**_SATURATE, default="DEFAULT")
+    bpy.types.Scene.kkbp_edit_saturate = bpy.props.EnumProperty(**_SATURATE, default=0)
 
 
 def unregister_properties():
@@ -257,7 +283,7 @@ class KKBP_OT_edit_material(_MaterialOperator, bpy.types.Operator):
     wants_edit = False
 
     # SKIP_SAVE: the panel passes the scene's choice, so a value from an earlier run never sticks.
-    saturate: bpy.props.EnumProperty(**_SATURATE, default="DEFAULT", options={"SKIP_SAVE"})
+    saturate: bpy.props.EnumProperty(**_SATURATE, default=0, options={"SKIP_SAVE"})
 
     def run(self, ch, mat):
         saturate = {"DEFAULT": None, "ON": True, "OFF": False}[self.saturate]
@@ -346,7 +372,9 @@ class KKBP_PT_material(bpy.types.Panel):
         else:
             row = layout.row(align=True)
             row.operator("kkbp.edit_material", icon="MATERIAL").saturate = context.scene.kkbp_edit_saturate
-            row.prop(context.scene, "kkbp_edit_saturate")
+            menu = _menu(context)
+            if menu is not None:
+                row.prop(context.scene, "kkbp_edit_saturate", text=_MENU_LABELS[menu])
 
 
 operator_classes = (KKBP_OT_merge_weights, KKBP_OT_export_prep, KKBP_OT_run_hook, KKBP_OT_bulk_import,

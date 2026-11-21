@@ -42,9 +42,15 @@ Tears, gag eyes, face cards and glasses can't be edited in any game, nor Summer 
 
 In Summer Vacation Scramble, saving the face also bakes its version without eyeshadow.
 
-## The Saturate choice
+## Shown colours and Saturate
 
-Beside the Edit Material button, Saturate decides whether the colours go through the game's colour grade. Leave it at Default: KKBP then does what matches the game for each material. On and Off are there for materials from modded shaders that come out too pale or too strong.
+Beside the Edit Material button is a menu with Default, On and Off. What it does depends on the material, and its name says which.
+
+**Shown colours** (Koikatsu and Koikatsu Sunshine, every material except those from modded shaders). The game darkens and saturates a material after its shader, so the colours it stores are paler than the result. With Shown colours on, which is the default, a colour field shows the colour as it appears on a lit, white part of the material. Type in or pick with the eyedropper the colour you want to see, from a reference image or from the scene. Use the Standard view transform, which the import sets. A part whose texture is darker than white, as clothes with folds drawn in are, still comes out darker than the colour. Set it to Off to see and edit the game's own values instead; an unedited material saves the same either way.
+
+**Saturate** (materials from modded shaders). It decides whether the colours go through the game's colour grade. Default doesn't saturate. Try On for a material that comes out too pale.
+
+Summer Vacation Scramble's materials show no menu: the game doesn't grade them after their shader, so there is nothing to switch.
 
 ## Where the files go
 

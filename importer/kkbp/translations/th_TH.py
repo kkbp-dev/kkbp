@@ -136,9 +136,13 @@ TRANSLATIONS = {
 
     # Edit Material
     "Saturate": "ปรับความอิ่มสี",
-    "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
-        "ให้เท็กซ์เจอร์และสีผ่านการเกรดสีของเกมหรือไม่ เหมือนที่ตัวนำเข้ารุ่นเก่าทำ",
-    "Hair and eyebrows saturate, everything else doesn't": "ผมและคิ้วปรับความอิ่มสี ส่วนอื่นไม่ปรับ",
+    "What Edit Material does with the colours: Shown colours for a material that follows the game's shaders, Saturate for one from a modded shader":
+        "สิ่งที่แก้ไขวัสดุทำกับสี: สีที่แสดงสำหรับวัสดุที่ทำตามเชดเดอร์ของเกม ปรับความอิ่มสีสำหรับวัสดุจากเชดเดอร์ม็อด",
+    "Shown colours": "สีที่แสดง",
+    "Each colour is the colour as it shows, so the eyedropper can pick it":
+        "แต่ละสีคือสีตามที่แสดง เพื่อให้ใช้หลอดดูดสีเลือกได้",
+    "Each colour is the game's own value, which shows graded and stronger":
+        "แต่ละสีคือค่าดั้งเดิมของเกม ซึ่งแสดงผลหลังปรับสีและเข้มกว่า",
     "Don't saturate": "ไม่ปรับความอิ่มสี",
     "Edit Material": "แก้ไขวัสดุ",
     "Swaps the active material for an editable one that rebuilds the game's colouring, so its colours can be changed and saved":

@@ -116,6 +116,10 @@ _Avoid_: shader recreation, approximation
 The light and global shading values a Game's shader bakes its light and dark textures with (the light term, the ambient colour and strength, the shadow floor), fitted to the Golden Samples (`models.KK`, `models.KKS`). The edit templates default to KK's; a Game Profile sets another shader's own (ADR 0041).
 _Avoid_: scene light, lighting preset
 
+**Shown Colour**:
+A colour as an edit template shows it, lit on a white texture: the game's colour put through the maker camera's colour grade. KK's and KKS's templates made from the games' shaders take their drawn colours as Shown Colours unless Edit Material's Shown colours menu is Off, so a colour picked with the eyedropper is the one that shows, and ungrade them in nodes (ADR 0056).
+_Avoid_: actual colour, display colour, saturated colour
+
 ### Exporting
 
 **Vertex Copy**:

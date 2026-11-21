@@ -25,6 +25,7 @@ import pytest
 from conftest import REPO, submodule
 
 edit_material = submodule("tools.edit_material")
+shading = submodule("shading")
 bake = submodule("tools.bake")
 profiles = submodule("profiles")
 
@@ -59,8 +60,9 @@ def difference(baked, reference):
     return float(np.abs(a[..., :3] - b[..., :3])[opaque].mean())
 
 
-def measure(ch, log=lambda *_: None):
-    """{material id: {"light": d, "dark": d}} for every editable material of `ch`."""
+def measure(ch, saturate=None, log=lambda *_: None):
+    """{material id: {"light": d, "dark": d}} for every editable material of `ch`, edited with
+    `saturate` (None: the profile's default)."""
     profile = profiles.get(ch.game)
     bundle = ch.bundle()
     out = {}
@@ -71,7 +73,7 @@ def measure(ch, log=lambda *_: None):
         material = ch.material(bm.id)
         if light is None or dark is None or material is None:
             continue
-        edit = edit_material.edit(ch, material, log=log)
+        edit = edit_material.edit(ch, material, saturate=saturate, log=log)
         try:
             ref_light, ref_dark = _load(light.file), _load(dark.file)
             baked_light, baked_dark = bake.bake(ch, edit, f"accuracy {bm.id}", at_least=tuple(ref_light.size), log=log)
@@ -101,6 +103,64 @@ def test_unedited_edit_materials_bake_close_to_the_game(game, golden_import):
             if was[kind] is not None and now[kind] is not None and now[kind] > was[kind] + MARGIN:
                 worse.append(f"{mid} {kind}: {now[kind]:.3f}, recorded {was[kind]:.3f}")
     assert not worse, "edit materials further from the game:\n" + "\n".join(worse)
+
+
+@pytest.mark.parametrize("game", ["kk", "kks"])
+def test_the_games_own_colours_bake_close_to_the_game_too(game, golden_import):
+    """ADR 0056: by default KK's and KKS's templates take Shown Colours, which the test above bakes.
+    With the menu Off they take the game's own colours, as they did before Shown Colours, and bake as
+    recorded too."""
+    numbers = measure(golden_import(game)[1], saturate=False)
+    REPORT.mkdir(parents=True, exist_ok=True)
+    (REPORT / f"{game}.game-colours.json").write_text(json.dumps(numbers, indent=1, sort_keys=True) + "\n")
+    recorded = json.loads(RECORD.read_text())[game]
+    worse = [f"{mid} {kind}: {numbers[mid][kind]:.3f}, recorded {was[kind]:.3f}"
+             for mid, was in recorded.items() for kind in ("light", "dark")
+             if was[kind] is not None and numbers[mid][kind] is not None and numbers[mid][kind] > was[kind] + MARGIN]
+    assert not worse, "edit materials with the game's own colours further from the game:\n" + "\n".join(worse)
+
+
+def test_the_inverse_grade_table_inverts_the_grade():
+    """`Lut_TimeDay inverse.exr` (importer/tools/make_ungrade_lut.py) holds, for each colour on the
+    grid, one the grade turns into it."""
+    images = REPO / "importer" / "library-src" / "images"
+    lut, inverse = (_pixels(_load_data(images / name)) for name in ("Lut_TimeDay.png", "Lut_TimeDay inverse.exr"))
+    assert inverse.shape == lut.shape == (32, 1024, 4)
+    grid = np.linspace(0, 1, 32)
+    r, g, b = np.meshgrid(grid, grid, grid, indexing="ij")
+    held = np.stack([inverse[gi, bi * 32 + ri, :3] for ri, gi, bi in np.ndindex(32, 32, 32)]).reshape(32, 32, 32, 3)
+    graded = shading.grade(held, lut)
+    assert np.abs(graded - np.stack([r, g, b], -1)).max() < 1e-4
+
+
+@pytest.mark.parametrize("game", ["kk", "kks"])
+def test_shown_colours_give_back_the_games_colours(game, golden_import):
+    """ADR 0056: every drawn colour of the Golden Samples' materials, as a Shown Colour, comes back through
+    the inverse table as the game's colour, and its swatch is within a few 1/255 of the graded colour."""
+    images = REPO / "importer" / "library-src" / "images"
+    lut, inverse = (_pixels(_load_data(images / name)).astype(np.float64)
+                    for name in ("Lut_TimeDay.png", "Lut_TimeDay inverse.exr"))
+    ch = golden_import(game)[1]
+    profile = profiles.get(ch.game)
+    colours = set()
+    for bm in ch.bundle().materials:
+        name = edit_material.template_for(profile, bm)
+        for c in profile.edit.colors.get(name, ()) if name else ():
+            colour = edit_material._color(bm, c.sources) if c.how == "shown" else None
+            if colour is not None:
+                colours.add(tuple(colour[:3]))
+    assert colours
+    for colour in colours:
+        shown = np.array(shading.shown_color(colour, lut, inverse)[:3])  # linear
+        encoded = np.where(shown <= 0.0031308, shown * 12.92, 1.055 * np.maximum(shown, 0) ** (1 / 2.4) - 0.055)
+        assert np.abs(shading.grade(encoded, inverse) - np.clip(colour, 0, 1)).max() < 1e-4, colour
+        assert np.abs(encoded - shading.grade(np.array(colour), lut)).max() < 10 / 255, colour
+
+
+def _load_data(path):
+    image = bpy.data.images.load(str(path), check_existing=False)
+    image.colorspace_settings.name = "Non-Color"
+    return image
 
 
 def test_svs_clothes_composite_their_create_material(golden_import):

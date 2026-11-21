@@ -6,7 +6,9 @@
     Color = col * min(Main, 1);  Alpha = Main alpha
 
 The pattern masks are read at `.KK pattern uv`. Linear colours; textures are their stored values.
-Written by hand."""
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
+
+import shown_colors
 
 NAME = '.KK create_topN'
 KIND = 'ShaderNodeTree'
@@ -53,4 +55,5 @@ def build(lib):
            {'Vector': previous, 'Vector_001': ('main', 'Vector')})
     t.link('color', 'Vector', 'out', 'Color')
     t.link('in', 'Main alpha', 'out', 'Alpha')
+    shown_colors.route(t, lib, 'Color', 'Color 2', 'Color 3', 'Pattern color 1', 'Pattern color 2', 'Pattern color 3')
     return t

@@ -156,7 +156,7 @@ _SKIN_COLORS = [
     ["detail_normal_map_scale", ["own:_DetailNormalMapScale"], "float"],
     ["shadow_extend", ["own:_ShadowExtend"], "float"],
     ["line_tex_on", ["own:_linetexon"], "float"],
-    *[[f"overlay_color{k}", [f"own:_overcolor{k}"], "plain"] for k in (1, 2, 3)],
+    *[[f"overlay_color{k}", [f"own:_overcolor{k}"], "shown"] for k in (1, 2, 3)],
     *[[f"overlay_color{k}_alpha", [f"own:_overcolor{k}"], "alpha"] for k in (1, 2, 3)],
     ["nip_specular", ["own:_nip_specular"], "float"], ["tex1_mask", ["own:_tex1mask"], "float"],
     ["nip", ["own:_nip"], "float"], ["nip_size", ["own:_nipsize"], "float"],
@@ -166,9 +166,9 @@ _SKIN_COLORS = [
 
 # create_topN's colours and pattern scales (main_opaque's and main_alpha's create stage).
 _CREATE_TOPN_COLORS = [
-    ["color", ["create:_Color"], "plain"], ["color2", ["create:_Color2"], "plain"],
-    ["color3", ["create:_Color3"], "plain"],
-    *[[f"pattern_color{k}", [f"create:_Color{k}_2"], "plain"] for k in (1, 2, 3)],
+    ["color", ["create:_Color"], "shown"], ["color2", ["create:_Color2"], "shown"],
+    ["color3", ["create:_Color3"], "shown"],
+    *[[f"pattern_color{k}", [f"create:_Color{k}_2"], "shown"] for k in (1, 2, 3)],
     *[[f"pattern_color{k}_alpha", [f"create:_Color{k}_2"], "alpha"] for k in (1, 2, 3)],
     *[[f"pattern_scale{k}{a}", [f"create:_PatternScale{k}{a}"], "float"] for k in (1, 2, 3) for a in "uv"],
 ]
@@ -183,7 +183,7 @@ _ITEM_COLORS = [
 ]
 
 # toon_eyew's colours: the texture's tint and the shadow colour.
-_EYEW_COLORS = [["color", ["own:_Color"], "plain"], ["shadow_color", ["own:_shadowcolor"], "plain"]]
+_EYEW_COLORS = [["color", ["own:_Color"], "shown"], ["shadow_color", ["own:_shadowcolor"], "plain"]]
 
 # The eyes' highlights, from the colours the game draws them with (D41).
 _EYE_COLORS = [
@@ -259,7 +259,8 @@ EDIT = {
     # Edit template -> [param, sources, how]. How: `item` sets `param.light` and `param.dark` (the
     # dark one shaded with the shadow), `skin` the same with the skin's shadow, `light` and `dark`
     # one param, `eyew_dark` one param shaded as the eyebrow shader (toon_eyew) does, `plain` the
-    # colour as it is, `alpha` the colour's alpha.
+    # colour as it is, `shown` a colour the template draws: its Shown Colour, or as it is when the
+    # edit is made with the menu Off (ADR 0056), `alpha` the colour's alpha.
     "colors": {
         "KK Body": [
             ["skin_color", ["create:_Color"], "skin"],
@@ -295,16 +296,16 @@ EDIT = {
         "KK Eyeline up": [["eyeline_fade_color", ["own:_Color"], "light"]],
         # The game's own colours, linear, as its shaders see them.
         "KK toon_eyew": _EYEW_COLORS,
-        "KK create_eyewhite": [*_EYEW_COLORS, ["create_color", ["create:_Color"], "plain"],
-                               ["create_color2", ["create:_Color2"], "plain"]],
-        "KK toon_nose": [["color", ["own:_Color"], "plain"], ["color_alpha", ["own:_Color"], "alpha"]],
+        "KK create_eyewhite": [*_EYEW_COLORS, ["create_color", ["create:_Color"], "shown"],
+                               ["create_color2", ["create:_Color2"], "shown"]],
+        "KK toon_nose": [["color", ["own:_Color"], "shown"], ["color_alpha", ["own:_Color"], "alpha"]],
         "KK create_body": [
-            *[[("color" if k == 1 else f"color{k}"), [f"create:_Color{'' if k == 1 else k}"], "plain"] for k in range(1, 7)],
+            *[[("color" if k == 1 else f"color{k}"), [f"create:_Color{'' if k == 1 else k}"], "shown"] for k in range(1, 7)],
             *[[f"color{k}_alpha", [f"create:_Color{k}"], "alpha"] for k in (2, 3, 4, 6)],
             *_SKIN_COLORS,
         ],
         "KK create_head": [
-            *[[("color" if k == 1 else f"color{k}"), [f"create:_Color{'' if k == 1 else k}"], "plain"] for k in range(1, 8)],
+            *[[("color" if k == 1 else f"color{k}"), [f"create:_Color{'' if k == 1 else k}"], "shown"] for k in range(1, 8)],
             *[[f"color{k}_alpha", [f"create:_Color{k}"], "alpha"] for k in range(3, 8)],
             ["tex4uv", ["create:_tex4uv"], "vector"], ["tex4uv_w", ["create:_tex4uv"], "vector_w"],
             ["tex5uv", ["create:_tex5uv"], "vector"], ["tex5uv_w", ["create:_tex5uv"], "vector_w"],
@@ -312,8 +313,8 @@ EDIT = {
             *_SKIN_COLORS,
         ],
         "KK toon_eye": [
-            ["overlay_color1", ["own:_overcolor1"], "plain"], ["overlay_color1_alpha", ["own:_overcolor1"], "alpha"],
-            ["overlay_color2", ["own:_overcolor2"], "plain"], ["overlay_color2_alpha", ["own:_overcolor2"], "alpha"],
+            ["overlay_color1", ["own:_overcolor1"], "shown"], ["overlay_color1_alpha", ["own:_overcolor1"], "alpha"],
+            ["overlay_color2", ["own:_overcolor2"], "shown"], ["overlay_color2_alpha", ["own:_overcolor2"], "alpha"],
             ["shadow_color", ["own:_shadowcolor"], "plain"],
             ["highlight", ["own:_isHighLight"], "float"], ["rotation", ["own:_rotation"], "float"],
         ],
@@ -327,14 +328,14 @@ EDIT = {
             ["shadow_extend", ["own:_ShadowExtend"], "float"], ["detail_b_line_ga", ["own:_DetailBLineGA"], "float"],
         ],
         "KK main_item": [
-            ["color", ["own:_Color"], "plain"], ["color2", ["own:_Color2"], "plain"], ["color3", ["own:_Color3"], "plain"],
+            ["color", ["own:_Color"], "shown"], ["color2", ["own:_Color2"], "shown"], ["color3", ["own:_Color3"], "shown"],
             ["another_ramp_full", ["own:_AnotherRampFull"], "float"],
             ["not_use_tex_specular", ["own:_notusetexspecular"], "float"],
             *_ITEM_COLORS,
         ],
         "KK main_hair": [
-            ["color", ["own:_Color"], "plain"], ["color2", ["own:_Color2"], "plain"],
-            ["color3", ["own:_Color3"], "plain"], ["shadow_color", ["own:_ShadowColor"], "plain"],
+            ["color", ["own:_Color"], "shown"], ["color2", ["own:_Color2"], "shown"],
+            ["color3", ["own:_Color3"], "shown"], ["shadow_color", ["own:_ShadowColor"], "plain"],
             ["shadow_extend", ["own:_ShadowExtend"], "float"],
         ],
     },

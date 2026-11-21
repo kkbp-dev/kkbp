@@ -139,9 +139,13 @@ TRANSLATIONS = {
 
     # Edit Material
     "Saturate": "Saturer",
-    "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
-        "Si les textures et les couleurs passent par l'étalonnage du jeu, comme le faisait l'ancien importeur",
-    "Hair and eyebrows saturate, everything else doesn't": "Les cheveux et les sourcils sont saturés, le reste non",
+    "What Edit Material does with the colours: Shown colours for a material that follows the game's shaders, Saturate for one from a modded shader":
+        "Ce que Modifier le matériau fait des couleurs : Couleurs affichées pour un matériau qui suit les shaders du jeu, Saturer pour un matériau d'un shader moddé",
+    "Shown colours": "Couleurs affichées",
+    "Each colour is the colour as it shows, so the eyedropper can pick it":
+        "Chaque couleur est la couleur telle qu'elle s'affiche, pour que la pipette puisse la prélever",
+    "Each colour is the game's own value, which shows graded and stronger":
+        "Chaque couleur est la valeur propre du jeu, qui s'affiche étalonnée et plus intense",
     "Don't saturate": "Ne pas saturer",
     "Edit Material": "Modifier le matériau",
     "Swaps the active material for an editable one that rebuilds the game's colouring, so its colours can be changed and saved":

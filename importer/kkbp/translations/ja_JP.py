@@ -143,9 +143,13 @@ TRANSLATIONS = {
 
     # Edit Material
     "Saturate": "彩度補正", #will be removed
-    "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
-        "従来のインポーターと同じように、テクスチャと色にゲームのカラーグレーディングをかけるかどうか", #will be removed
-    "Hair and eyebrows saturate, everything else doesn't": "髪と眉は彩度補正し、他はしない", #will be removed
+    "What Edit Material does with the colours: Shown colours for a material that follows the game's shaders, Saturate for one from a modded shader":
+        "マテリアル編集で色をどう扱うか：ゲームのシェーダーに従うマテリアルでは表示色、改造シェーダーのマテリアルでは彩度補正",
+    "Shown colours": "表示色",
+    "Each colour is the colour as it shows, so the eyedropper can pick it":
+        "各色は表示されるとおりの色なので、スポイトで拾えます",
+    "Each colour is the game's own value, which shows graded and stronger":
+        "各色はゲーム本来の値で、色補正がかかって濃く表示されます",
     "Don't saturate": "彩度補正しない", #will be removed
     "Edit Material": "マテリアルを編集",
     "Swaps the active material for an editable one that rebuilds the game's colouring, so its colours can be "

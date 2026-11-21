@@ -21,17 +21,21 @@ import numpy as np
 
 from .. import profiles, shading, templates
 from ..bundle.rules import NO_EYESHADOW
-from ..character import ID
+from ..bundle import BundleError
+from ..character import ID, CharacterError
 
 EDIT_OF = "kkbp_edit_of"  # on an edit material: the name of the material it edits
 EDIT_KEY = "kkbp_edit_key"  # on an edit material: its Character's Key (not KEY: it isn't a bundle material)
 FILLED = "kkbp_edit_filled"  # on an edit material: the slots edit() filled
-SATURATED = "kkbp_edit_saturated"  # on an edit material: whether it was saturated, which reset() keeps
+SATURATED = "kkbp_edit_saturated"  # on an edit material: whether it was saturated (or, for a graded
+# template, made with Shown Colours), which reset() keeps
+SHOWN_PARAM = "shown_colors"  # a graded template's switch: its drawn colours are Shown Colours (ADR 0056)
 NAME = "Edit {}"
 CACHE = "edit"
 # D42, ADR 0026: edit materials saturate their main textures and colours through the game's colour
 # grade, as legacy did, only for the profile's `saturated_roles` unless asked. Measured on the KK and
-# KKS samples, the others bake closer to the bundle's own light and dark textures without it.
+# KKS samples, the others bake closer to the bundle's own light and dark textures without it. For a
+# graded template, the menu switches Shown Colours instead, on by default (ADR 0056).
 
 
 class EditError(Exception):
@@ -51,6 +55,33 @@ def template_for(profile, bundle_material) -> str | None:
 def saturates(profile, bundle_material) -> bool:
     """Whether an edit of this bundle material saturates when the user doesn't say (ADR 0026)."""
     return bundle_material.role in profile.edit.saturated_roles
+
+
+def menu(ch, material) -> str | None:
+    """What Edit Material's Saturate menu does for `material`, which isn't being edited: "shown" (a
+    template made from a game's shaders with Shown Colours), "saturate" (a legacy template), or None
+    (nothing: an SVS template, or a material that can't be edited). For the panel, which draws often:
+    the template is looked up in the bundle once per material."""
+    key = (str(ch.bundle_path), material.get(ID))
+    if key not in _MENUS:
+        _MENUS[key] = _menu(ch, material)
+    return _MENUS[key]
+
+
+_MENUS: dict = {}  # (bundle path, material id) -> menu()
+
+
+def _menu(ch, material):
+    try:
+        if editable(ch, material) is not None:
+            return None
+        name = template_for(profiles.get(ch.game), ch.bundle().material(material[ID]))
+    except (CharacterError, BundleError, profiles.ProfileError):
+        return None
+    template = templates.library.TEMPLATES[name]
+    if not template.graded:
+        return "saturate"
+    return "shown" if SHOWN_PARAM in template.params else None
 
 
 def is_edit(material) -> bool:
@@ -104,10 +135,18 @@ def edit(ch, material, *, saturate: bool | None = None, log=print):
     profile = profiles.get(ch.game)
     bm = ch.bundle().material(material[ID])
     name = template_for(profile, bm)
-    if templates.library.TEMPLATES[name].graded:
-        saturate = False  # it grades its light and dark itself, as the game's bake (issue 30)
-    elif saturate is None:
-        saturate = saturates(profile, bm)
+    template = templates.library.TEMPLATES[name]
+    shown = False
+    if template.graded:
+        # A template made from a game's shaders grades its light and dark itself, as the game's bake
+        # (issue 30): its textures are never saturated. The menu switches its Shown Colours instead,
+        # on unless asked off (ADR 0056); a template without them (SVS's, ungraded) ignores it.
+        shown = saturate = SHOWN_PARAM in template.params and saturate is not False
+        textures_saturate = False
+    else:
+        if saturate is None:
+            saturate = saturates(profile, bm)
+        textures_saturate = saturate
     mat = templates.template_material(name).copy()
     mat.use_fake_user = False
     mat.name = NAME.format(material.name)
@@ -119,9 +158,9 @@ def edit(ch, material, *, saturate: bool | None = None, log=print):
     mat.use_transparent_shadow = material.use_transparent_shadow
     templates.copy_groups(mat)
 
-    filled = _fill_textures(ch, mat, material, bm, profile, saturate, log)
+    filled = _fill_textures(ch, mat, material, bm, profile, textures_saturate, log)
     mat[FILLED] = sorted(filled)
-    _set_colors(mat, bm, profile, saturate)
+    _set_colors(mat, bm, profile, textures_saturate, shown)
     _set_values(mat, bm, profile, filled)
 
     material.user_remap(mat)  # moves the fake user too, so it is set after
@@ -287,6 +326,10 @@ def _lut():
     return _pixels(templates.extra("lut"))
 
 
+def _ungrade_lut():
+    return _pixels(templates.extra("ungrade_lut"))
+
+
 def _hash(color) -> str:
     return hashlib.sha1(",".join(f"{c:.4f}" for c in color[:3]).encode()).hexdigest()[:8]
 
@@ -321,10 +364,14 @@ def _vector(bm, sources):
     return None
 
 
-def _set_colors(mat, bm, profile, saturate):
-    lut = _lut() if saturate else None
+def _set_colors(mat, bm, profile, saturate, shown):
+    lut = _lut() if saturate or shown else None
+    inverse = _ungrade_lut() if shown else None
     shadow = _shadow(bm, profile)
     out = (lambda c: shading.saturate_color(c, lut)) if saturate else _linear
+    as_shown = (lambda c: shading.shown_color(c, lut, inverse)) if shown else _linear
+    if shown:
+        _set(mat, SHOWN_PARAM, 1.0)
     params = templates.template_of(mat).params
     for c in profile.edit.colors.get(mat[templates.TEMPLATE], ()):
         if c.how in ("float", "vector", "vector_z", "vector_w"):
@@ -343,7 +390,8 @@ def _set_colors(mat, bm, profile, saturate):
             continue
         value = {"light": lambda: out(color), "dark": lambda: out(shading.dark_color(color, shadow)),
                  "eyew_dark": lambda: out(shading.eyew_dark_color(color, shadow)),
-                 "plain": lambda: _linear(color), "alpha": lambda: float(color[3])}[c.how]()
+                 "plain": lambda: _linear(color), "shown": lambda: as_shown(color),
+                 "alpha": lambda: float(color[3])}[c.how]()
         for name in ([c.param] if c.param in params else [f"{c.param}.light", f"{c.param}.dark"]):
             _set(mat, name, value)
 

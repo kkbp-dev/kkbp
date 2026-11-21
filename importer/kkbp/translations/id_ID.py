@@ -138,9 +138,13 @@ TRANSLATIONS = {
 
     # Edit Material
     "Saturate": "Saturasi",
-    "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
-        "Apakah tekstur dan warna melewati gradasi warna game, seperti pada pengimpor lama",
-    "Hair and eyebrows saturate, everything else doesn't": "Rambut dan alis disaturasi, yang lain tidak",
+    "What Edit Material does with the colours: Shown colours for a material that follows the game's shaders, Saturate for one from a modded shader":
+        "Apa yang dilakukan Edit Material pada warna: Warna tampil untuk material yang mengikuti shader game, Saturasi untuk material dari shader modifikasi",
+    "Shown colours": "Warna tampil",
+    "Each colour is the colour as it shows, so the eyedropper can pick it":
+        "Setiap warna adalah warna sebagaimana tampak, sehingga pipet dapat mengambilnya",
+    "Each colour is the game's own value, which shows graded and stronger":
+        "Setiap warna adalah nilai asli game, yang tampak setelah koreksi warna dan lebih kuat",
     "Don't saturate": "Jangan saturasi",
     "Edit Material": "Edit Material",
     "Swaps the active material for an editable one that rebuilds the game's colouring, so its colours can be changed and saved":

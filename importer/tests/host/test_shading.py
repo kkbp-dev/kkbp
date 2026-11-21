@@ -152,3 +152,19 @@ def test_eyew_dark_color():
     assert got[:3] == pytest.approx((1 - 0.74 * 0.7225, 1 - 0.72 * 0.7225, 0.555 * 0.4), abs=1e-5)
     assert shading.eyew_dark_color((0.5, 0.2, 0.0), shadow)[:3] == pytest.approx(
         (0.5 * got[0], 0.2 * got[1], 0.0), abs=1e-5)
+
+
+def test_grade_reads_the_lut_as_the_shader_models_do(lut):
+    """ADR 0056: Shown Colours are graded as `.KK grade` does, which follows models.grade."""
+    from game_shaders import models
+    rgb = np.random.default_rng(3).random((500, 3))
+    assert np.abs(shading.grade(rgb, lut) - models.grade(rgb, lut.astype(np.float64))).max() < 1e-6
+
+
+def test_a_shown_colour_is_what_the_inverse_table_gives_back_the_colour_from(lut):
+    """ADR 0056, with a stand-in for the grade's inverse table: the identity strip, whose inverse of
+    any colour is that colour, so the Shown Colour solved for through it is the colour itself."""
+    colour = (0.918, 0.938, 0.958, 1.0)
+    shown = shading.shown_color(colour, _identity_lut(), _identity_lut())
+    assert shown[3] == 1.0
+    assert np.asarray(shown[:3]) == pytest.approx(shading._srgb_to_linear(np.array(colour[:3])), abs=1e-6)

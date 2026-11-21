@@ -76,7 +76,7 @@ class Source:
 class EditColor:
     param: str
     sources: tuple[Source, ...]
-    how: str  # item, skin, light, dark, eyew_dark, plain, alpha, float, vector, vector_z or vector_w
+    how: str  # item, skin, light, dark, eyew_dark, plain, shown, alpha, float, vector, vector_z or vector_w
 
 
 @dataclass(frozen=True)
@@ -99,7 +99,7 @@ class EditRules:
 
 
 _WHERE = ("create", "own", "current")
-_HOW = ("item", "skin", "light", "dark", "eyew_dark", "plain", "alpha", "float", "vector", "vector_z", "vector_w")
+_HOW = ("item", "skin", "light", "dark", "eyew_dark", "plain", "shown", "alpha", "float", "vector", "vector_z", "vector_w")
 _CONDITIONS = ("role", "raw", "shader", "missing", "has", "create")
 
 

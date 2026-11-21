@@ -8,7 +8,10 @@ defaults are KK's, and KKS's profile sets its own.
     f     = max(Light * 0.6 + 0.4, Ambient strength)
     Light = base * f;  Dark = mix(base * shade, base, Shadow floor) * f
 
-Colours are linear; Main is the texture's stored value. Written by hand."""
+Colours are linear; Main is the texture's stored value.
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
+
+import shown_colors
 
 NAME = '.KK toon_eyew'
 KIND = 'ShaderNodeTree'
@@ -43,4 +46,5 @@ def build(lib):
     t.make('ShaderNodeVectorMath', 'dark', (500, 0), {'operation': 'SCALE'}, {'Vector': ('floor', 'Result_Vector'), 'Scale': factor})
     t.link('lit', 'Vector', 'out', 'Light')
     t.link('dark', 'Vector', 'out', 'Dark')
+    shown_colors.route(t, lib, 'Color')
     return t
