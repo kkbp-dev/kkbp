@@ -26,6 +26,10 @@ _Avoid_: character file
 One complete set of clothing and accessories a Character can wear.
 _Avoid_: coordinate, clothing set, costume
 
+**Body Textures**:
+The textures an Outfit puts on body materials, such as the alpha mask that hides the skin under its clothes. The body shows the Body Textures of the Outfit that is shown.
+_Avoid_: outfit masks, cloth alpha
+
 ### The export contract
 
 **Export Bundle**:

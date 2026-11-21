@@ -80,6 +80,7 @@ ADRs:
 - [0052 Vertex copies are found where the mesh stores them, not where physics leaves them](../adr/0052-vertex-copies-are-found-where-the-mesh-stores-them.md)
 - [0053 Import Animation uses Blender's C++ FBX importer](../adr/0053-import-animation-uses-blenders-cpp-fbx-importer.md)
 - [0054 `ch.bone(id)` finds a bundle bone in the rig by its Id, and prefers Rigify's ORG- copy](../adr/0054-ch-bone-finds-the-rigs-org-copy.md)
+- [0055 The body takes the shown Outfit's textures, swapped in by the add-on](../adr/0055-the-body-takes-the-shown-outfits-textures.md)
 
 ## Decisions
 
@@ -87,7 +88,7 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 
 ### The Core Import
 
-- **D1** The Step list is in `pipeline/steps.py`, in running order: load the Passes, join the armatures, name UV maps, merge the tongues, build the Parts, the tear controls, the one Gag eyes key (D68), order material slots and shape keys, link and drive the face keys, SVS's eyelids, trim the skeleton, bone tails and roll, IK bends, KK/KKS's fingers and legs, bone collections, joint corrections (D64), templates, the Outfit's body textures, the gag eyes' drivers, material changes, viewport colours, Collections, view transform.
+- **D1** The Step list is in `pipeline/steps.py`, in running order: load the Passes, join the armatures, name UV maps, merge the tongues, build the Parts, the tear controls, the one Gag eyes key (D68), order material slots and shape keys, link and drive the face keys, SVS's eyelids, trim the skeleton, bone tails and roll, IK bends, KK/KKS's fingers and legs, bone collections, joint corrections (D64), templates, each Outfit's body textures (ADR 0055), the gag eyes' drivers, material changes, viewport colours, Collections, view transform.
 - **D2** Bone tails and roll come from Bone Roles and Groups only, with no bone names in the profiles ([ADR 0017](../adr/0017-bone-tails-from-the-game-rotation.md)). The Rigify Hook re-aims the bones its own rig needs.
 - **D3** One Gag template for every Game ([ADR 0019](../adr/0019-one-gag-template-built-per-material.md)).
 - **D4** One tongue ([ADR 0020](../adr/0020-one-tongue-with-mouth-keys-and-bones.md)), part of Body (D65).
