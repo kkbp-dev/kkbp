@@ -8,7 +8,7 @@ from collections import defaultdict
 
 import bpy
 
-from .. import templates
+from .. import outfit_textures, templates
 from . import gag
 from .mesh import FACE_PARTS, drive_param, material_id
 
@@ -37,19 +37,36 @@ def apply_templates(ctx):
 
 def apply_outfit_body_textures(ctx):
     """Puts the textures the first Outfit sets on body materials, such as the alpha mask that hides
-    skin under its clothes, into those materials."""
+    skin under its clothes, into those materials. With more than one Outfit, each of those materials
+    also stores every Outfit's, so showing another Outfit puts its own in (ADR 0055)."""
     ch, bundle = ctx.character, ctx.bundle
     outfits = sorted((p for p in bundle.passes if p.kind == "outfit"), key=lambda p: p.outfit)
     if not outfits:
         return
-    for body_texture in outfits[0].body_textures:
-        mat = ch.material(body_texture.material)
-        if mat is None:
-            continue
-        slot = templates.slot_of(ch, body_texture.texture)
-        if slot is None or not templates.set_texture(ch, mat, slot, body_texture.texture):
-            ctx.log.info(f"Outfit {outfits[0].outfit:02d}'s {body_texture.texture.raw} has no slot in "
-                         f"{body_texture.material}'s template")
+    filled = defaultdict(dict)  # (material, slot) -> {Outfit: its texture}
+    for p in outfits:
+        for body_texture in p.body_textures:
+            mat = ch.material(body_texture.material)
+            if mat is None:
+                continue
+            slot = templates.slot_of(ch, body_texture.texture)
+            if slot is None or templates.texture_node(mat, slot) is None:
+                ctx.log.info(f"Outfit {p.outfit:02d}'s {body_texture.texture.raw} has no slot in "
+                             f"{body_texture.material}'s template")
+                continue
+            filled[(mat, slot)][p.outfit] = body_texture.texture
+    for (mat, slot), by_outfit in filled.items():
+        node = templates.texture_node(mat, slot)
+        own = (node.image, tuple(node.texture_mapping.translation[:2]), tuple(node.texture_mapping.scale[:2]))
+        for p in outfits:
+            texture = by_outfit.get(p.outfit)
+            if texture is not None:  # loads it; the first Outfit's goes back in below
+                owner = f"{material_id(mat)} Outfit {p.outfit:02d}" if len(outfits) > 1 else None
+                templates.set_texture(ch, mat, slot, texture, owner=owner)
+            if len(outfits) > 1:
+                image, offset, scale = (node.image, texture.offset, texture.scale) if texture is not None else own
+                outfit_textures.store(mat, ch.key, slot, p.outfit, image, offset, scale)
+        outfit_textures.put(mat, outfits[0].outfit)
 
 
 def drive_material_changes(ctx):
