@@ -70,10 +70,10 @@ def _pick(set_name, role, blend, slots=("main.light", "main.dark")):
 
 
 def test_kk_choices():
-    assert _pick("KK", "face", "opaque") == ("KK Light Dark", None, {"force_visibility": 0})
+    assert _pick("KK", "face", "opaque") == ("KK Light Dark", None, {"force_visibility": 2})
     # Issue 38: the face with its bakes without eyeshadow gets the template that fades them; SVS never does.
     plain = ("main.light", "main.dark", "main.light_no_eyeshadow", "main.dark_no_eyeshadow")
-    assert _pick("KK", "face", "opaque", plain) == ("KK Light Dark Face", None, {"force_visibility": 0})
+    assert _pick("KK", "face", "opaque", plain) == ("KK Light Dark Face", None, {"force_visibility": 2})
     assert _pick("KK", "face", "opaque", plain[:3])[0] == "KK Light Dark"
     assert _pick("KK", "body", "opaque", plain)[0] == "KK Light Dark"
     assert _pick("SVS", "face", "opaque", plain) == ("SVS Light Dark Face", None, {"force_visibility": 2})

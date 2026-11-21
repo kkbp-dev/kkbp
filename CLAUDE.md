@@ -30,7 +30,7 @@ A fresh clone can't run the tests yet: the Golden Samples the tests import are m
 - Work in small commits. Stage files by path; never `git add -A`. End every commit message with the `Co-Authored-By:` trailer of the model that wrote it.
 - Never commit the files and folders listed in `.gitignore`.
 - The git author is a placeholder from the global `~/.gitconfig`; leave it alone.
-- The remote is `origin` on GitHub (`kkbp-dev/test`); a change goes on its own branch and into `main` through a pull request. There is no CI: build, test and check steps are local scripts under `scripts/`.
+- The remote is `origin` on GitHub (`kkbp-dev/kkbp`); a change goes on its own branch and into `main` through a pull request. There is no CI: build, test and check steps are local scripts under `scripts/`.
 - Nothing gets installed into Blender's own Python or the user's Blender profile without their OK, and each OK covers that one install.
 - Long runs (the full test suite, `export-sample.sh`, game exports) take minutes: run them in the background and wait for them.
 - Run the full test suite once, after a change. Don't run it before the change for a baseline: the committed snapshots are the baseline, and `scripts/test-importer.sh` stops at once on a tree that already passed (the green stamp). To see whether a failure predates the change, run that one test (`launch.py -k <name>`, or `run.py core --sample <game>`) on the base commit, not the whole suite.

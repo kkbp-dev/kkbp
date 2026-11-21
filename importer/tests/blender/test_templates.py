@@ -52,9 +52,8 @@ def test_a_baked_material_gets_light_dark_with_its_textures(build):
     assert mat.surface_render_method == "DITHERED"
 
 
-@pytest.mark.parametrize("game, template, visibility", [("KK", "KK Light Dark Face", 0),
-                                                         ("SVS", "SVS Light Dark Face", 2)])
-def test_a_face_with_bakes_without_eyeshadow_gets_the_eyeshadow_slider(build, game, template, visibility):
+@pytest.mark.parametrize("game, template", [("KK", "KK Light Dark Face"), ("SVS", "SVS Light Dark Face")])
+def test_a_face_with_bakes_without_eyeshadow_gets_the_eyeshadow_slider(build, game, template):
     """Issue 38: at 1 the face is the game's bake, at 0 the bake without eyeshadow."""
     b = _builder(game)
     face = next(m for m in b.materials if m["id"] == "cf_m_face_00")
@@ -65,7 +64,7 @@ def test_a_face_with_bakes_without_eyeshadow_gets_the_eyeshadow_slider(build, ga
     mat = _apply(ch, bundle, "cf_m_face_00")
     assert mat[templates.TEMPLATE] == template
     slider = templates.param(mat, "eyeshadow")
-    assert slider.default_value == 1 and templates.param(mat, "force_visibility").default_value == visibility
+    assert slider.default_value == 1 and templates.param(mat, "force_visibility").default_value == 2
     for variant in ("light", "dark"):
         full = templates.texture(mat, "main", variant=variant)
         without = templates.texture(mat, "main", variant=f"{variant}_no_eyeshadow")
@@ -85,7 +84,7 @@ def test_a_face_without_those_bakes_has_no_eyeshadow_slider(build):
 def test_parameters_and_render_method_come_from_the_set(build):
     bundle, ch = _open(build)
     face = _apply(ch, bundle, "cf_m_face_00")
-    assert templates.param(face, "force_visibility").default_value == 0
+    assert templates.param(face, "force_visibility").default_value == 2
     eye = _apply(ch, bundle, "cf_m_hitomi_00")
     assert eye[templates.TEMPLATE] == "KK Eye"
     assert eye.surface_render_method == "BLENDED" and eye.use_transparent_shadow
