@@ -10,6 +10,7 @@ from bundle_builder import BundleBuilder
 from conftest import kkbp, submodule
 
 character = submodule("character")
+shading = submodule("shading")
 templates = submodule("templates")
 edit_material = submodule("tools.edit_material")
 link_hair = submodule("tools.link_hair")
@@ -172,15 +173,46 @@ def test_the_hair_takes_its_shaders_values(ch, id, front):
 
 def test_the_eyebrows_take_the_games_own_colours_and_never_saturate(ch):
     """KK's eyebrows are drawn by toon_eyew_lod0, which the template follows: it gets the game's own
-    colours linear, and grades in its nodes, so even an edit asked to saturate leaves the texture."""
+    colours linear, and grades in its nodes."""
     bm = ch.bundle().material("cf_m_mayuge_00")
-    edit = edit_material.edit(ch, ch.material("cf_m_mayuge_00"), saturate=True, log=lambda *_: None)
+    edit = edit_material.edit(ch, ch.material("cf_m_mayuge_00"), log=lambda *_: None)
     assert edit[templates.TEMPLATE] == "KK toon_eyew" and not edit[edit_material.SATURATED]
+    assert templates.param(edit, edit_material.SHOWN_PARAM).default_value == 0.0
     assert tuple(templates.param(edit, "color").default_value) == pytest.approx(edit_material._linear(bm.colors["_Color"]))
+    assert tuple(templates.param(edit, "shadow_color").default_value) == pytest.approx(
+        edit_material._linear(bm.colors["_shadowcolor"]))
+
+
+def test_saturated_the_eyebrows_take_shown_colours_and_keep_their_texture(ch):
+    """ADR 0056: asked to saturate, a template made from the game's shaders takes its drawn colours as
+    they show (graded) and switches its groups to ungrade them; its textures and shadow colour stay."""
+    bm = ch.bundle().material("cf_m_mayuge_00")
+    lut, inverse = edit_material._lut(), edit_material._ungrade_lut()
+    edit = edit_material.edit(ch, ch.material("cf_m_mayuge_00"), saturate=True, log=lambda *_: None)
+    assert edit[edit_material.SATURATED]
+    assert templates.param(edit, edit_material.SHOWN_PARAM).default_value == 1.0
+    assert tuple(templates.param(edit, "color").default_value) == pytest.approx(shading.shown_color(bm.colors["_Color"], lut, inverse))
     assert tuple(templates.param(edit, "shadow_color").default_value) == pytest.approx(
         edit_material._linear(bm.colors["_shadowcolor"]))
     image = templates.texture_node(edit, "main").image
     assert image.filepath and "saturated" not in image.name
+    # Every shader group that draws a colour reads the switch.
+    readers = [n for n in edit.node_tree.nodes if n.type == "GROUP" and "Shown colors" in n.inputs]
+    assert readers and all(n.inputs["Shown colors"].is_linked for n in readers)
+
+
+def test_reset_keeps_shown_colours(ch):
+    bm = ch.bundle().material("cf_m_top_inner01")
+    edit = edit_material.edit(ch, ch.material("cf_m_top_inner01"), saturate=True, log=lambda *_: None)
+    shown = tuple(templates.param(edit, "color2").default_value)
+    assert shown == pytest.approx(shading.shown_color(bm.create.colors["_Color2"], edit_material._lut(),
+                                                      edit_material._ungrade_lut()))
+    edit = edit_material.reset(ch, edit, log=lambda *_: None)
+    assert edit[edit_material.SATURATED] and tuple(templates.param(edit, "color2").default_value) == pytest.approx(shown)
+    edit = edit_material.reset(ch, edit, saturate=False, log=lambda *_: None)
+    assert templates.param(edit, edit_material.SHOWN_PARAM).default_value == 0.0
+    assert tuple(templates.param(edit, "color2").default_value) == pytest.approx(
+        edit_material._linear(bm.create.colors["_Color2"]))
 
 
 def test_the_eyes_are_placed_by_their_texture_transform(ch):
@@ -255,8 +287,10 @@ def test_tears_and_gag_eyes_are_not_editable_but_svs_bodies_are(ch, build):
         edit_material.edit(ch, ch.materials("gag_eyes")[0])
     result = kkbp.api.import_bundle(build(BundleBuilder("SVS")), hooks=[])
     svs = character.Character(result.character_key)
-    # SVS's body follows lif_main_skin_body (ADR 0051).
+    # SVS's body follows lif_main_skin_body (ADR 0051), which has no grade and so no Shown Colours.
     assert edit_material.editable(svs, svs.material("cf_m_body")) is None
+    edit = edit_material.edit(svs, svs.material("cf_m_body"), saturate=True, log=lambda *_: None)
+    assert not edit[edit_material.SATURATED]
 
 
 def test_save_bakes_light_and_dark_into_the_original(ch):

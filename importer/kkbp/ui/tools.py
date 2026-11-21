@@ -205,13 +205,15 @@ def _active_material(context):
     return obj.active_material if obj is not None and context.mode == "OBJECT" else None
 
 
-# Edit Material's Saturate option (ADR 0026), on the operator and, for the material panel to show
+# Edit Material's Saturate option (ADR 0026; Shown Colours for a graded template, ADR 0056), on the operator and, for the material panel to show
 # beside the button, on the scene (`scene.kkbp_edit_saturate`).
 _SATURATE = dict(
     name="Saturate",
     description="Whether the textures and colours go through the game's colour grade, as the legacy importer did",
     items=[("DEFAULT", "Default", "Hair and eyebrows saturate, everything else doesn't"),
-           ("ON", "On", "Saturate"), ("OFF", "Off", "Don't saturate")])
+           ("ON", "On", "Saturate. A material that follows the game's shaders takes its colours as they show "
+                        "instead, so the eyedropper can pick them"),
+           ("OFF", "Off", "Don't saturate")])
 
 
 def register_properties():

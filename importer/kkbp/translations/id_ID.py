@@ -140,6 +140,8 @@ TRANSLATIONS = {
     "Saturate": "Saturasi",
     "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
         "Apakah tekstur dan warna melewati gradasi warna game, seperti pada pengimpor lama",
+    "Saturate. A material that follows the game's shaders takes its colours as they show instead, so the eyedropper can pick them":
+        "Saturasi. Material yang mengikuti shader game mengambil warnanya sebagaimana tampak, sehingga pipet dapat mengambilnya",
     "Hair and eyebrows saturate, everything else doesn't": "Rambut dan alis disaturasi, yang lain tidak",
     "Don't saturate": "Jangan saturasi",
     "Edit Material": "Edit Material",

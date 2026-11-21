@@ -140,6 +140,8 @@ TRANSLATIONS = {
     "Saturate": "Насыщенность",
     "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
         "Проходят ли текстуры и цвета через цветокоррекцию игры, как в старом импортёре",
+    "Saturate. A material that follows the game's shaders takes its colours as they show instead, so the eyedropper can pick them":
+        "Насыщенность. Материал, следующий шейдерам игры, вместо этого берёт цвета такими, какими они видны, чтобы их можно было взять пипеткой",
     "Hair and eyebrows saturate, everything else doesn't": "Волосы и брови насыщаются, всё остальное нет",
     "Don't saturate": "Не насыщать",
     "Edit Material": "Редактировать материал",

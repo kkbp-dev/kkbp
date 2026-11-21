@@ -141,6 +141,8 @@ TRANSLATIONS = {
     "Saturate": "Saturer",
     "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
         "Si les textures et les couleurs passent par l'étalonnage du jeu, comme le faisait l'ancien importeur",
+    "Saturate. A material that follows the game's shaders takes its colours as they show instead, so the eyedropper can pick them":
+        "Saturer. Un matériau qui suit les shaders du jeu prend plutôt ses couleurs telles qu'elles s'affichent, pour que la pipette puisse les prélever",
     "Hair and eyebrows saturate, everything else doesn't": "Les cheveux et les sourcils sont saturés, le reste non",
     "Don't saturate": "Ne pas saturer",
     "Edit Material": "Modifier le matériau",

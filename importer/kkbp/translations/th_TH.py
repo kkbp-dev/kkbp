@@ -138,6 +138,8 @@ TRANSLATIONS = {
     "Saturate": "ปรับความอิ่มสี",
     "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
         "ให้เท็กซ์เจอร์และสีผ่านการเกรดสีของเกมหรือไม่ เหมือนที่ตัวนำเข้ารุ่นเก่าทำ",
+    "Saturate. A material that follows the game's shaders takes its colours as they show instead, so the eyedropper can pick them":
+        "ปรับความอิ่มสี วัสดุที่ทำตามเชดเดอร์ของเกมจะใช้สีตามที่แสดงแทน เพื่อให้ใช้หลอดดูดสีเลือกสีได้",
     "Hair and eyebrows saturate, everything else doesn't": "ผมและคิ้วปรับความอิ่มสี ส่วนอื่นไม่ปรับ",
     "Don't saturate": "ไม่ปรับความอิ่มสี",
     "Edit Material": "แก้ไขวัสดุ",
