@@ -14,7 +14,10 @@ the front (Light) and from behind (Dark), in linear colour (models.main_item):
     Alpha = saturate(2 * mix(1, Main alpha, Use main texture)) * 2 - 1
 
 The bake's quad faces the camera with the normal map, rim and the `_SpecularPower` highlight off.
-`_LineColorG`'s colour is taken as white. Written by hand."""
+`_LineColorG`'s colour is taken as white.
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
+
+import shown_colors
 
 NAME = '.KK main_item'
 KIND = 'ShaderNodeTree'
@@ -146,4 +149,5 @@ def build(lib):
                {'Factor_Float': ('line.g', 'Result_Float'), 'A_Color': (f'{key}.extended', 'Vector'),
                 'B_Color': ('line.color', 'Result_Color')})
         t.link(key, 'Result_Color', 'out', name)
+    shown_colors.route(t, lib, 'Color', 'Color 2', 'Color 3')
     return t

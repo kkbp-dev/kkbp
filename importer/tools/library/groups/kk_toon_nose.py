@@ -1,6 +1,9 @@
 """`.KK toon_nose`: KK's toon_nose_lod0, unlit: the colour where the texture's red is dark, plus its
 green; alpha the texture's times the colour's (models.toon_nose). Colours are linear; Main is the
-texture's stored value. Written by hand."""
+texture's stored value.
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
+
+import shown_colors
 
 NAME = '.KK toon_nose'
 KIND = 'ShaderNodeTree'
@@ -25,4 +28,5 @@ def build(lib):
     t.math('alpha', 'MULTIPLY', ('in', 'Main alpha'), ('in', 'Color alpha'), location=(150, -150))
     t.link('sum', 'Vector', 'out', 'Color')
     t.link('alpha', 'Value', 'out', 'Alpha')
+    shown_colors.route(t, lib, 'Color')
     return t

@@ -8,9 +8,14 @@
                             bake has no grade
     shade, combine, out     `.Toon shading` for the viewport, `.Combine colors` (whose Toon shading
                             input the bake sets: the `toon_shading` param), the Material Output
+    shown colors            a Value node (the `shown_colors` param) feeding every shader group's
+                            Shown colors input, in a graded template that has one (shown_colors.py,
+                            ADR 0056)
 
 The image nodes' stored-value convention and the grade are in game_shaders/models.py.
 """
+
+import shown_colors
 
 RENDER = {  # the legacy edit templates' settings, kept
     "surface_render_method": "BLENDED", "blend_method": "BLEND", "use_transparency_overlap": False,
@@ -32,6 +37,7 @@ def begin(lib, name, slots, *, force_visibility=0.0, props=None, grade=True):
     if grade:
         t.make("ShaderNodeGroup", "graded.light", (300, 200), {"node_tree": lib.group(".KK graded")})
         t.make("ShaderNodeGroup", "graded.dark", (300, 0), {"node_tree": lib.group(".KK graded")})
+        lib.later(lambda: _feed_shown_colors(t))
     graded = {"Light colors": ("graded.light", "Color"), "Dark colors": ("graded.dark", "Color")} if grade else {}
     t.make("ShaderNodeGroup", "shade", (300, -250), {"node_tree": lib.group(".Toon shading"), "width": 240.0})
     t.make("ShaderNodeGroup", "combine", (650, 0), {"node_tree": lib.group(".Combine colors"), "width": 300.0},
@@ -40,6 +46,16 @@ def begin(lib, name, slots, *, force_visibility=0.0, props=None, grade=True):
             **graded, "Toon shading": ("shade", "Toon shading")})
     t.make("ShaderNodeOutputMaterial", "out", (1050, 0), ins={"Surface": ("combine", "Result")})
     return t
+
+
+def _feed_shown_colors(t):
+    """Once the module has added its groups: a `shown colors` Value node feeding every shader group
+    with a Shown colors input (shown_colors.py), when the template has one."""
+    readers = [n.name for n in t.tree.nodes if n.type == "GROUP" and shown_colors.SOCKET in n.inputs]
+    if readers:
+        t.make("ShaderNodeValue", "shown colors", (-1700, 800), {"label": "Shown colors"}, outputs={"Value": 0.0})
+    for name in readers:
+        t.link("shown colors", "Value", name, shown_colors.SOCKET)
 
 
 def toon_through(t, node):

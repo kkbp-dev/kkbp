@@ -10,7 +10,10 @@
 
 The bake's flat mesh faces the camera, so the rim light, the back-face darkening and the normal map
 are gone; the gloss's second read (0.008 higher, a faint edge darkening) changes no bake measurably
-and is left out. Colours are linear; textures are their stored values. Written by hand."""
+and is left out. Colours are linear; textures are their stored values.
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
+
+import shown_colors
 
 NAME = '.KK main_hair'
 KIND = 'ShaderNodeTree'
@@ -93,4 +96,5 @@ def build(lib):
     t.make('ShaderNodeVectorMath', 'dark', (900, -200), {'operation': 'SCALE'}, {'Vector': ('dark.shaded', 'Vector'), 'Scale': factor})
     t.link('lit', 'Vector', 'out', 'Light')
     t.link('dark', 'Vector', 'out', 'Dark')
+    shown_colors.route(t, lib, 'Color', 'Color 2', 'Color 3')
     return t

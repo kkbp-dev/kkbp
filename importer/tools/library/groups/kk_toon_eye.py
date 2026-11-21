@@ -8,7 +8,10 @@ from behind (Dark), in linear colour (models.toon_eye):
     Light = min(col * f, 1);  Dark = min(col * mix(T, 1, hl) * f, 1);  Alpha = max(Main alpha, hl)
 
 Only the overlays' alpha shows, coloured by their colours. `_exppower` is 0 outside expressions, so
-the expression texture is left out. Written by hand."""
+the expression texture is left out.
+With Shown colors on, its drawn colours are Shown Colours (shown_colors.py, ADR 0056). Written by hand."""
+
+import shown_colors
 
 NAME = '.KK toon_eye'
 KIND = 'ShaderNodeTree'
@@ -62,4 +65,5 @@ def build(lib):
         t.link(key, 'Vector', 'out', name)
     alpha = t.math('alpha', 'MAXIMUM', ('in', 'Main alpha'), hl, location=(750, -300))
     t.link(alpha[0], alpha[1], 'out', 'Alpha')
+    shown_colors.route(t, lib, 'Overlay color 1', 'Overlay color 2')
     return t

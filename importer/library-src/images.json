@@ -17,6 +17,12 @@
   "alpha_mode": "STRAIGHT",
   "file": "Lut_TimeDay.png"
  },
+ "Lut_TimeDay inverse.exr": {
+  "source": "FILE",
+  "colorspace": "Non-Color",
+  "alpha_mode": "STRAIGHT",
+  "file": "Lut_TimeDay inverse.exr"
+ },
  "MouthAtlas.webp": {
   "source": "FILE",
   "colorspace": "sRGB",
