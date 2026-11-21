@@ -193,6 +193,35 @@ def test_fiery_eyes_leave_the_pupils_showing(golden_import):
     assert pupil() == 1 and body[FIERY].value == 0
 
 
+def test_the_drivers_run_again_after_the_dropdown_changes(golden_import):
+    """With several threads Blender sometimes runs a driver reading the dropdown before the material's
+    new value is in, and the correction key keeps the old expression's value. So an update that
+    changes a dropdown tags what reads it once more, without the material, and Blender runs those
+    drivers again in the same update's second pass (which calls no handlers). An update that changes
+    no dropdown tags nothing."""
+    _, ch = golden_import("kk")
+    key = ch.body.data.shape_keys
+    mat, _, _ = _picker(ch)
+    assert key in dropdowns.readers(mat) and ch.body in dropdowns.readers(mat)
+    _pick(ch, "Fiery Eyes")
+    assert dropdowns.run_again() == 0  # the change's own update did, and nothing changed since
+    dropdowns._seen.clear()  # as after loading a file
+    updates = []
+
+    def record(scene, depsgraph):
+        updates.append({u.id.original for u in depsgraph.updates})
+
+    bpy.app.handlers.depsgraph_update_post.append(record)
+    try:
+        assert dropdowns.run_again() == 1
+        bpy.context.view_layer.update()
+        bpy.context.view_layer.update()
+    finally:
+        bpy.app.handlers.depsgraph_update_post.remove(record)
+    assert {key, ch.body} <= updates[0] and mat not in updates[0]
+    assert not any(key in u for u in updates[1:]), updates[1:]
+
+
 def test_the_gag_patterns_read_the_frame_from_their_object(build):
     """The animated patterns turn with the frame, read from a property on each object with a Gag
     material; a driver in the material would update it, and every driver reading its dropdown, on
