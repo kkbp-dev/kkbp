@@ -138,8 +138,9 @@ def _textured(ctx, ch, obj, outlines_of):
     _modifier(obj, offset=1.0, material_offset=start)
     shared = _outline(ch, first, f"Outline {obj.name}")
     alpha = templates.texture_node(shared, "alpha_mask")
-    if alpha is not None:
-        alpha.image = _image(hook_assets.OUTLINES.placeholder)
+    if alpha is not None:  # a mask that hides nothing: white for KK's, black for SVS's (ADR 0057)
+        inverted = templates.template_of(shared).inverted_masks is not None
+        alpha.image = _image(hook_assets.OUTLINES.black if inverted else hook_assets.OUTLINES.placeholder)
     mesh.materials.append(shared)
 
 

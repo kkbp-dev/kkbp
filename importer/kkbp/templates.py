@@ -25,6 +25,7 @@ TEMPLATE = "kkbp_template"  # on a template material in the file, and on every m
 PATTERNS = "kkbp_patterns"  # on a material: its pattern slot's patterns, in choice order
 VARIANT = "kkbp_variant"  # on a material whose shader `swap` replaced: the variant
 DRIVEN = "kkbp.driven."  # + a parameter: the Attribute node reading it from the object (`read_from_objects`)
+MASKS = "kkbp.masks."  # + a node's part: the nodes `swap` adds to read inverted alpha masks KK's way
 HELD = ".held"  # + after that: the Math node that also keeps the material's own value
 
 
@@ -465,7 +466,8 @@ def pattern_param(material, pattern_index: int, name: str):
 
 def swap(material, variant: str) -> list[str]:
     """Puts the template's `variant` group (such as `cycles`) in place of its shader group. Returns
-    the shader's linked inputs the variant lacks, whose links went (the template's `variant_drops`)."""
+    the shader's linked inputs the variant lacks, whose links went (the template's `variant_drops`),
+    except those its inverted alpha masks carry over."""
     template = template_of(material)
     if variant not in template.variants:
         raise TemplateError(f"the {template.name} template has no {variant} variant")
@@ -489,7 +491,65 @@ def swap(material, variant: str) -> list[str]:
         socket = node.outputs.get(name)
         if socket is not None:
             tree.links.new(socket, to_socket)
-    return sorted({name for _, name in inputs} - {s.name for s in node.inputs})
+    carried = _read_masks(material, template, node, variant)
+    return sorted({name for _, name in inputs} - {s.name for s in node.inputs} - carried)
+
+
+def _read_masks(material, template, node, variant) -> set[str]:
+    """Feeds the shader `node` the template's inverted alpha masks (SVS's) the way `variant` reads
+    them: merged into one mask that shows where its red is white for a variant reading masks KK's
+    way, or the image nodes as they are for any other. The nodes it adds are rebuilt on every swap.
+    Returns the inputs the merged mask carries over, which the variant itself lacks (ADR 0057)."""
+    masks = template.inverted_masks
+    if masks is None:
+        return set()
+    tree = material.node_tree
+    for old in [n for n in tree.nodes if n.name.startswith(MASKS)]:
+        tree.nodes.remove(old)
+    images = {part: tree.nodes[name] for part, name in (("top", masks.top), ("bottom", masks.bottom))}
+    if variant not in masks.variants:
+        for part, image in images.items():
+            for output, name in zip(("Color", "Alpha"), masks.inputs[part]):
+                socket = node.inputs.get(name)
+                if socket is not None and not socket.is_linked:
+                    tree.links.new(image.outputs[output], socket)
+        return set()
+    frame = tree.nodes.new("NodeFrame")
+    frame.name, frame.label = MASKS + "frame", "SVS alpha masks, read KK's way"
+    x, y = images["top"].location
+
+    def add(kind, part, at, **props):
+        n = tree.nodes.new(kind)
+        n.name = n.label = MASKS + part
+        n.parent, n.hide = frame, True
+        n.location = (x + 520 + 160 * at[0], y - 40 * at[1])
+        for key, value in props.items():
+            setattr(n, key, value)
+        return n
+
+    shown = []
+    for row, (part, image) in enumerate(images.items()):
+        split = add("ShaderNodeSeparateColor", f"{part}.split", (0, row * 2))
+        invert = add("ShaderNodeMath", f"{part}.invert", (1, row * 2), operation="SUBTRACT", use_clamp=True)
+        times = add("ShaderNodeMath", f"{part}.alpha", (2, row * 2), operation="MULTIPLY", use_clamp=True)
+        tree.links.new(image.outputs["Color"], split.inputs["Color"])
+        invert.inputs[0].default_value = 1.0
+        tree.links.new(split.outputs["Red"], invert.inputs[1])
+        tree.links.new(invert.outputs["Value"], times.inputs[0])
+        tree.links.new(image.outputs["Alpha"], times.inputs[1])
+        shown.append(times)
+    both = add("ShaderNodeMath", "both", (3, 1), operation="MINIMUM")
+    tree.links.new(shown[0].outputs["Value"], both.inputs[0])
+    tree.links.new(shown[1].outputs["Value"], both.inputs[1])
+    merged = add("ShaderNodeCombineColor", "merged", (4, 1))
+    for channel in ("Red", "Green", "Blue"):  # KK's parser reads red, or green for Force visibility 1
+        tree.links.new(both.outputs["Value"], merged.inputs[channel])
+    color, alpha = (node.inputs[name] for name in masks.inputs["top"])
+    tree.links.new(merged.outputs["Color"], color)
+    for link in list(alpha.links):
+        tree.links.remove(link)
+    alpha.default_value = 1.0  # the masks' alphas are in the merged mask already
+    return set(masks.inputs["bottom"])
 
 
 def variant(material) -> str | None:

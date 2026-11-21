@@ -194,11 +194,43 @@ def test_swap_keeps_every_link_on_the_input_of_the_same_name(build):
         assert templates.param(mat, "hidden").links[0].from_node == held, variant
 
 
-def test_svs_gets_the_kk_variants_and_loses_its_bottom_alpha_mask(build):
+def test_svs_gets_the_kk_variants_with_its_alpha_masks_read_the_kk_way(build):
+    """SVS's two alpha masks show where their red is black; KK's variants read one mask shown where its
+    red is white. `swap` merges them into one read KK's way, once however often it swaps (ADR 0057)."""
     svs_bundle, svs = _open(build, "SVS")
     mat = _apply(svs, svs_bundle, "cf_m_body")
-    assert templates.swap(mat, "cycles") == ["Alpha mask bottom", "Alpha mask bottom alpha"]
-    assert templates.swap(mat, "principled") == []
+    tree = mat.node_tree
+    shader = tree.nodes["shader"]
+
+    def added():
+        return sorted(n.name for n in tree.nodes if n.name.startswith(templates.MASKS))
+
+    assert templates.swap(mat, "cycles") == []  # the bottom mask is carried over, not lost
+    merged = shader.inputs["Alpha mask"].links[0].from_node
+    assert merged.name == templates.MASKS + "merged"
+    assert not shader.inputs["Alpha mask alpha"].is_linked and shader.inputs["Alpha mask alpha"].default_value == 1.0
+    reads = {l.from_node.name for l in tree.links if l.to_node.name.startswith(templates.MASKS)}
+    assert {"tex.alpha_mask", "tex.alpha_mask_bottom"} <= reads
+    first = added()
+    templates.swap(mat, "eevee_mod")
+    assert added() == first
+    assert templates.swap(mat, "principled") == []  # Principled has both inputs and gets the images as they are
+    assert added() == []
+    for name, image in (("Alpha mask", "tex.alpha_mask"), ("Alpha mask bottom", "tex.alpha_mask_bottom")):
+        assert shader.inputs[name].links[0].from_node.name == image
+
+
+@pytest.mark.parametrize("top, bottom, shown", [("black", "black", True), ("white", "black", False),
+                                                ("black", "white", False)])
+def test_a_converted_svs_material_shows_only_where_both_masks_are_black(build, tmp_path, top, bottom, shown):
+    svs_bundle, svs = _open(build, "SVS")
+    mat = _apply(svs, svs_bundle, "cf_m_body")
+    templates.swap(mat, "eevee_mod")
+    images = {"black": "Template: BlackWithAlpha", "white": "Template: Placeholder"}
+    templates.texture_node(mat, "alpha_mask").image = bpy.data.images[images[top]]
+    templates.texture_node(mat, "alpha_mask_bottom").image = bpy.data.images[images[bottom]]
+    floor = _floor_under_a_quad(mat, tmp_path / "floor.png")
+    assert floor < 0.1 if shown else floor > 0.5
 
 
 def test_unknown_parameters_and_foreign_materials_are_errors(build):

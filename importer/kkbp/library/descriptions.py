@@ -8,7 +8,9 @@
 - `shader`: the group node `templates.swap` replaces with a variant group from `variants`.
 - `variant_params`: parameters only a variant's group has, such as Eevee Mod's fresnel, by variant.
 - `variant_drops`: the shader group's inputs the variants lack; their links go when a variant is
-  swapped in, and `swap` says so.
+  swapped in, and `swap` says so unless `inverted_masks` carries them over.
+- `inverted_masks`: alpha masks that show where their red is black (SVS's), which the variants
+  reading masks KK's way get converted (ADR 0057).
 - `requires`: slots a material must have for this template; without them it gets the Set's fallback.
 - `copies`: group nodes each material gets its own copy of (the edit templates' texture groups,
   ADR 0025), outermost first.
@@ -85,6 +87,21 @@ class Patterns:
 
 
 @dataclass(frozen=True)
+class InvertedMasks:
+    """A template's two alpha masks show a texel where their red is black, as SVS's shader reads them:
+    min((1 - top red) * top alpha, (1 - bottom red) * bottom alpha). KK's alpha mask parser, which the
+    `variants` named here use, has one mask and shows a texel where its red is white, so `swap` feeds
+    those variants the two masks merged into one, read KK's way (ADR 0057)."""
+
+    top: str  # image node
+    bottom: str  # image node
+    variants: frozenset[str]
+    # The shader inputs the image nodes feed, by name.
+    inputs: Mapping[str, tuple[str, str]] = MappingProxyType({
+        "top": ("Alpha mask", "Alpha mask alpha"), "bottom": ("Alpha mask bottom", "Alpha mask bottom alpha")})
+
+
+@dataclass(frozen=True)
 class Template:
     name: str
     textures: Mapping[str, str] = _EMPTY
@@ -94,6 +111,7 @@ class Template:
     variants: Mapping[str, str] = _EMPTY
     variant_params: Mapping[str, Mapping[str, tuple[str, str]]] = _EMPTY
     variant_drops: tuple[str, ...] = ()
+    inverted_masks: InvertedMasks | None = None
     requires: tuple[str, ...] = ()
     groups: tuple[str, ...] = field(default=())  # groups apply() needs beyond those the material holds
     copies: tuple[str, ...] = ()
@@ -125,6 +143,10 @@ _KK_VARIANTS = {
     "eevee_mod": ".Eevee Mod",
     "principled": ".Principled",
 }
+# SVS's alpha masks, which KK's variants other than Principled (it ignores alpha masks) read through
+# the `.KK alphamask parser` once converted (ADR 0057).
+_SVS_MASKS = InvertedMasks("tex.alpha_mask", "tex.alpha_mask_bottom",
+                           frozenset({"cycles", "cycles_classic", "cycles_no_shadows", "eevee_mod"}))
 _KK_VARIANT_PARAMS = MappingProxyType({
     "eevee_mod": MappingProxyType({
         "fresnel": ("shader", "Enable fresnel"),
@@ -538,7 +560,7 @@ TEMPLATES: Mapping[str, Template] = MappingProxyType({t.name: t for t in (
         params={**_LIGHT_DARK_PARAMS, "eyeshadow": ("eyeshadow", "Eyeshadow"),
                 "eyeshadow_hidden": ("eyeshadow", "Hide with gag eyes")},
         shader="shader", variants=_KK_VARIANTS, variant_params=_KK_VARIANT_PARAMS, requires=("main.light",),
-        variant_drops=("Alpha mask bottom", "Alpha mask bottom alpha"),
+        variant_drops=("Alpha mask bottom", "Alpha mask bottom alpha"), inverted_masks=_SVS_MASKS,
     ),
     Template(
         "KK Eye",
@@ -554,8 +576,9 @@ TEMPLATES: Mapping[str, Template] = MappingProxyType({t.name: t for t in (
         textures={**_LIGHT_DARK_TEXTURES, "alpha_mask_bottom": "tex.alpha_mask_bottom"},
         params=_LIGHT_DARK_PARAMS,
         shader="shader", variants=_KK_VARIANTS, variant_params=_KK_VARIANT_PARAMS, requires=("main.light",),
-        # KK's variants have no bottom alpha mask; Principled does.
-        variant_drops=("Alpha mask bottom", "Alpha mask bottom alpha"),
+        # KK's variants have no bottom alpha mask (`inverted_masks` merges it into the top one);
+        # Principled has the input.
+        variant_drops=("Alpha mask bottom", "Alpha mask bottom alpha"), inverted_masks=_SVS_MASKS,
     ),
     Template(
         "KK Tears",

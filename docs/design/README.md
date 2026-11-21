@@ -82,6 +82,7 @@ ADRs:
 - [0054 `ch.bone(id)` finds a bundle bone in the rig by its Id, and prefers Rigify's ORG- copy](../adr/0054-ch-bone-finds-the-rigs-org-copy.md)
 - [0055 The body takes the shown Outfit's textures, swapped in by the add-on](../adr/0055-the-body-takes-the-shown-outfits-textures.md)
 - [0056 The graded templates take Shown Colours, ungraded in nodes](../adr/0056-the-graded-templates-take-shown-colours.md)
+- [0057 SVS's alpha masks are merged and read KK's way by the KK variants](../adr/0057-svs-alpha-masks-are-read-the-kk-way-by-the-kk-variants.md)
 
 ## Decisions
 
@@ -111,7 +112,7 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 - **D15** The Hooks live in `importer/kkbp/builtin/`. Each asset file has a description with no `bpy`, checked against the file by a harness test, and is built from code by `scripts/build-library.sh` (D66): `rigify.blend` (widgets), `face_cards.blend` (its mouth atlas stored as WebP at quality 95), `outlines.blend`.
 - **D16** There is no Fix body seams Hook: the Exporter Core makes each group of vertex copies the same, and the Core Import's weld Steps weld them, keeping each face corner's custom normal (issues 85 and 100, [ADR 0047](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)). Copies are found by the mesh's stored vertices, where physics can't move them, and joined in index order, so every export of a card groups them the same way ([ADR 0052](../adr/0052-vertex-copies-are-found-where-the-mesh-stores-them.md)).
 - **D17** Separate meshes splits each `outfit` Part into one Part per material, named by material Id, through a Compat helper.
-- **D18** Convert shaders goes through `templates.swap`, with rules by Material Role; the Eevee Mod inputs are per-variant template params; Principled is a `.Principled` variant group. SVS Light Dark gets the KK variants, with a warning that its bottom alpha mask is lost.
+- **D18** Convert shaders goes through `templates.swap`, with rules by Material Role; the Eevee Mod inputs are per-variant template params; Principled is a `.Principled` variant group. SVS Light Dark gets the KK variants; `swap` merges its two alpha masks, which show where their red is black, into one read KK's way for every variant but Principled ([ADR 0057](../adr/0057-svs-alpha-masks-are-read-the-kk-way-by-the-kk-variants.md)).
 - **D19** Outlines: a Solidify modifier and black copies of the materials, found through templates; the face outline mask is chosen by the face material's template. There is no `outline` Part Role.
 - **D20** Face cards take their images from Material Roles; the card meshes and card rig have Part Role `face_card`.
 - **D21** SFW deletes the vertices and bones of Bone Group `nsfw` and, by exact name, the KK nipple bones, whether or not Rigify is on. With both on, the rig has no crotch, anus or nipple controls.

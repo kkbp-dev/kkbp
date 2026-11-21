@@ -493,8 +493,7 @@
    "id": null,
    "images": [
     "Template: BlackWithAlpha",
-    "Template: Normal detail placeholder",
-    "Template: Placeholder"
+    "Template: Normal detail placeholder"
    ],
    "node_groups": [
     ".Normal Map Optimized",
@@ -514,7 +513,6 @@
    "images": [
     "Template: BlackWithAlpha",
     "Template: Normal detail placeholder",
-    "Template: Placeholder",
     "m_cloth_cf_top_tshirt00 normal"
    ],
    "node_groups": [

@@ -88,6 +88,16 @@ def test_the_alpha_mask_folds_into_the_texture():
     assert out.getpixel((3, 3))[3] == 0  # black mask hides it
 
 
+def test_an_inverted_alpha_mask_folds_in_the_other_way_round():
+    """SVS's masks show where their red is black (ADR 0057)."""
+    texture = Image.new("RGBA", (4, 4), (200, 100, 50, 255))
+    mask = Image.new("RGBA", (2, 2), (0, 0, 0, 255))
+    mask.putpixel((0, 0), (255, 0, 0, 255))
+    out = atlas.apply_alpha_mask(texture, mask, inverted=True)
+    assert out.getpixel((0, 0))[3] == 0  # red hides it
+    assert out.getpixel((3, 3)) == (200, 100, 50, 255)  # black keeps it
+
+
 def _big():
     return [atlas.Piece("body", (4096, 4096)), atlas.Piece("face", (4096, 4096)),
             atlas.Piece("top", (4096, 4096)), atlas.Piece("skirt", (4096, 4096)),
