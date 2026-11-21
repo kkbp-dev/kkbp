@@ -46,6 +46,8 @@ In Summer Vacation Scramble, saving the face also bakes its version without eyes
 
 Beside the Edit Material button, Saturate decides whether the colours go through the game's colour grade. Leave it at Default: KKBP then does what matches the game for each material. On and Off are there for materials from modded shaders that come out too pale or too strong.
 
+In Koikatsu and Koikatsu Sunshine, Saturate On does something else for every material except those from modded shaders: the colours become the colours you see. The game darkens and saturates the material after its shader, so by default a colour field shows the game's own value, paler than the result. With On, a colour field shows the colour as it appears on a lit, white part of the material, and you can type in or pick with the eyedropper the colour you want to see, from a reference image or from the scene. Use the Standard view transform, which the import sets. A part whose texture is darker than white, as clothes with folds drawn in are, still comes out darker than the colour.
+
 ## Where the files go
 
 The baked textures are saved in the export folder's `kkbp_cache/` and packed into the `.blend`.
