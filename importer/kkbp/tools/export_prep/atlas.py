@@ -135,7 +135,8 @@ def _atlas_object(ch, obj, mode, folder, log, max_side=None):
                 picture = _pil(image) if image is not None else None
                 if picture is not None and slot in ("main.light", "main.dark") and mat.name in alpha \
                         and _keeps_alpha(mat):
-                    picture = atlas.apply_alpha_mask(picture, alpha[mat.name])
+                    inverted = templates.template_of(mat).inverted_masks is not None
+                    picture = atlas.apply_alpha_mask(picture, alpha[mat.name], inverted)
                 blank = FLAT_NORMAL if slot in NORMALS else (0, 0, 0, 0)
                 pictures[mat.name] = picture if picture is not None else blank
             if all(isinstance(p, tuple) for p in pictures.values()):

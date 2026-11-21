@@ -68,7 +68,8 @@ def test_principled(build):
     assert light_alpha.node == templates.texture(eye, "main", "light") and light_alpha.name == "Alpha"
 
 
-def test_svs_loses_its_bottom_alpha_mask_with_a_warning(build):
+def test_svs_keeps_its_bottom_alpha_mask_without_a_warning(build):
+    """The KK variants get SVS's two masks merged into one (ADR 0057), so nothing is lost."""
     path = build(BundleBuilder("SVS"))
     result = kkbp.api.import_bundle(path, options={"convert_shaders": "cycles"}, hooks=["Convert shaders"])
-    assert any("The cycles shader has no Alpha mask bottom" in w for w in result.warnings), result.warnings
+    assert not any("Alpha mask bottom" in w for w in result.warnings), result.warnings
