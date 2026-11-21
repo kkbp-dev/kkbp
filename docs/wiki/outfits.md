@@ -10,7 +10,7 @@ Tick Export All Outfits when [exporting](exporting.md#options). In Blender's Out
 
 ![The outfit collections in the Outliner](images/outfits/outliner.jpg)
 
-Hair and accessories that belong to an outfit change with it.
+Hair and accessories that belong to an outfit change with it. So does the skin each outfit hides: when exactly one outfit is shown, the body takes that outfit's alpha mask, so skin the outfit leaves bare shows. Switching outfits can't be keyframed.
 
 ## Variations
 
