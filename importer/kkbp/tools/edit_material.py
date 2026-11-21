@@ -21,7 +21,8 @@ import numpy as np
 
 from .. import profiles, shading, templates
 from ..bundle.rules import NO_EYESHADOW
-from ..character import ID
+from ..bundle import BundleError
+from ..character import ID, CharacterError
 
 EDIT_OF = "kkbp_edit_of"  # on an edit material: the name of the material it edits
 EDIT_KEY = "kkbp_edit_key"  # on an edit material: its Character's Key (not KEY: it isn't a bundle material)
@@ -34,7 +35,7 @@ CACHE = "edit"
 # D42, ADR 0026: edit materials saturate their main textures and colours through the game's colour
 # grade, as legacy did, only for the profile's `saturated_roles` unless asked. Measured on the KK and
 # KKS samples, the others bake closer to the bundle's own light and dark textures without it. For a
-# graded template, Saturate means Shown Colours instead (ADR 0056).
+# graded template, the menu switches Shown Colours instead, on by default (ADR 0056).
 
 
 class EditError(Exception):
@@ -54,6 +55,33 @@ def template_for(profile, bundle_material) -> str | None:
 def saturates(profile, bundle_material) -> bool:
     """Whether an edit of this bundle material saturates when the user doesn't say (ADR 0026)."""
     return bundle_material.role in profile.edit.saturated_roles
+
+
+def menu(ch, material) -> str | None:
+    """What Edit Material's Saturate menu does for `material`, which isn't being edited: "shown" (a
+    template made from a game's shaders with Shown Colours), "saturate" (a legacy template), or None
+    (nothing: an SVS template, or a material that can't be edited). For the panel, which draws often:
+    the template is looked up in the bundle once per material."""
+    key = (str(ch.bundle_path), material.get(ID))
+    if key not in _MENUS:
+        _MENUS[key] = _menu(ch, material)
+    return _MENUS[key]
+
+
+_MENUS: dict = {}  # (bundle path, material id) -> menu()
+
+
+def _menu(ch, material):
+    try:
+        if editable(ch, material) is not None:
+            return None
+        name = template_for(profiles.get(ch.game), ch.bundle().material(material[ID]))
+    except (CharacterError, BundleError, profiles.ProfileError):
+        return None
+    template = templates.library.TEMPLATES[name]
+    if not template.graded:
+        return "saturate"
+    return "shown" if SHOWN_PARAM in template.params else None
 
 
 def is_edit(material) -> bool:
@@ -107,16 +135,17 @@ def edit(ch, material, *, saturate: bool | None = None, log=print):
     profile = profiles.get(ch.game)
     bm = ch.bundle().material(material[ID])
     name = template_for(profile, bm)
-    if saturate is None:
-        saturate = saturates(profile, bm)
-    # A template made from a game's shaders grades its light and dark itself, as the game's bake
-    # (issue 30): its textures are never saturated. Saturate instead makes its drawn colours Shown
-    # Colours, where it has them (ADR 0056); a template without (SVS's, ungraded) ignores it.
+    template = templates.library.TEMPLATES[name]
     shown = False
-    if templates.library.TEMPLATES[name].graded:
-        shown = saturate = bool(saturate) and SHOWN_PARAM in templates.library.TEMPLATES[name].params
+    if template.graded:
+        # A template made from a game's shaders grades its light and dark itself, as the game's bake
+        # (issue 30): its textures are never saturated. The menu switches its Shown Colours instead,
+        # on unless asked off (ADR 0056); a template without them (SVS's, ungraded) ignores it.
+        shown = saturate = SHOWN_PARAM in template.params and saturate is not False
         textures_saturate = False
     else:
+        if saturate is None:
+            saturate = saturates(profile, bm)
         textures_saturate = saturate
     mat = templates.template_material(name).copy()
     mat.use_fake_user = False

@@ -1,6 +1,6 @@
 # Edit materials don't saturate by default, except hair and eyebrows
 
-Updated by [ADR 0056](0056-saturate-makes-the-graded-templates-take-shown-colours.md): for KK's and KKS's templates made from the games' shaders, Saturate On now means Shown Colours.
+Updated by [ADR 0056](0056-the-graded-templates-take-shown-colours.md): for KK's and KKS's templates made from the games' shaders, the menu now switches Shown Colours, on by default, and is labelled Shown colours; it is labelled Saturate only for the legacy templates.
 
 Updated by [ADR 0041](0041-edit-templates-follow-the-games-shaders.md): both games' bakes are graded by the maker camera's LUT after the shader, which saturating the legacy hair and eyebrows stood in for. The templates rebuilt from the games' shaders grade in their nodes and never saturate; this ADR still holds for the legacy templates that remain. Since the hair's template was rebuilt too, no Role of either Game saturates by default; the option stays for the legacy templates.
 

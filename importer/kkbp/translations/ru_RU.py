@@ -138,11 +138,13 @@ TRANSLATIONS = {
 
     # Edit Material
     "Saturate": "Насыщенность",
-    "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
-        "Проходят ли текстуры и цвета через цветокоррекцию игры, как в старом импортёре",
-    "Saturate. A material that follows the game's shaders takes its colours as they show instead, so the eyedropper can pick them":
-        "Насыщенность. Материал, следующий шейдерам игры, вместо этого берёт цвета такими, какими они видны, чтобы их можно было взять пипеткой",
-    "Hair and eyebrows saturate, everything else doesn't": "Волосы и брови насыщаются, всё остальное нет",
+    "What Edit Material does with the colours: Shown colours for a material that follows the game's shaders, Saturate for one from a modded shader":
+        "Что «Редактировать материал» делает с цветами: видимые цвета для материала по шейдерам игры, насыщенность для материала модифицированного шейдера",
+    "Shown colours": "Видимые цвета",
+    "Each colour is the colour as it shows, so the eyedropper can pick it":
+        "Каждый цвет — это цвет таким, каким он виден, поэтому его можно взять пипеткой",
+    "Each colour is the game's own value, which shows graded and stronger":
+        "Каждый цвет — собственное значение игры, которое после цветокоррекции выглядит насыщеннее",
     "Don't saturate": "Не насыщать",
     "Edit Material": "Редактировать материал",
     "Swaps the active material for an editable one that rebuilds the game's colouring, so its colours can be changed and saved":

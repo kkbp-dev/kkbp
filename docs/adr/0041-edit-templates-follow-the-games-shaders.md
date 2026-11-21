@@ -1,6 +1,6 @@
 # Edit templates follow the games' own shaders, and grade their light and dark as the maker camera does
 
-Updated by [ADR 0056](0056-saturate-makes-the-graded-templates-take-shown-colours.md): Saturate still never saturates these templates' textures, but with it on, KK's and KKS's take their drawn colours as Shown Colours and ungrade them in nodes.
+Updated by [ADR 0056](0056-the-graded-templates-take-shown-colours.md): these templates' textures are still never saturated, but KK's and KKS's take their drawn colours as Shown Colours, unless Edit Material's menu is Off, and ungrade them in nodes.
 
 Updates [ADR 0026](0026-edit-materials-dont-saturate-by-default.md) as issue 30 asks. Every material of both Golden Samples now has a template made from the game's shaders, and so does KK's `main_alpha` (checked on a second KK card with see-through clothes and accessories, exported into `importer/tests/.work/extra/`). The legacy edit templates remain the fallback for shaders no template models (modded shaders such as xukmi's, and any not seen yet). KKS's clothes, teeth, tongue and skin are approximations (below).
 

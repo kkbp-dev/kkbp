@@ -58,7 +58,8 @@ def test_editing_the_body_composites_it_from_the_create_material(ch):
     assert _users(edit) == users and not _users(body) and body.use_fake_user
     assert {"plain", "color_mask", "paint_mask", "detail_mask", "line_mask", "overlay1", "overlay2"} <= set(edit[edit_material.FILLED])
     assert not templates.own_groups(edit)
-    assert tuple(templates.param(edit, "color").default_value) == pytest.approx(edit_material._linear(bm.create.colors["_Color"]))
+    assert tuple(templates.param(edit, "color").default_value) == pytest.approx(  # a Shown Colour (ADR 0056)
+        shading.shown_color(bm.create.colors["_Color"], edit_material._lut(), edit_material._ungrade_lut()), abs=1e-4)
     assert tuple(templates.param(edit, "paint1").default_value) == pytest.approx(bm.create.vectors["_paint1"][:3])
     assert templates.param(edit, "paint1_w").default_value == pytest.approx(bm.create.vectors["_paint1"][3])
     assert templates.param(edit, "tan_present").default_value == 0.0  # no tan lines: the skin colour alone
@@ -143,16 +144,30 @@ def test_a_baked_emblem_is_not_drawn_outside_its_texture_either(ch):
     assert extensions("cf_m_top_inner01") == {"REPEAT"}
 
 
-def test_nothing_saturates_by_default(ch):
-    """ADR 0026: no KK Role saturates by default; the templates made from the game's shaders (the hair's
-    and the clothes' since issue 30) grade in their nodes instead, and the legacy ones don't saturate."""
+def test_by_default_the_shaders_templates_take_shown_colours_and_nothing_saturates(ch):
+    """ADR 0026, 0056: no KK Role saturates by default; the templates made from the game's shaders (the
+    hair's and the clothes' since issue 30) grade in their nodes instead, and take Shown Colours."""
     b = ch.bundle()
+    lut, inverse = edit_material._lut(), edit_material._ungrade_lut()
     for id, param, source in (("cf_m_hair_b_08_00", "color", b.material("cf_m_hair_b_08_00").colors["_Color"]),
                               ("cf_m_top_inner01", "color2", b.material("cf_m_top_inner01").create.colors["_Color2"]),
                               ("cf_m_body", "color", b.material("cf_m_body").create.colors["_Color"])):
         edit = edit_material.edit(ch, ch.material(id), log=lambda *_: None)
-        assert not edit[edit_material.SATURATED], id
-        assert tuple(templates.param(edit, param).default_value) == pytest.approx(edit_material._linear(source), abs=1e-3), id
+        assert edit[edit_material.SATURATED], id  # Shown Colours, which Reset keeps
+        assert templates.param(edit, edit_material.SHOWN_PARAM).default_value == 1.0, id
+        assert tuple(templates.param(edit, param).default_value) == pytest.approx(
+            shading.shown_color(source, lut, inverse), abs=1e-4), id
+        assert not any("saturated" in n.image.name for n in edit.node_tree.nodes if n.type == "TEX_IMAGE" and n.image), id
+
+
+def test_the_menu_does_what_the_template_takes(ch, legacy, build):
+    """The panel labels the menu by what it does for the material (edit_material.menu)."""
+    assert edit_material.menu(ch, ch.material("cf_m_top_inner01")) == "shown"
+    assert edit_material.menu(legacy, legacy.material("ct_modded")) == "saturate"
+    assert edit_material.menu(ch, ch.materials("tears")[0]) is None
+    result = kkbp.api.import_bundle(build(BundleBuilder("SVS")), hooks=[])
+    svs = character.Character(result.character_key)
+    assert edit_material.menu(svs, svs.material("cf_m_body")) is None  # no grade, so nothing to switch
 
 
 @pytest.mark.parametrize("id, front", [("cf_m_hair_b_08_00", 0.0), ("cf_m_hair_f_14_00_i", 1.0)])
@@ -171,11 +186,11 @@ def test_the_hair_takes_its_shaders_values(ch, id, front):
     assert tuple(mapping.scale[:2]) == pytest.approx(gloss.scale)
 
 
-def test_the_eyebrows_take_the_games_own_colours_and_never_saturate(ch):
-    """KK's eyebrows are drawn by toon_eyew_lod0, which the template follows: it gets the game's own
-    colours linear, and grades in its nodes."""
+def test_with_the_menu_off_the_eyebrows_take_the_games_own_colours(ch):
+    """KK's eyebrows are drawn by toon_eyew_lod0, which the template follows: with Shown Colours off it
+    gets the game's own colours linear, and grades in its nodes."""
     bm = ch.bundle().material("cf_m_mayuge_00")
-    edit = edit_material.edit(ch, ch.material("cf_m_mayuge_00"), log=lambda *_: None)
+    edit = edit_material.edit(ch, ch.material("cf_m_mayuge_00"), saturate=False, log=lambda *_: None)
     assert edit[templates.TEMPLATE] == "KK toon_eyew" and not edit[edit_material.SATURATED]
     assert templates.param(edit, edit_material.SHOWN_PARAM).default_value == 0.0
     assert tuple(templates.param(edit, "color").default_value) == pytest.approx(edit_material._linear(bm.colors["_Color"]))
@@ -183,12 +198,13 @@ def test_the_eyebrows_take_the_games_own_colours_and_never_saturate(ch):
         edit_material._linear(bm.colors["_shadowcolor"]))
 
 
-def test_saturated_the_eyebrows_take_shown_colours_and_keep_their_texture(ch):
-    """ADR 0056: asked to saturate, a template made from the game's shaders takes its drawn colours as
-    they show (graded) and switches its groups to ungrade them; its textures and shadow colour stay."""
+def test_the_eyebrows_take_shown_colours_and_keep_their_texture(ch):
+    """ADR 0056: by default, or with the menu On, a template made from the game's shaders takes its
+    drawn colours as they show (graded) and switches its groups to ungrade them; its textures and
+    shadow colour stay."""
     bm = ch.bundle().material("cf_m_mayuge_00")
     lut, inverse = edit_material._lut(), edit_material._ungrade_lut()
-    edit = edit_material.edit(ch, ch.material("cf_m_mayuge_00"), saturate=True, log=lambda *_: None)
+    edit = edit_material.edit(ch, ch.material("cf_m_mayuge_00"), log=lambda *_: None)
     assert edit[edit_material.SATURATED]
     assert templates.param(edit, edit_material.SHOWN_PARAM).default_value == 1.0
     assert tuple(templates.param(edit, "color").default_value) == pytest.approx(shading.shown_color(bm.colors["_Color"], lut, inverse))
@@ -279,6 +295,15 @@ def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(legacy):
     edit_material.cancel(edit)
     edit = _edit_from_the_operator(ch, "ct_modded")  # Default: nothing saturates
     assert not edit[edit_material.SATURATED]
+
+
+def test_the_operator_takes_shown_colours_unless_off(ch):
+    """ADR 0056: for a template made from the game's shaders the menu is Shown colours, on by default."""
+    edit = _edit_from_the_operator(ch, "cf_m_top_inner01")
+    assert templates.param(edit, edit_material.SHOWN_PARAM).default_value == 1.0
+    edit_material.cancel(edit)
+    edit = _edit_from_the_operator(ch, "cf_m_top_inner01", saturate="OFF")
+    assert templates.param(edit, edit_material.SHOWN_PARAM).default_value == 0.0
 
 
 def test_tears_and_gag_eyes_are_not_editable_but_svs_bodies_are(ch, build):

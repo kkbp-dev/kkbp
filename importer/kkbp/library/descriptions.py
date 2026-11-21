@@ -15,8 +15,8 @@
 - `positions`: a slot whose placement is a `Scale Vector` group node in place of the image node's own
   mapping (the edit eyes' pupil and highlights, D41).
 - `graded`: an edit template made from a game's shaders, which grades its light and dark itself as
-  the game's bake did; the edit tool never saturates its textures (issue 30). With Saturate on, one
-  with a `shown_colors` param takes Shown Colours instead (ADR 0056).
+  the game's bake did; the edit tool never saturates its textures (issue 30). One with a
+  `shown_colors` param takes Shown Colours unless the menu is Off (ADR 0056).
 
 A node is named by its path: `textures/_CM.png` is the node `_CM.png` in the group of the material's
 node `textures`.

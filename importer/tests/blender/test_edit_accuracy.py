@@ -106,18 +106,18 @@ def test_unedited_edit_materials_bake_close_to_the_game(game, golden_import):
 
 
 @pytest.mark.parametrize("game", ["kk", "kks"])
-def test_shown_colours_bake_close_to_the_game_too(game, golden_import):
-    """ADR 0056: with Saturate on, KK's and KKS's templates take Shown Colours and ungrade them in nodes
-    (`.KK ungrade`), which gives the game's colours back closely enough that an unedited edit still
-    bakes as recorded."""
-    numbers = measure(golden_import(game)[1], saturate=True)
+def test_the_games_own_colours_bake_close_to_the_game_too(game, golden_import):
+    """ADR 0056: by default KK's and KKS's templates take Shown Colours, which the test above bakes.
+    With the menu Off they take the game's own colours, as they did before Shown Colours, and bake as
+    recorded too."""
+    numbers = measure(golden_import(game)[1], saturate=False)
     REPORT.mkdir(parents=True, exist_ok=True)
-    (REPORT / f"{game}.shown.json").write_text(json.dumps(numbers, indent=1, sort_keys=True) + "\n")
+    (REPORT / f"{game}.game-colours.json").write_text(json.dumps(numbers, indent=1, sort_keys=True) + "\n")
     recorded = json.loads(RECORD.read_text())[game]
     worse = [f"{mid} {kind}: {numbers[mid][kind]:.3f}, recorded {was[kind]:.3f}"
              for mid, was in recorded.items() for kind in ("light", "dark")
              if was[kind] is not None and numbers[mid][kind] is not None and numbers[mid][kind] > was[kind] + MARGIN]
-    assert not worse, "edit materials with Shown Colours further from the game:\n" + "\n".join(worse)
+    assert not worse, "edit materials with the game's own colours further from the game:\n" + "\n".join(worse)
 
 
 def test_the_inverse_grade_table_inverts_the_grade():

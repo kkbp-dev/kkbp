@@ -259,8 +259,8 @@ EDIT = {
     # Edit template -> [param, sources, how]. How: `item` sets `param.light` and `param.dark` (the
     # dark one shaded with the shadow), `skin` the same with the skin's shadow, `light` and `dark`
     # one param, `eyew_dark` one param shaded as the eyebrow shader (toon_eyew) does, `plain` the
-    # colour as it is, `shown` a colour the template draws: as it is, or its Shown Colour when the
-    # edit is made with Saturate on (ADR 0056), `alpha` the colour's alpha.
+    # colour as it is, `shown` a colour the template draws: its Shown Colour, or as it is when the
+    # edit is made with the menu Off (ADR 0056), `alpha` the colour's alpha.
     "colors": {
         "KK Body": [
             ["skin_color", ["create:_Color"], "skin"],

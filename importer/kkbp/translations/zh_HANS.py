@@ -140,11 +140,13 @@ TRANSLATIONS = {
 
     # Edit Material
     "Saturate": "饱和度校正",
-    "Whether the textures and colours go through the game's colour grade, as the legacy importer did":
-        "是否像旧版导入器那样，让贴图和颜色经过游戏的调色",
-    "Saturate. A material that follows the game's shaders takes its colours as they show instead, so the eyedropper can pick them":
-        "饱和度校正。遵循游戏着色器的材质改为按显示效果取色，以便用吸管拾取颜色",
-    "Hair and eyebrows saturate, everything else doesn't": "头发和眉毛进行饱和度校正，其他不进行",
+    "What Edit Material does with the colours: Shown colours for a material that follows the game's shaders, Saturate for one from a modded shader":
+        "编辑材质如何处理颜色：遵循游戏着色器的材质使用显示颜色，改造着色器的材质使用饱和度校正",
+    "Shown colours": "显示颜色",
+    "Each colour is the colour as it shows, so the eyedropper can pick it":
+        "每种颜色都是显示出来的颜色，因此可以用吸管拾取",
+    "Each colour is the game's own value, which shows graded and stronger":
+        "每种颜色都是游戏自身的值，经调色后显示得更浓",
     "Don't saturate": "不进行饱和度校正",
     "Edit Material": "编辑材质",
     "Swaps the active material for an editable one that rebuilds the game's colouring, so its colours can be "
