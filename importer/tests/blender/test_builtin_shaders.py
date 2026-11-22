@@ -9,9 +9,9 @@ templates = submodule("templates")
 character = submodule("character")
 
 
-def _baked():
+def _baked(game="KK"):
     """The default Character with a baked face and left eye, so they get Light Dark templates."""
-    b = BundleBuilder()
+    b = BundleBuilder(game)
     materials = {m["id"]: m for m in b.materials}
     for id in ("cf_m_face_00", "cf_m_hitomi_00"):
         materials[id]["textures"] = [b.add_texture("_MainTex", role="main", variant="light"),
@@ -47,10 +47,27 @@ def test_eevee_mod(build):
     assert templates.param(body, "disable_permalight_mask").default_value is True
     sdf = templates.param(face, "permalight_mask").links[0].from_node
     assert sdf.node_tree.name == ".SDF_Cel_Shader"
+    assert sdf.node_tree.nodes["SDF Texture"].image.name == "Face SDF KK"
     assert ch.body.modifiers["Light Rotation Catcher"].node_group.name == ".Light Rotation Catcher"
     # The eyes keep the Eevee shader and are always lit.
     assert _shader(eye) == ".KK" and not templates.param(eye, "permalight_mask").is_linked
     assert tuple(templates.param(eye, "permalight_mask").default_value) == (1.0, 0.0, 0.0, 1.0)
+
+
+def test_svs_faces_share_a_copy_of_the_sdf_group_with_svs_images(build):
+    """The SDF and its hair contact shadows mask are drawn in a face UV layout, which SVS's face
+    doesn't share with KK's: SVS faces get a copy of the group with SVS's images, one per file."""
+    path = build(_baked("SVS"))
+    for _ in range(2):
+        kkbp.api.import_bundle(path, options={"convert_shaders": "eevee_mod"}, hooks=["Convert shaders"])
+    faces = [m for m in bpy.data.materials if m.get(character.ROLE) == "face" and character.KEY in m]
+    assert len(faces) == 2
+    groups = [templates.param(f, "permalight_mask").links[0].from_node.node_tree for f in faces]
+    assert groups[0] == groups[1] and groups[0].name == ".SDF_Cel_Shader SVS"
+    assert groups[0].nodes["SDF Texture"].image.name == "Face SDF SVS"
+    assert groups[0].nodes["Hair contact shadows mask"].image.name == "SVS hair contact shadows mask"
+    kk = bpy.data.node_groups[".SDF_Cel_Shader"]  # the library's own, which KK faces get, keeps KK's
+    assert kk.nodes["SDF Texture"].image.name == "Face SDF KK"
 
 
 def test_principled(build):

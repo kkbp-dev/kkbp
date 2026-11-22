@@ -23,7 +23,7 @@ The Core Import welds the copies of each vertex before any Hook runs ([ADR 0047]
 
 Swaps the materials of the body, hair, clothes and alternate clothes to another shader variant with `templates.swap` (D18). The tears and gag eyes keep their own templates.
 
-- `eevee_mod`: the eyebrows, eyes, upper eyeline and eye whites keep the Eevee shader and are always lit; the face and body normals are reset so no seam shows at the neck.
+- `eevee_mod`: the eyebrows, eyes, upper eyeline and eye whites keep the Eevee shader and are always lit; the face and body normals are reset so no seam shows at the neck. The face shades through `.SDF_Cel_Shader`, whose SDF and hair contact shadows mask are drawn in KK's face UV layout; a face whose template is in `library.FACE_SDF` (SVS's) gets a copy of the group, `.SDF_Cel_Shader SVS`, holding its Game's images, made once per file.
 - `cycles` and `cycles_classic`: the eyelines and eyebrows draw without shadows, and the eyelines move forward a little so they don't sink into the face.
 - `principled`: a `.Principled` variant group, a very simple material.
 

@@ -32,7 +32,8 @@ from library import hook_assets  # noqa: E402
 # no template holds it (`templates.swap`, `templates.apply`, the convert-shaders Hook's EXTRAS).
 LIBRARY_FAKE_GROUPS = (".Cycles", ".Cycles Classic", ".Cycles no shadows", ".Eevee Mod", ".Principled",
                        ".Light Rotation Catcher", ".SDF_Cel_Shader", ".Gag UV", ".Gag pick")
-LIBRARY_FAKE_IMAGES = ("Template: Black", "Template: Body neck shadow", "Lut_TimeDay.png")
+LIBRARY_FAKE_IMAGES = ("Template: Black", "Template: Body neck shadow", "Lut_TimeDay.png", "Face SDF SVS",
+                       "SVS hair contact shadows mask")
 
 # Replacements for images the legacy file had broken: name -> generated settings.
 FIXED_IMAGES = {

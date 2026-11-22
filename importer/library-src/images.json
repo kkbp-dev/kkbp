@@ -113,10 +113,22 @@
   "alpha_mode": "PREMUL",
   "file": "Template orbita_1k.exr"
  },
- "sdf 5.png": {
+ "Face SDF KK": {
   "source": "FILE",
   "colorspace": "sRGB",
   "alpha_mode": "STRAIGHT",
-  "file": "sdf 5.png"
+  "file": "Face SDF KK.png"
+ },
+ "Face SDF SVS": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "Face SDF SVS.png"
+ },
+ "SVS hair contact shadows mask": {
+  "source": "FILE",
+  "colorspace": "sRGB",
+  "alpha_mode": "STRAIGHT",
+  "file": "SVS hair contact shadows mask.png"
  }
 }

@@ -11,7 +11,7 @@ Set Convert shaders in the [Import Options](importing.md#import-options) before 
 | Shader | Renderer | What you get |
 |---|---|---|
 | Eevee (default) | Eevee | Toon shading that looks like the game |
-| Eevee+ | Eevee | A modified Eevee setup. The eyebrows, eyes, upper eyeline and eye whites are always lit, and the face and body normals are reset so no seam shows at the neck |
+| Eevee+ | Eevee | A modified Eevee setup. The eyebrows, eyes, upper eyeline and eye whites are always lit, the face can be shaded by a signed distance field (SDF) texture made for its Game's face, and the face and body normals are reset so no seam shows at the neck |
 | Cycles (toon) | Cycles | Toon shaders for Cycles. The eyelines and eyebrows draw without shadows |
 | Cycles (classic) | Cycles | The classic Cycles shaders, with the same eyeline and eyebrow handling |
 | Principled BSDF | Any | A very simple material: a starting point for your own shading or for other programs |
