@@ -69,7 +69,7 @@ def build(lib):
         'width': 316.95148,
         'label': 'SET YOUR SDF TEXTURE HERE',
         'show_texture': True,
-        'image': lib.image('sdf 5.png'),
+        'image': lib.image('Face SDF KK'),
         'extension': 'CLIP',
         'image_user': {
             'frame_duration': 1,
@@ -225,7 +225,7 @@ def build(lib):
         'location': (3469.5525, 274.1041),
         'data_type': 'RGBA',
     })
-    t.node('ShaderNodeTexImage', 'Image Texture', props={
+    t.node('ShaderNodeTexImage', 'Hair contact shadows mask', props={
         'location': (2958.754, -112.848885),
         'image': lib.image('SDF hair contact shadows mask 2.png'),
         'image_user': {
@@ -297,7 +297,7 @@ def build(lib):
     t.link('Combine XYZ.002', 'Vector', 'Mapping', 'Location')
     t.link('Mix.003', 'Result_Color', 'Mix.004', 'A_Color')
     t.link('Hue/Saturation/Value', 'Color', 'Mix.004', 'Factor_Float')
-    t.link('Image Texture', 'Color', 'Hue/Saturation/Value', 'Color')
+    t.link('Hair contact shadows mask', 'Color', 'Hue/Saturation/Value', 'Color')
     t.link('Invert Color', 'Color', 'Hue/Saturation/Value', 'Fac')
     t.link('Group Input.003', 'Enable hair contact shadows', 'Invert Color', 'Color')
     return t

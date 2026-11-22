@@ -8,7 +8,7 @@ from collections import defaultdict
 import bpy
 from mathutils import Vector
 
-from .. import templates
+from .. import library, templates
 from ..character import ROLE
 from ..pipeline.hooks import hook
 from ..pipeline.options import Option
@@ -98,12 +98,33 @@ def _eevee_mod(ctx, materials):
                 modifier.node_group = templates.extra("light_rotation")
                 modifier.show_expanded = False
             sdf = mat.node_tree.nodes.new("ShaderNodeGroup")
-            sdf.node_tree = templates.extra("sdf")
+            sdf.node_tree = _sdf_group(mat)
             sdf.name = sdf.label = "sdf"
             mat.node_tree.links.new(sdf.outputs[0], templates.param(mat, "permalight_mask"))
             templates.param(mat, "disable_permalight_mask").default_value = True
     if body is not None:
         _reset_normals(body, set(ch.materials(roles=EEVEE_MOD_NORMALS)))
+
+
+def _sdf_group(face):
+    """The `.SDF_Cel_Shader` group for the face's template: the library's, drawn in KK's face UV
+    layout, or a copy of it holding the images drawn in the template's own (SVS's), made once per
+    file and shared by every Character of that Game."""
+    group = templates.extra("sdf")
+    other = library.FACE_SDF.get(templates.template_of(face).name)
+    if other is None:
+        return group
+    suffix, sdf_image, mask_image = other
+    name = f"{group.name} {suffix}"
+    copy = bpy.data.node_groups.get(name)
+    if copy is None or copy.get(library.VERSION_PROP) != library.TEMPLATE_VERSION:
+        if copy is not None:
+            copy.name = f"{name} (v{copy.get(library.VERSION_PROP)})"  # an older file's copy stays as it was
+        copy = group.copy()
+        copy.name = name
+        for node_name, extra in zip(library.SDF_IMAGE_NODES, (sdf_image, mask_image)):
+            copy.nodes[node_name].image = templates.extra(extra)
+    return copy
 
 
 def _swap_all(ctx, materials, variant):
