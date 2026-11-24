@@ -10,7 +10,7 @@ The body's shape keys are named by what they do, with their category first: `Eye
 
 ## The face rig
 
-With the [Rigify rig](rig.md), the face has controls where they act, and a board beside the head for the rest. They show with the Emotions and Eyes rows of Rig Layers.
+The [Rigify rig](rig.md) gives you a mixture of on-face controls and a 2D emotion board next to the head. They show with the Emotions and Eyes rows of Rig Layers.
 
 ![The face controls and the board beside the head, on a Summer Vacation Scramble character with outlines](images/expressions/face-rig.jpg)
 
@@ -58,9 +58,9 @@ Face cards (off by default) adds flat 2D eye and mouth cards in front of the fac
 
 ![The same face with face cards, with its normal eyes, and with the eyes hidden](images/expressions/face-cards.jpg)
 
-From left to right: the face cards, the character's normal eyes with the face cards hidden, and the face with both hidden.
+From left to right: the face cards, the character's normal eyes, and the face with both hidden.
 
-The cards sit in front of the character's own eyes and cover them. Where the eyes would still show around the cards, as when the head is turned, hide them too: separate them with [Separate eyes](#separate-eyes), hide the `Eyes` object, then set the `Eyeshadow` slider in the face material to a value of zero to hide the eyeshadow. Hiding both leaves the face without eyes, for drawing them another way.
+The cards sit in front of the character's blank face. Separate the eyes with [Separate eyes](#separate-eyes), hide the `Eyes` object, then set the `Eyeshadow` slider in the face material to a value of zero to hide the eyeshadow. Hiding both leaves the face without eyes, for drawing them another way.
 
 ## Separate eyes
 
