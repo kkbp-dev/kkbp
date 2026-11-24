@@ -10,6 +10,7 @@ rigify = submodule("builtin.rigify")
 prepare = submodule("builtin.rigify.prepare")
 names = submodule("builtin.rigify.names")
 ground = submodule("builtin.rigify.finish.ground")
+board = submodule("builtin.rigify.finish.face.board")
 
 
 @pytest.fixture(scope="module")
@@ -73,13 +74,18 @@ def test_the_rig_is_in_front(ch):
     assert ch.rig.show_in_front and ch.rig.display_type == "TEXTURED"
 
 
-def test_junk_holds_the_widgets_and_the_metarig_and_is_hidden(ch):
+def test_junk_holds_the_board_labels_and_the_hidden_widgets_and_metarig(ch):
     junk = bpy.data.collections[rigify.JUNK.format(name=ch.name)]
+    hidden = bpy.data.collections[rigify.WIDGETS.format(name=ch.name)]
+    labels = bpy.data.collections[board.LABELS.format(name=ch.name)]
     assert junk.name in ch.collection.children
-    assert ch.armature.name in junk.objects and list(ch.armature.users_collection) == [junk]
-    assert any(c.name.startswith("WGTS_") for c in junk.children)
+    assert set(junk.children) == {hidden, labels} and not junk.objects
+    assert ch.armature.name in hidden.objects and list(ch.armature.users_collection) == [hidden]
+    assert any(c.name.startswith("WGTS_") for c in hidden.children)
     assert not any(c.name.startswith("WGTS_") for c in bpy.context.scene.collection.children)
-    assert _layer(bpy.context.view_layer.layer_collection, junk).exclude
+    view_layer = bpy.context.view_layer.layer_collection
+    assert not _layer(view_layer, junk).exclude and not _layer(view_layer, labels).exclude
+    assert _layer(view_layer, hidden).exclude
     assert "Bone Widgets" not in bpy.data.collections
 
 

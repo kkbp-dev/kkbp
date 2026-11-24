@@ -260,10 +260,11 @@ class _Labels:
     def __init__(self, build, rig):
         ch = build.character
         name = LABELS.format(name=ch.name)
-        self.collection = next((c for c in ch.collection.children if c.name == name), None)
+        # in Junk, which stays in the view layer while the widgets inside it are excluded (_tidy)
+        self.collection = next((c for c in build.widgets.children if c.name == name), None)
         if self.collection is None:
             self.collection = bpy.data.collections.new(name)
-            ch.collection.children.link(self.collection)
+            build.widgets.children.link(self.collection)
         self.rig, self.count = rig, 0
 
     def add(self, text, world, size=TEXT, align="LEFT"):
