@@ -20,7 +20,7 @@ It has two halves. An **exporter** runs inside the game and saves the character 
 <tr>
 <td width="25%" valign="top"><a href="docs/wiki/shaders.md"><img src="docs/wiki/images/readme/shaders.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/shaders.md">Looks like the game</a></b><br>Shaders for Eevee and Cycles, a plain Principled setup, and the game's outlines.</td>
 <td width="25%" valign="top"><a href="docs/wiki/rig.md"><img src="docs/wiki/images/readme/rig.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/rig.md">A rig that bends like the game</a></b><br>A Rigify control rig, with elbows, knees and shoulders corrected by the game's own rules.</td>
-<td width="25%" valign="top"><a href="docs/wiki/expressions.md"><img src="docs/wiki/images/readme/expressions.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/expressions.md">Every expression</a></b><br>All the game's eye and mouth expressions with English names, an emotion grid, gag eyes and tears.</td>
+<td width="25%" valign="top"><a href="docs/wiki/expressions.md"><img src="docs/wiki/images/readme/expressions.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/expressions.md">Every expression</a></b><br>All the game's eye and mouth expressions with English names, face controls with emotion presets, gag eyes and tears.</td>
 <td width="25%" valign="top"><a href="docs/wiki/outfits.md"><img src="docs/wiki/images/readme/outfits.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/outfits.md">Every outfit</a></b><br>All of a card's outfits in one import, with their half-off variations if you want them.</td>
 </tr>
 <tr>
@@ -97,7 +97,7 @@ The [wiki](docs/wiki/README.md) explains each feature with pictures.
 | [Importing](docs/wiki/importing.md) | Every Import Option, saved defaults, Bulk Import, languages |
 | [Shaders and outlines](docs/wiki/shaders.md) | The five shader choices and the outlines |
 | [The rig](docs/wiki/rig.md) | The Rigify rig, Rig Layers, joint corrections, Snap IKs |
-| [Expressions](docs/wiki/expressions.md) | The emotion grid, gag eyes, tears, face cards |
+| [Expressions](docs/wiki/expressions.md) | The face rig and presets, gag eyes, tears, face cards |
 | [Outfits](docs/wiki/outfits.md) | Outfits, variations, separate clothing, SFW mode |
 | [Edit Material](docs/wiki/edit-material.md) | Changing colours and baking them |
 | [Export Prep](docs/wiki/export-prep.md) | VRM, VRChat, Unreal, atlases |

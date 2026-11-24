@@ -16,7 +16,7 @@ How to use KKBP, one page per topic. For a two-minute start, see [Install](../..
 |---|---|
 | [Shaders and outlines](shaders.md) | Eevee, Eevee+, Cycles (toon), Cycles (classic), Principled BSDF, and the outlines |
 | [The rig](rig.md) | The Rigify rig, Rig Layers, joint corrections, teeth bones, Snap IKs |
-| [Expressions](expressions.md) | Expression shape keys, the emotion grid, gag eyes, tears, face cards, separate eyes |
+| [Expressions](expressions.md) | Expression shape keys, the face rig and presets, gag eyes, tears, face cards, separate eyes |
 | [Outfits](outfits.md) | Outfits, variations, separate clothing, SFW mode |
 | [Edit Material](edit-material.md) | Changing a material's colours and baking them |
 | [Export Prep](export-prep.md) | Readying a character for VRM, VRChat or Unreal, atlases, Merge Weights |

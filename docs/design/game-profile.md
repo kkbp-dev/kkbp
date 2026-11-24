@@ -22,6 +22,7 @@ See [export-bundle.md](export-bundle.md#roles-and-canonical-names).
 - A profile can **extend** another and override only what differs: KKS extends KK.
 - The profile names its Template Set (`TEMPLATE_SET = "KK"` or `"SVS"`). Template Sets are described in [material-template.md](material-template.md).
 - It maps the Raw Properties a template has a slot for (`RAW_TEXTURES`) and the per-pattern values an expression sets (`PATTERN_VALUES`).
+- It maps the Rigify Hook's Face Key Roles to Expression Names (`FACE_KEYS`, [ADR 0058](../adr/0058-the-face-rig-drives-the-expression-keys-through-face-key-roles.md)): the same name can mean another expression in another Game.
 - It holds the bone tail and roll rules (`BONES`), by Bone Role and Bone Group ([ADR 0017](../adr/0017-bone-tails-from-the-game-rotation.md)). No exact bone names turned out to be needed.
 - A field a profile sets replaces its base profile's; a field it leaves out is inherited.
 - Profiles live in `importer/kkbp/profiles/`, which never imports bpy. Steps get the bundle's profile as `ctx.profile`.
@@ -39,7 +40,7 @@ See [export-bundle.md](export-bundle.md#roles-and-canonical-names).
 
 ## Hooks
 
-- Hooks do not get `ctx.profile` in v1. What a Hook needs is in the bundle, so profiles can change freely without affecting the hook interface.
+- Hooks do not get `ctx.profile` in v1. What a Hook needs is in the bundle, so profiles can change freely without affecting the hook interface. Where a built-in Hook needs profile data, a Step writes it into the scene: the Face Key Roles go onto Body's shape keys (`record_face_keys`).
 
 ## Unknown Games
 
