@@ -9,7 +9,9 @@
   tears.
 
 The board's frame can't be selected; only its knobs and sliders move. Labels are text objects
-parented to the frame, in their own Collection, hidden in renders.
+parented to the frame, in their own Collection, hidden in renders. Nothing on the board draws a
+relationship line: each control hangs from a pivot (face/__init__.py), and each label sits on the
+frame bone's tail.
 """
 
 from __future__ import annotations
@@ -274,6 +276,10 @@ class _Labels:
         obj.hide_select = True
         obj.hide_render = True
         obj.show_in_front = True
+        # The object sits on the frame bone's tail, where its relationship line goes, so the line has
+        # no length; the text moves to its place by its own offset (in the text's plane: x across, y up).
+        anchor = self.rig.matrix_world @ self.rig.data.bones[names.FACE_BOARD_BONE].tail_local
+        curve.offset_x, curve.offset_y = world.x - anchor.x, world.z - anchor.z
         bpy.context.view_layer.update()
-        obj.matrix_world = Matrix.Translation(world) @ Matrix.Rotation(math.radians(90), 4, "X")
+        obj.matrix_world = Matrix.Translation(anchor) @ Matrix.Rotation(math.radians(90), 4, "X")
         return obj

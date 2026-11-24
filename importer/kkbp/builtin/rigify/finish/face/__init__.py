@@ -58,10 +58,32 @@ def face_rig(build):
         {"presets": {p: r["ops"] for p, r in resolved.items()}, "expect": {p: r["expect"] for p, r in resolved.items()},
          "panel": panel, "controls": controls_ + [names.EYE_TARGET_BONE, names.LEFT_EYE_TARGET_BONE,
                                                   names.RIGHT_EYE_TARGET_BONE]}, ensure_ascii=False)
+    _no_relationship_lines(build.rig)
     for name in (names.FACE_LAYER, names.EYES_LAYER, names.EMOTIONS_LAYER):
         build.rig.data.collections_all[name].is_visible = True
     log.info(f"The face rig drives {len(controlled)} expression keys from its controls; "
              f"{len(raw)} more have Face Properties sliders")
+
+
+def _no_relationship_lines(rig):
+    """Each control the face layers show hangs from a hidden pivot whose tail is the control's head,
+    so its dashed relationship line has no length. The pivot sits at rest, so the control moves as
+    before."""
+    shown = {b.name for name in (names.FACE_LAYER, names.EYES_LAYER, names.EMOTIONS_LAYER)
+             for b in rig.data.collections_all[name].bones if b.parent is not None}
+    with editing(rig, "EDIT"):
+        edit = rig.data.edit_bones
+        for name in sorted(shown):
+            bone = edit[name]
+            pivot = edit.new(names.FACE_PIVOT_PREFIX + name)
+            pivot.head = bone.head - bone.vector.normalized() * 0.002
+            pivot.tail = bone.head.copy()
+            pivot.roll = bone.roll
+            pivot.use_deform = False
+            pivot.parent = bone.parent
+            bone.parent = pivot
+    for name in shown:
+        shapes.put(rig, names.FACE_PIVOT_PREFIX + name, names.MCH_LAYER_INDEX)
 
 
 def _properties(build, raw):

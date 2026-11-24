@@ -1609,9 +1609,9 @@
    },
    "id": null,
    "location": [
-    0.014,
-    0.194,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1627,9 +1627,9 @@
    },
    "id": null,
    "location": [
-    0.1328,
-    0.1625,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1645,9 +1645,9 @@
    },
    "id": null,
    "location": [
-    0.1672,
-    0.1625,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1663,9 +1663,9 @@
    },
    "id": null,
    "location": [
-    0.188,
-    0.188,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1681,9 +1681,9 @@
    },
    "id": null,
    "location": [
-    0.204,
-    0.1817,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1699,9 +1699,9 @@
    },
    "id": null,
    "location": [
-    0.204,
-    0.1433,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1717,9 +1717,9 @@
    },
    "id": null,
    "location": [
-    0.1868,
-    0.1625,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1735,9 +1735,9 @@
    },
    "id": null,
    "location": [
-    0.2212,
-    0.1625,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1753,9 +1753,9 @@
    },
    "id": null,
    "location": [
-    0.242,
-    0.188,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1771,9 +1771,9 @@
    },
    "id": null,
    "location": [
-    0.258,
-    0.1817,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1789,9 +1789,9 @@
    },
    "id": null,
    "location": [
-    0.258,
-    0.1433,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1807,9 +1807,9 @@
    },
    "id": null,
    "location": [
-    0.08,
-    0.188,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1825,9 +1825,9 @@
    },
    "id": null,
    "location": [
-    0.2408,
-    0.1625,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1843,9 +1843,9 @@
    },
    "id": null,
    "location": [
-    0.2752,
-    0.1625,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1861,9 +1861,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.1553,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1879,9 +1879,9 @@
    },
    "id": null,
    "location": [
-    0.008,
-    0.107,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1897,9 +1897,9 @@
    },
    "id": null,
    "location": [
-    0.008,
-    0.0955,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1915,9 +1915,9 @@
    },
    "id": null,
    "location": [
-    0.008,
-    0.084,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1933,9 +1933,9 @@
    },
    "id": null,
    "location": [
-    0.008,
-    0.0725,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1951,9 +1951,9 @@
    },
    "id": null,
    "location": [
-    0.008,
-    0.061,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1969,9 +1969,9 @@
    },
    "id": null,
    "location": [
-    0.008,
-    0.0495,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -1987,9 +1987,9 @@
    },
    "id": null,
    "location": [
-    0.008,
-    0.038,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2005,9 +2005,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.1817,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2023,9 +2023,9 @@
    },
    "id": null,
    "location": [
-    0.006,
-    0.0245,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2041,9 +2041,9 @@
    },
    "id": null,
    "location": [
-    0.008,
-    0.015,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2059,9 +2059,9 @@
    },
    "id": null,
    "location": [
-    0.008,
-    0.0035,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2077,9 +2077,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.107,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2095,9 +2095,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.0955,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2113,9 +2113,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.084,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2131,9 +2131,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.0725,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2149,9 +2149,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.061,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2167,9 +2167,9 @@
    },
    "id": null,
    "location": [
-    0.094,
-    0.0475,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2185,9 +2185,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.038,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2203,9 +2203,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.1433,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2221,9 +2221,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.0265,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2239,9 +2239,9 @@
    },
    "id": null,
    "location": [
-    0.096,
-    0.015,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2257,9 +2257,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.107,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2275,9 +2275,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.0955,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2293,9 +2293,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.084,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2311,9 +2311,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.0725,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2329,9 +2329,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.061,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2347,9 +2347,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.0495,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2365,9 +2365,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.038,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2383,9 +2383,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.0265,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2401,9 +2401,9 @@
    },
    "id": null,
    "location": [
-    0.0788,
-    0.1625,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2419,9 +2419,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.015,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2437,9 +2437,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    0.0035,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2455,9 +2455,9 @@
    },
    "id": null,
    "location": [
-    0.184,
-    -0.008,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2473,9 +2473,9 @@
    },
    "id": null,
    "location": [
-    0.006,
-    0.1225,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2491,9 +2491,9 @@
    },
    "id": null,
    "location": [
-    0.094,
-    0.1225,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2509,9 +2509,9 @@
    },
    "id": null,
    "location": [
-    0.182,
-    0.1225,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2527,9 +2527,9 @@
    },
    "id": null,
    "location": [
-    0.284,
-    0.2135,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2545,9 +2545,9 @@
    },
    "id": null,
    "location": [
-    0.1132,
-    0.1625,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2563,9 +2563,9 @@
    },
    "id": null,
    "location": [
-    0.134,
-    0.188,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2581,9 +2581,9 @@
    },
    "id": null,
    "location": [
-    0.15,
-    0.1817,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -2599,9 +2599,9 @@
    },
    "id": null,
    "location": [
-    0.15,
-    0.1433,
-    0.0015
+    0.0,
+    0.0,
+    0.0
    ],
    "modifiers": [],
    "parent": "Rig {character}",
@@ -15141,7 +15141,7 @@
      ],
      [
       "MCH",
-      246
+      294
      ],
      [
       "NSFW",
@@ -15184,7 +15184,7 @@
       10
      ]
     ],
-    "bone_count": 1317,
+    "bone_count": 1365,
     "bones": {
      "Board Eye Angry": {
       "deform": false,
@@ -15193,7 +15193,7 @@
        -0.0406,
        1.3411
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eye Angry",
       "tail": [
        0.1709,
        -0.0406,
@@ -15207,7 +15207,7 @@
        -0.0406,
        1.3756
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eye Displeased",
       "tail": [
        0.1709,
        -0.0406,
@@ -15221,7 +15221,7 @@
        -0.0406,
        1.3526
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eye Doubt",
       "tail": [
        0.1709,
        -0.0406,
@@ -15235,7 +15235,7 @@
        -0.0406,
        1.3871
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eye Happy, Closed",
       "tail": [
        0.1709,
        -0.0406,
@@ -15249,7 +15249,7 @@
        -0.0406,
        1.3296
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eye Lonely",
       "tail": [
        0.1709,
        -0.0406,
@@ -15263,7 +15263,7 @@
        -0.0406,
        1.3986
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eye Smiling",
       "tail": [
        0.1709,
        -0.0406,
@@ -15277,7 +15277,7 @@
        -0.0406,
        1.3641
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eye Smug",
       "tail": [
        0.1709,
        -0.0406,
@@ -15291,7 +15291,7 @@
        -0.0406,
        1.3986
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eyebrow Amazed",
       "tail": [
        0.2589,
        -0.0406,
@@ -15305,7 +15305,7 @@
        -0.0406,
        1.3526
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eyebrow Angry",
       "tail": [
        0.2589,
        -0.0406,
@@ -15319,7 +15319,7 @@
        -0.0406,
        1.3871
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eyebrow Doubt",
       "tail": [
        0.2589,
        -0.0406,
@@ -15333,7 +15333,7 @@
        -0.0406,
        1.3756
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eyebrow Smiling",
       "tail": [
        0.2589,
        -0.0406,
@@ -15347,7 +15347,7 @@
        -0.0406,
        1.3641
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Eyebrow Worried",
       "tail": [
        0.2589,
        -0.0406,
@@ -15361,7 +15361,7 @@
        -0.0406,
        1.3066
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Gag eyes",
       "tail": [
        0.1709,
        -0.0406,
@@ -15375,7 +15375,7 @@
        -0.0406,
        1.3641
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Angry",
       "tail": [
        0.3469,
        -0.0406,
@@ -15389,7 +15389,7 @@
        -0.0406,
        1.3871
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Cartoony Smile",
       "tail": [
        0.3469,
        -0.0406,
@@ -15403,7 +15403,7 @@
        -0.0406,
        1.3066
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Catlike",
       "tail": [
        0.3469,
        -0.0406,
@@ -15417,7 +15417,7 @@
        -0.0406,
        1.3756
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Excited",
       "tail": [
        0.3469,
        -0.0406,
@@ -15431,7 +15431,7 @@
        -0.0406,
        1.3526
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Hate",
       "tail": [
        0.3469,
        -0.0406,
@@ -15445,7 +15445,7 @@
        -0.0406,
        1.3181
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Kiss",
       "tail": [
        0.3469,
        -0.0406,
@@ -15459,7 +15459,7 @@
        -0.0406,
        1.2836
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Playful",
       "tail": [
        0.3469,
        -0.0406,
@@ -15473,7 +15473,7 @@
        -0.0406,
        1.3411
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Serious",
       "tail": [
        0.3469,
        -0.0406,
@@ -15487,7 +15487,7 @@
        -0.0406,
        1.3986
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Smiling",
       "tail": [
        0.3469,
        -0.0406,
@@ -15501,7 +15501,7 @@
        -0.0406,
        1.2951
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Tongue Out",
       "tail": [
        0.3469,
        -0.0406,
@@ -15515,7 +15515,7 @@
        -0.0406,
        1.3296
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Mouth Triangle",
       "tail": [
        0.3469,
        -0.0406,
@@ -15529,7 +15529,7 @@
        -0.0406,
        1.3066
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Tears big",
       "tail": [
        0.2589,
        -0.0406,
@@ -15543,7 +15543,7 @@
        -0.0406,
        1.3181
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Tears med",
       "tail": [
        0.2589,
        -0.0406,
@@ -15557,7 +15557,7 @@
        -0.0406,
        1.3296
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board Tears small",
       "tail": [
        0.2589,
        -0.0406,
@@ -15571,7 +15571,7 @@
        -0.0406,
        1.2951
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board gag type",
       "tail": [
        0.1709,
        -0.0406,
@@ -15585,7 +15585,7 @@
        -0.0406,
        1.4541
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board look",
       "tail": [
        0.1609,
        -0.0406,
@@ -15599,7 +15599,7 @@
        -0.0406,
        1.4541
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board mood",
       "tail": [
        0.2749,
        -0.0406,
@@ -15613,7 +15613,7 @@
        -0.0406,
        1.4541
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board mood2",
       "tail": [
        0.3289,
        -0.0406,
@@ -15627,7 +15627,7 @@
        -0.0406,
        1.4541
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board open",
       "tail": [
        0.3829,
        -0.0406,
@@ -15641,7 +15641,7 @@
        -0.0406,
        1.4541
       ],
-      "parent": "Face board",
+      "parent": "MCH-pivot Board shape",
       "tail": [
        0.2209,
        -0.0406,
@@ -17335,7 +17335,7 @@
        -0.3796,
        1.3981
       ],
-      "parent": "MCH-Eye target parent",
+      "parent": "MCH-pivot Eye target",
       "tail": [
        0.0,
        -0.3796,
@@ -17349,7 +17349,7 @@
        -0.3796,
        1.3981
       ],
-      "parent": "Eye target",
+      "parent": "MCH-pivot Eye target L",
       "tail": [
        0.0426,
        -0.3796,
@@ -17363,7 +17363,7 @@
        -0.3796,
        1.3981
       ],
-      "parent": "Eye target",
+      "parent": "MCH-pivot Eye target R",
       "tail": [
        -0.0426,
        -0.3796,
@@ -17377,7 +17377,7 @@
        -0.0778,
        1.5958
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face Properties",
       "tail": [
        0.0,
        -0.0778,
@@ -17391,7 +17391,7 @@
        -0.0396,
        1.2716
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face board",
       "tail": [
        0.1249,
        -0.0396,
@@ -17405,7 +17405,7 @@
        -0.0446,
        1.4441
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face brow L",
       "tail": [
        0.0344,
        -0.0446,
@@ -17419,7 +17419,7 @@
        -0.0446,
        1.444
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face brow R",
       "tail": [
        -0.0344,
        -0.0446,
@@ -17433,7 +17433,7 @@
        -0.0491,
        1.444
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face brow mid",
       "tail": [
        0.0,
        -0.0491,
@@ -17447,7 +17447,7 @@
        -0.0372,
        1.3488
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face corner L",
       "tail": [
        0.0174,
        -0.0372,
@@ -17461,7 +17461,7 @@
        -0.0372,
        1.3488
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face corner R",
       "tail": [
        -0.0174,
        -0.0372,
@@ -17475,7 +17475,7 @@
        -0.0491,
        1.464
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face emote",
       "tail": [
        0.0,
        -0.0491,
@@ -17489,7 +17489,7 @@
        -0.0375,
        1.3231
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face jaw",
       "tail": [
        0.0,
        -0.0375,
@@ -17503,7 +17503,7 @@
        -0.03,
        1.417
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face lid L",
       "tail": [
        0.0466,
        -0.03,
@@ -17517,7 +17517,7 @@
        -0.03,
        1.417
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face lid R",
       "tail": [
        -0.0466,
        -0.03,
@@ -17531,7 +17531,7 @@
        -0.0416,
        1.3981
       ],
-      "parent": "ORG-Head",
+      "parent": "MCH-pivot Face lids",
       "tail": [
        0.0,
        -0.0416,
@@ -25334,6 +25334,678 @@
        0.0,
        -0.036,
        1.0197
+      ]
+     },
+     "MCH-pivot Board Eye Angry": {
+      "deform": false,
+      "head": [
+       0.1709,
+       -0.0406,
+       1.3391
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1709,
+       -0.0406,
+       1.3411
+      ]
+     },
+     "MCH-pivot Board Eye Displeased": {
+      "deform": false,
+      "head": [
+       0.1709,
+       -0.0406,
+       1.3736
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1709,
+       -0.0406,
+       1.3756
+      ]
+     },
+     "MCH-pivot Board Eye Doubt": {
+      "deform": false,
+      "head": [
+       0.1709,
+       -0.0406,
+       1.3506
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1709,
+       -0.0406,
+       1.3526
+      ]
+     },
+     "MCH-pivot Board Eye Happy, Closed": {
+      "deform": false,
+      "head": [
+       0.1709,
+       -0.0406,
+       1.3851
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1709,
+       -0.0406,
+       1.3871
+      ]
+     },
+     "MCH-pivot Board Eye Lonely": {
+      "deform": false,
+      "head": [
+       0.1709,
+       -0.0406,
+       1.3276
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1709,
+       -0.0406,
+       1.3296
+      ]
+     },
+     "MCH-pivot Board Eye Smiling": {
+      "deform": false,
+      "head": [
+       0.1709,
+       -0.0406,
+       1.3966
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1709,
+       -0.0406,
+       1.3986
+      ]
+     },
+     "MCH-pivot Board Eye Smug": {
+      "deform": false,
+      "head": [
+       0.1709,
+       -0.0406,
+       1.3621
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1709,
+       -0.0406,
+       1.3641
+      ]
+     },
+     "MCH-pivot Board Eyebrow Amazed": {
+      "deform": false,
+      "head": [
+       0.2589,
+       -0.0406,
+       1.3966
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2589,
+       -0.0406,
+       1.3986
+      ]
+     },
+     "MCH-pivot Board Eyebrow Angry": {
+      "deform": false,
+      "head": [
+       0.2589,
+       -0.0406,
+       1.3506
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2589,
+       -0.0406,
+       1.3526
+      ]
+     },
+     "MCH-pivot Board Eyebrow Doubt": {
+      "deform": false,
+      "head": [
+       0.2589,
+       -0.0406,
+       1.3851
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2589,
+       -0.0406,
+       1.3871
+      ]
+     },
+     "MCH-pivot Board Eyebrow Smiling": {
+      "deform": false,
+      "head": [
+       0.2589,
+       -0.0406,
+       1.3736
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2589,
+       -0.0406,
+       1.3756
+      ]
+     },
+     "MCH-pivot Board Eyebrow Worried": {
+      "deform": false,
+      "head": [
+       0.2589,
+       -0.0406,
+       1.3621
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2589,
+       -0.0406,
+       1.3641
+      ]
+     },
+     "MCH-pivot Board Gag eyes": {
+      "deform": false,
+      "head": [
+       0.1709,
+       -0.0406,
+       1.3046
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1709,
+       -0.0406,
+       1.3066
+      ]
+     },
+     "MCH-pivot Board Mouth Angry": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.3621
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.3641
+      ]
+     },
+     "MCH-pivot Board Mouth Cartoony Smile": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.3851
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.3871
+      ]
+     },
+     "MCH-pivot Board Mouth Catlike": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.3046
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.3066
+      ]
+     },
+     "MCH-pivot Board Mouth Excited": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.3736
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.3756
+      ]
+     },
+     "MCH-pivot Board Mouth Hate": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.3506
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.3526
+      ]
+     },
+     "MCH-pivot Board Mouth Kiss": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.3161
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.3181
+      ]
+     },
+     "MCH-pivot Board Mouth Playful": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.2816
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.2836
+      ]
+     },
+     "MCH-pivot Board Mouth Serious": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.3391
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.3411
+      ]
+     },
+     "MCH-pivot Board Mouth Smiling": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.3966
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.3986
+      ]
+     },
+     "MCH-pivot Board Mouth Tongue Out": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.2931
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.2951
+      ]
+     },
+     "MCH-pivot Board Mouth Triangle": {
+      "deform": false,
+      "head": [
+       0.3469,
+       -0.0406,
+       1.3276
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3469,
+       -0.0406,
+       1.3296
+      ]
+     },
+     "MCH-pivot Board Tears big": {
+      "deform": false,
+      "head": [
+       0.2589,
+       -0.0406,
+       1.3046
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2589,
+       -0.0406,
+       1.3066
+      ]
+     },
+     "MCH-pivot Board Tears med": {
+      "deform": false,
+      "head": [
+       0.2589,
+       -0.0406,
+       1.3161
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2589,
+       -0.0406,
+       1.3181
+      ]
+     },
+     "MCH-pivot Board Tears small": {
+      "deform": false,
+      "head": [
+       0.2589,
+       -0.0406,
+       1.3276
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2589,
+       -0.0406,
+       1.3296
+      ]
+     },
+     "MCH-pivot Board gag type": {
+      "deform": false,
+      "head": [
+       0.1709,
+       -0.0406,
+       1.2931
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1709,
+       -0.0406,
+       1.2951
+      ]
+     },
+     "MCH-pivot Board look": {
+      "deform": false,
+      "head": [
+       0.1609,
+       -0.0406,
+       1.4521
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1609,
+       -0.0406,
+       1.4541
+      ]
+     },
+     "MCH-pivot Board mood": {
+      "deform": false,
+      "head": [
+       0.2749,
+       -0.0406,
+       1.4521
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2749,
+       -0.0406,
+       1.4541
+      ]
+     },
+     "MCH-pivot Board mood2": {
+      "deform": false,
+      "head": [
+       0.3289,
+       -0.0406,
+       1.4521
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3289,
+       -0.0406,
+       1.4541
+      ]
+     },
+     "MCH-pivot Board open": {
+      "deform": false,
+      "head": [
+       0.3829,
+       -0.0406,
+       1.4521
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3829,
+       -0.0406,
+       1.4541
+      ]
+     },
+     "MCH-pivot Board shape": {
+      "deform": false,
+      "head": [
+       0.2209,
+       -0.0406,
+       1.4521
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2209,
+       -0.0406,
+       1.4541
+      ]
+     },
+     "MCH-pivot Eye target": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.3796,
+       1.3961
+      ],
+      "parent": "MCH-Eye target parent",
+      "tail": [
+       0.0,
+       -0.3796,
+       1.3981
+      ]
+     },
+     "MCH-pivot Eye target L": {
+      "deform": false,
+      "head": [
+       0.0426,
+       -0.3796,
+       1.3961
+      ],
+      "parent": "Eye target",
+      "tail": [
+       0.0426,
+       -0.3796,
+       1.3981
+      ]
+     },
+     "MCH-pivot Eye target R": {
+      "deform": false,
+      "head": [
+       -0.0426,
+       -0.3796,
+       1.3961
+      ],
+      "parent": "Eye target",
+      "tail": [
+       -0.0426,
+       -0.3796,
+       1.3981
+      ]
+     },
+     "MCH-pivot Face Properties": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.0778,
+       1.5938
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0,
+       -0.0778,
+       1.5958
+      ]
+     },
+     "MCH-pivot Face board": {
+      "deform": false,
+      "head": [
+       0.1249,
+       -0.0396,
+       1.2696
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.1249,
+       -0.0396,
+       1.2716
+      ]
+     },
+     "MCH-pivot Face brow L": {
+      "deform": false,
+      "head": [
+       0.0344,
+       -0.0446,
+       1.4421
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0344,
+       -0.0446,
+       1.4441
+      ]
+     },
+     "MCH-pivot Face brow R": {
+      "deform": false,
+      "head": [
+       -0.0344,
+       -0.0446,
+       1.442
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.0344,
+       -0.0446,
+       1.444
+      ]
+     },
+     "MCH-pivot Face brow mid": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.0491,
+       1.442
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0,
+       -0.0491,
+       1.444
+      ]
+     },
+     "MCH-pivot Face corner L": {
+      "deform": false,
+      "head": [
+       0.0174,
+       -0.0372,
+       1.3468
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0174,
+       -0.0372,
+       1.3488
+      ]
+     },
+     "MCH-pivot Face corner R": {
+      "deform": false,
+      "head": [
+       -0.0174,
+       -0.0372,
+       1.3468
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.0174,
+       -0.0372,
+       1.3488
+      ]
+     },
+     "MCH-pivot Face emote": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.0491,
+       1.462
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0,
+       -0.0491,
+       1.464
+      ]
+     },
+     "MCH-pivot Face jaw": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.0375,
+       1.3211
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0,
+       -0.0375,
+       1.3231
+      ]
+     },
+     "MCH-pivot Face lid L": {
+      "deform": false,
+      "head": [
+       0.0466,
+       -0.03,
+       1.415
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0466,
+       -0.03,
+       1.417
+      ]
+     },
+     "MCH-pivot Face lid R": {
+      "deform": false,
+      "head": [
+       -0.0466,
+       -0.03,
+       1.415
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.0466,
+       -0.03,
+       1.417
+      ]
+     },
+     "MCH-pivot Face lids": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.0416,
+       1.3961
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0,
+       -0.0416,
+       1.3981
       ]
      },
      "MCH-torso.parent": {

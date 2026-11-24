@@ -12,7 +12,7 @@ The body's shape keys are named by what they do, with their category first: `Eye
 
 With the [Rigify rig](rig.md), the face has controls where they act, and a board beside the head for the rest. They show with the Face, Eyes and Emotions rows of Rig Layers.
 
-![The face controls and the board beside the head](images/expressions/face-rig.jpg)
+![The face controls and the board beside the head, on a Summer Vacation Scramble character with outlines](images/expressions/face-rig.jpg)
 
 On the face:
 

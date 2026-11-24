@@ -452,6 +452,10 @@ LEFT_EYE_AIM_BONE = "MCH-Eye aim L"
 RIGHT_EYE_AIM_BONE = "MCH-Eye aim R"
 FACE_CONTROL_PREFIX = "Face "  # + the control: "Face lids", "Face brow L", "Face jaw"
 FACE_BOARD_BONE = "Face board"
+# A hidden bone between each face control and its parent, whose tail is the control's head: Blender
+# draws a relationship line from a bone's head to its parent's tail, even to a hidden parent, so the
+# line has no length.
+FACE_PIVOT_PREFIX = "MCH-pivot "
 BOARD_CONTROL_PREFIX = "Board "  # + the grid or slider: "Board look", "Board Eye Smiling"
 LEFT_BROW_BONE = "cf_J_MayuMid_s_L"
 RIGHT_BROW_BONE = right_name(LEFT_BROW_BONE)

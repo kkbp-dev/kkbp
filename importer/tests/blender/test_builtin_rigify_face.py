@@ -254,3 +254,26 @@ def test_head_tracking_still_turns_the_head(ch):
     target["02A) Track target"] = 0.0
     _update(ch)
     assert turned > 0.1
+
+
+def test_no_face_control_draws_a_relationship_line(ch):
+    """Blender draws a bone's dashed line from its head to its parent's tail, even to a hidden
+    parent: every control the face layers show hangs from a hidden pivot whose tail is its head."""
+    collections = ch.rig.data.collections_all
+    shown = {b.name for name in (names.FACE_LAYER, names.EYES_LAYER, names.EMOTIONS_LAYER)
+             for b in collections[name].bones}
+    for name in shown:
+        bone = ch.rig.data.bones[name]
+        if bone.parent is None:
+            continue
+        assert bone.parent.name not in shown, name
+        assert (bone.head_local - bone.parent.tail_local).length < 1e-6, name
+
+
+def test_no_board_label_draws_a_relationship_line(ch):
+    """A label's line goes from its origin to the frame bone's tail: they are the same point."""
+    tail = ch.rig.matrix_world @ ch.rig.data.bones[names.FACE_BOARD_BONE].tail_local
+    labels = [o for o in bpy.data.objects if o.parent == ch.rig and o.type == "FONT"]
+    assert labels
+    for label in labels:
+        assert (label.matrix_world.translation - tail).length < 1e-5, label.name
