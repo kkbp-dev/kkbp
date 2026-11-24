@@ -14,7 +14,7 @@ import re
 
 import bpy
 
-SUMMARY_VERSION = 1
+SUMMARY_VERSION = 2
 CHARACTER = "{character}"
 
 # The new importer's tags (importer/kkbp/character.py and templates.py). A summary of a legacy import
@@ -70,10 +70,17 @@ def summarize(character_name):
 
 
 def _collections(collection, clean):
-    return {
+    out = {
         "objects": sorted(clean(o.name) for o in collection.objects),
         "children": {clean(c.name): _collections(c, clean) for c in sorted(collection.children, key=lambda c: c.name)},
     }
+    if getattr(collection, "color_tag", "NONE") != "NONE":  # the scene's own Collection has none
+        out["color"] = collection.color_tag
+    if getattr(collection, "asset_data", None) is not None:
+        preview = collection.preview
+        out["asset"] = {"tags": sorted(t.name for t in collection.asset_data.tags),
+                        "preview": list(preview.image_size) if preview else None}
+    return out
 
 
 def _object(obj, clean):
