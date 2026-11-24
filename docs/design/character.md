@@ -6,13 +6,13 @@ How the importer and its tools find an imported Character's Blender objects. Ter
 
 - Each imported Character gets a **Character Key**: a unique id generated at import and stored on every Part.
 - The Key is the only thing that decides membership. Names and Collections don't count.
-- The import still creates a Collection for the Character, for tidiness only.
+- The import still creates a Collection for the Character, for tidiness only. It is an asset, tagged with the Game, with the Card's picture as its preview (issue 131); the Card's data after the picture isn't kept. Each Collection the import and the Hooks make has an Outliner colour by what it holds, from the table in `collection_colors.py` (issue 130).
 - Blender object names are for display only (for example "Chika Body"). Nothing looks an object up by name, and users can rename freely. Material and bone names are still bundle Ids.
 
 ## Part Roles
 
-- Each Part carries exactly one Part Role from a closed set: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows` (the last two only after the link shape keys tool).
-- Outfit Parts also carry their Outfit index.
+- Each Part carries exactly one Part Role from a closed set: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows` (the last two only after the Separate Eyes Hook), `low_poly` (only after the Low poly Hook).
+- Outfit, alternate clothes and low poly Parts also carry their Outfit index.
 - `ch.add_part` is the only way to tag an object, so the tagging rules live in one place.
 
 ## Interface

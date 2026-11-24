@@ -8,6 +8,7 @@ Run Hook, in the Tools panel, runs any Hook on a character already in the file. 
 
 - Rigify, on a character imported without a rig
 - Separate Eyes, once you decide to composite the eyes over the hair
+- Low poly, to make the low poly copies again with another amount
 - Convert shaders, to change shader
 
 ## Adding your own

@@ -172,6 +172,10 @@ _Avoid_: piece, component, child
 What a Part is for, such as body, hair, outfit or armature, drawn from a closed set.
 _Avoid_: object type, flag, tag
 
+**Low Poly Copy**:
+A copy of an Outfit's clothes or hair with fewer faces and no outline, made by the Low poly Hook for faster playback, with Part Role `low_poly` and its Outfit (ADR 0059).
+_Avoid_: LOD, proxy mesh, decimated mesh
+
 **Material Template**:
 A KKBP shader material from the built-in library that bundle materials are rebuilt from.
 _Avoid_: shader template, template material

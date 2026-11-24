@@ -84,6 +84,7 @@ ADRs:
 - [0056 The graded templates take Shown Colours, ungraded in nodes](../adr/0056-the-graded-templates-take-shown-colours.md)
 - [0057 SVS's alpha masks are merged and read KK's way by the KK variants](../adr/0057-svs-alpha-masks-are-read-the-kk-way-by-the-kk-variants.md)
 - [0058 The face rig drives the expression keys through Face Key Roles](../adr/0058-the-face-rig-drives-the-expression-keys-through-face-key-roles.md)
+- [0059 Low poly copies are decimated once, from the finished Parts](../adr/0059-low-poly-copies-are-decimated-once-from-the-finished-parts.md)
 
 ## Decisions
 
@@ -91,7 +92,7 @@ The agreed decisions, numbered in the order they were made. Code comments, ADRs 
 
 ### The Core Import
 
-- **D1** The Step list is in `pipeline/steps.py`, in running order: load the Passes, join the armatures, name UV maps, merge the tongues, build the Parts, the tear controls, the one Gag eyes key (D68), order material slots and shape keys, link and drive the face keys, SVS's eyelids, trim the skeleton, bone tails and roll, IK bends, KK/KKS's fingers and legs, bone collections, joint corrections (D64), templates, each Outfit's body textures (ADR 0055), the gag eyes' drivers, material changes, viewport colours, Collections, view transform.
+- **D1** The Step list is in `pipeline/steps.py`, in running order: load the Passes, join the armatures, name UV maps, merge the tongues, build the Parts, the tear controls, the one Gag eyes key (D68), order material slots and shape keys, link and drive the face keys, SVS's eyelids, trim the skeleton, bone tails and roll, IK bends, KK/KKS's fingers and legs, bone collections, joint corrections (D64), templates, each Outfit's body textures (ADR 0055), the gag eyes' drivers, material changes, viewport colours, Collections (each coloured by what it holds), the Character's Collection as an asset with the Card as its preview, view transform.
 - **D2** Bone tails and roll come from Bone Roles and Groups only, with no bone names in the profiles ([ADR 0017](../adr/0017-bone-tails-from-the-game-rotation.md)). The Rigify Hook re-aims the bones its own rig needs.
 - **D3** One Gag template for every Game ([ADR 0019](../adr/0019-one-gag-template-built-per-material.md)).
 - **D4** One tongue ([ADR 0020](../adr/0020-one-tongue-with-mouth-keys-and-bones.md)), part of Body (D65).
