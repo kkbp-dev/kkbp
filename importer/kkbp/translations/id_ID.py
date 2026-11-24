@@ -84,12 +84,23 @@ TRANSLATIONS = {
     "Use Rigify armature": "Gunakan kerangka Rigify",
     "Generates a Rigify control rig, suitable for animating in Blender. Without it the Character keeps the FK armature, which is easier to export":
         "Membuat rig kontrol Rigify yang cocok untuk animasi di Blender. Tanpanya, Karakter tetap memakai kerangka FK, yang lebih mudah diekspor",
+    "Low poly clothes and hair": "Pakaian dan rambut low poly",
+    "Adds a copy of each Outfit's clothes and hair with fewer faces and no outline, in a hidden Collection beside the Outfit's, for smoother playback":
+        "Menambahkan salinan pakaian dan rambut setiap outfit dengan lebih sedikit face dan tanpa garis luar, dalam Collection tersembunyi di samping milik outfit, agar pemutaran lebih lancar",
+    "No low poly copies": "Tanpa salinan low poly",
+    "Light (50%)": "Ringan (50%)",
+    "Medium (25%)": "Sedang (25%)",
+    "Strong (10%)": "Kuat (10%)",
+    "The copies keep half of the faces": "Salinan menyimpan separuh face",
+    "The copies keep a quarter of the faces": "Salinan menyimpan seperempat face",
+    "The copies keep a tenth of the faces": "Salinan menyimpan sepersepuluh face",
     "Separate eyes": "Pisahkan mata",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so they can show through the hair with the compositor":
         "Memindahkan mata dan alis dari Body ke objek tersendiri, dengan kunci bentuk yang mengikuti milik Body, sehingga bisa tampil menembus rambut lewat kompositor",
 
     # The built-in Hooks' names, as the panel lists them
     "Outlines": "Garis luar",
+    "Low poly": "Low poly",
     "Separate Eyes": "Pisahkan Mata",
     "Separate meshes": "Pisahkan mesh",
     "Convert shaders": "Konversi shader",

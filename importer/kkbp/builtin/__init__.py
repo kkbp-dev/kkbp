@@ -15,3 +15,4 @@ from . import face_cards  # noqa: E402,F401
 from . import sfw  # noqa: E402,F401
 from . import rigify  # noqa: E402,F401
 from . import separate_eyes  # noqa: E402,F401
+from . import low_poly  # noqa: E402,F401

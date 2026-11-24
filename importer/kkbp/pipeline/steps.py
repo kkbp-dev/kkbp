@@ -46,8 +46,9 @@ STEPS: list[Step] = [
 
 # The built-in Hooks (builtin/) by name, in the fixed order they run after the Core Import.
 # SFW comes before Rigify so the rig is built without the bones it deletes. Separate Eyes comes after
-# Rigify so the new Parts are made on the finished rig. Delete default scene runs last, once every
-# object the other Hooks add is in the file.
+# Rigify so the new Parts are made on the finished rig. Low poly copies the finished clothes and hair,
+# so it comes after every Hook that changes them. Delete default scene runs last, once every object
+# the other Hooks add is in the file.
 BUILTIN_HOOKS: list[str] = [
     "Convert shaders",
     "Separate meshes",
@@ -56,5 +57,6 @@ BUILTIN_HOOKS: list[str] = [
     "SFW",
     "Rigify",
     "Separate Eyes",
+    "Low poly",
     "Delete default scene",
 ]

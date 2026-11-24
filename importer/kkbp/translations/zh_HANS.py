@@ -85,6 +85,16 @@ TRANSLATIONS = {
     "Generates a Rigify control rig, suitable for animating in Blender. Without it the Character keeps the FK "
     "armature, which is easier to export":
         "生成适合在 Blender 中制作动画的 Rigify 控制绑定。禁用时角色保留 FK 骨架，更便于导出",
+    "Low poly clothes and hair": "低多边形服装和头发",
+    "Adds a copy of each Outfit's clothes and hair with fewer faces and no outline, in a hidden Collection beside the Outfit's, for smoother playback":
+        "为每套服装的衣服和头发添加一个面数更少、没有轮廓线的副本，放在服装集合旁边的隐藏集合中，让播放更流畅",
+    "No low poly copies": "无低多边形副本",
+    "Light (50%)": "轻 (50%)",
+    "Medium (25%)": "中 (25%)",
+    "Strong (10%)": "强 (10%)",
+    "The copies keep half of the faces": "副本保留一半的面",
+    "The copies keep a quarter of the faces": "副本保留四分之一的面",
+    "The copies keep a tenth of the faces": "副本保留十分之一的面",
     "Separate eyes": "分离眼睛",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so "
     "they can show through the hair with the compositor":
@@ -92,6 +102,7 @@ TRANSLATIONS = {
 
     # The built-in Hooks' names, as the panel lists them
     "Outlines": "轮廓线",
+    "Low poly": "低多边形",
     "Separate Eyes": "分离眼睛",
     "Separate meshes": "分离网格",
     "Convert shaders": "转换着色器",

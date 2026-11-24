@@ -16,11 +16,11 @@ from .bundle import Bundle, open_bundle
 from .collection_colors import color
 
 PART_ROLES = ("body", "hair", "outfit", "alt_outfit", "tears", "gag_eyes", "armature", "rig", "face_card", "eyes",
-              "eyebrows")
+              "eyebrows", "low_poly")
 # Roles a Character has at most one of.
 SINGLE_ROLES = ("body", "armature", "rig", "tears", "gag_eyes")
 # Roles whose Parts must name their Outfit.
-OUTFIT_ROLES = ("outfit", "alt_outfit")
+OUTFIT_ROLES = ("outfit", "alt_outfit", "low_poly")
 
 # Custom property names. Parts carry all but ID; materials and images carry KEY, ID and (materials) ROLE.
 KEY = "kkbp_key"

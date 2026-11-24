@@ -84,12 +84,23 @@ TRANSLATIONS = {
     "Use Rigify armature": "Usar armação Rigify",
     "Generates a Rigify control rig, suitable for animating in Blender. Without it the Character keeps the FK armature, which is easier to export":
         "Gera um rig de controle Rigify, adequado para animar no Blender. Sem ele, o personagem mantém a armação FK, que é mais fácil de exportar",
+    "Low poly clothes and hair": "Roupas e cabelo low poly",
+    "Adds a copy of each Outfit's clothes and hair with fewer faces and no outline, in a hidden Collection beside the Outfit's, for smoother playback":
+        "Adiciona uma cópia das roupas e do cabelo de cada traje com menos faces e sem contorno, numa coleção oculta ao lado da do traje, para uma reprodução mais fluida",
+    "No low poly copies": "Sem cópias low poly",
+    "Light (50%)": "Leve (50%)",
+    "Medium (25%)": "Médio (25%)",
+    "Strong (10%)": "Forte (10%)",
+    "The copies keep half of the faces": "As cópias mantêm metade das faces",
+    "The copies keep a quarter of the faces": "As cópias mantêm um quarto das faces",
+    "The copies keep a tenth of the faces": "As cópias mantêm um décimo das faces",
     "Separate eyes": "Separar olhos",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so they can show through the hair with the compositor":
         "Move os olhos e as sobrancelhas de Body para objetos próprios, com as chaves de formato seguindo as de Body, para que possam aparecer através do cabelo com o compositor",
 
     # The built-in Hooks' names, as the panel lists them
     "Outlines": "Contornos",
+    "Low poly": "Low poly",
     "Separate Eyes": "Separar olhos",
     "Separate meshes": "Separar malhas",
     "Convert shaders": "Converter shaders",

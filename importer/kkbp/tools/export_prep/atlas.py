@@ -76,8 +76,9 @@ def _tidy_slots(obj):
 
 
 def _copy(ch, collection):
-    """Copies of the Character's armature and meshes, using each other as the originals did."""
-    originals = [ch.armature] + [o for o in ch.parts() if o.type == "MESH"]
+    """Copies of the Character's armature and meshes, using each other as the originals did. The Low
+    poly Hook's copies are left out: the atlas copy is the Character as another program gets it."""
+    originals = [ch.armature] + [o for o in ch.parts() if o.type == "MESH" and o.get("kkbp_role") != "low_poly"]
     copies = {}
     for obj in originals:
         copy = obj.copy()
