@@ -380,3 +380,33 @@ EDIT = {
         ["shader:main_hair_front", {"front": 1.0}],
     ],
 }
+
+# What each control of the Rigify Hook's face rig drives (Face Key Roles, profiles/__init__.py). Picked
+# from renders of every expression (ADR 0058). KK's lip-only (", Closed") keys move little, so some of
+# the lip moods use open keys.
+FACE_KEYS = {
+    "blink": [("Eye Closed", 0.35), ("Eye Happy, Closed", 0.7)],  # the legacy emotion grid's soft close
+    "wink_l": "Eye Winking L", "wink_r": "Eye Winking R",
+    "brows_up": "Eyebrow Surprised", "brows_down": "Eyebrow Disappointed", "brow_down_side": "Eyebrow Angry",
+    "emote_sad_brows": "Eyebrow Worried", "emote_sad_eyes": "Eye Sad",
+    "emote_angry_brows": "Eyebrow Angry", "emote_angry_eyes": "Eye Angry",
+    "corner_up": "Mouth Smiling, Closed", "corner_down": "Mouth Angry, Closed",
+    "corner_out": "Mouth Happy (Broad), Closed",
+    "vowel_a": "Mouth Big A", "vowel_i": "Mouth Big I", "vowel_o": "Mouth Big O", "vowel_e": "Mouth Big E",
+    "vowel_u": "Mouth Big U",
+    "open_mood_up": "Mouth Hold In Mouth", "open_mood_down": "Mouth Lonely", "open_mood_left": "Mouth Dissatisfied",
+    "open_mood_right": "Mouth Impatient",
+    "mood_up": "Mouth Smiling, Closed", "mood_down": "Mouth Angry, Closed", "mood_left": "Mouth Dissatisfied, Closed",
+    "mood_right": "Mouth Smug, Closed",
+    "mood2_up": "Mouth Catlike, Closed", "mood2_down": "Mouth Serious 2, Closed", "mood2_left": "Mouth Hate",
+    "mood2_right": "Mouth Excited (Moderate)",
+    "eyes_smiling": "Eye Smiling", "eyes_happy_closed": "Eye Happy, Closed", "eyes_half_lid": "Eye Bored",
+    "eyes_smug": "Eye Smug", "eyes_doubt": "Eye Thinking", "eyes_angry": "Eye Angry", "eyes_sad": "Eye Sad",
+    "brows_amazed": "Eyebrow Anxious", "brows_doubt": "Eyebrow Doubt L", "brows_smiling": "Eyebrow Smug",
+    "brows_worried": "Eyebrow Worried", "brows_angry": "Eyebrow Angry",
+    "open_smile": "Mouth Smiling", "open_cartoony": "Mouth Cartoony Smile", "open_excited": "Mouth Excited (Broad)",
+    "open_angry": "Mouth Angry", "open_hate": "Mouth Angry 2", "open_serious": "Mouth Serious 2",
+    "open_triangle": "Mouth Triangle", "open_kiss": "Mouth Kiss", "open_catlike": "Mouth Catlike",
+    "open_tongue": "Mouth Tongue Out", "open_playful": "Mouth Playful",
+    "gag_eyes": "Gag eyes", "tears_small": "Tears small", "tears_med": "Tears med", "tears_big": "Tears big",
+}

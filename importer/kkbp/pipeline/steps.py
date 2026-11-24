@@ -22,6 +22,7 @@ STEPS: list[Step] = [
     Step(gag.combine_gag_keys),
     Step(mesh.order_material_slots),
     Step(mesh.order_shape_keys),
+    Step(mesh.record_face_keys),
     Step(mesh.link_expression_keys),
     Step(mesh.drive_showing_keys),
     Step(mesh.move_eyelids_forward, games=["SVS"]),

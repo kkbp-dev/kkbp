@@ -20,7 +20,28 @@ from .corrections import CorrectionError, Corrections, parse as _parse_correctio
 _MODULES = {m.GAME: m for m in (kk, kks, svs)}
 # What a profile module may set. Each is optional in a module that EXTENDS another, and replaces
 # the base profile's value when set.
-_FIELDS = ("TEMPLATE_SET", "RAW_TEXTURES", "PATTERN_VALUES", "BONES", "EDIT", "CORRECTIONS")
+_FIELDS = ("TEMPLATE_SET", "RAW_TEXTURES", "PATTERN_VALUES", "BONES", "EDIT", "CORRECTIONS", "FACE_KEYS")
+
+# Face Key Roles: what each control of the Rigify Hook's face rig drives (finish/face, ADR 0058). A
+# profile's FACE_KEYS maps each to an Expression Name, or to (Expression Name, weight) pairs mixed
+# together; a role a Game has no key for is left out and its control isn't made.
+FACE_KEY_ROLES = (
+    # on the face
+    "blink", "wink_l", "wink_r", "brows_up", "brows_down", "brow_down_side",
+    "emote_sad_brows", "emote_sad_eyes", "emote_angry_brows", "emote_angry_eyes",
+    "corner_up", "corner_down", "corner_out",
+    # the jaw opens one of these, picked by the mouth shape grid (A in its middle) or the open mood grid
+    "vowel_a", "vowel_i", "vowel_o", "vowel_e", "vowel_u",
+    "open_mood_up", "open_mood_down", "open_mood_left", "open_mood_right",
+    # the lip mood grids
+    "mood_up", "mood_down", "mood_left", "mood_right", "mood2_up", "mood2_down", "mood2_left", "mood2_right",
+    # the board's sliders
+    "eyes_smiling", "eyes_happy_closed", "eyes_half_lid", "eyes_smug", "eyes_doubt", "eyes_angry", "eyes_sad",
+    "brows_amazed", "brows_doubt", "brows_smiling", "brows_worried", "brows_angry",
+    "open_smile", "open_cartoony", "open_excited", "open_angry", "open_hate", "open_serious", "open_triangle",
+    "open_kiss", "open_catlike", "open_tongue", "open_playful",
+    "gag_eyes", "tears_small", "tears_med", "tears_big",
+)
 
 
 class ProfileError(Exception):
@@ -113,6 +134,7 @@ class Profile:
     bones: BoneRules
     edit: EditRules
     corrections: Corrections  # the game's joint corrections (profiles/corrections.py)
+    face_keys: Mapping[str, tuple[tuple[str, float], ...]]  # Face Key Role -> (Expression Name, weight)s
 
 
 def games() -> tuple[str, ...]:
@@ -139,7 +161,7 @@ def _resolve(game, seen):
         base = _resolve(extends, seen + (game,))
         values = {"TEMPLATE_SET": base.template_set, "RAW_TEXTURES": dict(base.raw_textures),
                   "PATTERN_VALUES": dict(base.pattern_values), "BONES": base.bones, "EDIT": base.edit,
-                  "CORRECTIONS": base.corrections}
+                  "CORRECTIONS": base.corrections, "FACE_KEYS": base.face_keys}
     for name in _FIELDS:
         if hasattr(module, name):
             value = getattr(module, name)
@@ -153,7 +175,20 @@ def _resolve(game, seen):
                    pattern_values=MappingProxyType(dict(values["PATTERN_VALUES"])),
                    bones=bones if isinstance(bones, BoneRules) else _bone_rules(game, bones),
                    edit=values["EDIT"] if isinstance(values["EDIT"], EditRules) else _edit_rules(game, values["EDIT"]),
-                   corrections=_corrections(game, values["CORRECTIONS"]))
+                   corrections=_corrections(game, values["CORRECTIONS"]),
+                   face_keys=_face_keys(game, values["FACE_KEYS"]))
+
+
+def _face_keys(game, data):
+    out = {}
+    for role, value in data.items():
+        if role not in FACE_KEY_ROLES:
+            raise ProfileError(f"profile {game}: FACE_KEYS has an unknown role {role!r}")
+        pairs = ((value, 1.0),) if isinstance(value, str) else tuple((name, float(w)) for name, w in value)
+        if not pairs or any(not name or not 0 < w <= 1 for name, w in pairs):
+            raise ProfileError(f"profile {game}: FACE_KEYS {role} needs Expression Names with weights in (0, 1]")
+        out[role] = pairs
+    return MappingProxyType(out)
 
 
 def _corrections(game, data):
