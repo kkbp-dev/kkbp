@@ -10,6 +10,7 @@ import math
 import bpy
 
 from .. import appending, templates
+from ..collection_colors import color
 from ..library import hook_assets
 from ..pipeline.hooks import hook
 from ..pipeline.options import Option
@@ -34,6 +35,7 @@ def face_cards(ctx):
     bone_shapes = next(c for c in added if appending.base_name(c.name) == assets.bone_shapes)
     ch.collection.children.link(collection)
     collection.name = f"{assets.collection} {ch.name}"
+    color(collection, "face")
     for layer in (_layer(collection), _layer(bone_shapes)):
         if layer is not None:
             layer.exclude = True

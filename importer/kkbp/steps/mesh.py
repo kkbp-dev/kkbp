@@ -12,6 +12,7 @@ from collections import defaultdict
 import bpy
 
 from .. import compat, mesh_loader, templates
+from ..collection_colors import color
 from ..editing import editing
 from ..character import ID, KEY, OUTFIT, ROLE, SUB_COLLECTION
 
@@ -342,15 +343,17 @@ def arrange_collections(ctx):
     first = outfits[0] if outfits else None
     for index in outfits:
         name = f"Outfit {index:02d} {ch.name}"
-        collection = child_collection(root, name)
+        collection = color(child_collection(root, name), "outfit")
         collection[OUTFIT] = index  # the Collection that shows the Outfit (outfit_textures.py)
         move_to_collection(ch.parts(("outfit", "hair"), outfit=index), collection, hide=index != first)
         alts = ch.parts("alt_outfit", outfit=index)
         if alts:
-            move_to_collection(alts, child_collection(root, f"Alts {index:02d} {ch.name}"), hide=True)
+            alts_collection = color(child_collection(root, f"Alts {index:02d} {ch.name}"), "alts")
+            move_to_collection(alts, alts_collection, hide=True)
     face = ch.parts(("tears", "gag_eyes"))
     if face:
-        move_to_collection(face, child_collection(root, f"Tears and gag eyes {ch.name}"), hide=False)
+        face_collection = color(child_collection(root, f"Tears and gag eyes {ch.name}"), "face")
+        move_to_collection(face, face_collection, hide=False)
 
 
 # --- helpers ------------------------------------------------------------------------------

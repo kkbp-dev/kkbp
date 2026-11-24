@@ -13,6 +13,7 @@ from pathlib import Path
 import bpy
 
 from .bundle import Bundle, open_bundle
+from .collection_colors import color
 
 PART_ROLES = ("body", "hair", "outfit", "alt_outfit", "tears", "gag_eyes", "armature", "rig", "face_card", "eyes",
               "eyebrows")
@@ -213,6 +214,7 @@ class Character:
         """Makes this Character's Collection, named after it, inside `parent`."""
         collection = bpy.data.collections.new(self.name or "Character")
         collection[KEY] = self.key
+        color(collection, "character")
         parent.children.link(collection)
         return collection
 

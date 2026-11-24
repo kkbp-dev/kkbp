@@ -13,6 +13,7 @@ property and driver names (ADR 0023, ADR 0043); names.py holds them all.
 import bpy
 
 from ... import compat, joint_corrections
+from ...collection_colors import color
 from ...pipeline.hooks import hook
 from ...pipeline.options import Option
 from . import prepare
@@ -113,6 +114,7 @@ def _tidy(build, generated_from):
     ch, metarig = build.character, build.metarig
     junk = build.widgets
     junk.name = JUNK.format(name=ch.name)
+    color(junk, "junk")
     hidden = bpy.data.collections.new(WIDGETS.format(name=ch.name))
     junk.children.link(hidden)
     for obj in list(junk.objects):

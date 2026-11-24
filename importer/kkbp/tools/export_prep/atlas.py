@@ -18,6 +18,7 @@ import bpy
 
 from ... import templates
 from ...character import ID, KEY
+from ...collection_colors import color
 
 # The texture slots each atlas mode makes an atlas of.
 WITHOUT_EYESHADOW = {"main.light": "main.light_no_eyeshadow", "main.dark": "main.dark_no_eyeshadow"}
@@ -41,7 +42,7 @@ def build(ch, mode: str, folder: Path, log, max_side: int | None = None):
     Pillow is required to import, so it is there; it is imported here, not when the add-on loads,
     because the add-on must load without it to offer installing it."""
     folder.mkdir(parents=True, exist_ok=True)
-    collection = bpy.data.collections.new(f"{ch.name} atlas")
+    collection = color(bpy.data.collections.new(f"{ch.name} atlas"), "atlas")
     bpy.context.scene.collection.children.link(collection)
     copies = _copy(ch, collection)
     for obj in [o for o in copies if o.type == "MESH"]:
