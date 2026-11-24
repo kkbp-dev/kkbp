@@ -18,7 +18,7 @@ What works in which game.
 | Eevee shader, outlines | Yes | Yes | Yes |
 | [Other shaders](shaders.md) | Yes | Yes | Yes; the bottom alpha mask is lost |
 | [Rigify rig](rig.md), joint corrections | Yes | Yes | Yes |
-| [Expressions](expressions.md), emotion grid, gag eyes | Yes | Yes | Yes |
+| [Expressions](expressions.md), face rig and presets, gag eyes | Yes | Yes | Yes |
 | Tongue during mouth expressions | Moves | Moves | Stays still in most, as in the game |
 | Face cards, Separate eyes | Yes | Yes | Yes |
 | [Edit Material](edit-material.md) | Yes | Yes, partly approximated | Yes, except the eyelids |

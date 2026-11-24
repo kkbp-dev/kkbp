@@ -29,7 +29,7 @@ The exporter writes to the game's BepInEx log (`BepInEx/LogOutput.log`, or `outp
 | Edit Material or Export Prep can't find the export | They read the export folder again: put it back where it was imported from |
 | There are no outlines | Outlines are left out for the Cycles and Principled shaders |
 | A seam shows around the neck or down the chest | Report it with the card: every import welds the face and body together, so a seam is a bug |
-| The face controls or other rig controls aren't showing | Show them in Rig Layers, in the sidebar's Item tab; the face controls are the Emotions row |
+| The face controls or other rig controls aren't showing | Show them in Rig Layers, in the sidebar's Item tab; the face controls are the Emotions and Eyes rows |
 | Colours look washed out or too strong | Set the scene's View Transform to Standard (the import does this for you) |
 
 Deleting an export's `kkbp_cache/` folder is always safe; the importer makes it again.

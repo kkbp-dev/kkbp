@@ -159,10 +159,43 @@ TRANSLATIONS = {
     "Link Hair": "Vincular cabelo",
     "Puts every hair material into edit with the active hair material's settings":
         "Coloca todos os materiais de cabelo em edição com as configurações do material de cabelo ativo",
+    # The Face panel (the Rigify Hook's face rig)
+    "Face Preset": "Predefinição de rosto",
+    "Poses the face as this emotion. Shift-click adds it on top of the face as it is": "Coloca o rosto nesta emoção. Shift+clique a adiciona sobre o rosto atual",
+    "Add": "Adicionar",
+    "Adds the preset on top of the face as it is": "Adiciona a predefinição sobre o rosto atual",
+    "Reset Face": "Redefinir rosto",
+    "Puts every face control back and every face slider to 0": "Volta todos os controles do rosto e zera todos os controles deslizantes do rosto",
+    "Key Face": "Inserir chave do rosto",
+    "Keys every face control and face slider at the current frame": "Insere chaves em todos os controles e controles deslizantes do rosto no quadro atual",
+    "Emotions": "Emoções",
+    "Eyes": "Olhos",
+    "More Expressions": "Mais expressões",
+    "Strength": "Intensidade",
+    "Shift-click adds on top": "Shift+clique adiciona por cima",
+    "Target follows head": "O alvo segue a cabeça",
+    "Lids follow gaze": "As pálpebras seguem o olhar",
+    "Iris size": "Tamanho da íris",
+    "Neutral": "Neutro",
+    "Happy": "Feliz",
+    "Laugh": "Risada",
+    "Gentle smile": "Sorriso suave",
+    "Sad": "Triste",
+    "Crying": "Chorando",
+    "Angry": "Com raiva",
+    "Surprised": "Surpreso",
+    "Embarrassed": "Envergonhado",
+    "Smug": "Convencido",
+    "Sleepy": "Sonolento",
+    "Pained": "Com dor",
+    "Brows": "Sobrancelhas",
+    "Mouth": "Boca",
+    "Tears": "Lágrimas",
 }
 
 # In the "KKBP" translation context, where Blender's own word means something else.
 IN_CONTEXT = {
+    "Face": "Rosto",
     "Hooks": "Hooks",
     "Hook": "Hook",
 }

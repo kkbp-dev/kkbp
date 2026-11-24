@@ -17,6 +17,10 @@ The controls have readable names (`Left arm`, `Hips`). Hair and accessory bones 
 
 The rig stands the character's lowest point on the floor. IK stretch is off.
 
+## Face
+
+The face has its own controls, a board beside the head and emotion presets: see [Expressions](expressions.md#the-face-rig). The game's own face bones are in the hidden Face Tweak collection, for small adjustments bone by bone.
+
 ## Joint corrections
 
 The game moves small helper bones to keep the elbows, knees, shoulders and hips from collapsing as they bend. KKBP copies the game's own rules for them, so the joints hold their shape as they do in the game's Studio.

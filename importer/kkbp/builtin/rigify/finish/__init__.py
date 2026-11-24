@@ -1,13 +1,13 @@
 """What the Rigify Hook does to the rig Rigify generated from the metarig.
 
 `finish_rig` runs the phases in order. Each works in Object Mode; `fixups.edit_bones` runs in the
-editing() block here, and the emotion grid and grounding open their own.
+editing() block here, and the face rig and grounding open their own.
 """
 
 from __future__ import annotations
 
 from ....editing import editing
-from . import emotions, fixups, ground, outfits, shapes
+from . import face, fixups, ground, outfits, shapes
 
 
 def finish_rig(build):
@@ -22,5 +22,5 @@ def finish_rig(build):
     fixups.tags(build)
     outfits.outfit_collections(build)
     fixups.ik_stretch_off(build)
-    emotions.emotion_grid(build)
     ground.ground(build)
+    face.face_rig(build)  # after grounding, which moves the rig's bones and would leave its Child Of stale

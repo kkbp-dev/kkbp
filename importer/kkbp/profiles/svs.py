@@ -372,3 +372,30 @@ def _corrections():
 
 # The joint corrections (docs/design/joint-corrections.md).
 CORRECTIONS = _corrections()
+
+# The face rig's keys (Face Key Roles; KK's say more). SVS's open-mouth keys all carry the same jaw
+# drop, and its lip-only (", Closed") keys move the lips clearly, so the lip moods use those.
+FACE_KEYS = {
+    "blink": "Eye Closed",
+    "wink_l": "Eye Winking L", "wink_r": "Eye Winking R",
+    "brows_up": "Eyebrow Excited", "brows_down": "Eyebrow Lonely", "brow_down_side": "Eyebrow Angry",
+    "emote_sad_brows": "Eyebrow Worried", "emote_sad_eyes": "Eye Lonely",
+    "emote_angry_brows": "Eyebrow Angry", "emote_angry_eyes": "Eye Angry",
+    "corner_up": "Mouth Smiling, Closed", "corner_down": "Mouth Lonely, Closed", "corner_out": "Mouth Excited, Closed",
+    "vowel_a": "Mouth A", "vowel_i": "Mouth I", "vowel_o": "Mouth O", "vowel_e": "Mouth E", "vowel_u": "Mouth U",
+    "open_mood_up": "Mouth Hold In Mouth", "open_mood_down": "Mouth Lonely", "open_mood_left": "Mouth Displeased",
+    "open_mood_right": "Mouth Impatient",
+    "mood_up": "Mouth Smiling, Closed", "mood_down": "Mouth Lonely, Closed", "mood_left": "Mouth Displeased, Closed",
+    "mood_right": "Mouth Smug, Closed",
+    "mood2_up": "Mouth Catlike, Closed", "mood2_down": "Mouth Angry (Moderate), Closed",
+    "mood2_left": "Mouth Hate, Closed", "mood2_right": "Mouth Impatient, Closed",
+    "eyes_smiling": "Eye Smiling", "eyes_happy_closed": "Eye Happy, Closed", "eyes_half_lid": "Eye Displeased",
+    "eyes_smug": "Eye Smug", "eyes_doubt": "Eye Doubt", "eyes_angry": "Eye Angry", "eyes_sad": "Eye Lonely",
+    "brows_amazed": "Eyebrow Amazed", "brows_doubt": "Eyebrow Doubt", "brows_smiling": "Eyebrow Smiling",
+    "brows_worried": "Eyebrow Worried", "brows_angry": "Eyebrow Angry",
+    "open_smile": "Mouth Smiling", "open_cartoony": "Mouth Cartoony Smile", "open_excited": "Mouth Excited",
+    "open_angry": "Mouth Angry", "open_hate": "Mouth Hate", "open_serious": "Mouth Serious",
+    "open_triangle": "Mouth Triangle", "open_kiss": "Mouth Kiss", "open_catlike": "Mouth Catlike",
+    "open_tongue": "Mouth Tongue Out", "open_playful": "Mouth Playful",
+    "gag_eyes": "Gag eyes", "tears_small": "Tears small", "tears_med": "Tears med", "tears_big": "Tears big",
+}

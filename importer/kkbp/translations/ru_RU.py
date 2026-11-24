@@ -157,10 +157,43 @@ TRANSLATIONS = {
     "Link Hair": "Связать волосы",
     "Puts every hair material into edit with the active hair material's settings":
         "Переводит все материалы волос в режим редактирования с настройками активного материала волос",
+    # The Face panel (the Rigify Hook's face rig)
+    "Face Preset": "Пресет лица",
+    "Poses the face as this emotion. Shift-click adds it on top of the face as it is": "Придаёт лицу эту эмоцию. Shift+щелчок добавляет её к текущему лицу",
+    "Add": "Добавить",
+    "Adds the preset on top of the face as it is": "Добавляет пресет к текущему лицу",
+    "Reset Face": "Сбросить лицо",
+    "Puts every face control back and every face slider to 0": "Возвращает все контроллеры лица на место и все ползунки лица в 0",
+    "Key Face": "Ключ лица",
+    "Keys every face control and face slider at the current frame": "Ставит ключи на все контроллеры и ползунки лица в текущем кадре",
+    "Emotions": "Эмоции",
+    "Eyes": "Глаза",
+    "More Expressions": "Другие выражения",
+    "Strength": "Сила",
+    "Shift-click adds on top": "Shift+щелчок добавляет сверху",
+    "Target follows head": "Цель следует за головой",
+    "Lids follow gaze": "Веки следуют за взглядом",
+    "Iris size": "Размер радужки",
+    "Neutral": "Нейтрально",
+    "Happy": "Радость",
+    "Laugh": "Смех",
+    "Gentle smile": "Мягкая улыбка",
+    "Sad": "Грусть",
+    "Crying": "Плач",
+    "Angry": "Злость",
+    "Surprised": "Удивление",
+    "Embarrassed": "Смущение",
+    "Smug": "Самодовольство",
+    "Sleepy": "Сонливость",
+    "Pained": "Боль",
+    "Brows": "Брови",
+    "Mouth": "Рот",
+    "Tears": "Слёзы",
 }
 
 # In the "KKBP" translation context, where Blender's own word means something else.
 IN_CONTEXT = {
+    "Face": "Лицо",
     "Hooks": "Хуки",
     "Hook": "Хук",
 }

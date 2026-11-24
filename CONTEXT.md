@@ -96,6 +96,10 @@ _Avoid_: alpha shader, transparency type
 The canonical English name of an expression shape key, shared by every Game, alongside the Game's own name. It is the display name used in Blender, prefixed by its category, such as `Eye Happy` or `Gag Heart Eyes`.
 _Avoid_: translated name, shape key alias
 
+**Face Key Role**:
+What a control of the Rigify Hook's face rig drives, such as `blink`, `corner_down` or `vowel_o`. The Game Profile maps each to an Expression Name, or to a weighted mix of them; the `record_face_keys` Step writes the roles onto Body for the Hook (ADR 0058).
+_Avoid_: expression slot, face channel
+
 **Gag Eyes Key**:
 The one shape key, `Gag eyes`, that shows the gag expression picked on the gag eyes' `Gag expression` dropdown. It replaces the gag expressions' own keys; an expression whose shape differs from the shared one has a driven correction key beside it, such as `Gag eyes (Fiery Eyes)` (ADR 0042).
 _Avoid_: gag slider, combined gag key

@@ -15,7 +15,6 @@ LIMBS = (
     (names.LEFT_LEG_IK_LAYER_BONE_NAMES, names.LEFT_LEG_LAYER),
     (names.RIGHT_LEG_IK_LAYER_BONE_NAMES, names.RIGHT_LEG_LAYER),
 )
-EYE_HANDLES = (names.EYES_HANDLE_BONE, names.LEFT_EYE_HANDLE_BONE, names.RIGHT_EYE_HANDLE_BONE)
 TORSO_HANDLES = (names.BREASTS_HANDLE_BONE, names.LEFT_BREAST_HANDLE_BONE, names.RIGHT_BREAST_HANDLE_BONE,
                  names.BUTTOCKS_HANDLE_BONE, names.LEFT_BUTTOCK_HANDLE_BONE, names.RIGHT_BUTTOCK_HANDLE_BONE)
 
@@ -29,17 +28,16 @@ ROWS = (
     (names.RIGHT_ARM_LAYER + names.IK_LAYER_SUFFIX, 3), (names.RIGHT_ARM_LAYER + names.FK_LAYER_SUFFIX, 3),
     (names.LEFT_LEG_LAYER + names.IK_LAYER_SUFFIX, 2), (names.LEFT_LEG_LAYER + names.FK_LAYER_SUFFIX, 2),
     (names.RIGHT_LEG_LAYER + names.IK_LAYER_SUFFIX, 3), (names.RIGHT_LEG_LAYER + names.FK_LAYER_SUFFIX, 3),
-    (names.FINGERS_LAYER, 6), (names.EMOTIONS_LAYER, 6), (names.HAIR_LAYER, 6),
+    (names.FINGERS_LAYER, 6), (names.HAIR_LAYER, 6),
     (TWEAK, 7), (names.FINGERS_LAYER + names.DETAIL_LAYER_SUFFIX, 7),
     (names.HAIR_LAYER + names.DETAIL_LAYER_SUFFIX, 8), (names.HAIR_LAYER + names.MCH_LAYER_SUFFIX, 8),
     (names.SKIRT_LAYER, 9), (names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX, 9),
-    (names.EYES_LAYER, 10), (names.FACE_LAYER, 10), (names.FACE_LAYER + names.MCH_LAYER_SUFFIX, 10),
+    (names.TONGUE_LAYER, 10), (names.FACE_TWEAK_LAYER, 11), (names.FACE_MCH_LAYER, 11),
     (names.NSFW_LAYER, 14),
 )
 # Drawn first in the bone collection list, last moved first, so the IK collections come before the FK ones.
 FIRST = (names.LEFT_LEG_LAYER + names.IK_LAYER_SUFFIX, names.RIGHT_LEG_LAYER + names.IK_LAYER_SUFFIX,
-         names.LEFT_ARM_LAYER + names.IK_LAYER_SUFFIX, names.RIGHT_ARM_LAYER + names.IK_LAYER_SUFFIX,
-         names.EMOTIONS_LAYER)
+         names.LEFT_ARM_LAYER + names.IK_LAYER_SUFFIX, names.RIGHT_ARM_LAYER + names.IK_LAYER_SUFFIX)
 # Rigify's colour sets: Tweak blue, Root purple, IK red, FK green, Extra orange, Special yellow.
 COLOUR_SETS = (
     (names.TORSO_LAYER, "Special"), (TWEAK, "Tweak"),
@@ -49,8 +47,8 @@ COLOUR_SETS = (
     (names.LEFT_ARM_LAYER + names.FK_LAYER_SUFFIX, "FK"), (names.LEFT_LEG_LAYER + names.FK_LAYER_SUFFIX, "FK"),
     (names.FINGERS_LAYER, "Special"), (names.FINGERS_LAYER + names.DETAIL_LAYER_SUFFIX, "Special"),
     (names.NSFW_LAYER, "Tweak"), (names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX, "FK"),
-    (names.SKIRT_LAYER, "Special"), (names.FACE_LAYER, "Special"), (names.FACE_LAYER + names.MCH_LAYER_SUFFIX, "Tweak"),
-    (names.EYES_LAYER, "Extra"), (names.HAIR_LAYER, "Special"), (names.HAIR_LAYER + names.MCH_LAYER_SUFFIX, "Tweak"),
+    (names.SKIRT_LAYER, "Special"), (names.FACE_TWEAK_LAYER, "Special"), (names.FACE_MCH_LAYER, "Tweak"),
+    (names.TONGUE_LAYER, "Extra"), (names.HAIR_LAYER, "Special"), (names.HAIR_LAYER + names.MCH_LAYER_SUFFIX, "Tweak"),
     (names.HAIR_LAYER + names.DETAIL_LAYER_SUFFIX, "FK"),
 )
 
@@ -77,10 +75,8 @@ def sort_bones(build, lists):
     for name in names.FINGERS_LAYER_BONE_NAMES:
         move(name, names.FINGERS_LAYER)
         bone_collections.tweak(metarig, name, names.FINGERS_LAYER + names.DETAIL_LAYER_SUFFIX)
-    for name in lists.eyes_secondary:
-        move(name, names.EYES_LAYER)
-    for name in EYE_HANDLES:
-        move(name, names.FACE_LAYER)
+    for name in lists.tongue_secondary:
+        move(name, names.TONGUE_LAYER)
     move(names.HEAD_TRACK_TARGET_BONE, TWEAK)
     bone_collections.tweak(metarig, names.HIPS_BONE, TWEAK)
     bone_collections.fk(metarig, names.HIPS_BONE, TORSO_FK)
@@ -90,16 +86,15 @@ def sort_bones(build, lists):
     move(names.WAIST_BONE, TWEAK)
     for name in names.FACE_BONES:
         if bone := metarig.data.bones.get(name):
-            move(bone.name, names.FACE_LAYER)
+            move(bone.name, names.FACE_TWEAK_LAYER)
             bone_collections.lock(metarig, bone.name, False)
             bone.use_deform = True
     for bone in metarig.data.bones:
-        if bone.collections.get(names.FACE_LAYER + names.MCH_LAYER_SUFFIX) or bone.collections.get(names.NSFW_LAYER):
+        if bone.collections.get(names.FACE_MCH_LAYER) or bone.collections.get(names.NSFW_LAYER):
             bone_collections.lock(metarig, bone.name, False)
             bone.use_deform = True
     with editing(metarig, "EDIT"):
         deform_flags(build, lists)
-    metarig.data.collections.new(names.EMOTIONS_LAYER)
 
 
 def deform_flags(build, lists):

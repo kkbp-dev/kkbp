@@ -13,8 +13,6 @@ def _both(left, right, attribute, value):
     return ((left, attribute, value), (right, attribute, value))
 
 
-EYES = ((names.EYES_TRACK_TARGET_BONE, WIDGET, "pivot_cross"), (names.EYEBALLS_BONE, WIDGET, "bone"),
-        *_both(names.LEFT_EYEBALL_BONE, names.RIGHT_EYEBALL_BONE, WIDGET, "bone"))
 TONGUE = (
     (names.RIGGED_TONGUE_BONE1, WIDGET, "jaw"),
     (names.RIGGED_TONGUE_BONE2, TYPE, "limbs.super_finger"),
@@ -142,7 +140,7 @@ def rigify_types(build):
     features = build.features
     for bone in metarig.pose.bones[:]:
         bone.rigify_type = "basic.raw_copy"
-    rows = (EYES + (TONGUE if features.rigged_tongue else ()) + SPINE
+    rows = ((TONGUE if features.rigged_tongue else ()) + SPINE
             + (BETTER_PENETRATION if features.better_penetration else ()) + BREASTS
             + (NIPPLES if build.kk_extras else ()) + ARMS + (ARM_CORRECTIONS if build.kk_extras else ()) + PALMS
             + FINGERS + LEGS + (LEG_CORRECTIONS if build.kk_extras else ()))

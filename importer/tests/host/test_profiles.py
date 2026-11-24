@@ -52,3 +52,23 @@ def test_bone_rules_name_known_roles_and_groups(game):
         for anchor in (rule.under, rule.outside):
             assert anchor is None or anchor in _contract.BONE_ROLES
     assert set(rules.chains) <= set(_contract.BONE_GROUPS)
+
+
+@pytest.mark.parametrize("game", _contract.GAMES)
+def test_face_keys_name_keys_body_has(game):
+    """Every Expression Name the face rig's Face Key Roles name (ADR 0058) is a shape key of the
+    Game's Body, as the committed snapshot of its Golden Sample has them."""
+    import json
+    from pathlib import Path
+    snapshot = json.loads((Path(__file__).parents[1] / "snapshots" / f"{game.lower()}.defaults.json").read_text(
+        encoding="utf-8"))
+    body = next(v for k, v in snapshot["objects"].items() if k.startswith("Body "))
+    keys = set(body["mesh"]["shape_keys"])
+    face_keys = profiles.get(game).face_keys
+    assert set(face_keys) == set(profiles.FACE_KEY_ROLES)
+    missing = sorted({name for pairs in face_keys.values() for name, _ in pairs} - keys)
+    assert not missing, f"{game}'s Body has no {missing}"
+
+
+def test_kks_takes_kks_face_keys_from_kk():
+    assert profiles.get("KKS").face_keys == profiles.get("KK").face_keys

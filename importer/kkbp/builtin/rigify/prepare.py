@@ -1,5 +1,5 @@
 """What the legacy armature Step did only when Rigify was on, before the Rigify scripts ran: the
-eye controller with its UV warps, and the "clarity" renames the scripts expect (D23, D24, D25).
+eye controller and the eye UV warps, and the "clarity" renames the scripts expect (D23, D24, D25).
 The legacy joint-correction drivers are gone: the joint corrections Step copies the game's own, and
 the Rigify Hook puts them back on the generated rig (ADR 0038).
 
@@ -29,7 +29,6 @@ JOINT_CORRECTION_BONES = tuple(
     + ["cf_s_waist02", "cf_j_waist02"])
 
 # The eye controller (legacy create_eye_controller_bone).
-EYES_X = "Eyesx"
 EYE_CONTROLLER = "Eye Controller"
 EYE_CONTROLLER_FORWARD = 0.05
 EYE_GROUPS = {"eye_l": "Left Eye", "eye_r": "Right Eye"}
@@ -99,45 +98,31 @@ def _face_mch(ctx, armature):
 
 
 def _eye_controller(ctx, armature, role):
-    """Eyesx and the Eye Controller that moves the eye textures through two UV warp modifiers on Body.
-    The legacy importer made them from the head hit box, which is never exported (exporter-core.md),
-    then moved them to the nose bridge pointing forward, as they end up here; without a nose bridge
-    they stay a little in front of the eyes' midpoint."""
-    ch, skeleton = ctx.character, ctx.bundle.skeleton
+    """The Eye Controller, a metarig-only bone at the nose bridge pointing forward (a little in front
+    of the eyes' midpoint without a nose bridge): the head is told apart by it and the head track
+    target is placed from it. And the two UV warp modifiers on Body that slide the eye textures; the
+    face rig drives their offset and scale (finish/face). The legacy importer made the bone from the
+    head hit box, which is never exported (exporter-core.md), then moved it to the nose bridge."""
+    ch = ctx.character
     left, right, head = role.get("left_eye"), role.get("right_eye"), role.get("head")
     if not (left and right and head):
         ctx.log.warning("The skeleton has no eye or head bones, so there is no eye controller")
         return
-    eyebrow_tops = [b.id for b in skeleton.bones if b.group == "eyebrow"]
     with editing(armature, "EDIT"):
         bones = armature.data.edit_bones
         middle = (bones[left].head + bones[right].head) / 2
-        top = max((bones[b].tail.z for b in eyebrow_tops if b in bones), default=middle.z + 0.03)
-        eyes_x = bones.new(EYES_X)
-        eyes_x.head = Vector((0.0, middle.y - EYE_CONTROLLER_FORWARD, middle.z))
-        eyes_x.tail = Vector((0.0, eyes_x.head.y, max(top, middle.z + 0.01)))
-        eyes_x.parent = bones[head]
-        eyes_x.roll = -math.pi / 2
         controller = bones.new(EYE_CONTROLLER)
-        controller.head = eyes_x.head / 2
-        controller.tail = eyes_x.tail / 2
-        controller.matrix = eyes_x.matrix
         controller.parent = bones[head]
-        controller.roll = -math.pi / 2
-        # Legacy then moved both to the nose bridge, pointing forward (its y * 1.5), with the roll
-        # kept: the Eyes handle Rigify copies from the controller lies flat, as its widget needs.
         # By exact name: no Bone Role marks the nose bridge, and all three Games have it.
         nose = bones.get(NOSE_BRIDGE)
-        for bone in (eyes_x, controller):
-            if nose is not None:
-                bone.head = Vector((bone.head.x, nose.head.y, nose.head.z))
-                bone.tail = Vector((bone.head.x, nose.head.y * 1.5, nose.head.z))
-            else:
-                bone.tail = bone.head + Vector((0.0, -EYE_CONTROLLER_LENGTH, 0.0))
-            bone.roll = -math.pi / 2
+        if nose is not None:
+            controller.head = Vector((0.0, nose.head.y, nose.head.z))
+            controller.tail = Vector((0.0, nose.head.y * 1.5, nose.head.z))
+        else:
+            controller.head = Vector((0.0, middle.y - EYE_CONTROLLER_FORWARD, middle.z))
+            controller.tail = controller.head + Vector((0.0, -EYE_CONTROLLER_LENGTH, 0.0))
+        controller.roll = -math.pi / 2
     armature.pose.bones[EYE_CONTROLLER].lock_location[1] = True
-    armature.data.bones[EYES_X].hide = True
-    _collection(armature, EYES_X, "Deform bones")
     _collection(armature, EYE_CONTROLLER, "Torso")
     body = ch.body
     if body is None:
@@ -145,8 +130,6 @@ def _eye_controller(ctx, armature, role):
     for material_role, name in UV_WARPS.items():
         modifier = body.modifiers.new(name, "UV_WARP")
         modifier.axis_u, modifier.axis_v = "Z", "X"
-        modifier.object_from = modifier.object_to = armature
-        modifier.bone_from, modifier.bone_to = EYES_X, EYE_CONTROLLER
         modifier.vertex_group = EYE_GROUPS[material_role]
         modifier.uv_layer = UV_MAP
         modifier.show_expanded = False

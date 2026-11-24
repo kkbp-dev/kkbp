@@ -163,10 +163,43 @@ TRANSLATIONS = {
     "Link Hair": "他の髪マテリアルをアップデート",
     "Puts every hair material into edit with the active hair material's settings":
         "アクティブな髪マテリアルの設定で、すべての髪マテリアルを編集状態にする",
+    # The Face panel (the Rigify Hook's face rig)
+    "Face Preset": "表情プリセット",
+    "Poses the face as this emotion. Shift-click adds it on top of the face as it is": "顔をこの感情にします。Shift+クリックで今の顔に加えます",
+    "Add": "追加",
+    "Adds the preset on top of the face as it is": "プリセットを今の顔に加えます",
+    "Reset Face": "表情をリセット",
+    "Puts every face control back and every face slider to 0": "顔のコントロールを元に戻し、顔のスライダーをすべて0にします",
+    "Key Face": "表情にキーを挿入",
+    "Keys every face control and face slider at the current frame": "現在のフレームで顔のコントロールとスライダーすべてにキーを挿入します",
+    "Emotions": "感情",
+    "Eyes": "目",
+    "More Expressions": "その他の表情",
+    "Strength": "強さ",
+    "Shift-click adds on top": "Shift+クリックで加算",
+    "Target follows head": "ターゲットが頭に追従",
+    "Lids follow gaze": "まぶたが視線に追従",
+    "Iris size": "瞳の大きさ",
+    "Neutral": "ニュートラル",
+    "Happy": "喜び",
+    "Laugh": "笑い",
+    "Gentle smile": "やさしい笑顔",
+    "Sad": "悲しみ",
+    "Crying": "泣き",
+    "Angry": "怒り",
+    "Surprised": "驚き",
+    "Embarrassed": "照れ",
+    "Smug": "得意げ",
+    "Sleepy": "眠い",
+    "Pained": "苦痛",
+    "Brows": "眉",
+    "Mouth": "口",
+    "Tears": "涙",
 }
 
 # In the "KKBP" translation context, where Blender's own word means something else.
 IN_CONTEXT = {
+    "Face": "顔",
     "Hooks": "フック",
     "Hook": "フック",
 }

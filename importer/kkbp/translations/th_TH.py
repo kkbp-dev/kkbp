@@ -155,10 +155,43 @@ TRANSLATIONS = {
     "Link Hair": "ลิงก์ผม",
     "Puts every hair material into edit with the active hair material's settings":
         "ทำให้วัสดุผมทั้งหมดเข้าสู่การแก้ไขด้วยการตั้งค่าของวัสดุผมที่ใช้งานอยู่",
+    # The Face panel (the Rigify Hook's face rig)
+    "Face Preset": "พรีเซ็ตใบหน้า",
+    "Poses the face as this emotion. Shift-click adds it on top of the face as it is": "ทำให้ใบหน้าแสดงอารมณ์นี้ Shift+คลิกเพื่อเพิ่มทับใบหน้าปัจจุบัน",
+    "Add": "เพิ่ม",
+    "Adds the preset on top of the face as it is": "เพิ่มพรีเซ็ตทับใบหน้าปัจจุบัน",
+    "Reset Face": "รีเซ็ตใบหน้า",
+    "Puts every face control back and every face slider to 0": "คืนตัวควบคุมใบหน้าทั้งหมดและตั้งแถบเลื่อนใบหน้าทั้งหมดเป็น 0",
+    "Key Face": "ใส่คีย์ใบหน้า",
+    "Keys every face control and face slider at the current frame": "ใส่คีย์ให้ตัวควบคุมและแถบเลื่อนใบหน้าทั้งหมดที่เฟรมปัจจุบัน",
+    "Emotions": "อารมณ์",
+    "Eyes": "ดวงตา",
+    "More Expressions": "การแสดงออกอื่น ๆ",
+    "Strength": "ความแรง",
+    "Shift-click adds on top": "Shift+คลิกเพื่อเพิ่มทับ",
+    "Target follows head": "เป้าหมายตามศีรษะ",
+    "Lids follow gaze": "เปลือกตาตามสายตา",
+    "Iris size": "ขนาดม่านตา",
+    "Neutral": "ปกติ",
+    "Happy": "มีความสุข",
+    "Laugh": "หัวเราะ",
+    "Gentle smile": "ยิ้มอ่อน",
+    "Sad": "เศร้า",
+    "Crying": "ร้องไห้",
+    "Angry": "โกรธ",
+    "Surprised": "ประหลาดใจ",
+    "Embarrassed": "เขิน",
+    "Smug": "ภูมิใจในตัวเอง",
+    "Sleepy": "ง่วงนอน",
+    "Pained": "เจ็บปวด",
+    "Brows": "คิ้ว",
+    "Mouth": "ปาก",
+    "Tears": "น้ำตา",
 }
 
 # In the "KKBP" translation context, where Blender's own word means something else.
 IN_CONTEXT = {
+    "Face": "ใบหน้า",
     "Hooks": "ฮุก",
     "Hook": "ฮุก",
 }

@@ -15,7 +15,7 @@ import bpy
 from ... import compat, joint_corrections
 from ...pipeline.hooks import hook
 from ...pipeline.options import Option
-from . import names, prepare
+from . import prepare
 from .finish import finish_rig
 from .metarig import build_metarig
 from .build import RigBuild
@@ -88,8 +88,8 @@ def _into(obj, collection):
 
 
 def _move_onto(ch, metarig, rig):
-    """Everything that used the armature uses the rig: parents, armature modifiers, the eye UV warps
-    and bone-parented objects such as the face cards' rig."""
+    """Everything that used the armature uses the rig: parents, armature modifiers and bone-parented
+    objects such as the face cards' rig."""
     for obj in [o for o in bpy.data.objects if o.parent == metarig]:
         # The rig sits where the metarig does, so each object keeps its own transform, as in legacy.
         if obj.parent_type == "BONE":
@@ -102,11 +102,6 @@ def _move_onto(ch, metarig, rig):
         for modifier in obj.modifiers:
             if modifier.type == "ARMATURE" and modifier.object == metarig:
                 modifier.object = rig
-            if modifier.type == "UV_WARP" and modifier.object_from == metarig:
-                modifier.object_from = modifier.object_to = rig
-                modifier.bone_from = prepare.EYES_X
-                modifier.bone_to = (names.LEFT_EYE_BONE if modifier.name == prepare.UV_WARPS["eye_l"]
-                                    else names.RIGHT_EYE_BONE)
 
 
 def _tidy(build, generated_from):

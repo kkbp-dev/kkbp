@@ -160,11 +160,44 @@ TRANSLATIONS = {
     "Link Hair": "更新其他头发材质",
     "Puts every hair material into edit with the active hair material's settings":
         "用活动头发材质的设置，将所有头发材质置于编辑状态",
+    # The Face panel (the Rigify Hook's face rig)
+    "Face Preset": "表情预设",
+    "Poses the face as this emotion. Shift-click adds it on top of the face as it is": "让脸做出这种情绪。按住 Shift 点击则叠加到当前的脸上",
+    "Add": "添加",
+    "Adds the preset on top of the face as it is": "把预设叠加到当前的脸上",
+    "Reset Face": "重置表情",
+    "Puts every face control back and every face slider to 0": "让所有脸部控制器归位，所有脸部滑块归零",
+    "Key Face": "为表情插帧",
+    "Keys every face control and face slider at the current frame": "在当前帧为所有脸部控制器和滑块插入关键帧",
+    "Emotions": "情绪",
+    "Eyes": "眼睛",
+    "More Expressions": "更多表情",
+    "Strength": "强度",
+    "Shift-click adds on top": "Shift+点击叠加",
+    "Target follows head": "目标跟随头部",
+    "Lids follow gaze": "眼睑跟随视线",
+    "Iris size": "虹膜大小",
+    "Neutral": "中性",
+    "Happy": "开心",
+    "Laugh": "大笑",
+    "Gentle smile": "微笑",
+    "Sad": "悲伤",
+    "Crying": "哭泣",
+    "Angry": "生气",
+    "Surprised": "惊讶",
+    "Embarrassed": "害羞",
+    "Smug": "得意",
+    "Sleepy": "困倦",
+    "Pained": "痛苦",
+    "Brows": "眉毛",
+    "Mouth": "嘴",
+    "Tears": "眼泪",
 }
 
 # In the "KKBP" translation context, where Blender's own word means something else (its "Hook" is the
 # modifier, 钩挂).
 IN_CONTEXT = {
+    "Face": "脸",
     "Hooks": "钩子",
     "Hook": "钩子",
 }

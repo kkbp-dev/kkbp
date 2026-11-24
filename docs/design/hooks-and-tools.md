@@ -49,8 +49,8 @@ Turns the armature into a hidden metarig (still `ch.armature`), generates a Rigi
 
 - **Names.** The Role bones are renamed to readable names (`Left arm`, `Hips`) from a Bone Role table before generating (D23). Accessory bones called `root`, `torso` or `head`, and duplicate names, are renamed so they don't clash with Rigify's own. Every generated bone keeps its bundle Id in its `id` property.
 - **Optional parts** are made when the skeleton has their bones: the skirt, the tongue, Better Penetration, the head and the male parts.
-- **Bones.** The Hook re-aims the bones its rig needs ([ADR 0017](../adr/0017-bone-tails-from-the-game-rotation.md)), then connects and parents them. It adds eye, chest and butt bones, tracking bones and handle bones.
-- **Eyes.** The eye controller and the Left and Right Eye vertex groups come from Bone and Material Roles (D25).
+- **Bones.** The Hook re-aims the bones its rig needs ([ADR 0017](../adr/0017-bone-tails-from-the-game-rotation.md)), then connects and parents them. It adds chest and butt bones, the head tracking bones (`metarig/head_track.py`) and handle bones.
+- **Eyes.** The eye controller (a metarig-only bone the head track target is placed from), the eye UV warps and the Left and Right Eye vertex groups come from Bone and Material Roles (D25).
 - **Hands.** The wrists are aimed and the palms made on every skeleton; SVS's fingertips and thumbs are aimed from their vertex groups ([ADR 0045](../adr/0045-every-skeleton-gets-aimed-hands-and-palms.md)). Finger rolls, the edits to the joint-correction bones and the nipple widgets run only when the skeleton has every joint-correction bone they name (D24, [ADR 0022](../adr/0022-kk-rigify-extras-gated-on-their-bones.md)).
 - **Joint corrections.** The Core Import's joint corrections are put back on the generated rig ([ADR 0038](../adr/0038-joint-corrections-copy-the-games-rules.md)).
 - **Tongue.** The single tongue is rigged on Body ([ADR 0020](../adr/0020-one-tongue-with-mouth-keys-and-bones.md), [ADR 0039](../adr/0039-the-tongue-is-part-of-body.md)).
@@ -58,7 +58,7 @@ Turns the armature into a hidden metarig (still `ch.armature`), generates a Rigi
 - **Teeth bones** (`metarig/teeth.py`, issues 42 and 99; every rig gets them). The faces with the `teeth` Material Role are split into an upper and a lower row by connected piece. Each row gets the controls `Teeth <row> L2`, `L1`, `C`, `R1`, `R2` (ends, halfway, middle) in the `Face (MCH)` collection. Under each mouth bone the teeth are weighted to, a control has a hidden bone that copies it and takes those weights, so the teeth follow the mouth bones exactly as they would without the controls.
 - **Widgets.** Each Character gets its own widgets; the fixed widget meshes come from `rigify.blend`. The Bone Widgets collection becomes a hidden Junk collection that also holds the metarig.
 - **Bone collections.** The rig's collections are built from the Core's (D7). Hair and accessory bones of later Outfits go in their own collections, from the Outfit tag `join_armatures` gives each bone (`kkbp_outfit`, D29). An empty, hidden `Custom` collection sits to the right of NSFW in the Rig Layers panel, for bones the user adds (issue 7).
-- **Emotion grid** (`finish/emotions.py`). Mouth, eye and custom key controllers and their drivers, built from the Expression Names present. A key Body lacks is left out and named in the log, and the rest of the grid is made (issue 64). The mouth circle's first keys also go by `Mouth A`, `I`, `U`, `E`, `O`; where Body lacks the second keys of A, I and O, `Mouth Smiling`, `Mouth Hate, Closed` and `Mouth Serious` stand in (for SVS); a first key with no second stays at full instead of fading out.
+- **Face rig** (`finish/face/`, [ADR 0058](../adr/0058-the-face-rig-drives-the-expression-keys-through-face-key-roles.md)). Controls on the face (blink, winks, brows, emote, mouth corners, jaw), a board beside the head (look, mouth shape, lip moods, open moods, sliders, gag eyes, tears), a look-at target that drives the eye UV warps, and twelve emotion presets. Each control drives Face Key Roles, which the `record_face_keys` Step wrote on Body from the Game Profile. A role Body has no key for is left out. A key no control reaches gets a slider on the Face Properties bone. One side's brow and corner controls drive halves of the Game's keys. The game face bones go in the hidden `Face Tweak` collection. It runs after the feet are put on the floor, so its constraints see the grounded rig.
 - **Feet on the floor.** The lowest visible vertex goes on the floor ([ADR 0027](../adr/0027-rigify-stands-the-lowest-vertex-on-the-floor.md)); the bones move as edit bones.
 - IK stretch is off.
 
@@ -158,7 +158,8 @@ These have no Role, and no Group that marks only them. Each is written in the Ho
 | The deform bones: `cf_s_shoulder02`, `cf_s_arm01`…`03`, `cf_s_forearm01`, `02`, `cf_s_wrist`, `cf_s_hand`, `cf_s_thigh01`…`03`, `cf_s_leg01`…`03`, `cf_s_head`, `cf_s_neck`, `cf_s_spine01`…`03`, `cf_s_waist01` | Rigify | No Role |
 | `cf_J_FaceUp_ty`, `cf_J_FaceBase` (head height, head mod) | Rigify | No Role |
 | `a_n_heel` (heel) | Rigify | Group `helper` holds many others |
-| `Eyesx`, `Eye Controller` | Rigify | Made by the Hook itself |
+| `Eye Controller` | Rigify | Made by the Hook itself |
+| `cf_J_MayuMid_s`, `cf_J_Mouth` (each side), `cf_J_MouthLow`, `cf_J_ChinTip_Base` | Rigify | Where the face rig's brow, mouth corner and jaw controls go; no Role marks them |
 
 ### Shape keys
 

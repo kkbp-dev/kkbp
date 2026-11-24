@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from .... import compat
 from ....editing import editing
-from . import accessories, deform, eyes, features, handles, layout, limbs, teeth, torso, types
+from . import accessories, deform, features, handles, head_track, layout, limbs, teeth, torso, types
 from . import lists as bone_lists
 
 
@@ -20,12 +20,11 @@ def build_metarig(build):
     features.detect(build)
     with editing(metarig, "EDIT"):
         features.id_bone(build)
-        eyes.eye_bones(build)
         torso.breasts_and_buttocks(build)
     handles.widgets_and_handles(build)
     with editing(metarig, "EDIT"):
-        measures = eyes.tracking_bones(build)
-    eyes.mechanism(build, measures)
+        placeholders = head_track.tracking_bones(build)
+    head_track.mechanism(build, placeholders)
     compat.add_rigify_color_sets(metarig)  # Rigify's standard colour sets, which the UI phase names
     with editing(metarig, "EDIT"):
         deform.deform_vertex_groups(build)

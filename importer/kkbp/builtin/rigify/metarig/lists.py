@@ -15,7 +15,7 @@ class BoneLists:
     """What the collection phase needs from this one."""
     deform: list
     useful: list
-    eyes_secondary: list
+    tongue_secondary: list
     torso: list
     torso_tweak: list
 
@@ -34,14 +34,7 @@ BETTER_PENETRATION = (
     names.BETTER_PENETRATION_BACK_CROTCH_BONE)
 BREAST_HANDLES = (names.BREASTS_HANDLE_BONE, names.LEFT_BREAST_HANDLE_BONE, names.RIGHT_BREAST_HANDLE_BONE)
 # The bones the Hook makes that move others but need no control.
-USEFUL = (
-    names.EYES_X_BONE, names.EYES_BONE, names.LEFT_EYE_BONE, names.RIGHT_EYE_BONE, names.EYES_TRACK_TARGET_PARENT_BONE,
-    names.EYES_HANDLE_MARKER_BONE, names.LEFT_EYE_HANDLE_MARKER_BONE, names.RIGHT_EYE_HANDLE_MARKER_BONE,
-    names.LEFT_EYE_HANDLE_MARKER_X_BONE, names.RIGHT_EYE_HANDLE_MARKER_X_BONE, names.LEFT_EYE_HANDLE_MARKER_Z_BONE,
-    names.RIGHT_EYE_HANDLE_MARKER_Z_BONE, names.EYEBALLS_TRACK_BONE, names.LEFT_EYEBALL_TRACK_BONE,
-    names.RIGHT_EYEBALL_TRACK_BONE, names.LEFT_EYEBALL_TRACK_CORRECTION_BONE, names.RIGHT_EYEBALL_TRACK_CORRECTION_BONE,
-    names.LEFT_HEAD_MARKER_X_BONE, names.RIGHT_HEAD_MARKER_X_BONE, names.LEFT_HEAD_MARKER_Z_BONE,
-    names.RIGHT_HEAD_MARKER_Z_BONE, names.HEAD_TRACK_BONE, names.HEAD_TRACK_TARGET_PARENT_BONE)
+USEFUL = (names.HEAD_TRACK_BONE, names.HEAD_TRACK_TARGET_PARENT_BONE)
 FACE = (names.ORIGINAL_UPPER_FACE_LAYER_INDEX, names.ORIGINAL_LOWER_FACE_LAYER_INDEX)
 HAIR_MCH = names.HAIR_LAYER + names.MCH_LAYER_SUFFIX
 SKIRT_DETAIL = names.SKIRT_LAYER + names.DETAIL_LAYER_SUFFIX
@@ -56,14 +49,12 @@ def bone_lists(build, found) -> BoneLists:
     metarig = build.metarig
     features = build.features
     torso = [n for n in names.TORSO_LAYER_BONE_NAMES if not (features.male and n in BREAST_HANDLES)]
-    eyes_primary = [n for n in names.EYES_PRIMARY_LAYER_BONE_NAMES
-                    if features.rigged_tongue or n not in TONGUE_PRIMARY]
-    eyes_secondary = [n for n in names.EYES_SECONDARY_LAYER_BONE_NAMES
-                      if features.rigged_tongue or n not in TONGUE_SECONDARY]
+    tongue_primary = [n for n in names.TONGUE_PRIMARY_LAYER_BONE_NAMES if features.rigged_tongue]
+    tongue_secondary = [n for n in names.TONGUE_SECONDARY_LAYER_BONE_NAMES if features.rigged_tongue]
     torso_tweak = [n for n in names.TORSO_TWEAK_LAYER_BONE_NAMES
                    if features.better_penetration or n not in BETTER_PENETRATION]
 
-    control = [*eyes_primary, *eyes_secondary, *torso, *torso_tweak, *names.LEFT_ARM_IK_LAYER_BONE_NAMES,
+    control = [*tongue_primary, *tongue_secondary, *torso, *torso_tweak, *names.LEFT_ARM_IK_LAYER_BONE_NAMES,
                *names.RIGHT_ARM_IK_LAYER_BONE_NAMES, *names.FINGERS_LAYER_BONE_NAMES,
                *names.LEFT_LEG_IK_LAYER_BONE_NAMES, *names.RIGHT_LEG_IK_LAYER_BONE_NAMES]
     for bone in metarig.data.bones:
@@ -110,7 +101,7 @@ def bone_lists(build, found) -> BoneLists:
             continue
         if bone.rigify_type in ("basic.raw_copy", "basic.super_copy"):
             _relink(bone)
-    return BoneLists(deform, useful, eyes_secondary, torso, torso_tweak)
+    return BoneLists(deform, useful, tongue_secondary, torso, torso_tweak)
 
 
 def _related(rig, name):

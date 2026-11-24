@@ -24,6 +24,7 @@ PART_FOR_MATERIAL_ROLE = {"tears": "tears", "gag_eyes": "gag_eyes", "hair": "hai
 UV_NAMES = ("uv_main", "uv_nipple_and_shine", "uv_underhair", "uv_eyeshadow")
 
 ARMATURE_MODIFIER = "Armature modifier"
+FACE_KEYS = "kkbp_face_keys"  # on Body's shape keys: Face Key Role -> [[Expression Name, weight], ...]
 COLLECTION = SUB_COLLECTION  # on the Character's sub-Collections: which one it is
 
 # What the Character's objects are called. Names are for display only; nothing looks them up.
@@ -200,6 +201,28 @@ def order_shape_keys(ctx):
         if wanted != names:
             for name in wanted:
                 compat.move_shape_key(obj, keys.key_blocks.find(name), "BOTTOM")
+
+
+def record_face_keys(ctx):
+    """Writes the Game Profile's Face Key Roles onto Body's shape keys, as JSON (`FACE_KEYS`), keeping
+    only the Expression Names Body has: the Rigify Hook's face rig reads them there, since Hooks
+    don't get the profile (ADR 0058)."""
+    import json
+
+    body = ctx.character.body
+    if body is None or body.data.shape_keys is None:
+        return
+    have = body.data.shape_keys.key_blocks
+    found, missing = {}, []
+    for role, pairs in ctx.profile.face_keys.items():
+        kept = [[name, weight] for name, weight in pairs if name in have]
+        if kept:
+            found[role] = kept
+        else:
+            missing.append(role)
+    body.data.shape_keys[FACE_KEYS] = json.dumps(found, ensure_ascii=False, sort_keys=True)
+    if missing:
+        ctx.log.info(f"Body has no key for the face rig's {', '.join(sorted(missing))}")
 
 
 def add_tear_controls(ctx):

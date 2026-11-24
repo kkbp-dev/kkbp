@@ -1,4 +1,4 @@
-"""The handles: control bones in front of the eyes, breasts and buttocks that the bones themselves
+"""The handles: control bones in front of the breasts and buttocks that the bones themselves
 copy, each drawn with a widget sized from the vertex groups it moves. In Object Mode; the handle
 bones are made in Edit Mode inside `_arrange`."""
 
@@ -10,7 +10,7 @@ from dataclasses import dataclass
 
 import bpy
 
-from .. import bones, constraints, meshes, names, widget_shapes, widgets
+from .. import bones, constraints, meshes, names, widgets
 from ....editing import editing
 
 
@@ -26,10 +26,6 @@ class HandleSet:
     size: tuple  # the middle widget's scale on x, y and z; the side ones scale towards their own group
 
 
-EYES = HandleSet((names.EYES_BONE, names.LEFT_EYE_BONE, names.RIGHT_EYE_BONE),
-                 (names.EYES_HANDLE_BONE, names.LEFT_EYE_HANDLE_BONE, names.RIGHT_EYE_HANDLE_BONE),
-                 (names.LEFT_EYE_DEFORM_BONE, names.RIGHT_EYE_DEFORM_BONE),
-                 snap=False, rotate=(90, 0, 90), move=(0.93, 1.66427, 1), size=(1.16, 1, 1.65))
 BREASTS = HandleSet((names.BREASTS_BONE, names.LEFT_BREAST_BONE1, names.RIGHT_BREAST_BONE1),
                     (names.BREASTS_HANDLE_BONE, names.LEFT_BREAST_HANDLE_BONE, names.RIGHT_BREAST_HANDLE_BONE),
                     (names.LEFT_NIPPLE_DEFORM_BONE1, names.RIGHT_NIPPLE_DEFORM_BONE1),
@@ -38,8 +34,6 @@ BUTTOCKS = HandleSet((names.BUTTOCKS_BONE, names.LEFT_BUTTOCK_BONE, names.RIGHT_
                      (names.BUTTOCKS_HANDLE_BONE, names.LEFT_BUTTOCK_HANDLE_BONE, names.RIGHT_BUTTOCK_HANDLE_BONE),
                      (names.LEFT_BUTTOCK_DEFORM_BONE, names.RIGHT_BUTTOCK_DEFORM_BONE),
                      snap=True, rotate=None, move=(0, -3.6, 1), size=(30, 1, 25))
-# Used when an eye's vertex group reaches no higher than 0 (cf_J_Eye07_s is the lower eyelid's).
-EYE_FALLBACK = ("cf_J_Eye07_s_L", "cf_J_Eye07_s_R")
 # rigify.blend's breast widgets, which the buttock handles draw too.
 BREAST_WIDGETS = (names.ORIGINAL_WIDGET_BREASTS, names.ORIGINAL_WIDGET_BREAST_LEFT, names.ORIGINAL_WIDGET_BREAST_RIGHT)
 
@@ -47,13 +41,6 @@ BREAST_WIDGETS = (names.ORIGINAL_WIDGET_BREASTS, names.ORIGINAL_WIDGET_BREAST_LE
 def widgets_and_handles(build):
     metarig = build.metarig
     widgets.append_library(build)
-    eyes = (widgets.make(build, names.WIDGET_EYES, metarig, names.EYES_BONE, widget_shapes.EYES_VERTICES,
-                         widget_shapes.EYES_EDGES),
-            widgets.make(build, names.WIDGET_EYE_LEFT, metarig, names.LEFT_EYE_BONE, widget_shapes.EYE_VERTICES,
-                         widget_shapes.EYE_EDGES),
-            widgets.make(build, names.WIDGET_EYE_RIGHT, metarig, names.RIGHT_EYE_BONE, widget_shapes.EYE_VERTICES,
-                         widget_shapes.EYE_EDGES))
-    _arrange(build, EYES, eyes)
     breasts = _copies(build, (names.WIDGET_BREASTS, names.WIDGET_BREAST_LEFT, names.WIDGET_BREAST_RIGHT),
                       names.BREASTS_BONE)
     if not build.features.male:
@@ -62,10 +49,9 @@ def widgets_and_handles(build):
                        names.BUTTOCKS_BONE)
     _arrange(build, BUTTOCKS, buttocks)
 
-    _finish(metarig, EYES, eyes, eye=True)
     if not build.features.male:
-        _finish(metarig, BREASTS, breasts, eye=False)
-    _finish(metarig, BUTTOCKS, buttocks, eye=False)
+        _finish(metarig, BREASTS, breasts)
+    _finish(metarig, BUTTOCKS, buttocks)
     # The buttock handles also follow the game's buttock joint corrections.
     name = names.COPY_TRANSFORMS_CONSTRAINT_BASE + names.JOINT_CONSTRAINT_SUFFIX + names.CORRECTION_CONSTRAINT_SUFFIX
     for handle, correction in ((names.LEFT_BUTTOCK_HANDLE_BONE, names.LEFT_BUTTOCK_JOINT_CORRECTION_BONE),
@@ -99,8 +85,6 @@ def _arrange(build, handle_set, shapes):
     body = build.body
     _shape(middle, handle_set)
     lb, rb = (meshes.group_bounds(body, g) for g in handle_set.groups)
-    if not lb.max_z or not rb.max_z:
-        lb, rb = (meshes.group_bounds(body, g) for g in EYE_FALLBACK)
     mid_z = {"left": (lb.max_z + lb.min_z) / 2, "right": (rb.max_z + rb.min_z) / 2}
     average_mid_z = statistics.mean([mid_z["left"], mid_z["right"]])
     average_min_y = statistics.mean([lb.min_y, rb.min_y])
@@ -138,16 +122,11 @@ def _arrange(build, handle_set, shapes):
             child.parent = parent
 
 
-def _finish(rig, handle_set, shapes, eye):
-    """Each handle draws its widget, and its bone copies it. An eye handle moves only across the face."""
+def _finish(rig, handle_set, shapes):
+    """Each handle draws its widget, and its bone copies it."""
     for bone, handle, widget in zip(handle_set.bones, handle_set.handles, shapes):
         pose_bone = rig.pose.bones[handle]
         pose_bone.custom_shape = widget
-        if eye:
-            pose_bone.lock_location[1] = True
-            pose_bone.lock_rotation[0] = True
-            pose_bone.lock_rotation[2] = True
-            pose_bone.lock_scale[1] = True
         constraints.copy_transforms(rig, bone, handle,
                                     name=names.COPY_TRANSFORMS_CONSTRAINT_BASE + names.HANDLE_CONSTRAINT_SUFFIX,
                                     mix="REPLACE", space="LOCAL")

@@ -1,18 +1,42 @@
 # Expressions
 
-Every eye and mouth expression of the game comes into Blender as a shape key with an English name, and the rig has a grid of controls for them.
+Every eye and mouth expression of the game comes into Blender as a shape key with an English name, and the rig has face controls and emotion presets for them.
 
-![A few expressions made with the emotion grid](images/expressions/grid.jpg)
+![The Happy and Angry presets on a Koikatsu and a Summer Vacation Scramble character](images/expressions/presets.jpg)
 
 ## Shape keys
 
 The body's shape keys are named by what they do, with their category first: `Eye Closed`, `Eye Happy`, `Mouth Big A`. They are the game's complete expressions, so one key at full gives the expression as the game shows it. The names are the same in all three games.
 
-## The emotion grid
+## The face rig
 
-With the [Rigify rig](rig.md), the face has controls for the mouth, the eyes and custom keys. Show them with the Emotions row of Rig Layers, then drag a control to blend between expressions.
+With the [Rigify rig](rig.md), the face has controls where they act, and a board beside the head for the rest. They show with the Emotions and Eyes rows of Rig Layers.
 
-![The emotion grid's controls beside the face](images/expressions/controls.jpg)
+![The face controls and the board beside the head, on a Summer Vacation Scramble character with outlines](images/expressions/face-rig.jpg)
+
+On the face:
+
+- **Blink**, between the eyes, closes both eyes as it moves down. The small control above each eye winks it.
+- **The brows**: the middle control raises and lowers both brows, and the one on each brow raises or lowers only that brow.
+- **Emote**, the orange diamond on the forehead: up is sad, down is angry.
+- **Each mouth corner** moves up (smile), down (frown) or out (wide).
+- **The jaw**, under the chin, opens the mouth.
+
+On the board:
+
+- **Look** moves the eyes. The eyes also follow the yellow target in front of the face. Scale the target to make the irises bigger or smaller.
+- **Mouth shape** picks the shape the jaw opens: A in the middle, I, O, E and U at the edges.
+- **Open mood** is four more open shapes, which take over from the mouth shape when you push it. Only one open shape is ever on, so the teeth and tongue never move twice.
+- **Mood** and **Mood 2** shape the lips and work with any open shape.
+- **The sliders** are for the other eye, brow and open-mouth expressions, the gag eyes (how much, and which gag) and the tears.
+
+### Presets
+
+The Face panel in the sidebar's KKBP tab has twelve emotion presets, such as Happy, Laugh, Sad and Angry. A preset moves the controls, so you can adjust the face with them afterwards. Shift-click a preset to add it to the face as it is, and set how strong presets are with Strength. Reset Face puts every control back; Key Face keys them all at the current frame.
+
+The panel's Eyes section sets whether the eye target follows the head and how much the lids close when the eyes look down. More Expressions has a slider for every expression no control reaches.
+
+Each game names its expressions differently, so the controls drive the keys that look right in each game: the same control may drive a differently named key in Koikatsu and in Summer Vacation Scramble.
 
 ## Gag eyes
 
@@ -48,5 +72,5 @@ To do this on a character already imported, use Run Hook in the Tools panel and 
 
 | | Koikatsu | Koikatsu Sunshine | Summer Vacation Scramble |
 |---|---|---|---|
-| Expression shape keys, emotion grid | Yes | Yes | Yes |
+| Expression shape keys, face rig and presets | Yes | Yes | Yes |
 | Tongue during mouth expressions | Moves with the mouth | Moves with the mouth | Stays still in most, as in the game |

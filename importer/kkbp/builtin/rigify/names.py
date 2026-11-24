@@ -9,7 +9,7 @@ The bone names are of three kinds:
 
 - the readable names prepare.py gives the bones with a Bone Role before the Hook runs (D23,
   bone_names.py), such as "Left arm" and "Thumb0_L"
-- names of bones the Hook makes itself, such as "Eyes handle" and "Breasts handle";
+- names of bones the Hook makes itself, such as "Breasts handle" and "Face lids";
 - game names (`cf_...`) of bones with no Bone Role, found by exact name because no Role or Group
   tells them apart. docs/design/hooks-and-tools.md lists them.
 
@@ -41,15 +41,8 @@ def right_name(left):
     return name
 
 
-# --- The eyelids shape key the eye handles drive (a copy of an Expression Name, ADR 0004) ---
-EYELIDS_SHAPE_KEY = "Eye Closed"
-EYELIDS_SHAPE_KEY_COPY = EYELIDS_SHAPE_KEY + COPY_NAME_SUFFIX
-
 # --- Widgets: the Bone Widgets collection in rigify.blend, its objects, and the Hook's own ---
 WIDGET_COLLECTION = "Bone Widgets"
-WIDGET_EYES = "WidgetEyesRigify"
-WIDGET_EYE_LEFT = "WidgetEyeLeftRigify"
-WIDGET_EYE_RIGHT = "WidgetEyeRightRigify"
 WIDGET_FACE = "WidgetFace"
 ORIGINAL_WIDGET_BREASTS = "WidgetBust"
 ORIGINAL_WIDGET_BREAST_LEFT = "WidgetBreastL"
@@ -64,39 +57,14 @@ WIDGET_BUTTOCK_RIGHT = "WidgetButtockRight"
 # --- Bones: the Hook's own, the D23 names and the game's, by body part ----------------------
 HANDLE_BONE_SUFFIX = " handle"
 TRACK_BONE_SUFFIX = " track"
-MARKER_BONE_SUFFIX = " marker"
 PARENT_BONE_SUFFIX = " parent"
 PLACEHOLDER_BONE_SUFFIX = " placeholder"
-X_BONE_SUFFIX = " x"
-Z_BONE_SUFFIX = " z"
 
 ORIGINAL_ROOT_UPPER_BONE = "cf_pv_root_upper"
 ROOT_BONE = "root"
-EYES_X_BONE = "Eyesx"
+# The metarig-only bone prepare.py makes at the nose bridge: the head is told apart by it, and the
+# head track target is placed from it.
 ORIGINAL_EYES_BONE = "Eye Controller"
-EYES_BONE = "Eyes target"
-LEFT_EYE_BONE = "Left eye target"
-RIGHT_EYE_BONE = right_name(LEFT_EYE_BONE)
-EYES_HANDLE_BONE = "Eyes" + HANDLE_BONE_SUFFIX
-LEFT_EYE_HANDLE_BONE = "Left eye" + HANDLE_BONE_SUFFIX
-RIGHT_EYE_HANDLE_BONE = right_name(LEFT_EYE_HANDLE_BONE)
-EYES_TRACK_TARGET_BONE = "Eyes track target"
-EYES_TRACK_TARGET_PARENT_BONE = EYES_TRACK_TARGET_BONE + PARENT_BONE_SUFFIX
-EYES_HANDLE_MARKER_BONE = EYES_HANDLE_BONE + MARKER_BONE_SUFFIX
-LEFT_EYE_HANDLE_MARKER_BONE = LEFT_EYE_HANDLE_BONE + MARKER_BONE_SUFFIX
-RIGHT_EYE_HANDLE_MARKER_BONE = right_name(LEFT_EYE_HANDLE_MARKER_BONE)
-LEFT_EYE_HANDLE_MARKER_X_BONE = LEFT_EYE_HANDLE_BONE + MARKER_BONE_SUFFIX + X_BONE_SUFFIX
-RIGHT_EYE_HANDLE_MARKER_X_BONE = right_name(LEFT_EYE_HANDLE_MARKER_X_BONE)
-LEFT_EYE_HANDLE_MARKER_Z_BONE = LEFT_EYE_HANDLE_BONE + MARKER_BONE_SUFFIX + Z_BONE_SUFFIX
-RIGHT_EYE_HANDLE_MARKER_Z_BONE = right_name(LEFT_EYE_HANDLE_MARKER_Z_BONE)
-EYEBALLS_BONE = "Eyeballs"
-LEFT_EYEBALL_BONE = "Left eyeball"
-RIGHT_EYEBALL_BONE = right_name(LEFT_EYEBALL_BONE)
-EYEBALLS_TRACK_BONE = EYEBALLS_BONE + TRACK_BONE_SUFFIX
-LEFT_EYEBALL_TRACK_BONE = LEFT_EYEBALL_BONE + TRACK_BONE_SUFFIX
-RIGHT_EYEBALL_TRACK_BONE = right_name(LEFT_EYEBALL_TRACK_BONE)
-LEFT_EYEBALL_TRACK_CORRECTION_BONE = LEFT_EYEBALL_TRACK_BONE + " correction"
-RIGHT_EYEBALL_TRACK_CORRECTION_BONE = right_name(LEFT_EYEBALL_TRACK_CORRECTION_BONE)
 RIGGED_TONGUE_LEFT_BONE_BASE = "cf_j_tang_L"
 RIGGED_TONGUE_RIGHT_BONE_BASE = right_name(RIGGED_TONGUE_LEFT_BONE_BASE)
 RIGGED_TONGUE_BONE1 = "cf_j_tang_01"
@@ -111,10 +79,6 @@ RIGGED_TONGUE_BONE5 = "cf_j_tang_05"
 RIGGED_TONGUE_LEFT_BONE5 = RIGGED_TONGUE_LEFT_BONE_BASE + "_05"
 RIGGED_TONGUE_RIGHT_BONE5 = RIGGED_TONGUE_RIGHT_BONE_BASE + "_05"
 HEAD_BONE = "Head"
-LEFT_HEAD_MARKER_X_BONE = LEFT_NAME_PREFIX + HEAD_BONE + MARKER_BONE_SUFFIX + X_BONE_SUFFIX
-RIGHT_HEAD_MARKER_X_BONE = right_name(LEFT_HEAD_MARKER_X_BONE)
-LEFT_HEAD_MARKER_Z_BONE = LEFT_NAME_PREFIX + HEAD_BONE + MARKER_BONE_SUFFIX + Z_BONE_SUFFIX
-RIGHT_HEAD_MARKER_Z_BONE = right_name(LEFT_HEAD_MARKER_Z_BONE)
 HEAD_TRACK_TARGET_BONE = "Head track target"
 HEAD_TRACK_TARGET_PARENT_BONE = HEAD_TRACK_TARGET_BONE + PARENT_BONE_SUFFIX
 HEAD_TRACK_BONE = "Head" + TRACK_BONE_SUFFIX
@@ -477,6 +441,31 @@ MID_RIGHT_KNEE_JOINT_CORRECTION_BONE = right_name(MID_LEFT_KNEE_JOINT_CORRECTION
 BACK_LEFT_KNEE_JOINT_CORRECTION_BONE = "cf_s_kneeB_L"
 BACK_RIGHT_KNEE_JOINT_CORRECTION_BONE = right_name(BACK_LEFT_KNEE_JOINT_CORRECTION_BONE)
 
+# --- The face rig (finish/face, ADR 0058): its bones, and the game face bones its controls are
+# placed at, by exact name because no Bone Role marks them (all three Games have them) -------------
+FACE_PROPERTIES_BONE = "Face Properties"
+EYE_TARGET_BONE = "Eye target"
+LEFT_EYE_TARGET_BONE = "Eye target L"
+RIGHT_EYE_TARGET_BONE = "Eye target R"
+EYE_TARGET_PARENT_BONE = "MCH-Eye target parent"
+LEFT_EYE_AIM_BONE = "MCH-Eye aim L"
+RIGHT_EYE_AIM_BONE = "MCH-Eye aim R"
+FACE_CONTROL_PREFIX = "Face "  # + the control: "Face lids", "Face brow L", "Face jaw"
+FACE_BOARD_BONE = "Face board"
+# A hidden bone between each face control and its parent, whose tail is the control's head: Blender
+# draws a relationship line from a bone's head to its parent's tail, even to a hidden parent, so the
+# line has no length.
+FACE_PIVOT_PREFIX = "MCH-pivot "
+BOARD_CONTROL_PREFIX = "Board "  # + the grid or slider: "Board look", "Board Eye Smiling"
+LEFT_BROW_BONE = "cf_J_MayuMid_s_L"
+RIGHT_BROW_BONE = right_name(LEFT_BROW_BONE)
+LEFT_MOUTH_CORNER_BONE = "cf_J_Mouth_L"
+RIGHT_MOUTH_CORNER_BONE = right_name(LEFT_MOUTH_CORNER_BONE)
+LOWER_LIP_BONE = "cf_J_MouthLow"
+CHIN_BONE = "cf_J_ChinTip_Base"
+FACE_KEYS_PROPERTY = "kkbp_face_keys"  # on Body's shape keys, from the record_face_keys Step
+FACE_DATA_PROPERTY = "kkbp_face"  # on the rig: the presets and sliders the Face panel shows
+
 # --- Constraint names the Hook gives (shown in the UI) ------------------------------------
 COPY_TRANSFORMS_CONSTRAINT_BASE = "Copy Transforms"
 COPY_ROTATION_CONSTRAINT_BASE = "Copy Rotation"
@@ -487,7 +476,6 @@ ARMATURE_CONSTRAINT_BASE = "Armature"
 DAMPED_TRACK_CONSTRAINT_BASE = "Damped Track"
 HANDLE_CONSTRAINT_SUFFIX = "_Handle"
 JOINT_CONSTRAINT_SUFFIX = "_Joint"
-EYEBALL_CONSTRAINT_SUFFIX = "_Eyeball"
 HEAD_CONSTRAINT_SUFFIX = "_Head"
 PARENT_CONSTRAINT_SUFFIX = "_Parent"
 TRACK_CONSTRAINT_SUFFIX = "_Track"
@@ -499,12 +487,11 @@ MIN_CONSTRAINT_SUFFIX = " Min"
 MAX_CONSTRAINT_SUFFIX = " Max"
 
 # --- The bones each bone collection gets ---------------------------------------------------
-EYES_PRIMARY_LAYER_BONE_NAMES = (
-    EYES_HANDLE_BONE, LEFT_EYE_HANDLE_BONE, RIGHT_EYE_HANDLE_BONE, RIGGED_TONGUE_BONE1, RIGGED_TONGUE_BONE2,
-    RIGGED_TONGUE_BONE3, RIGGED_TONGUE_BONE4, RIGGED_TONGUE_BONE5,
+TONGUE_PRIMARY_LAYER_BONE_NAMES = (
+    RIGGED_TONGUE_BONE1, RIGGED_TONGUE_BONE2, RIGGED_TONGUE_BONE3, RIGGED_TONGUE_BONE4, RIGGED_TONGUE_BONE5,
 )
-EYES_SECONDARY_LAYER_BONE_NAMES = (
-    EYES_TRACK_TARGET_BONE, EYEBALLS_BONE, LEFT_EYEBALL_BONE, RIGHT_EYEBALL_BONE, RIGGED_TONGUE_LEFT_BONE3,
+TONGUE_SECONDARY_LAYER_BONE_NAMES = (
+    RIGGED_TONGUE_LEFT_BONE3,
     RIGGED_TONGUE_RIGHT_BONE3, RIGGED_TONGUE_LEFT_BONE4, RIGGED_TONGUE_RIGHT_BONE4, RIGGED_TONGUE_LEFT_BONE5,
     RIGGED_TONGUE_RIGHT_BONE5,
 )
@@ -555,10 +542,14 @@ IK_LAYER_SUFFIX = " IK"
 FK_LAYER_SUFFIX = " FK"
 
 HAIR_LAYER = "Hair/Accessories"
-EYES_LAYER = "Eyes/Rig.Tongue"
+TONGUE_LAYER = "Tongue"
 RIGGED_TONGUE_LAYER = "Rigged tongue"
+# The face rig's collections (finish/face): its face controls, board and Face Properties bone in
+# Emotions, the eye targets in Eyes; and the game face bones', hidden, for bone-level tweaks.
 EMOTIONS_LAYER = "Emotions"
-FACE_LAYER = "Face"
+EYES_LAYER = "Eyes"
+FACE_TWEAK_LAYER = "Face Tweak"
+FACE_MCH_LAYER = "Face (MCH)"
 TORSO_LAYER = "Torso"
 LEFT_ARM_LAYER = "Arm.L"
 RIGHT_ARM_LAYER = right_name(LEFT_ARM_LAYER)
@@ -601,73 +592,4 @@ FRONT_RIGHT_KNEE_JOINT_CORRECTION_BONE
 TARGETS_TO_CHANGE = (
     LEFT_ARM_BONE, RIGHT_ARM_BONE, LEFT_ELBOW_BONE, RIGHT_ELBOW_BONE, LEFT_LEG_BONE, RIGHT_LEG_BONE,
     LEFT_KNEE_BONE, RIGHT_KNEE_BONE,
-)
-
-# --- The emotion grid: its controllers and guides, and the Expression Names they drive
-# (display strings, ADR 0004). The copies are what the grid drives, so the originals stay free.
-FACE_WIDGET_MOUTH_GUIDE_BONE = "Face Widget Mouth Guide"
-MOUTH_WIDGET_CONTROLLER_BONE = "Mouth Widget Controller"
-MOUTH_SHAPEKEY_A = "Mouth Big A"
-MOUTH_SHAPEKEY_I = "Mouth Small I"
-MOUTH_SHAPEKEY_U = "Mouth Big U"
-MOUTH_SHAPEKEY_E = "Mouth Big E"
-MOUTH_SHAPEKEY_O = "Mouth Big O"
-
-MOUTH_SHAPEKEY_A2 = "Mouth Happy (Broad)"
-MOUTH_SHAPEKEY_I2 = "Mouth Big I"
-MOUTH_SHAPEKEY_U2 = "Mouth Triangle"
-MOUTH_SHAPEKEY_E2 = "Mouth Impatient"
-MOUTH_SHAPEKEY_O2 = "Mouth Serious 2"
-
-# What a Game with one size of each vowel calls the circle's keys (SVS; issue #64): its vowels for
-# the first keys, and the user's picks for the second keys it has no namesake of. The grid takes the
-# first name Body has, so no Game is asked for.
-MOUTH_SHAPEKEY_ALTERNATES = (
-    (MOUTH_SHAPEKEY_A, "Mouth A"), (MOUTH_SHAPEKEY_I, "Mouth I"), (MOUTH_SHAPEKEY_U, "Mouth U"),
-    (MOUTH_SHAPEKEY_E, "Mouth E"), (MOUTH_SHAPEKEY_O, "Mouth O"),
-    (MOUTH_SHAPEKEY_A2, "Mouth Smiling"), (MOUTH_SHAPEKEY_I2, "Mouth Hate, Closed"),
-    (MOUTH_SHAPEKEY_O2, "Mouth Serious"),
-)
-
-MOUTH_SHAPEKEYS_COPY_SUFFIX = " (Copy)"
-
-MOUTH_SHAPEKEYS_TO_COPY = (
-    MOUTH_SHAPEKEY_A,
-    MOUTH_SHAPEKEY_I,
-    MOUTH_SHAPEKEY_U,
-    MOUTH_SHAPEKEY_E,
-    MOUTH_SHAPEKEY_O,
-    MOUTH_SHAPEKEY_A2,
-    MOUTH_SHAPEKEY_I2,
-    MOUTH_SHAPEKEY_U2,
-    MOUTH_SHAPEKEY_E2,
-    MOUTH_SHAPEKEY_O2
-)
-
-FACE_WIDGET_EYES_GUIDE_BONE = "Face Widget Eye Guide"
-EYE_WIDGET_CONTROLLER_BONE = "Eye Widget Controller"
-EYE_SHAPEKEY_CLOSED1 = "Eye Closed"
-EYE_SHAPEKEY_CLOSED2 = "Eye Happy, Closed"
-EYE_SHAPEKEY_CLOSED3 = "Eye Both Eyes Shut Tight"
-EYE_SHAPEKEY_CLOSED4 = "Eye Default"
-
-EYE_SHAPEKEYS_COPY_SUFFIX = " (Copy)"
-
-EYE_SHAPEKEYS_TO_COPY = (
-    EYE_SHAPEKEY_CLOSED1,
-    EYE_SHAPEKEY_CLOSED2,
-    EYE_SHAPEKEY_CLOSED3,
-    EYE_SHAPEKEY_CLOSED4,
-)
-
-CUSTOM1_WIDGET_CONTROLLER_BONE = "Custom Key Controller 1"
-CUSTOM2_WIDGET_CONTROLLER_BONE = "Custom Key Controller 2"
-CUSTOM1_GUIDE_BONE = "Custom Key 1 Guide"
-CUSTOM2_GUIDE_BONE = "Custom Key 2 Guide"
-
-CUSTOM_SHAPEKEYS_TO_CREATE = (
-    'Custom Key 1 Up',
-    'Custom Key 2 Down',
-    'Custom Key 3 Up',
-    'Custom Key 4 Down',
 )

@@ -3,10 +3,10 @@ kkbp.import_bundle, Character and the other modules any script can call."""
 
 import bpy
 
-from . import operators, options, panel, preferences, tools
+from . import face, operators, options, panel, preferences, tools
 
-_classes = (preferences.classes + operators.classes + tools.operator_classes + panel.classes
-            + tools.panel_classes)
+_classes = (preferences.classes + operators.classes + tools.operator_classes + face.operator_classes
+            + panel.classes + tools.panel_classes + face.panel_classes)
 
 
 def register():
