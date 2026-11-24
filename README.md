@@ -29,7 +29,7 @@ It has two parts. An **exporter** runs inside the game and saves the character d
 </tr>
 </table>
 
-The Blender panel is in English, Chinese (Simplified), French, German, Indonesian, Japanese, Portuguese, Russian, Spanish and Thai.
+The Blender panel is in English, 简体中文, Français, Deutsch, Bahasa Indonesia, 日本語, Português, Русский, Español and ไทย.
 
 ## Supported games
 
