@@ -45,6 +45,7 @@ RUNS: list[Run] = [
     Run("SFW", {"sfw_mode": True}),
     Run("Rigify", {"use_rigify": True}),
     Run("Separate Eyes", {"separate_eyes": True}),
+    Run("Low poly", {"low_poly": "medium"}, "medium"),
 ]
 
 # Hook name -> the parts of the summary it may change.
@@ -80,6 +81,10 @@ OWNS: dict[str, tuple] = {
     # Body loses the eye and eyebrow faces, their slots and its UV-warp modifiers; the new Parts and their
     # Collection come, with keys driven from Body's.
     "Separate Eyes": (("objects", "**"), ("collections", "**"), ("counts", "objects"), ("counts", "meshes")),
+    # The low poly copies of the clothes and hair, and the Collections they go in. Nothing else changes.
+    "Low poly": (lambda d: d.path[0] == "objects" and len(d.path) == 2 and _role(d) == ["low_poly"],
+                 lambda d: d.path[0] == "collections" and any(str(p).startswith("Low poly ") for p in d.path),
+                 ("counts", "objects"), ("counts", "meshes")),
 }
 FACE_CARDS = ("Face card", "Facecard-bone")
 CARD_MATERIALS = ("Eyeline card", "Eyewhite card", "Pupil L card", "Pupil R card", "Gag Mouth")

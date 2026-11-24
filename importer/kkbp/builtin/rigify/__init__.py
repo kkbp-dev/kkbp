@@ -13,6 +13,7 @@ property and driver names (ADR 0023, ADR 0043); names.py holds them all.
 import bpy
 
 from ... import compat, joint_corrections
+from ...collection_colors import color
 from ...pipeline.hooks import hook
 from ...pipeline.options import Option
 from . import prepare
@@ -29,7 +30,8 @@ FOLLOW = {"Head": "head"}
 NSFW_COLLECTION, SFW_NAME = "NSFW", "Chest"
 # An empty collection beside NSFW in the Rig Layers panel, for bones the user adds (issue #7).
 CUSTOM_COLLECTION = "Custom"
-JUNK = "Junk {name}"  # what the Bone Widgets collection becomes: widgets and the metarig, hidden
+JUNK = "Junk {name}"  # what the Bone Widgets collection becomes: the face board labels and WIDGETS
+WIDGETS = "Widgets {name}"  # inside Junk, excluded from the view layer: the widgets and the metarig
 
 
 @hook(name="Rigify", switch=SWITCH)
@@ -105,15 +107,22 @@ def _move_onto(ch, metarig, rig):
 
 
 def _tidy(build, generated_from):
-    """The Bone Widgets collection becomes the Character's Junk collection, excluded from the view
-    layer as legacy excluded Bone Widgets, and takes Rigify's widget collection and the metarig."""
+    """The Bone Widgets collection becomes the Character's Junk collection. Junk stays in the view
+    layer for the face board labels, which show and hide with the board's bone collection; the
+    widgets, Rigify's widget collection and the metarig go in its Widgets collection, excluded from
+    the view layer as legacy excluded Bone Widgets."""
     ch, metarig = build.character, build.metarig
     junk = build.widgets
     junk.name = JUNK.format(name=ch.name)
+    color(junk, "junk")
+    hidden = bpy.data.collections.new(WIDGETS.format(name=ch.name))
+    junk.children.link(hidden)
+    for obj in list(junk.objects):
+        _into(obj, hidden)
     for collection in [c for c in bpy.data.collections if c.name == f"WGTS_{generated_from}"]:
-        _move_collection(collection, junk)
-    _into(metarig, junk)
-    layer = _layer(bpy.context.view_layer.layer_collection, junk)
+        _move_collection(collection, hidden)
+    _into(metarig, hidden)
+    layer = _layer(bpy.context.view_layer.layer_collection, hidden)
     if layer is not None:
         layer.exclude = True
 

@@ -87,6 +87,16 @@ TRANSLATIONS = {
     "armature, which is easier to export":
         "Blenderでのアニメーションに向いたRigifyのコントロールリグを生成します。無効にするとキャラクターはFKアーマチュアのままで、"
         "エクスポートしやすくなります",
+    "Low poly clothes and hair": "ローポリの服と髪",
+    "Adds a copy of each Outfit's clothes and hair with fewer faces and no outline, in a hidden Collection beside the Outfit's, for smoother playback":
+        "各衣装の服と髪の、面を減らしアウトラインのないコピーを、衣装のコレクションの横の非表示のコレクションに追加し、再生を軽くします",
+    "No low poly copies": "ローポリのコピーなし",
+    "Light (50%)": "弱 (50%)",
+    "Medium (25%)": "中 (25%)",
+    "Strong (10%)": "強 (10%)",
+    "The copies keep half of the faces": "コピーは面の半分を残します",
+    "The copies keep a quarter of the faces": "コピーは面の4分の1を残します",
+    "The copies keep a tenth of the faces": "コピーは面の10分の1を残します",
     "Separate eyes": "目を分離",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so "
     "they can show through the hair with the compositor":
@@ -94,6 +104,7 @@ TRANSLATIONS = {
 
     # The built-in Hooks' names, as the panel lists them
     "Outlines": "アウトライン",
+    "Low poly": "ローポリ",
     "Separate Eyes": "目を分離",
     "Separate meshes": "メッシュを分離",
     "Convert shaders": "シェーダーを変換",

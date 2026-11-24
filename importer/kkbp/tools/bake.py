@@ -13,6 +13,7 @@ import bpy
 import numpy as np
 
 from .. import compat, templates
+from ..character import ROLE
 
 CACHE = "baked"
 SCENE = "KKBP bake"
@@ -26,7 +27,9 @@ NEUTRAL_SLOTS = ("alpha_mask",)
 def bake(ch, material, name: str, *, at_least=(0, 0), log=print):
     """(light image, dark image) for `material`, rendered from the Character's meshes that use it, at
     the size of its largest texture or `at_least` (the light texture being replaced), if larger."""
-    objects = [o for o in ch.parts() if o.type == "MESH" and material.name in o.data.materials]
+    # not the Low poly Hook's copies: their faces would draw over the original's in the bake
+    objects = [o for o in ch.parts() if o.type == "MESH" and o.get(ROLE) != "low_poly"
+               and material.name in o.data.materials]
     if not objects:
         raise ValueError(f"no mesh of {ch.name} uses {material.name}")
     width, height = max(_size(material), tuple(at_least), key=lambda size: size[0] * size[1])

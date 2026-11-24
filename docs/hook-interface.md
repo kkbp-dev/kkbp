@@ -1,6 +1,6 @@
-# Hook interface 2.1
+# Hook interface 2.2
 
-How to write a Hook: a script that KKBP runs on each Character it imports, after the Core Import has rebuilt it. This is version **2.1** of the hook interface (`kkbp.HOOK_API_VERSION`). The design behind it is in [design/import-pipeline.md](design/import-pipeline.md#hooks); terms are defined in [CONTEXT.md](../CONTEXT.md).
+How to write a Hook: a script that KKBP runs on each Character it imports, after the Core Import has rebuilt it. This is version **2.2** of the hook interface (`kkbp.HOOK_API_VERSION`). The design behind it is in [design/import-pipeline.md](design/import-pipeline.md#hooks); terms are defined in [CONTEXT.md](../CONTEXT.md).
 
 ## A first Hook
 
@@ -138,14 +138,14 @@ A Hook doesn't get the Game Profile; what a Hook needs to know about the Charact
 | `ch.hairs`, `ch.outfits`, `ch.alt_outfits` | Lists of Parts |
 | `ch.outfit(index)` | Every Part of Outfit `index` |
 | `ch.parts(roles=None, outfit=None)` | Parts, filtered by Part Role (a name or a list) and Outfit |
-| `ch.add_part(obj, role, outfit=None)` | Makes a new object a Part. `role` is a Part Role; `outfit` is required for `outfit` and `alt_outfit` |
+| `ch.add_part(obj, role, outfit=None)` | Makes a new object a Part. `role` is a Part Role; `outfit` is required for `outfit`, `alt_outfit` and `low_poly` |
 | `ch.collection` | The Character's Collection. It is there for tidiness: membership is the tag, not the Collection |
 | `ch.material(id)`, `ch.materials(roles=None, parts=None)` | Materials by bundle Id, or filtered by Material Role and by the Part Roles that use them |
 | `ch.image(id)` | An image the import loaded, by the name it gave it |
 | `ch.bundle()` | Reopens the Export Bundle the Character came from |
 | `kkbp.Character.of(obj)`, `kkbp.Character.all(scene)` | The Character an object belongs to, and every Character in a scene |
 
-Part Roles: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows`. The tongue is part of Body: find its faces by the `tongue` Material Role. The armature's bones are named by bundle Id, except that the Rigify Hook gives the rig and its metarig readable names (`Left arm`, `Head`); `ch.bone(id)` finds a bone either way.
+Part Roles: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armature`, `rig`, `face_card`, `eyes`, `eyebrows`, `low_poly` (the Low poly Hook's copies of the clothes and hair, which carry their Outfit). The tongue is part of Body: find its faces by the `tongue` Material Role. The armature's bones are named by bundle Id, except that the Rigify Hook gives the rig and its metarig readable names (`Left arm`, `Head`); `ch.bone(id)` finds a bone either way.
 
 ## Bundle
 
@@ -201,3 +201,4 @@ Part Roles: `body`, `hair`, `outfit`, `alt_outfit`, `tears`, `gag_eyes`, `armatu
 - A Hook that declares `requires_api="2.0"` runs on every 2.x, and one that declares `"2.1"` on 2.1 and later.
 - 2.0 removed the `tongue` Part Role and `ch.tongue`: the tongue is part of Body ([ADR 0039](adr/0039-the-tongue-is-part-of-body.md)). A 1.x Hook is skipped; one that used neither runs again once it declares 2.0.
 - 2.1 added `ch.bone(id)`.
+- 2.2 added the `low_poly` Part Role.

@@ -6,7 +6,7 @@ lists, the Game Profile (ctx.profile) and the bundle's Roles, Groups and Names.
 """
 
 from .. import joint_corrections
-from ..steps import armature, gag, materials, mesh, symmetry, welds
+from ..steps import armature, asset, gag, materials, mesh, symmetry, welds
 from .step import Step
 
 STEPS: list[Step] = [
@@ -40,13 +40,15 @@ STEPS: list[Step] = [
     Step(materials.drive_material_changes),
     Step(materials.set_viewport_colors),
     Step(mesh.arrange_collections),
+    Step(asset.mark_asset),
     Step(materials.set_view_transform),
 ]
 
 # The built-in Hooks (builtin/) by name, in the fixed order they run after the Core Import.
 # SFW comes before Rigify so the rig is built without the bones it deletes. Separate Eyes comes after
-# Rigify so the new Parts are made on the finished rig. Delete default scene runs last, once every
-# object the other Hooks add is in the file.
+# Rigify so the new Parts are made on the finished rig. Low poly copies the finished clothes and hair,
+# so it comes after every Hook that changes them. Delete default scene runs last, once every object
+# the other Hooks add is in the file.
 BUILTIN_HOOKS: list[str] = [
     "Convert shaders",
     "Separate meshes",
@@ -55,5 +57,6 @@ BUILTIN_HOOKS: list[str] = [
     "SFW",
     "Rigify",
     "Separate Eyes",
+    "Low poly",
     "Delete default scene",
 ]

@@ -14,7 +14,7 @@ from typing import Callable
 
 from .options import Option, OptionError
 
-HOOK_API_VERSION = "2.1"
+HOOK_API_VERSION = "2.2"
 _ADDON = __package__.rpartition(".")[0]  # this add-on's package, such as bl_ext.user_default.kkbp
 FOLDER_MODULE = "kkbp_user_hooks"  # folder scripts are loaded as kkbp_user_hooks.<file stem>
 

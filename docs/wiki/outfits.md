@@ -20,6 +20,12 @@ With Export Variations ticked when exporting, the half-off states of the clothes
 
 By default each outfit's clothes are one object. With Separate meshes set to "Separate all clothing" in the [Import Options](importing.md#import-options), each piece of clothing is its own object, named by its material, so a jacket can be hidden or shoes swapped.
 
+## Low poly clothes and hair
+
+Set Low poly clothes and hair in the [Import Options](importing.md#import-options) to Light, Medium or Strong to get a copy of each outfit's clothes and hair with fewer faces: half of them, a quarter or a tenth. The copies are in a hidden `Low poly 00`, `Low poly 01`… collection beside each outfit's. Animation plays back faster with them. Hide the outfit's collection and show its `Low poly` one; the body still gets that outfit's skin textures.
+
+The copies have no outline, follow the rig like the originals, and share their materials, so a colour you change in [Edit Material](edit-material.md) changes both. To try another amount, pick it in the Import Options and run Low poly on the character with [Run Hook](hooks.md#running-a-hook-on-an-imported-character): the new copies replace the old. At Strong a layer of clothing can show through the one over it, such as a shirt through a jacket's sleeves, so try Light or Medium first.
+
 ## SFW mode
 
 SFW mode (off by default) attempts to cover up some NSFW things: it deletes the NSFW parts of the body mesh and their bones. Turn it on before importing a character you will share or show on screen. With it on, the rig has no controls for the removed parts.

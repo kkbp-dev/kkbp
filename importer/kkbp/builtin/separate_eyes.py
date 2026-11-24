@@ -12,6 +12,7 @@ import bpy
 from mathutils import Matrix
 
 from ..character import ROLE
+from ..collection_colors import color
 from ..pipeline.hooks import hook
 from ..pipeline.options import Option
 from ..steps.mesh import child_collection, move_to_collection
@@ -78,7 +79,8 @@ def separate(ch) -> list:
     for part in made:
         _drive_keys(body, part)
     if made:
-        move_to_collection(made, child_collection(ch.collection, f"Eyes and Eyebrows {ch.name}"), hide=False)
+        collection = color(child_collection(ch.collection, f"Eyes and Eyebrows {ch.name}"), "face")
+        move_to_collection(made, collection, hide=False)
     return made
 
 

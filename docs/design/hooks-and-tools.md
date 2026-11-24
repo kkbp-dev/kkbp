@@ -15,9 +15,10 @@ The built-in Hooks are modules in `importer/kkbp/builtin/`. They run in the orde
 | 5 | SFW | `sfw_mode` (bool) | off | none |
 | 6 | Rigify | `use_rigify` (bool) | on | `rigify.blend` |
 | 7 | Separate Eyes | `separate_eyes` (bool) | off | none |
-| 8 | Delete default scene | `delete_default_scene` (bool) | on | none |
+| 8 | Low poly | `low_poly` (choice): `off` "Off", `light` "Light (50%)", `medium` "Medium (25%)", `strong` "Strong (10%)" | `off` | none |
+| 9 | Delete default scene | `delete_default_scene` (bool) | on | none |
 
-The Core Import welds the copies of each vertex before any Hook runs ([ADR 0047](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)). SFW comes before Rigify so the rig is built without the bones it deletes. Separate Eyes comes after Rigify so the new Parts are made on the finished rig. Delete default scene runs last, once every object the other Hooks add is in the file.
+The Core Import welds the copies of each vertex before any Hook runs ([ADR 0047](../adr/0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md)). SFW comes before Rigify so the rig is built without the bones it deletes. Separate Eyes comes after Rigify so the new Parts are made on the finished rig. Low poly copies the finished clothes and hair, so it comes after every Hook that changes them. Delete default scene runs last, once every object the other Hooks add is in the file.
 
 ### Convert shaders (`shaders.py`)
 
@@ -56,7 +57,7 @@ Turns the armature into a hidden metarig (still `ch.armature`), generates a Rigi
 - **Tongue.** The single tongue is rigged on Body ([ADR 0020](../adr/0020-one-tongue-with-mouth-keys-and-bones.md), [ADR 0039](../adr/0039-the-tongue-is-part-of-body.md)).
 - **Skirt.** Found by the game's indexed names, `cf_d_sk_top` and `cf_d_sk_00_00` to `cf_j_sk_07_05` (`names.skirt_bone`): all 48, or there is no skirt rig.
 - **Teeth bones** (`metarig/teeth.py`, issues 42 and 99; every rig gets them). The faces with the `teeth` Material Role are split into an upper and a lower row by connected piece. Each row gets the controls `Teeth <row> L2`, `L1`, `C`, `R1`, `R2` (ends, halfway, middle) in the `Face (MCH)` collection. Under each mouth bone the teeth are weighted to, a control has a hidden bone that copies it and takes those weights, so the teeth follow the mouth bones exactly as they would without the controls.
-- **Widgets.** Each Character gets its own widgets; the fixed widget meshes come from `rigify.blend`. The Bone Widgets collection becomes a hidden Junk collection that also holds the metarig.
+- **Widgets.** Each Character gets its own widgets; the fixed widget meshes come from `rigify.blend`. The Bone Widgets collection becomes the Junk collection. Junk stays in the view layer and holds the face board labels, which show and hide with the board's bone collection, and a `Widgets` collection, excluded from the view layer, with the widgets, Rigify's widget collection and the metarig.
 - **Bone collections.** The rig's collections are built from the Core's (D7). Hair and accessory bones of later Outfits go in their own collections, from the Outfit tag `join_armatures` gives each bone (`kkbp_outfit`, D29). An empty, hidden `Custom` collection sits to the right of NSFW in the Rig Layers panel, for bones the user adds (issue 7).
 - **Face rig** (`finish/face/`, [ADR 0058](../adr/0058-the-face-rig-drives-the-expression-keys-through-face-key-roles.md)). Controls on the face (blink, winks, brows, emote, mouth corners, jaw), a board beside the head (look, mouth shape, lip moods, open moods, sliders, gag eyes, tears), a look-at target that drives the eye UV warps, and twelve emotion presets. Each control drives Face Key Roles, which the `record_face_keys` Step wrote on Body from the Game Profile. A role Body has no key for is left out. A key no control reaches gets a slider on the Face Properties bone. One side's brow and corner controls drive halves of the Game's keys. The game face bones go in the hidden `Face Tweak` collection. It runs after the feet are put on the floor, so its constraints see the grounded rig.
 - **Feet on the floor.** The lowest visible vertex goes on the floor ([ADR 0027](../adr/0027-rigify-stands-the-lowest-vertex-on-the-floor.md)); the bones move as edit bones.
@@ -69,6 +70,10 @@ A change to the Hook is checked with the rig fingerprint (`run.py fingerprint`, 
 ### Separate Eyes (`separate_eyes.py`)
 
 Moves the eye and eyebrow materials out of Body into new Parts with Part Roles `eyes` and `eyebrows`, in an `Eyes and Eyebrows <name>` Collection, parented to Body with their shape keys driven from Body's (D35, D60). The eyes Part takes the pupils, eye whites and eye lines: KK's and KKS's eyelines, and SVS's eyelash and eyelid materials. The Rigify eye UV-warp modifiers move with them. When it separates something, it also turns on the Cryptomatte Object and Material passes of every view layer of the scene, which the compositor needs to pick the Parts out (issue 102); it never turns them off.
+
+### Low poly (`low_poly.py`)
+
+Gives each `outfit` and `hair` Part a copy with about the preset's share of its faces (Light keeps 50%, Medium 25%, Strong 10%), for faster playback (issue 129, [ADR 0059](../adr/0059-low-poly-copies-are-decimated-once-from-the-finished-parts.md)). A Collapse decimation, mirrored across X, is applied once at the rest pose. The copy keeps its weights and modifiers, shares its Part's materials, and loses the Outline modifier and the outline slots. Copies have Part Role `low_poly` and their Outfit, are named after their Part with ` low poly`, and go in a hidden `Low poly NN <name>` Collection that carries the Outfit's number, so showing it gives the body that Outfit's textures (ADR 0055). Alternate clothes get no copy. Run again (Run Hook), it first removes the Character's `low_poly` Parts. Bake and Export Prep's atlas copy leave the copies out.
 
 ### Delete default scene (`default_scene.py`)
 
@@ -100,6 +105,7 @@ Nothing is found by an object, material, node, socket or image name.
 | What | How it is found |
 |---|---|
 | The body, hair, clothes, alternate clothes, armature, rig, gag eyes, tears | `ch.body`, `ch.hairs`, `ch.outfits`, `ch.alt_outfits`, `ch.armature`, `ch.rig`, `ch.gag_eyes`, `ch.tears` |
+| The low poly copies | `ch.parts("low_poly")` |
 | The tongue | Body's faces with Material Role `tongue` |
 | Face and body materials | Material Roles `face`, `body` |
 | Eyelines and eyebrows | Material Roles `eyeline_upper` (else `eyelash`, SVS), `eyeline_shadow`, `eyeline_lower`, `eyebrow` |

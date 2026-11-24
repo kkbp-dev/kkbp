@@ -83,12 +83,23 @@ TRANSLATIONS = {
     "Use Rigify armature": "Использовать арматуру Rigify",
     "Generates a Rigify control rig, suitable for animating in Blender. Without it the Character keeps the FK armature, which is easier to export":
         "Создаёт управляющий риг Rigify, подходящий для анимации в Blender. Без него персонаж сохраняет FK-арматуру, которую проще экспортировать",
+    "Low poly clothes and hair": "Низкополигональные одежда и волосы",
+    "Adds a copy of each Outfit's clothes and hair with fewer faces and no outline, in a hidden Collection beside the Outfit's, for smoother playback":
+        "Добавляет копию одежды и волос каждого наряда с меньшим числом граней и без обводки, в скрытую коллекцию рядом с коллекцией наряда, для более плавного воспроизведения",
+    "No low poly copies": "Без низкополигональных копий",
+    "Light (50%)": "Слабо (50%)",
+    "Medium (25%)": "Средне (25%)",
+    "Strong (10%)": "Сильно (10%)",
+    "The copies keep half of the faces": "Копии сохраняют половину граней",
+    "The copies keep a quarter of the faces": "Копии сохраняют четверть граней",
+    "The copies keep a tenth of the faces": "Копии сохраняют десятую часть граней",
     "Separate eyes": "Отделить глаза",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so they can show through the hair with the compositor":
         "Переносит глаза и брови из Body в отдельные объекты, их ключи формы следуют за ключами Body, чтобы с помощью композитора их можно было показать сквозь волосы",
 
     # The built-in Hooks' names, as the panel lists them
     "Outlines": "Обводки",
+    "Low poly": "Низкополигональные копии",
     "Separate Eyes": "Отделение глаз",
     "Separate meshes": "Разделение мешей",
     "Convert shaders": "Преобразование шейдеров",

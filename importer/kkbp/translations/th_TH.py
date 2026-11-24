@@ -82,12 +82,23 @@ TRANSLATIONS = {
     "Use Rigify armature": "ใช้โครงร่าง Rigify",
     "Generates a Rigify control rig, suitable for animating in Blender. Without it the Character keeps the FK armature, which is easier to export":
         "สร้างริกควบคุม Rigify ที่เหมาะกับการทำแอนิเมชันใน Blender หากไม่ใช้ ตัวละครจะคงโครงร่าง FK ไว้ ซึ่งส่งออกได้ง่ายกว่า",
+    "Low poly clothes and hair": "เสื้อผ้าและผมแบบโลว์โพลี",
+    "Adds a copy of each Outfit's clothes and hair with fewer faces and no outline, in a hidden Collection beside the Outfit's, for smoother playback":
+        "เพิ่มสำเนาเสื้อผ้าและผมของแต่ละชุดที่มีหน้าน้อยลงและไม่มีเส้นขอบ ในคอลเลกชันที่ซ่อนไว้ข้างคอลเลกชันของชุด เพื่อให้เล่นภาพเคลื่อนไหวได้ลื่นขึ้น",
+    "No low poly copies": "ไม่มีสำเนาโลว์โพลี",
+    "Light (50%)": "เบา (50%)",
+    "Medium (25%)": "ปานกลาง (25%)",
+    "Strong (10%)": "มาก (10%)",
+    "The copies keep half of the faces": "สำเนาเก็บหน้าไว้ครึ่งหนึ่ง",
+    "The copies keep a quarter of the faces": "สำเนาเก็บหน้าไว้หนึ่งในสี่",
+    "The copies keep a tenth of the faces": "สำเนาเก็บหน้าไว้หนึ่งในสิบ",
     "Separate eyes": "แยกดวงตา",
     "Moves the eyes and eyebrows out of Body into their own objects, with their shape keys following Body's, so they can show through the hair with the compositor":
         "ย้ายดวงตาและคิ้วออกจาก Body ไปเป็นวัตถุของตัวเอง โดยให้ชีปคีย์ตามของ Body เพื่อให้แสดงทะลุผมได้ด้วยคอมโพสิเตอร์",
 
     # The built-in Hooks' names, as the panel lists them
     "Outlines": "เส้นขอบ",
+    "Low poly": "โลว์โพลี",
     "Separate Eyes": "แยกดวงตา",
     "Separate meshes": "แยกเมช",
     "Convert shaders": "แปลงเชดเดอร์",

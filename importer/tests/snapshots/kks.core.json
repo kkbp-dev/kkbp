@@ -2,9 +2,19 @@
  "collections": {
   "children": {
    "{character}": {
+    "asset": {
+     "preview": [
+      256,
+      256
+     ],
+     "tags": [
+      "KKS"
+     ]
+    },
     "children": {
      "Outfit 00 {character}": {
       "children": {},
+      "color": "COLOR_04",
       "objects": [
        "Hair Outfit 00 {character}",
        "Outfit 00 {character}"
@@ -12,12 +22,14 @@
      },
      "Tears and gag eyes {character}": {
       "children": {},
+      "color": "COLOR_07",
       "objects": [
        "Gag Eyes {character}",
        "Tears {character}"
       ]
      }
     },
+    "color": "COLOR_05",
     "objects": [
      "Armature {character}",
      "Body {character}"
@@ -13886,12 +13898,14 @@
    "join_armatures": "ran",
    "link_expression_keys": "ran",
    "load_passes": "ran",
+   "mark_asset": "ran",
    "merge_rigged_tongue": "ran",
    "move_eyelids_forward": "skipped",
    "move_upper_eyeline_forward": "ran",
    "order_material_slots": "ran",
    "order_shape_keys": "ran",
    "orient_fingers_and_legs": "ran",
+   "record_face_keys": "ran",
    "rename_uv_maps": "ran",
    "set_bone_tails_and_roll": "ran",
    "set_view_transform": "ran",
@@ -13903,5 +13917,5 @@
    "weld_neck": "ran"
   }
  },
- "summary_version": 1
+ "summary_version": 2
 }
