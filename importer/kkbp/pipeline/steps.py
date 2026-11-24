@@ -6,7 +6,7 @@ lists, the Game Profile (ctx.profile) and the bundle's Roles, Groups and Names.
 """
 
 from .. import joint_corrections
-from ..steps import armature, gag, materials, mesh, symmetry, welds
+from ..steps import armature, asset, gag, materials, mesh, symmetry, welds
 from .step import Step
 
 STEPS: list[Step] = [
@@ -40,6 +40,7 @@ STEPS: list[Step] = [
     Step(materials.drive_material_changes),
     Step(materials.set_viewport_colors),
     Step(mesh.arrange_collections),
+    Step(asset.mark_asset),
     Step(materials.set_view_transform),
 ]
 
