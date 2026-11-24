@@ -26,7 +26,7 @@ from .....editing import editing
 from .....steps import gag
 from ... import names
 from . import controls, shapes
-from .terms import Term, axis, channel, driver
+from .terms import Term, axis, channel, driver, prop
 
 HEAD = names.ORIGINAL_BONE_PREFIX + names.HEAD_BONE
 SLIDE = 0.03  # a slider's travel
@@ -121,7 +121,7 @@ def build(build, keys, eyes, terms, log) -> dict:
                 sliders.append((None, None, text, None, Vector((cx, y - 0.0015, z - 0.002)), cx))
     rig.data.bones[names.FACE_BOARD_BONE].hide_select = True  # scenery: only its knobs and sliders move
     shapes.lock(rig.pose.bones[names.FACE_BOARD_BONE])
-    shapes.put(rig, names.FACE_BOARD_BONE, names.FACE_LAYER)
+    shapes.put(rig, names.FACE_BOARD_BONE, names.EMOTIONS_LAYER)
 
     labels = _Labels(build, rig)
     reach = {}
@@ -134,7 +134,7 @@ def build(build, keys, eyes, terms, log) -> dict:
         frame.append(([(local.x - half, local.y), (local.x + half, local.y), (local.x, local.y - half),
                        (local.x, local.y + half)], [(0, 1), (2, 3)]))
         pose_bone = rig.pose.bones[bone]
-        shapes.put(rig, bone, names.FACE_LAYER)
+        shapes.put(rig, bone, names.EMOTIONS_LAYER)
         shapes.lock(pose_bone, location=(False, False, True))
         shapes.limit_location(pose_bone, x=(-half, half), y=(-half, half))
         shapes.widget(build, rig, bone, shapes.combine(shapes.circle(half * 0.28), shapes.circle(half * 0.09)),
@@ -165,7 +165,7 @@ def build(build, keys, eyes, terms, log) -> dict:
                        (local.x, local.y + 0.002), (local.x + SLIDE, local.y - 0.002), (local.x + SLIDE, local.y + 0.002)],
                       [(0, 1), (2, 3), (4, 5)]))
         pose_bone = rig.pose.bones[name]
-        shapes.put(rig, name, names.FACE_LAYER)
+        shapes.put(rig, name, names.EMOTIONS_LAYER)
         shapes.lock(pose_bone, location=(False, True, True))
         shapes.limit_location(pose_bone, x=(0.0, SLIDE))
         shapes.widget(build, rig, name, shapes.rect(-0.0022, -0.0038, 0.0022, 0.0038), color=COLORS[colour])
@@ -276,6 +276,9 @@ class _Labels:
         obj.hide_select = True
         obj.hide_render = True
         obj.show_in_front = True
+        # hidden with the board's bone collection
+        driver(obj, "hide_viewport", "not shown",
+               [("shown", prop(self.rig, f'data.collections_all["{names.EMOTIONS_LAYER}"].is_visible'))])
         # The object sits on the frame bone's tail, where its relationship line goes, so the line has
         # no length; the text moves to its place by its own offset (in the text's plane: x across, y up).
         anchor = self.rig.matrix_world @ self.rig.data.bones[names.FACE_BOARD_BONE].tail_local

@@ -218,13 +218,14 @@ def test_the_look_joystick_moves_the_eyes(ch):
 
 def test_the_layers_and_the_board(ch):
     collections = ch.rig.data.collections_all
-    for name in (names.FACE_LAYER, names.EYES_LAYER, names.EMOTIONS_LAYER):
+    for name in (names.EYES_LAYER, names.EMOTIONS_LAYER):
         assert collections[name].is_visible and len(collections[name].bones) > 0, name
     tweak = collections[names.FACE_TWEAK_LAYER]
     assert not tweak.is_visible and "cf_J_Mayu_L" in [b.name for b in tweak.bones]
     assert ch.rig.data.bones[names.FACE_BOARD_BONE].hide_select
     labels = [o for o in bpy.data.objects if o.parent == ch.rig and o.type == "FONT"]
     assert len(labels) > 30 and all(o.hide_select and o.hide_render for o in labels)
+    assert "Face" not in collections  # the face controls are in Emotions
     for old in ("Eyes handle", "Mouth Widget Controller", "Eyesx", "Eyeballs"):
         assert old not in ch.rig.data.bones, old
     keys = ch.body.data.shape_keys.key_blocks
@@ -260,7 +261,7 @@ def test_no_face_control_draws_a_relationship_line(ch):
     """Blender draws a bone's dashed line from its head to its parent's tail, even to a hidden
     parent: every control the face layers show hangs from a hidden pivot whose tail is its head."""
     collections = ch.rig.data.collections_all
-    shown = {b.name for name in (names.FACE_LAYER, names.EYES_LAYER, names.EMOTIONS_LAYER)
+    shown = {b.name for name in (names.EYES_LAYER, names.EMOTIONS_LAYER)
              for b in collections[name].bones}
     for name in shown:
         bone = ch.rig.data.bones[name]
@@ -277,3 +278,14 @@ def test_no_board_label_draws_a_relationship_line(ch):
     assert labels
     for label in labels:
         assert (label.matrix_world.translation - tail).length < 1e-5, label.name
+
+
+def test_the_board_labels_hide_with_the_emotions_layer(ch):
+    emotions = ch.rig.data.collections_all[names.EMOTIONS_LAYER]
+    labels = [o for o in bpy.data.objects if o.parent == ch.rig and o.type == "FONT"]
+    emotions.is_visible = False
+    bpy.context.view_layer.update()
+    hidden = [o.visible_get() for o in labels]
+    emotions.is_visible = True
+    bpy.context.view_layer.update()
+    assert not any(hidden) and all(o.visible_get() for o in labels)

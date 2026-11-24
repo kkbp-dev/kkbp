@@ -53,13 +53,14 @@ def face_rig(build):
 
     resolved = presets.resolve(keys, reach, set(raw))
     controls_ = [b.name for b in build.rig.data.bones
-                 if b.collections.get(names.FACE_LAYER) and b.name != names.FACE_BOARD_BONE]
+                 if b.collections.get(names.EMOTIONS_LAYER)
+                 and b.name not in (names.FACE_BOARD_BONE, names.FACE_PROPERTIES_BONE)]
     build.rig[names.FACE_DATA_PROPERTY] = json.dumps(
         {"presets": {p: r["ops"] for p, r in resolved.items()}, "expect": {p: r["expect"] for p, r in resolved.items()},
          "panel": panel, "controls": controls_ + [names.EYE_TARGET_BONE, names.LEFT_EYE_TARGET_BONE,
                                                   names.RIGHT_EYE_TARGET_BONE]}, ensure_ascii=False)
     _no_relationship_lines(build.rig)
-    for name in (names.FACE_LAYER, names.EYES_LAYER, names.EMOTIONS_LAYER):
+    for name in (names.EYES_LAYER, names.EMOTIONS_LAYER):
         build.rig.data.collections_all[name].is_visible = True
     log.info(f"The face rig drives {len(controlled)} expression keys from its controls; "
              f"{len(raw)} more have Face Properties sliders")
@@ -69,7 +70,7 @@ def _no_relationship_lines(rig):
     """Each control the face layers show hangs from a hidden pivot whose tail is the control's head,
     so its dashed relationship line has no length. The pivot sits at rest, so the control moves as
     before."""
-    shown = {b.name for name in (names.FACE_LAYER, names.EYES_LAYER, names.EMOTIONS_LAYER)
+    shown = {b.name for name in (names.EYES_LAYER, names.EMOTIONS_LAYER)
              for b in rig.data.collections_all[name].bones if b.parent is not None}
     with editing(rig, "EDIT"):
         edit = rig.data.edit_bones
@@ -99,7 +100,7 @@ def _properties(build, raw):
     pose_bone = rig.pose.bones[names.FACE_PROPERTIES_BONE]
     shapes.lock(pose_bone)
     shapes.widget(build, rig, pose_bone.name, shapes.star(0.022, 0.009), color=STAR_COLOR, wire=2.0)
-    shapes.collection(rig, names.EMOTIONS_LAYER, row=6)
+    shapes.collection(rig, names.EMOTIONS_LAYER, row=10)
     shapes.put(rig, pose_bone.name, names.EMOTIONS_LAYER)
     for name in raw:
         drivers.bone_property(rig, names.FACE_PROPERTIES_BONE, name, default=0.0, min=0.0, max=1.0,

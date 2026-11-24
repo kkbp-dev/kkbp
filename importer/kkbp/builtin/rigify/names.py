@@ -544,9 +544,9 @@ FK_LAYER_SUFFIX = " FK"
 HAIR_LAYER = "Hair/Accessories"
 TONGUE_LAYER = "Tongue"
 RIGGED_TONGUE_LAYER = "Rigged tongue"
-# The face rig's collections (finish/face), and the game face bones', hidden, for bone-level tweaks.
+# The face rig's collections (finish/face): its face controls, board and Face Properties bone in
+# Emotions, the eye targets in Eyes; and the game face bones', hidden, for bone-level tweaks.
 EMOTIONS_LAYER = "Emotions"
-FACE_LAYER = "Face"
 EYES_LAYER = "Eyes"
 FACE_TWEAK_LAYER = "Face Tweak"
 FACE_MCH_LAYER = "Face (MCH)"

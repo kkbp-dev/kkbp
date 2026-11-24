@@ -118,6 +118,11 @@ def root_colour(build):
 
 
 def visible_collections(build):
+    # The Core Import's Face collection is left empty once its bones are sorted (the face rig's
+    # controls go in Emotions).
+    leftover = build.rig.data.collections_all.get(names.ORIGINAL_UPPER_FACE_LAYER_INDEX)
+    if leftover is not None and not leftover.bones and not leftover.children:
+        build.rig.data.collections.remove(leftover)
     for collection in build.rig.data.collections_all:
         collection.is_visible = False
     for name in VISIBLE:

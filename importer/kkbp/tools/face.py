@@ -67,8 +67,8 @@ def key(rig, frame):
         return
     for name in found["controls"]:
         if bone := rig.pose.bones.get(name):
-            bone.keyframe_insert("location", frame=frame, group=names.FACE_LAYER)
-            bone.keyframe_insert("scale", frame=frame, group=names.FACE_LAYER)
+            bone.keyframe_insert("location", frame=frame, group=names.EMOTIONS_LAYER)
+            bone.keyframe_insert("scale", frame=frame, group=names.EMOTIONS_LAYER)
     for _, keys in found["panel"]:
         for k in keys:
             rig.keyframe_insert(f'pose.bones["{names.FACE_PROPERTIES_BONE}"]["{k}"]', frame=frame,

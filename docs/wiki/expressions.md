@@ -2,7 +2,7 @@
 
 Every eye and mouth expression of the game comes into Blender as a shape key with an English name, and the rig has face controls and emotion presets for them.
 
-![The Happy and Laugh presets on a Koikatsu and a Summer Vacation Scramble character](images/expressions/presets.jpg)
+![The Happy and Angry presets on a Koikatsu and a Summer Vacation Scramble character](images/expressions/presets.jpg)
 
 ## Shape keys
 
@@ -10,7 +10,7 @@ The body's shape keys are named by what they do, with their category first: `Eye
 
 ## The face rig
 
-With the [Rigify rig](rig.md), the face has controls where they act, and a board beside the head for the rest. They show with the Face, Eyes and Emotions rows of Rig Layers.
+With the [Rigify rig](rig.md), the face has controls where they act, and a board beside the head for the rest. They show with the Emotions and Eyes rows of Rig Layers.
 
 ![The face controls and the board beside the head, on a Summer Vacation Scramble character with outlines](images/expressions/face-rig.jpg)
 

@@ -122,11 +122,11 @@ def build(build, keys, eyes, terms, log) -> dict:
     with editing(rig, "EDIT"):
         for c in made:
             shapes.new_bone(rig.data.edit_bones, bone_name(c), where[c], parent=HEAD, length=0.006)
-    shapes.collection(rig, names.FACE_LAYER, row=10)
+    shapes.collection(rig, names.EMOTIONS_LAYER, row=10)
     for c in made:
         y_range, x_range, kind = CONTROLS[c]
         pose_bone = rig.pose.bones[bone_name(c)]
-        shapes.put(rig, pose_bone.name, names.FACE_LAYER)
+        shapes.put(rig, pose_bone.name, names.EMOTIONS_LAYER)
         shapes.lock(pose_bone, location=(x_range is None, False, True))
         shapes.limit_location(pose_bone, x=x_range, y=y_range)
         shapes.widget(build, rig, pose_bone.name, _shape(c, kind), color=EMOTE_COLOR if kind == "emote" else COLOR)
