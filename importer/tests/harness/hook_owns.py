@@ -73,7 +73,8 @@ OWNS: dict[str, tuple] = {
     # Vertices, vertex groups and shape keys of the meshes, and bones of the armature.
     "SFW": (("objects", "*", "mesh", "**"), ("objects", "*", "armature", "**")),
     # The metarig and the rig, their widgets, and what moves onto the rig: parents, modifiers, vertex
-    # groups (DEF- names, the eye and palm groups) and the emotion grid's shape keys. Not materials.
+    # groups (DEF- names, the eye and palm groups), and the face rig's shape key halves, drivers and
+    # board labels (ADR 0058). Not materials.
     "Rigify": (("objects", "**"), ("collections", "**"), ("counts", "objects"), ("counts", "meshes"),
                ("counts", "armatures"), ("counts", "actions")),
     # Body loses the eye and eyebrow faces, their slots and its UV-warp modifiers; the new Parts and their

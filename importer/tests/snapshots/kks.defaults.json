@@ -3,14 +3,73 @@
   "children": {
    "{character}": {
     "children": {
+     "Face board labels {character}": {
+      "children": {},
+      "objects": [
+       "Face board label 1",
+       "Face board label 10",
+       "Face board label 11",
+       "Face board label 12",
+       "Face board label 13",
+       "Face board label 14",
+       "Face board label 15",
+       "Face board label 16",
+       "Face board label 17",
+       "Face board label 18",
+       "Face board label 19",
+       "Face board label 2",
+       "Face board label 20",
+       "Face board label 21",
+       "Face board label 22",
+       "Face board label 23",
+       "Face board label 24",
+       "Face board label 25",
+       "Face board label 26",
+       "Face board label 27",
+       "Face board label 28",
+       "Face board label 29",
+       "Face board label 3",
+       "Face board label 30",
+       "Face board label 31",
+       "Face board label 32",
+       "Face board label 33",
+       "Face board label 34",
+       "Face board label 35",
+       "Face board label 36",
+       "Face board label 37",
+       "Face board label 38",
+       "Face board label 39",
+       "Face board label 4",
+       "Face board label 40",
+       "Face board label 41",
+       "Face board label 42",
+       "Face board label 43",
+       "Face board label 44",
+       "Face board label 45",
+       "Face board label 46",
+       "Face board label 47",
+       "Face board label 48",
+       "Face board label 49",
+       "Face board label 5",
+       "Face board label 50",
+       "Face board label 51",
+       "Face board label 52",
+       "Face board label 53",
+       "Face board label 54",
+       "Face board label 55",
+       "Face board label 56",
+       "Face board label 6",
+       "Face board label 7",
+       "Face board label 8",
+       "Face board label 9"
+      ]
+     },
      "Junk {character}": {
       "children": {
        "WGTS_Armature {character}": {
         "children": {},
         "objects": [
          "WGT-RIG-Armature {character}_Chest_fk",
-         "WGT-RIG-Armature {character}_Eyeballs",
-         "WGT-RIG-Armature {character}_Eyes track target",
          "WGT-RIG-Armature {character}_Head track target",
          "WGT-RIG-Armature {character}_Hips_fk",
          "WGT-RIG-Armature {character}_IndexFinger1_L",
@@ -46,7 +105,6 @@
          "WGT-RIG-Armature {character}_Left elbow_tweak",
          "WGT-RIG-Armature {character}_Left elbow_tweak.001",
          "WGT-RIG-Armature {character}_Left elbow_tweak.002",
-         "WGT-RIG-Armature {character}_Left eyeball",
          "WGT-RIG-Armature {character}_Left knee_fk",
          "WGT-RIG-Armature {character}_Left knee_tweak",
          "WGT-RIG-Armature {character}_Left knee_tweak.001",
@@ -114,7 +172,6 @@
          "WGT-RIG-Armature {character}_Right elbow_tweak",
          "WGT-RIG-Armature {character}_Right elbow_tweak.001",
          "WGT-RIG-Armature {character}_Right elbow_tweak.002",
-         "WGT-RIG-Armature {character}_Right eyeball",
          "WGT-RIG-Armature {character}_Right knee_fk",
          "WGT-RIG-Armature {character}_Right knee_tweak",
          "WGT-RIG-Armature {character}_Right knee_tweak.001",
@@ -399,6 +456,54 @@
        "Eye Grid",
        "Metarig {character}",
        "Mouth Grid",
+       "WGT-Rig {character}_Board Eye Angry",
+       "WGT-Rig {character}_Board Eye Bored",
+       "WGT-Rig {character}_Board Eye Happy, Closed",
+       "WGT-Rig {character}_Board Eye Sad",
+       "WGT-Rig {character}_Board Eye Smiling",
+       "WGT-Rig {character}_Board Eye Smug",
+       "WGT-Rig {character}_Board Eye Thinking",
+       "WGT-Rig {character}_Board Eyebrow Angry",
+       "WGT-Rig {character}_Board Eyebrow Anxious",
+       "WGT-Rig {character}_Board Eyebrow Doubt L",
+       "WGT-Rig {character}_Board Eyebrow Smug",
+       "WGT-Rig {character}_Board Eyebrow Worried",
+       "WGT-Rig {character}_Board Gag eyes",
+       "WGT-Rig {character}_Board Mouth Angry",
+       "WGT-Rig {character}_Board Mouth Angry 2",
+       "WGT-Rig {character}_Board Mouth Cartoony Smile",
+       "WGT-Rig {character}_Board Mouth Catlike",
+       "WGT-Rig {character}_Board Mouth Excited (Broad)",
+       "WGT-Rig {character}_Board Mouth Kiss",
+       "WGT-Rig {character}_Board Mouth Playful",
+       "WGT-Rig {character}_Board Mouth Serious 2",
+       "WGT-Rig {character}_Board Mouth Smiling",
+       "WGT-Rig {character}_Board Mouth Tongue Out",
+       "WGT-Rig {character}_Board Mouth Triangle",
+       "WGT-Rig {character}_Board Tears big",
+       "WGT-Rig {character}_Board Tears med",
+       "WGT-Rig {character}_Board Tears small",
+       "WGT-Rig {character}_Board gag type",
+       "WGT-Rig {character}_Board look",
+       "WGT-Rig {character}_Board mood",
+       "WGT-Rig {character}_Board mood2",
+       "WGT-Rig {character}_Board open",
+       "WGT-Rig {character}_Board shape",
+       "WGT-Rig {character}_Eye target",
+       "WGT-Rig {character}_Eye target L",
+       "WGT-Rig {character}_Eye target R",
+       "WGT-Rig {character}_Face Properties",
+       "WGT-Rig {character}_Face board",
+       "WGT-Rig {character}_Face brow L",
+       "WGT-Rig {character}_Face brow R",
+       "WGT-Rig {character}_Face brow mid",
+       "WGT-Rig {character}_Face corner L",
+       "WGT-Rig {character}_Face corner R",
+       "WGT-Rig {character}_Face emote",
+       "WGT-Rig {character}_Face jaw",
+       "WGT-Rig {character}_Face lid L",
+       "WGT-Rig {character}_Face lid R",
+       "WGT-Rig {character}_Face lids",
        "WidgetBP",
        "WidgetBreastL",
        "WidgetBreastLeft",
@@ -411,9 +516,6 @@
        "WidgetButtocks",
        "WidgetChest",
        "WidgetEye",
-       "WidgetEyeLeftRigify",
-       "WidgetEyeRightRigify",
-       "WidgetEyesRigify",
        "WidgetFace",
        "WidgetFinger",
        "WidgetFingerThumb",
@@ -462,9 +564,9 @@
   "armatures": 3,
   "images": 77,
   "materials": 44,
-  "meshes": 382,
+  "meshes": 423,
   "node_groups": 14,
-  "objects": 426
+  "objects": 523
  },
  "images": [
   "KK OutlineMask.png",
@@ -1427,7 +1529,7 @@
      "Outline cf_m_face_00",
      "Outline cf_m_body"
     ],
-    "shape_key_drivers": 21,
+    "shape_key_drivers": 135,
     "shape_keys": [
      "Basis",
      "Gag eyes",
@@ -1557,25 +1659,16 @@
      "Tears med",
      "Tears small",
      "Gag eyes (Fiery Eyes)",
-     "Eye Closed copy",
-     "Mouth Big A (Copy)",
-     "Mouth Big E (Copy)",
-     "Mouth Big I (Copy)",
-     "Mouth Big O (Copy)",
-     "Mouth Big U (Copy)",
-     "Mouth Happy (Broad) (Copy)",
-     "Mouth Impatient (Copy)",
-     "Mouth Serious 2 (Copy)",
-     "Mouth Small I (Copy)",
-     "Mouth Triangle (Copy)",
-     "Eye Both Eyes Shut Tight (Copy)",
-     "Eye Closed (Copy)",
-     "Eye Default (Copy)",
-     "Eye Happy, Closed (Copy)",
-     "Custom Key 1 Up",
-     "Custom Key 2 Down",
-     "Custom Key 3 Up",
-     "Custom Key 4 Down"
+     "Eyebrow Surprised (L)",
+     "Eyebrow Surprised (R)",
+     "Eyebrow Angry (L)",
+     "Eyebrow Angry (R)",
+     "Mouth Smiling, Closed (L)",
+     "Mouth Smiling, Closed (R)",
+     "Mouth Angry, Closed (L)",
+     "Mouth Angry, Closed (R)",
+     "Mouth Happy (Broad), Closed (L)",
+     "Mouth Happy (Broad), Closed (R)"
     ],
     "uv_maps": [
      "uv_main",
@@ -1702,6 +1795,1014 @@
    "parent": null,
    "roles": [],
    "type": "MESH"
+  },
+  "Face board label 1": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.014,
+    0.194,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 10": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.1328,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 11": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.1672,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 12": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.188,
+    0.188,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 13": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.204,
+    0.1817,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 14": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.204,
+    0.1433,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 15": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.1868,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 16": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.2212,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 17": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.242,
+    0.188,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 18": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.258,
+    0.1817,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 19": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.258,
+    0.1433,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.08,
+    0.188,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 20": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.2408,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 21": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.2752,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 22": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.1553,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 23": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.107,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 24": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.0955,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 25": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.084,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 26": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.0725,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 27": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.061,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 28": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.0495,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 29": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.038,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 3": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.1817,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 30": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.006,
+    0.0245,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 31": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.015,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 32": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.0035,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 33": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.107,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 34": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.0955,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 35": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.084,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 36": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.0725,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 37": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.061,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 38": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.094,
+    0.0475,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 39": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.038,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 4": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.1433,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 40": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.0265,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 41": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.015,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 42": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.107,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 43": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0955,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 44": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.084,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 45": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0725,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 46": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.061,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 47": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0495,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 48": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.038,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 49": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0265,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 5": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0788,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 50": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.015,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 51": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0035,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 52": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    -0.008,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 53": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.006,
+    0.1225,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 54": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.094,
+    0.1225,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 55": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.182,
+    0.1225,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 56": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.284,
+    0.2135,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 6": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.1132,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 7": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.134,
+    0.188,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 8": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.15,
+    0.1817,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 9": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.15,
+    0.1433,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
   },
   "Gag Eyes {character}": {
    "constraints": 0,
@@ -1837,20 +2938,16 @@
       57
      ],
      [
-      "Emotions",
-      0
-     ],
-     [
-      "Eyes/Rig.Tongue",
-      10
-     ],
-     [
       "Face",
-      51
+      0
      ],
      [
       "Face (MCH)",
       30
+     ],
+     [
+      "Face Tweak",
+      48
      ],
      [
       "Fingers",
@@ -1894,7 +2991,7 @@
      ],
      [
       "MCH",
-      30
+      9
      ],
      [
       "NSFW",
@@ -1917,6 +3014,10 @@
       0
      ],
      [
+      "Tongue",
+      6
+     ],
+     [
       "Torso",
       9
      ],
@@ -1929,7 +3030,7 @@
       6
      ]
     ],
-    "bone_count": 833,
+    "bone_count": 805,
     "bones": {
      "Breasts handle": {
       "deform": false,
@@ -2519,118 +3620,6 @@
        1.4249
       ]
      },
-     "Eyeballs": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Eyeballs track": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Eyes handle": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Eyes handle marker": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Eyes target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3922
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3922
-      ]
-     },
-     "Eyes track target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Eyes track target parent",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Eyes track target parent": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": null,
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Eyesx": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3922
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3922
-      ]
-     },
      "Head": {
       "deform": false,
       "head": [
@@ -3051,34 +4040,6 @@
        1.4363
       ]
      },
-     "Left Head marker x": {
-      "deform": false,
-      "head": [
-       0.0399,
-       0.0149,
-       1.3457
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.0195,
-       1.3457
-      ]
-     },
-     "Left Head marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       0.0149,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.0195,
-       1.4096
-      ]
-     },
      "Left ankle": {
       "deform": false,
       "head": [
@@ -3119,118 +4080,6 @@
        0.5261,
        0.0281,
        1.2549
-      ]
-     },
-     "Left eye handle": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Eyes handle",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Left eye handle marker": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Left eye handle marker x": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Left eye handle marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Left eye target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3922
-      ],
-      "parent": "Eyes target",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3922
-      ]
-     },
-     "Left eyeball": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Left eyeball track": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Left eyeball track correction": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4096
       ]
      },
      "Left heel": {
@@ -3751,34 +4600,6 @@
        1.4344
       ]
      },
-     "Right Head marker x": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       0.0149,
-       1.3457
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.0195,
-       1.3457
-      ]
-     },
-     "Right Head marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       0.0149,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.0195,
-       1.4096
-      ]
-     },
      "Right ankle": {
       "deform": false,
       "head": [
@@ -3819,118 +4640,6 @@
        -0.526,
        0.0277,
        1.2549
-      ]
-     },
-     "Right eye handle": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Eyes handle",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Right eye handle marker": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Right eye handle marker x": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Right eye handle marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Right eye target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3922
-      ],
-      "parent": "Eyes target",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3922
-      ]
-     },
-     "Right eyeball": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Right eyeball track": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Right eyeball track correction": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4096
       ]
      },
      "Right heel": {
@@ -13594,8 +14303,8 @@
       ]
      }
     },
-    "drivers": 89,
-    "pose_constraints": 88
+    "drivers": 11,
+    "pose_constraints": 58
    },
    "constraints": 0,
    "hidden": {
@@ -13744,19 +14453,23 @@
      ],
      [
       "Emotions",
-      17
+      1
      ],
      [
-      "Eyes/Rig.Tongue",
-      12
+      "Eyes",
+      3
      ],
      [
       "Face",
-      42
+      44
      ],
      [
       "Face (MCH)",
       36
+     ],
+     [
+      "Face Tweak",
+      48
      ],
      [
       "Fingers",
@@ -13804,7 +14517,7 @@
      ],
      [
       "MCH",
-      339
+      321
      ],
      [
       "NSFW",
@@ -13831,6 +14544,10 @@
       56
      ],
      [
+      "Tongue",
+      8
+     ],
+     [
       "Torso",
       8
      ],
@@ -13843,8 +14560,470 @@
       10
      ]
     ],
-    "bone_count": 1351,
+    "bone_count": 1366,
     "bones": {
+     "Board Eye Angry": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3532
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3592
+      ]
+     },
+     "Board Eye Bored": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3877
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3937
+      ]
+     },
+     "Board Eye Happy, Closed": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3992
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.4052
+      ]
+     },
+     "Board Eye Sad": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3417
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3477
+      ]
+     },
+     "Board Eye Smiling": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.4107
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.4167
+      ]
+     },
+     "Board Eye Smug": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3762
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3822
+      ]
+     },
+     "Board Eye Thinking": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3647
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3707
+      ]
+     },
+     "Board Eyebrow Angry": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3647
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3707
+      ]
+     },
+     "Board Eyebrow Anxious": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.4107
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.4167
+      ]
+     },
+     "Board Eyebrow Doubt L": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3992
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.4052
+      ]
+     },
+     "Board Eyebrow Smug": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3877
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3937
+      ]
+     },
+     "Board Eyebrow Worried": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3762
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3822
+      ]
+     },
+     "Board Gag eyes": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3187
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3247
+      ]
+     },
+     "Board Mouth Angry": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3762
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3822
+      ]
+     },
+     "Board Mouth Angry 2": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3647
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3707
+      ]
+     },
+     "Board Mouth Cartoony Smile": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3992
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.4052
+      ]
+     },
+     "Board Mouth Catlike": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3187
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3247
+      ]
+     },
+     "Board Mouth Excited (Broad)": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3877
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3937
+      ]
+     },
+     "Board Mouth Kiss": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3302
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3362
+      ]
+     },
+     "Board Mouth Playful": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.2957
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3017
+      ]
+     },
+     "Board Mouth Serious 2": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3532
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3592
+      ]
+     },
+     "Board Mouth Smiling": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.4107
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.4167
+      ]
+     },
+     "Board Mouth Tongue Out": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3072
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3132
+      ]
+     },
+     "Board Mouth Triangle": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3417
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3477
+      ]
+     },
+     "Board Tears big": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3187
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3247
+      ]
+     },
+     "Board Tears med": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3302
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3362
+      ]
+     },
+     "Board Tears small": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3417
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3477
+      ]
+     },
+     "Board gag type": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3072
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3132
+      ]
+     },
+     "Board look": {
+      "deform": false,
+      "head": [
+       0.1607,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1607,
+       -0.0725,
+       1.4722
+      ]
+     },
+     "Board mood": {
+      "deform": false,
+      "head": [
+       0.2747,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2747,
+       -0.0725,
+       1.4722
+      ]
+     },
+     "Board mood2": {
+      "deform": false,
+      "head": [
+       0.3287,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3287,
+       -0.0725,
+       1.4722
+      ]
+     },
+     "Board open": {
+      "deform": false,
+      "head": [
+       0.3827,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3827,
+       -0.0725,
+       1.4722
+      ]
+     },
+     "Board shape": {
+      "deform": false,
+      "head": [
+       0.2207,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2207,
+       -0.0725,
+       1.4722
+      ]
+     },
      "Breasts handle": {
       "deform": false,
       "head": [
@@ -13913,62 +15092,6 @@
        0.0,
        0.0149,
        1.1725
-      ]
-     },
-     "Custom Key 1 Guide": {
-      "deform": false,
-      "head": [
-       -0.25,
-       -0.0712,
-       1.4024
-      ],
-      "parent": "head",
-      "tail": [
-       -0.25,
-       0.0288,
-       1.4024
-      ]
-     },
-     "Custom Key 2 Guide": {
-      "deform": false,
-      "head": [
-       -0.3,
-       -0.0712,
-       1.4024
-      ],
-      "parent": "head",
-      "tail": [
-       -0.3,
-       0.0288,
-       1.4024
-      ]
-     },
-     "Custom Key Controller 1": {
-      "deform": false,
-      "head": [
-       -0.25,
-       -0.0712,
-       1.4024
-      ],
-      "parent": "head",
-      "tail": [
-       -0.25,
-       0.0288,
-       1.4024
-      ]
-     },
-     "Custom Key Controller 2": {
-      "deform": false,
-      "head": [
-       -0.3,
-       -0.0712,
-       1.4024
-      ],
-      "parent": "head",
-      "tail": [
-       -0.3,
-       0.0288,
-       1.4024
       ]
      },
      "DEF-Chest": {
@@ -16043,158 +17166,214 @@
        1.352
       ]
      },
-     "Eye Widget Controller": {
+     "Eye target": {
       "deform": false,
       "head": [
-       -0.2,
-       -0.0712,
-       1.4024
+       0.0,
+       -0.4115,
+       1.4102
       ],
-      "parent": "head",
+      "parent": "MCH-Eye target parent",
       "tail": [
-       -0.2,
-       0.0288,
-       1.4024
+       0.0,
+       -0.4115,
+       1.4302
       ]
      },
-     "Eyeballs": {
-      "deform": true,
+     "Eye target L": {
+      "deform": false,
+      "head": [
+       0.043,
+       -0.4115,
+       1.4102
+      ],
+      "parent": "Eye target",
+      "tail": [
+       0.043,
+       -0.4115,
+       1.4252
+      ]
+     },
+     "Eye target R": {
+      "deform": false,
+      "head": [
+       -0.043,
+       -0.4115,
+       1.4102
+      ],
+      "parent": "Eye target",
+      "tail": [
+       -0.043,
+       -0.4115,
+       1.4252
+      ]
+     },
+     "Face Properties": {
+      "deform": false,
       "head": [
        0.0,
-       -0.0381,
-       1.4024
+       -0.1051,
+       1.5815
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.0725,
-       1.4024
+       -0.1051,
+       1.6015
       ]
      },
-     "Eyeballs track": {
+     "Face board": {
+      "deform": false,
+      "head": [
+       0.1247,
+       -0.0715,
+       1.2837
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.1247,
+       -0.0715,
+       1.3037
+      ]
+     },
+     "Face brow L": {
+      "deform": false,
+      "head": [
+       0.0352,
+       -0.0836,
+       1.4467
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0352,
+       -0.0836,
+       1.4527
+      ]
+     },
+     "Face brow R": {
+      "deform": false,
+      "head": [
+       -0.0358,
+       -0.0834,
+       1.4467
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.0358,
+       -0.0834,
+       1.4527
+      ]
+     },
+     "Face brow mid": {
       "deform": false,
       "head": [
        0.0,
-       -0.0381,
-       1.4024
+       -0.0858,
+       1.4467
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.0725,
-       1.4024
+       -0.0858,
+       1.4527
       ]
      },
-     "Eyes handle": {
-      "deform": true,
+     "Face corner L": {
+      "deform": false,
+      "head": [
+       0.0219,
+       -0.0629,
+       1.3523
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0219,
+       -0.0629,
+       1.3583
+      ]
+     },
+     "Face corner R": {
+      "deform": false,
+      "head": [
+       -0.0219,
+       -0.0629,
+       1.3523
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.0219,
+       -0.0629,
+       1.3583
+      ]
+     },
+     "Face emote": {
+      "deform": false,
       "head": [
        0.0,
-       -0.1712,
-       1.4024
+       -0.0858,
+       1.4667
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.2056,
-       1.4024
+       -0.0858,
+       1.4727
       ]
      },
-     "Eyes handle marker": {
+     "Face jaw": {
       "deform": false,
       "head": [
        0.0,
-       -0.1712,
-       1.4024
+       -0.0539,
+       1.3333
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.2056,
-       1.4024
+       -0.0539,
+       1.3393
       ]
      },
-     "Eyes target": {
+     "Face lid L": {
+      "deform": false,
+      "head": [
+       0.047,
+       -0.0651,
+       1.4287
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.047,
+       -0.0651,
+       1.4347
+      ]
+     },
+     "Face lid R": {
+      "deform": false,
+      "head": [
+       -0.047,
+       -0.0651,
+       1.4287
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.047,
+       -0.0651,
+       1.4347
+      ]
+     },
+     "Face lids": {
       "deform": false,
       "head": [
        0.0,
-       -0.0688,
-       1.385
+       -0.0732,
+       1.4102
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.1032,
-       1.385
-      ]
-     },
-     "Eyes track target": {
-      "deform": true,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4024
-      ],
-      "parent": "Eyes track target parent",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Eyes track target parent": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4024
-      ],
-      "parent": null,
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Eyesx": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.385
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.385
-      ]
-     },
-     "Face Widget Eye Guide": {
-      "deform": false,
-      "head": [
-       -0.2,
-       -0.0712,
-       1.4024
-      ],
-      "parent": "head",
-      "tail": [
-       -0.2,
-       0.0288,
-       1.4024
-      ]
-     },
-     "Face Widget Mouth Guide": {
-      "deform": false,
-      "head": [
-       0.2,
-       -0.0712,
-       1.4024
-      ],
-      "parent": "head",
-      "tail": [
-       0.2,
-       0.0288,
-       1.4024
+       -0.0732,
+       1.4162
       ]
      },
      "Head track": {
@@ -18955,34 +20134,6 @@
        1.4291
       ]
      },
-     "Left Head marker x": {
-      "deform": false,
-      "head": [
-       0.0399,
-       0.0149,
-       1.3384
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.0195,
-       1.3384
-      ]
-     },
-     "Left Head marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       0.0149,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.0195,
-       1.4024
-      ]
-     },
      "Left ankle_fk": {
       "deform": false,
       "head": [
@@ -19205,118 +20356,6 @@
        0.492,
        0.0298,
        1.2477
-      ]
-     },
-     "Left eye handle": {
-      "deform": true,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4024
-      ],
-      "parent": "Eyes handle",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Left eye handle marker": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Left eye handle marker x": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Left eye handle marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Left eye target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.385
-      ],
-      "parent": "Eyes target",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.385
-      ]
-     },
-     "Left eyeball": {
-      "deform": true,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4024
-      ]
-     },
-     "Left eyeball track": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4024
-      ]
-     },
-     "Left eyeball track correction": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4024
       ]
      },
      "Left knee_fk": {
@@ -19807,6 +20846,48 @@
        0.0,
        0.0457,
        1.0925
+      ]
+     },
+     "MCH-Eye aim L": {
+      "deform": false,
+      "head": [
+       0.043,
+       -0.0546,
+       1.4102
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.043,
+       -0.0746,
+       1.4102
+      ]
+     },
+     "MCH-Eye aim R": {
+      "deform": false,
+      "head": [
+       -0.043,
+       -0.0546,
+       1.4102
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.043,
+       -0.0746,
+       1.4102
+      ]
+     },
+     "MCH-Eye target parent": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.4115,
+       1.4102
+      ],
+      "parent": "root",
+      "tail": [
+       0.0,
+       -0.4115,
+       1.4302
       ]
      },
      "MCH-Hips": {
@@ -24331,20 +25412,6 @@
        1.2452
       ]
      },
-     "Mouth Widget Controller": {
-      "deform": false,
-      "head": [
-       0.2,
-       -0.0712,
-       1.4024
-      ],
-      "parent": "head",
-      "tail": [
-       0.2,
-       0.0288,
-       1.4024
-      ]
-     },
      "N_hairback08": {
       "deform": false,
       "head": [
@@ -26291,34 +27358,6 @@
        1.4271
       ]
      },
-     "Right Head marker x": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       0.0149,
-       1.3384
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.0195,
-       1.3384
-      ]
-     },
-     "Right Head marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       0.0149,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.0195,
-       1.4024
-      ]
-     },
      "Right ankle_fk": {
       "deform": false,
       "head": [
@@ -26541,118 +27580,6 @@
        -0.492,
        0.0295,
        1.2477
-      ]
-     },
-     "Right eye handle": {
-      "deform": true,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4024
-      ],
-      "parent": "Eyes handle",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Right eye handle marker": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Right eye handle marker x": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Right eye handle marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4024
-      ]
-     },
-     "Right eye target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.385
-      ],
-      "parent": "Eyes target",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.385
-      ]
-     },
-     "Right eyeball": {
-      "deform": true,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4024
-      ]
-     },
-     "Right eyeball track": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4024
-      ]
-     },
-     "Right eyeball track correction": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4024
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4024
       ]
      },
      "Right knee_fk": {
@@ -32760,8 +33687,8 @@
       ]
      }
     },
-    "drivers": 441,
-    "pose_constraints": 881
+    "drivers": 364,
+    "pose_constraints": 901
    },
    "constraints": 0,
    "hidden": {
@@ -32885,64 +33812,6 @@
     "uv_maps": [],
     "vertex_groups": 0,
     "vertices": 32
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WGT-RIG-Armature {character}_Eyeballs": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.0381,
-    1.4096
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 12,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 8
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WGT-RIG-Armature {character}_Eyes track target": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.1712,
-    1.4096
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 27,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 30
    },
    "modifiers": [],
    "parent": null,
@@ -33973,35 +34842,6 @@
     "uv_maps": [],
     "vertex_groups": 0,
     "vertices": 48
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WGT-RIG-Armature {character}_Left eyeball": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0399,
-    -0.0381,
-    1.4096
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 12,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 8
    },
    "modifiers": [],
    "parent": null,
@@ -35965,35 +36805,6 @@
     "uv_maps": [],
     "vertex_groups": 0,
     "vertices": 48
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WGT-RIG-Armature {character}_Right eyeball": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    -0.0399,
-    -0.0381,
-    1.4096
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 12,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 8
    },
    "modifiers": [],
    "parent": null,
@@ -43990,6 +44801,1398 @@
    "roles": [],
    "type": "MESH"
   },
+  "WGT-Rig {character}_Board Eye Angry": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Bored": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Happy, Closed": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Sad": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Smiling": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Smug": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Thinking": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Angry": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Anxious": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Doubt L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Smug": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Worried": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Gag eyes": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Angry": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Angry 2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Cartoony Smile": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Catlike": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Excited (Broad)": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Kiss": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Playful": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Serious 2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Smiling": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Tongue Out": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Triangle": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Tears big": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Tears med": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Tears small": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board gag type": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board look": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board mood": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board mood2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board open": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board shape": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Eye target": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 28,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 28
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Eye target L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Eye target R": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face Properties": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 10,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 10
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face board": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 128,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 232
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face brow L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 20,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 22
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face brow R": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 20,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 22
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face brow mid": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 20,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 22
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face corner L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 22,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 25
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face corner R": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 22,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 25
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face emote": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 8,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 10
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face jaw": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 18,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 19
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face lid L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 18,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 19
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face lid R": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 18,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 19
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face lids": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 18,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 19
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
   "WidgetBP": {
    "constraints": 0,
    "hidden": {
@@ -44356,93 +46559,6 @@
     ],
     "vertex_groups": 0,
     "vertices": 64
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WidgetEyeLeftRigify": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.0688,
-    1.3922
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 24,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 24
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WidgetEyeRightRigify": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.0688,
-    1.3922
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 24,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 24
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WidgetEyesRigify": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.0688,
-    1.3922
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 76,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 76
    },
    "modifiers": [],
    "parent": null,
@@ -45037,6 +47153,7 @@
    "order_material_slots": "ran",
    "order_shape_keys": "ran",
    "orient_fingers_and_legs": "ran",
+   "record_face_keys": "ran",
    "rename_uv_maps": "ran",
    "set_bone_tails_and_roll": "ran",
    "set_view_transform": "ran",

@@ -3,14 +3,73 @@
   "children": {
    "{character}": {
     "children": {
+     "Face board labels {character}": {
+      "children": {},
+      "objects": [
+       "Face board label 1",
+       "Face board label 10",
+       "Face board label 11",
+       "Face board label 12",
+       "Face board label 13",
+       "Face board label 14",
+       "Face board label 15",
+       "Face board label 16",
+       "Face board label 17",
+       "Face board label 18",
+       "Face board label 19",
+       "Face board label 2",
+       "Face board label 20",
+       "Face board label 21",
+       "Face board label 22",
+       "Face board label 23",
+       "Face board label 24",
+       "Face board label 25",
+       "Face board label 26",
+       "Face board label 27",
+       "Face board label 28",
+       "Face board label 29",
+       "Face board label 3",
+       "Face board label 30",
+       "Face board label 31",
+       "Face board label 32",
+       "Face board label 33",
+       "Face board label 34",
+       "Face board label 35",
+       "Face board label 36",
+       "Face board label 37",
+       "Face board label 38",
+       "Face board label 39",
+       "Face board label 4",
+       "Face board label 40",
+       "Face board label 41",
+       "Face board label 42",
+       "Face board label 43",
+       "Face board label 44",
+       "Face board label 45",
+       "Face board label 46",
+       "Face board label 47",
+       "Face board label 48",
+       "Face board label 49",
+       "Face board label 5",
+       "Face board label 50",
+       "Face board label 51",
+       "Face board label 52",
+       "Face board label 53",
+       "Face board label 54",
+       "Face board label 55",
+       "Face board label 56",
+       "Face board label 6",
+       "Face board label 7",
+       "Face board label 8",
+       "Face board label 9"
+      ]
+     },
      "Junk {character}": {
       "children": {
        "WGTS_Armature {character}": {
         "children": {},
         "objects": [
          "WGT-RIG-Armature {character}_Chest_fk",
-         "WGT-RIG-Armature {character}_Eyeballs",
-         "WGT-RIG-Armature {character}_Eyes track target",
          "WGT-RIG-Armature {character}_Head track target",
          "WGT-RIG-Armature {character}_Hips_fk",
          "WGT-RIG-Armature {character}_IndexFinger1_L",
@@ -46,7 +105,6 @@
          "WGT-RIG-Armature {character}_Left elbow_tweak",
          "WGT-RIG-Armature {character}_Left elbow_tweak.001",
          "WGT-RIG-Armature {character}_Left elbow_tweak.002",
-         "WGT-RIG-Armature {character}_Left eyeball",
          "WGT-RIG-Armature {character}_Left knee_fk",
          "WGT-RIG-Armature {character}_Left knee_tweak",
          "WGT-RIG-Armature {character}_Left knee_tweak.001",
@@ -114,7 +172,6 @@
          "WGT-RIG-Armature {character}_Right elbow_tweak",
          "WGT-RIG-Armature {character}_Right elbow_tweak.001",
          "WGT-RIG-Armature {character}_Right elbow_tweak.002",
-         "WGT-RIG-Armature {character}_Right eyeball",
          "WGT-RIG-Armature {character}_Right knee_fk",
          "WGT-RIG-Armature {character}_Right knee_tweak",
          "WGT-RIG-Armature {character}_Right knee_tweak.001",
@@ -412,6 +469,54 @@
        "Eye Grid",
        "Metarig {character}",
        "Mouth Grid",
+       "WGT-Rig {character}_Board Eye Angry",
+       "WGT-Rig {character}_Board Eye Bored",
+       "WGT-Rig {character}_Board Eye Happy, Closed",
+       "WGT-Rig {character}_Board Eye Sad",
+       "WGT-Rig {character}_Board Eye Smiling",
+       "WGT-Rig {character}_Board Eye Smug",
+       "WGT-Rig {character}_Board Eye Thinking",
+       "WGT-Rig {character}_Board Eyebrow Angry",
+       "WGT-Rig {character}_Board Eyebrow Anxious",
+       "WGT-Rig {character}_Board Eyebrow Doubt L",
+       "WGT-Rig {character}_Board Eyebrow Smug",
+       "WGT-Rig {character}_Board Eyebrow Worried",
+       "WGT-Rig {character}_Board Gag eyes",
+       "WGT-Rig {character}_Board Mouth Angry",
+       "WGT-Rig {character}_Board Mouth Angry 2",
+       "WGT-Rig {character}_Board Mouth Cartoony Smile",
+       "WGT-Rig {character}_Board Mouth Catlike",
+       "WGT-Rig {character}_Board Mouth Excited (Broad)",
+       "WGT-Rig {character}_Board Mouth Kiss",
+       "WGT-Rig {character}_Board Mouth Playful",
+       "WGT-Rig {character}_Board Mouth Serious 2",
+       "WGT-Rig {character}_Board Mouth Smiling",
+       "WGT-Rig {character}_Board Mouth Tongue Out",
+       "WGT-Rig {character}_Board Mouth Triangle",
+       "WGT-Rig {character}_Board Tears big",
+       "WGT-Rig {character}_Board Tears med",
+       "WGT-Rig {character}_Board Tears small",
+       "WGT-Rig {character}_Board gag type",
+       "WGT-Rig {character}_Board look",
+       "WGT-Rig {character}_Board mood",
+       "WGT-Rig {character}_Board mood2",
+       "WGT-Rig {character}_Board open",
+       "WGT-Rig {character}_Board shape",
+       "WGT-Rig {character}_Eye target",
+       "WGT-Rig {character}_Eye target L",
+       "WGT-Rig {character}_Eye target R",
+       "WGT-Rig {character}_Face Properties",
+       "WGT-Rig {character}_Face board",
+       "WGT-Rig {character}_Face brow L",
+       "WGT-Rig {character}_Face brow R",
+       "WGT-Rig {character}_Face brow mid",
+       "WGT-Rig {character}_Face corner L",
+       "WGT-Rig {character}_Face corner R",
+       "WGT-Rig {character}_Face emote",
+       "WGT-Rig {character}_Face jaw",
+       "WGT-Rig {character}_Face lid L",
+       "WGT-Rig {character}_Face lid R",
+       "WGT-Rig {character}_Face lids",
        "WidgetBP",
        "WidgetBreastL",
        "WidgetBreastLeft",
@@ -424,9 +529,6 @@
        "WidgetButtocks",
        "WidgetChest",
        "WidgetEye",
-       "WidgetEyeLeftRigify",
-       "WidgetEyeRightRigify",
-       "WidgetEyesRigify",
        "WidgetFace",
        "WidgetFinger",
        "WidgetFingerThumb",
@@ -475,9 +577,9 @@
   "armatures": 3,
   "images": 86,
   "materials": 50,
-  "meshes": 393,
+  "meshes": 434,
   "node_groups": 14,
-  "objects": 439
+  "objects": 536
  },
  "images": [
   "KK OutlineMask.png",
@@ -1579,7 +1681,7 @@
      "Outline cf_m_face_00",
      "Outline cf_m_body"
     ],
-    "shape_key_drivers": 21,
+    "shape_key_drivers": 133,
     "shape_keys": [
      "Basis",
      "Gag eyes",
@@ -1707,25 +1809,16 @@
      "Tears med",
      "Tears small",
      "Gag eyes (Fiery Eyes)",
-     "Eye Closed copy",
-     "Mouth Big A (Copy)",
-     "Mouth Big E (Copy)",
-     "Mouth Big I (Copy)",
-     "Mouth Big O (Copy)",
-     "Mouth Big U (Copy)",
-     "Mouth Happy (Broad) (Copy)",
-     "Mouth Impatient (Copy)",
-     "Mouth Serious 2 (Copy)",
-     "Mouth Small I (Copy)",
-     "Mouth Triangle (Copy)",
-     "Eye Both Eyes Shut Tight (Copy)",
-     "Eye Closed (Copy)",
-     "Eye Default (Copy)",
-     "Eye Happy, Closed (Copy)",
-     "Custom Key 1 Up",
-     "Custom Key 2 Down",
-     "Custom Key 3 Up",
-     "Custom Key 4 Down"
+     "Eyebrow Surprised (L)",
+     "Eyebrow Surprised (R)",
+     "Eyebrow Angry (L)",
+     "Eyebrow Angry (R)",
+     "Mouth Smiling, Closed (L)",
+     "Mouth Smiling, Closed (R)",
+     "Mouth Angry, Closed (L)",
+     "Mouth Angry, Closed (R)",
+     "Mouth Happy (Broad), Closed (L)",
+     "Mouth Happy (Broad), Closed (R)"
     ],
     "uv_maps": [
      "uv_main",
@@ -1852,6 +1945,1014 @@
    "parent": null,
    "roles": [],
    "type": "MESH"
+  },
+  "Face board label 1": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.014,
+    0.194,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 10": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.1328,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 11": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.1672,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 12": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.188,
+    0.188,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 13": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.204,
+    0.1817,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 14": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.204,
+    0.1433,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 15": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.1868,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 16": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.2212,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 17": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.242,
+    0.188,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 18": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.258,
+    0.1817,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 19": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.258,
+    0.1433,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.08,
+    0.188,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 20": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.2408,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 21": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.2752,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 22": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.1553,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 23": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.107,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 24": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.0955,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 25": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.084,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 26": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.0725,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 27": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.061,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 28": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.0495,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 29": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.038,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 3": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.1817,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 30": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.006,
+    0.0245,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 31": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.015,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 32": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.008,
+    0.0035,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 33": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.107,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 34": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.0955,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 35": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.084,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 36": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.0725,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 37": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.061,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 38": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.094,
+    0.0475,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 39": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.038,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 4": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.1433,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 40": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.0265,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 41": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.096,
+    0.015,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 42": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.107,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 43": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0955,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 44": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.084,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 45": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0725,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 46": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.061,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 47": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0495,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 48": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.038,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 49": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0265,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 5": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0788,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 50": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.015,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 51": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    0.0035,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 52": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.184,
+    -0.008,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 53": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.006,
+    0.1225,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 54": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.094,
+    0.1225,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 55": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.182,
+    0.1225,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 56": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.284,
+    0.2135,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 6": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.1132,
+    0.1625,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 7": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.134,
+    0.188,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 8": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.15,
+    0.1817,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
+  },
+  "Face board label 9": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": true,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.15,
+    0.1433,
+    0.0015
+   ],
+   "modifiers": [],
+   "parent": "Rig {character}",
+   "roles": [],
+   "type": "FONT"
   },
   "Gag Eyes {character}": {
    "constraints": 0,
@@ -1987,20 +3088,16 @@
       57
      ],
      [
-      "Emotions",
-      0
-     ],
-     [
-      "Eyes/Rig.Tongue",
-      10
-     ],
-     [
       "Face",
-      51
+      0
      ],
      [
       "Face (MCH)",
       30
+     ],
+     [
+      "Face Tweak",
+      48
      ],
      [
       "Fingers",
@@ -2044,7 +3141,7 @@
      ],
      [
       "MCH",
-      42
+      21
      ],
      [
       "NSFW",
@@ -2067,6 +3164,10 @@
       0
      ],
      [
+      "Tongue",
+      6
+     ],
+     [
       "Torso",
       9
      ],
@@ -2079,20 +3180,20 @@
       6
      ]
     ],
-    "bone_count": 854,
+    "bone_count": 826,
     "bones": {
      "Breasts handle": {
       "deform": false,
       "head": [
        0.0,
-       -0.1935,
-       1.1863
+       -0.1941,
+       1.186
       ],
       "parent": "Upper Chest",
       "tail": [
        0.0,
-       -0.1299,
-       1.1863
+       -0.1305,
+       1.186
       ]
      },
      "Buttocks": {
@@ -2191,118 +3292,6 @@
        -0.0457,
        -0.0381,
        1.4249
-      ]
-     },
-     "Eyeballs": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Eyeballs track": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Eyes handle": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Eyes handle marker": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Eyes target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3922
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3922
-      ]
-     },
-     "Eyes track target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Eyes track target parent",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Eyes track target parent": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": null,
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Eyesx": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3922
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3922
       ]
      },
      "Head": {
@@ -2687,14 +3676,14 @@
       "deform": false,
       "head": [
        0.0645,
-       -0.1935,
-       1.1891
+       -0.1941,
+       1.1889
       ],
       "parent": "Breasts handle",
       "tail": [
-       0.0284,
-       -0.1299,
-       1.1778
+       0.0283,
+       -0.1305,
+       1.1775
       ]
      },
      "Left Buttock handle": {
@@ -2723,34 +3712,6 @@
        0.0274,
        0.0314,
        1.4363
-      ]
-     },
-     "Left Head marker x": {
-      "deform": false,
-      "head": [
-       0.0399,
-       0.0149,
-       1.3457
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.0195,
-       1.3457
-      ]
-     },
-     "Left Head marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       0.0149,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.0195,
-       1.4096
       ]
      },
      "Left ankle": {
@@ -2793,118 +3754,6 @@
        0.5261,
        0.0281,
        1.2549
-      ]
-     },
-     "Left eye handle": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Eyes handle",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Left eye handle marker": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Left eye handle marker x": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Left eye handle marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Left eye target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3922
-      ],
-      "parent": "Eyes target",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3922
-      ]
-     },
-     "Left eyeball": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Left eyeball track": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Left eyeball track correction": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4096
       ]
      },
      "Left heel": {
@@ -3387,14 +4236,14 @@
       "deform": false,
       "head": [
        -0.0645,
-       -0.1935,
-       1.1891
+       -0.1941,
+       1.1889
       ],
       "parent": "Breasts handle",
       "tail": [
-       -0.0284,
-       -0.1299,
-       1.1778
+       -0.0283,
+       -0.1305,
+       1.1775
       ]
      },
      "Right Buttock handle": {
@@ -3423,34 +4272,6 @@
        -0.0248,
        0.0314,
        1.4344
-      ]
-     },
-     "Right Head marker x": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       0.0149,
-       1.3457
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.0195,
-       1.3457
-      ]
-     },
-     "Right Head marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       0.0149,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.0195,
-       1.4096
       ]
      },
      "Right ankle": {
@@ -3493,118 +4314,6 @@
        -0.526,
        0.0277,
        1.2549
-      ]
-     },
-     "Right eye handle": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Eyes handle",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Right eye handle marker": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Right eye handle marker x": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Right eye handle marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4096
-      ]
-     },
-     "Right eye target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3922
-      ],
-      "parent": "Eyes target",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3922
-      ]
-     },
-     "Right eyeball": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Right eyeball track": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4096
-      ]
-     },
-     "Right eyeball track correction": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4096
-      ],
-      "parent": "Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4096
       ]
      },
      "Right heel": {
@@ -5276,29 +5985,29 @@
      "a_n_nip_L": {
       "deform": false,
       "head": [
-       0.0789,
-       -0.0909,
-       1.1791
+       0.0782,
+       -0.0913,
+       1.1784
       ],
       "parent": "cf_s_bnipacc_L",
       "tail": [
-       0.0424,
-       -0.0267,
-       1.1751
+       0.043,
+       -0.0263,
+       1.1756
       ]
      },
      "a_n_nip_R": {
       "deform": false,
       "head": [
-       -0.0789,
-       -0.0909,
-       1.1791
+       -0.0782,
+       -0.0913,
+       1.1784
       ],
       "parent": "cf_s_bnipacc_R",
       "tail": [
-       -0.0424,
-       -0.0267,
-       1.1751
+       -0.043,
+       -0.0263,
+       1.1756
       ]
      },
      "a_n_nose": {
@@ -6878,7 +7587,7 @@
       ],
       "parent": "cf_J_hairFL_02_00",
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3657
       ]
@@ -6886,13 +7595,13 @@
      "cf_J_hairFL_02_02": {
       "deform": false,
       "head": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3657
       ],
       "parent": "cf_J_hairFL_02_01",
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.4157
       ]
@@ -6921,22 +7630,22 @@
       "parent": "cf_J_hairFR_02_00",
       "tail": [
        0.0724,
-       -0.0369,
-       1.371
+       -0.037,
+       1.3711
       ]
      },
      "cf_J_hairFR_02_02": {
       "deform": false,
       "head": [
        0.0724,
-       -0.0369,
-       1.371
+       -0.037,
+       1.3711
       ],
       "parent": "cf_J_hairFR_02_01",
       "tail": [
        0.0724,
-       -0.0369,
-       1.421
+       -0.037,
+       1.4211
       ]
      },
      "cf_J_hairF_00": {
@@ -6962,22 +7671,22 @@
       ],
       "parent": "cf_J_hairF_00",
       "tail": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4221
       ]
      },
      "cf_J_hairF_02": {
       "deform": false,
       "head": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4221
       ],
       "parent": "cf_J_hairF_01",
       "tail": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4721
       ]
      },
@@ -7306,29 +8015,29 @@
      "cf_d_bnip01_L": {
       "deform": false,
       "head": [
-       0.0752,
-       -0.0844,
-       1.1787
+       0.0746,
+       -0.0847,
+       1.1782
       ],
       "parent": "cf_j_bust03_L",
       "tail": [
-       0.0387,
-       -0.0202,
-       1.1748
+       0.0395,
+       -0.0197,
+       1.1754
       ]
      },
      "cf_d_bnip01_R": {
       "deform": false,
       "head": [
-       -0.0752,
-       -0.0844,
-       1.1787
+       -0.0746,
+       -0.0847,
+       1.1782
       ],
       "parent": "cf_j_bust03_R",
       "tail": [
-       -0.0387,
-       -0.0202,
-       1.1748
+       -0.0395,
+       -0.0197,
+       1.1754
       ]
      },
      "cf_d_bust00": {
@@ -7404,29 +8113,29 @@
      "cf_d_bust03_L": {
       "deform": false,
       "head": [
-       0.0696,
-       -0.0745,
-       1.1781
+       0.0692,
+       -0.0747,
+       1.1777
       ],
       "parent": "cf_j_bust02_L",
       "tail": [
-       0.0331,
-       -0.0102,
-       1.1741
+       0.034,
+       -0.0097,
+       1.1749
       ]
      },
      "cf_d_bust03_R": {
       "deform": false,
       "head": [
-       -0.0696,
-       -0.0745,
-       1.1781
+       -0.0692,
+       -0.0747,
+       1.1777
       ],
       "parent": "cf_j_bust02_R",
       "tail": [
-       -0.0331,
-       -0.0102,
-       1.1741
+       -0.034,
+       -0.0097,
+       1.1749
       ]
      },
      "cf_d_forearm02_L": {
@@ -8132,57 +8841,57 @@
      "cf_j_bnip02_L": {
       "deform": true,
       "head": [
-       0.0796,
-       -0.0922,
-       1.1791
+       0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_s_bnip02_L",
       "tail": [
-       0.0431,
-       -0.0279,
-       1.1752
+       0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "cf_j_bnip02_R": {
       "deform": true,
       "head": [
-       -0.0796,
-       -0.0922,
-       1.1791
+       -0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_s_bnip02_R",
       "tail": [
-       -0.0431,
-       -0.0279,
-       1.1752
+       -0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "cf_j_bnip02root_L": {
       "deform": true,
       "head": [
-       0.0765,
-       -0.0867,
-       1.1788
+       0.0759,
+       -0.0871,
+       1.1783
       ],
       "parent": "cf_d_bnip01_L",
       "tail": [
-       0.0401,
-       -0.0225,
-       1.1749
+       0.0407,
+       -0.022,
+       1.1755
       ]
      },
      "cf_j_bnip02root_R": {
       "deform": true,
       "head": [
-       -0.0765,
-       -0.0867,
-       1.1788
+       -0.0759,
+       -0.0871,
+       1.1783
       ],
       "parent": "cf_d_bnip01_R",
       "tail": [
-       -0.0401,
-       -0.0225,
-       1.1749
+       -0.0407,
+       -0.022,
+       1.1755
       ]
      },
      "cf_j_bust01_L": {
@@ -8245,14 +8954,14 @@
       "deform": true,
       "head": [
        0.0604,
-       -0.0583,
-       1.1772
+       -0.0584,
+       1.1771
       ],
       "parent": "cf_d_bust02_L",
       "tail": [
-       0.0239,
-       0.0059,
-       1.1732
+       0.0252,
+       0.0067,
+       1.1743
       ]
      },
      "cf_j_bust02_L_01": {
@@ -8273,14 +8982,14 @@
       "deform": true,
       "head": [
        -0.0604,
-       -0.0583,
-       1.1772
+       -0.0584,
+       1.1771
       ],
       "parent": "cf_d_bust02_R",
       "tail": [
-       -0.0239,
-       0.0059,
-       1.1732
+       -0.0252,
+       0.0067,
+       1.1743
       ]
      },
      "cf_j_bust02_R_01": {
@@ -8300,57 +9009,57 @@
      "cf_j_bust03_L": {
       "deform": true,
       "head": [
-       0.0695,
-       -0.0743,
-       1.1781
+       0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_d_bust03_L",
       "tail": [
-       0.033,
-       -0.0101,
-       1.1742
+       0.0339,
+       -0.0095,
+       1.175
       ]
      },
      "cf_j_bust03_L_01": {
       "deform": false,
       "head": [
-       0.0696,
-       -0.0745,
-       1.1781
+       0.0692,
+       -0.0747,
+       1.1777
       ],
       "parent": "cf_d_bust03_L",
       "tail": [
-       0.0331,
-       -0.0102,
-       1.1741
+       0.034,
+       -0.0097,
+       1.1749
       ]
      },
      "cf_j_bust03_R": {
       "deform": true,
       "head": [
-       -0.0695,
-       -0.0743,
-       1.1781
+       -0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_d_bust03_R",
       "tail": [
-       -0.033,
-       -0.0101,
-       1.1742
+       -0.0339,
+       -0.0095,
+       1.175
       ]
      },
      "cf_j_bust03_R_01": {
       "deform": false,
       "head": [
-       -0.0696,
-       -0.0745,
-       1.1781
+       -0.0692,
+       -0.0747,
+       1.1777
       ],
       "parent": "cf_d_bust03_R",
       "tail": [
-       -0.0331,
-       -0.0102,
-       1.1741
+       -0.034,
+       -0.0097,
+       1.1749
       ]
      },
      "cf_j_index04_L": {
@@ -8686,7 +9395,7 @@
       "tail": [
        -0.1095,
        -0.0738,
-       0.8524
+       0.8525
       ]
      },
      "cf_j_sk_01_02": {
@@ -8694,13 +9403,13 @@
       "head": [
        -0.1095,
        -0.0738,
-       0.8524
+       0.8525
       ],
       "parent": "cf_j_sk_01_01",
       "tail": [
        -0.117,
        -0.08,
-       0.7472
+       0.7473
       ]
      },
      "cf_j_sk_01_03": {
@@ -8708,27 +9417,27 @@
       "head": [
        -0.117,
        -0.08,
-       0.7472
+       0.7473
       ],
       "parent": "cf_j_sk_01_02",
       "tail": [
        -0.1208,
-       -0.0831,
-       0.6414
+       -0.083,
+       0.6416
       ]
      },
      "cf_j_sk_01_04": {
       "deform": false,
       "head": [
        -0.1208,
-       -0.0831,
-       0.6414
+       -0.083,
+       0.6416
       ],
       "parent": "cf_j_sk_01_03",
       "tail": [
        -0.1227,
        -0.0846,
-       0.5354
+       0.5358
       ]
      },
      "cf_j_sk_01_05": {
@@ -8736,13 +9445,13 @@
       "head": [
        -0.1227,
        -0.0846,
-       0.5354
+       0.5358
       ],
       "parent": "cf_j_sk_01_04",
       "tail": [
-       -0.1237,
+       -0.1236,
        -0.0854,
-       0.4292
+       0.4298
       ]
      },
      "cf_j_sk_02_00": {
@@ -8796,17 +9505,17 @@
       ],
       "parent": "cf_j_sk_02_02",
       "tail": [
-       -0.1887,
+       -0.1886,
        0.029,
-       0.6502
+       0.6503
       ]
      },
      "cf_j_sk_02_04": {
       "deform": false,
       "head": [
-       -0.1887,
+       -0.1886,
        0.029,
-       0.6502
+       0.6503
       ],
       "parent": "cf_j_sk_02_03",
       "tail": [
@@ -8826,7 +9535,7 @@
       "tail": [
        -0.1941,
        0.0298,
-       0.4343
+       0.4344
       ]
      },
      "cf_j_sk_03_00": {
@@ -8894,17 +9603,17 @@
       ],
       "parent": "cf_j_sk_03_03",
       "tail": [
-       -0.1368,
+       -0.1367,
        0.1766,
-       0.5526
+       0.5527
       ]
      },
      "cf_j_sk_03_05": {
       "deform": false,
       "head": [
-       -0.1368,
+       -0.1367,
        0.1766,
-       0.5526
+       0.5527
       ],
       "parent": "cf_j_sk_03_04",
       "tail": [
@@ -8952,7 +9661,7 @@
       "tail": [
        -0.0016,
        0.1902,
-       0.7748
+       0.7747
       ]
      },
      "cf_j_sk_04_03": {
@@ -8960,13 +9669,13 @@
       "head": [
        -0.0016,
        0.1902,
-       0.7748
+       0.7747
       ],
       "parent": "cf_j_sk_04_02",
       "tail": [
        -0.0017,
        0.1993,
-       0.668
+       0.6679
       ]
      },
      "cf_j_sk_04_04": {
@@ -8974,13 +9683,13 @@
       "head": [
        -0.0017,
        0.1993,
-       0.668
+       0.6679
       ],
       "parent": "cf_j_sk_04_03",
       "tail": [
        -0.0018,
        0.204,
-       0.5607
+       0.5605
       ]
      },
      "cf_j_sk_04_05": {
@@ -8988,13 +9697,13 @@
       "head": [
        -0.0018,
        0.204,
-       0.5607
+       0.5605
       ],
       "parent": "cf_j_sk_04_04",
       "tail": [
        -0.0019,
        0.2063,
-       0.453
+       0.4528
       ]
      },
      "cf_j_sk_05_00": {
@@ -9132,17 +9841,17 @@
       ],
       "parent": "cf_j_sk_06_02",
       "tail": [
-       0.1887,
+       0.1886,
        0.029,
-       0.6502
+       0.6503
       ]
      },
      "cf_j_sk_06_04": {
       "deform": false,
       "head": [
-       0.1887,
+       0.1886,
        0.029,
-       0.6502
+       0.6503
       ],
       "parent": "cf_j_sk_06_03",
       "tail": [
@@ -9162,7 +9871,7 @@
       "tail": [
        0.1941,
        0.0298,
-       0.4343
+       0.4344
       ]
      },
      "cf_j_sk_07_00": {
@@ -9188,7 +9897,7 @@
       ],
       "parent": "cf_j_sk_07_00",
       "tail": [
-       0.1095,
+       0.1094,
        -0.0738,
        0.8525
       ]
@@ -9196,7 +9905,7 @@
      "cf_j_sk_07_02": {
       "deform": false,
       "head": [
-       0.1095,
+       0.1094,
        -0.0738,
        0.8525
       ],
@@ -9204,7 +9913,7 @@
       "tail": [
        0.117,
        -0.0799,
-       0.7473
+       0.7474
       ]
      },
      "cf_j_sk_07_03": {
@@ -9212,41 +9921,41 @@
       "head": [
        0.117,
        -0.0799,
-       0.7473
+       0.7474
       ],
       "parent": "cf_j_sk_07_02",
       "tail": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6415
+       0.6417
       ]
      },
      "cf_j_sk_07_04": {
       "deform": false,
       "head": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6415
+       0.6417
       ],
       "parent": "cf_j_sk_07_03",
       "tail": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5355
+       0.5358
       ]
      },
      "cf_j_sk_07_05": {
       "deform": false,
       "head": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5355
+       0.5358
       ],
       "parent": "cf_j_sk_07_04",
       "tail": [
        0.1236,
-       -0.0854,
-       0.4293
+       -0.0853,
+       0.4298
       ]
      },
      "cf_j_spinesk_00": {
@@ -10148,141 +10857,141 @@
      "cf_s_bnip015_L": {
       "deform": true,
       "head": [
-       0.0741,
-       -0.0825,
-       1.1786
+       0.0736,
+       -0.0828,
+       1.1781
       ],
       "parent": "cf_d_bnip01_L",
       "tail": [
-       0.0376,
-       -0.0182,
-       1.1747
+       0.0384,
+       -0.0177,
+       1.1753
       ]
      },
      "cf_s_bnip015_R": {
       "deform": true,
       "head": [
-       -0.0741,
-       -0.0825,
-       1.1786
+       -0.0736,
+       -0.0828,
+       1.1781
       ],
       "parent": "cf_d_bnip01_R",
       "tail": [
-       -0.0376,
-       -0.0182,
-       1.1747
+       -0.0384,
+       -0.0177,
+       1.1753
       ]
      },
      "cf_s_bnip01_L": {
       "deform": true,
       "head": [
-       0.0726,
-       -0.0798,
-       1.1784
+       0.0721,
+       -0.0801,
+       1.178
       ],
       "parent": "cf_d_bnip01_L",
       "tail": [
-       0.0361,
-       -0.0155,
-       1.1745
+       0.0369,
+       -0.015,
+       1.1752
       ]
      },
      "cf_s_bnip01_R": {
       "deform": true,
       "head": [
-       -0.0726,
-       -0.0798,
-       1.1784
+       -0.0721,
+       -0.0801,
+       1.178
       ],
       "parent": "cf_d_bnip01_R",
       "tail": [
-       -0.0361,
-       -0.0155,
-       1.1745
+       -0.0369,
+       -0.015,
+       1.1752
       ]
      },
      "cf_s_bnip025_L": {
       "deform": true,
       "head": [
-       0.0774,
-       -0.0883,
-       1.1789
+       0.0767,
+       -0.0886,
+       1.1783
       ],
       "parent": "cf_j_bnip02root_L",
       "tail": [
-       0.0409,
-       -0.024,
-       1.175
+       0.0416,
+       -0.0236,
+       1.1755
       ]
      },
      "cf_s_bnip025_R": {
       "deform": true,
       "head": [
-       -0.0774,
-       -0.0882,
-       1.1789
+       -0.0767,
+       -0.0886,
+       1.1783
       ],
       "parent": "cf_j_bnip02root_R",
       "tail": [
-       -0.0409,
-       -0.024,
-       1.175
+       -0.0415,
+       -0.0236,
+       1.1755
       ]
      },
      "cf_s_bnip02_L": {
       "deform": false,
       "head": [
-       0.0796,
-       -0.0922,
-       1.1791
+       0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02root_L",
       "tail": [
-       0.0431,
-       -0.0279,
-       1.1752
+       0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "cf_s_bnip02_R": {
       "deform": false,
       "head": [
-       -0.0796,
-       -0.0922,
-       1.1791
+       -0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02root_R",
       "tail": [
-       -0.0431,
-       -0.0279,
-       1.1752
+       -0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "cf_s_bnipacc_L": {
       "deform": false,
       "head": [
-       0.0789,
-       -0.0909,
-       1.1791
+       0.0782,
+       -0.0913,
+       1.1784
       ],
       "parent": "cf_j_bnip02_L",
       "tail": [
-       0.0424,
-       -0.0267,
-       1.1751
+       0.043,
+       -0.0263,
+       1.1756
       ]
      },
      "cf_s_bnipacc_R": {
       "deform": false,
       "head": [
-       -0.0789,
-       -0.0909,
-       1.1791
+       -0.0782,
+       -0.0913,
+       1.1784
       ],
       "parent": "cf_j_bnip02_R",
       "tail": [
-       -0.0424,
-       -0.0267,
-       1.1751
+       -0.043,
+       -0.0263,
+       1.1756
       ]
      },
      "cf_s_bust00_L": {
@@ -10350,9 +11059,9 @@
       ],
       "parent": "cf_j_bust02_L",
       "tail": [
-       0.0234,
-       0.0087,
-       1.1731
+       0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "cf_s_bust02_R": {
@@ -10364,37 +11073,37 @@
       ],
       "parent": "cf_j_bust02_R",
       "tail": [
-       -0.0234,
-       0.0087,
-       1.1731
+       -0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "cf_s_bust03_L": {
       "deform": true,
       "head": [
-       0.0695,
-       -0.0743,
-       1.1781
+       0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_j_bust03_L",
       "tail": [
-       0.033,
-       -0.01,
-       1.1742
+       0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "cf_s_bust03_R": {
       "deform": true,
       "head": [
-       -0.0695,
-       -0.0743,
-       1.1781
+       -0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_j_bust03_R",
       "tail": [
-       -0.033,
-       -0.01,
-       1.1742
+       -0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "cf_s_elbo_L": {
@@ -12730,9 +13439,9 @@
       ],
       "parent": "cf_s_bust02_L",
       "tail": [
-       0.0234,
-       0.0087,
-       1.1731
+       0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "k_f_mune02L_01": {
@@ -12744,9 +13453,9 @@
       ],
       "parent": "cf_s_bust02_L",
       "tail": [
-       0.0234,
-       0.0087,
-       1.1731
+       0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "k_f_mune02L_02": {
@@ -12758,9 +13467,9 @@
       ],
       "parent": "cf_s_bust02_L",
       "tail": [
-       0.0234,
-       0.0087,
-       1.1731
+       0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "k_f_mune02L_03": {
@@ -12772,9 +13481,9 @@
       ],
       "parent": "cf_s_bust02_L",
       "tail": [
-       0.0234,
-       0.0087,
-       1.1731
+       0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "k_f_mune02R_00": {
@@ -12786,9 +13495,9 @@
       ],
       "parent": "cf_s_bust02_R",
       "tail": [
-       -0.0234,
-       0.0087,
-       1.1731
+       -0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "k_f_mune02R_01": {
@@ -12800,9 +13509,9 @@
       ],
       "parent": "cf_s_bust02_R",
       "tail": [
-       -0.0234,
-       0.0087,
-       1.1731
+       -0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "k_f_mune02R_02": {
@@ -12814,9 +13523,9 @@
       ],
       "parent": "cf_s_bust02_R",
       "tail": [
-       -0.0234,
-       0.0087,
-       1.1731
+       -0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "k_f_mune02R_03": {
@@ -12828,233 +13537,233 @@
       ],
       "parent": "cf_s_bust02_R",
       "tail": [
-       -0.0234,
-       0.0087,
-       1.1731
+       -0.0247,
+       0.0095,
+       1.1742
       ]
      },
      "k_f_mune03L_00": {
       "deform": false,
       "head": [
-       0.0695,
-       -0.0743,
-       1.1781
+       0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_s_bust03_L",
       "tail": [
-       0.033,
-       -0.01,
-       1.1742
+       0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "k_f_mune03L_01": {
       "deform": false,
       "head": [
-       0.0695,
-       -0.0743,
-       1.1781
+       0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_s_bust03_L",
       "tail": [
-       0.033,
-       -0.01,
-       1.1742
+       0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "k_f_mune03L_02": {
       "deform": false,
       "head": [
-       0.0695,
-       -0.0743,
-       1.1781
+       0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_s_bust03_L",
       "tail": [
-       0.033,
-       -0.01,
-       1.1742
+       0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "k_f_mune03L_03": {
       "deform": false,
       "head": [
-       0.0695,
-       -0.0743,
-       1.1781
+       0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_s_bust03_L",
       "tail": [
-       0.033,
-       -0.01,
-       1.1742
+       0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "k_f_mune03R_00": {
       "deform": false,
       "head": [
-       -0.0695,
-       -0.0743,
-       1.1781
+       -0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_s_bust03_R",
       "tail": [
-       -0.033,
-       -0.01,
-       1.1742
+       -0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "k_f_mune03R_01": {
       "deform": false,
       "head": [
-       -0.0695,
-       -0.0743,
-       1.1781
+       -0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_s_bust03_R",
       "tail": [
-       -0.033,
-       -0.01,
-       1.1742
+       -0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "k_f_mune03R_02": {
       "deform": false,
       "head": [
-       -0.0695,
-       -0.0743,
-       1.1781
+       -0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_s_bust03_R",
       "tail": [
-       -0.033,
-       -0.01,
-       1.1742
+       -0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "k_f_mune03R_03": {
       "deform": false,
       "head": [
-       -0.0695,
-       -0.0743,
-       1.1781
+       -0.0691,
+       -0.0745,
+       1.1778
       ],
       "parent": "cf_s_bust03_R",
       "tail": [
-       -0.033,
-       -0.01,
-       1.1742
+       -0.0339,
+       -0.0094,
+       1.175
       ]
      },
      "k_f_munenipL_00": {
       "deform": false,
       "head": [
-       0.0796,
-       -0.0922,
-       1.1791
+       0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02_L",
       "tail": [
-       0.0431,
-       -0.0279,
-       1.1752
+       0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "k_f_munenipL_01": {
       "deform": false,
       "head": [
-       0.0796,
-       -0.0922,
-       1.1791
+       0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02_L",
       "tail": [
-       0.0431,
-       -0.0279,
-       1.1752
+       0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "k_f_munenipL_02": {
       "deform": false,
       "head": [
-       0.0796,
-       -0.0922,
-       1.1791
+       0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02_L",
       "tail": [
-       0.0431,
-       -0.0279,
-       1.1752
+       0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "k_f_munenipL_03": {
       "deform": false,
       "head": [
-       0.0796,
-       -0.0922,
-       1.1791
+       0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02_L",
       "tail": [
-       0.0431,
-       -0.0279,
-       1.1752
+       0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "k_f_munenipR_00": {
       "deform": false,
       "head": [
-       -0.0796,
-       -0.0922,
-       1.1791
+       -0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02_R",
       "tail": [
-       -0.0431,
-       -0.0279,
-       1.1752
+       -0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "k_f_munenipR_01": {
       "deform": false,
       "head": [
-       -0.0796,
-       -0.0922,
-       1.1791
+       -0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02_R",
       "tail": [
-       -0.0431,
-       -0.0279,
-       1.1752
+       -0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "k_f_munenipR_02": {
       "deform": false,
       "head": [
-       -0.0796,
-       -0.0922,
-       1.1791
+       -0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02_R",
       "tail": [
-       -0.0431,
-       -0.0279,
-       1.1752
+       -0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "k_f_munenipR_03": {
       "deform": false,
       "head": [
-       -0.0796,
-       -0.0922,
-       1.1791
+       -0.0789,
+       -0.0926,
+       1.1785
       ],
       "parent": "cf_j_bnip02_R",
       "tail": [
-       -0.0431,
-       -0.0279,
-       1.1752
+       -0.0437,
+       -0.0275,
+       1.1757
       ]
      },
      "k_f_neck_00": {
@@ -14038,8 +14747,8 @@
       ]
      }
     },
-    "drivers": 89,
-    "pose_constraints": 88
+    "drivers": 11,
+    "pose_constraints": 58
    },
    "constraints": 0,
    "hidden": {
@@ -14194,19 +14903,23 @@
      ],
      [
       "Emotions",
-      17
+      1
      ],
      [
-      "Eyes/Rig.Tongue",
-      12
+      "Eyes",
+      3
      ],
      [
       "Face",
-      42
+      44
      ],
      [
       "Face (MCH)",
       36
+     ],
+     [
+      "Face Tweak",
+      48
      ],
      [
       "Fingers",
@@ -14254,7 +14967,7 @@
      ],
      [
       "MCH",
-      351
+      333
      ],
      [
       "NSFW",
@@ -14281,6 +14994,10 @@
       56
      ],
      [
+      "Tongue",
+      8
+     ],
+     [
       "Torso",
       8
      ],
@@ -14293,20 +15010,482 @@
       10
      ]
     ],
-    "bone_count": 1392,
+    "bone_count": 1407,
     "bones": {
+     "Board Eye Angry": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3532
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3592
+      ]
+     },
+     "Board Eye Bored": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3877
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3937
+      ]
+     },
+     "Board Eye Happy, Closed": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3992
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.4052
+      ]
+     },
+     "Board Eye Sad": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3417
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3477
+      ]
+     },
+     "Board Eye Smiling": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.4107
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.4167
+      ]
+     },
+     "Board Eye Smug": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3762
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3822
+      ]
+     },
+     "Board Eye Thinking": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3647
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3707
+      ]
+     },
+     "Board Eyebrow Angry": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3647
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3707
+      ]
+     },
+     "Board Eyebrow Anxious": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.4107
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.4167
+      ]
+     },
+     "Board Eyebrow Doubt L": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3992
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.4052
+      ]
+     },
+     "Board Eyebrow Smug": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3877
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3937
+      ]
+     },
+     "Board Eyebrow Worried": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3762
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3822
+      ]
+     },
+     "Board Gag eyes": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3187
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3247
+      ]
+     },
+     "Board Mouth Angry": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3762
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3822
+      ]
+     },
+     "Board Mouth Angry 2": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3647
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3707
+      ]
+     },
+     "Board Mouth Cartoony Smile": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3992
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.4052
+      ]
+     },
+     "Board Mouth Catlike": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3187
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3247
+      ]
+     },
+     "Board Mouth Excited (Broad)": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3877
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3937
+      ]
+     },
+     "Board Mouth Kiss": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3302
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3362
+      ]
+     },
+     "Board Mouth Playful": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.2957
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3017
+      ]
+     },
+     "Board Mouth Serious 2": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3532
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3592
+      ]
+     },
+     "Board Mouth Smiling": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.4107
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.4167
+      ]
+     },
+     "Board Mouth Tongue Out": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3072
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3132
+      ]
+     },
+     "Board Mouth Triangle": {
+      "deform": false,
+      "head": [
+       0.3467,
+       -0.0725,
+       1.3417
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3467,
+       -0.0725,
+       1.3477
+      ]
+     },
+     "Board Tears big": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3187
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3247
+      ]
+     },
+     "Board Tears med": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3302
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3362
+      ]
+     },
+     "Board Tears small": {
+      "deform": false,
+      "head": [
+       0.2587,
+       -0.0725,
+       1.3417
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2587,
+       -0.0725,
+       1.3477
+      ]
+     },
+     "Board gag type": {
+      "deform": false,
+      "head": [
+       0.1707,
+       -0.0725,
+       1.3072
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1707,
+       -0.0725,
+       1.3132
+      ]
+     },
+     "Board look": {
+      "deform": false,
+      "head": [
+       0.1607,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.1607,
+       -0.0725,
+       1.4722
+      ]
+     },
+     "Board mood": {
+      "deform": false,
+      "head": [
+       0.2747,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2747,
+       -0.0725,
+       1.4722
+      ]
+     },
+     "Board mood2": {
+      "deform": false,
+      "head": [
+       0.3287,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3287,
+       -0.0725,
+       1.4722
+      ]
+     },
+     "Board open": {
+      "deform": false,
+      "head": [
+       0.3827,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.3827,
+       -0.0725,
+       1.4722
+      ]
+     },
+     "Board shape": {
+      "deform": false,
+      "head": [
+       0.2207,
+       -0.0725,
+       1.4662
+      ],
+      "parent": "Face board",
+      "tail": [
+       0.2207,
+       -0.0725,
+       1.4722
+      ]
+     },
      "Breasts handle": {
       "deform": false,
       "head": [
        0.0,
-       -0.1935,
-       1.1861
+       -0.1941,
+       1.1859
       ],
       "parent": "ORG-Upper Chest",
       "tail": [
        0.0,
-       -0.1299,
-       1.1861
+       -0.1305,
+       1.1859
       ]
      },
      "Buttocks": {
@@ -14363,62 +15542,6 @@
        0.0,
        0.0149,
        1.1795
-      ]
-     },
-     "Custom Key 1 Guide": {
-      "deform": false,
-      "head": [
-       -0.25,
-       -0.0712,
-       1.4094
-      ],
-      "parent": "head",
-      "tail": [
-       -0.25,
-       0.0288,
-       1.4094
-      ]
-     },
-     "Custom Key 2 Guide": {
-      "deform": false,
-      "head": [
-       -0.3,
-       -0.0712,
-       1.4094
-      ],
-      "parent": "head",
-      "tail": [
-       -0.3,
-       0.0288,
-       1.4094
-      ]
-     },
-     "Custom Key Controller 1": {
-      "deform": false,
-      "head": [
-       -0.25,
-       -0.0712,
-       1.4094
-      ],
-      "parent": "head",
-      "tail": [
-       -0.25,
-       0.0288,
-       1.4094
-      ]
-     },
-     "Custom Key Controller 2": {
-      "deform": false,
-      "head": [
-       -0.3,
-       -0.0712,
-       1.4094
-      ],
-      "parent": "head",
-      "tail": [
-       -0.3,
-       0.0288,
-       1.4094
       ]
      },
      "DEF-Chest": {
@@ -15494,7 +16617,7 @@
       ],
       "parent": "DEF-cf_J_hairFL_02_00",
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ]
@@ -15502,13 +16625,13 @@
      "DEF-cf_J_hairFL_02_02": {
       "deform": true,
       "head": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ],
       "parent": "ORG-cf_J_hairFL_02_02",
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.4155
       ]
@@ -15537,7 +16660,7 @@
       "parent": "DEF-cf_J_hairFR_02_00",
       "tail": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ]
      },
@@ -15545,13 +16668,13 @@
       "deform": true,
       "head": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ],
       "parent": "ORG-cf_J_hairFR_02_02",
       "tail": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.4209
       ]
      },
@@ -15578,22 +16701,22 @@
       ],
       "parent": "DEF-cf_J_hairF_00",
       "tail": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ]
      },
      "DEF-cf_J_hairF_02": {
       "deform": true,
       "head": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ],
       "parent": "ORG-cf_J_hairF_02",
       "tail": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4719
       ]
      },
@@ -15888,7 +17011,7 @@
       "tail": [
        -0.117,
        -0.08,
-       0.747
+       0.7472
       ]
      },
      "DEF-cf_j_sk_01_03": {
@@ -15896,27 +17019,27 @@
       "head": [
        -0.117,
        -0.08,
-       0.747
+       0.7472
       ],
       "parent": "DEF-cf_j_sk_01_02",
       "tail": [
        -0.1208,
-       -0.0831,
-       0.6412
+       -0.083,
+       0.6415
       ]
      },
      "DEF-cf_j_sk_01_04": {
       "deform": true,
       "head": [
        -0.1208,
-       -0.0831,
-       0.6412
+       -0.083,
+       0.6415
       ],
       "parent": "DEF-cf_j_sk_01_03",
       "tail": [
        -0.1227,
        -0.0846,
-       0.5352
+       0.5356
       ]
      },
      "DEF-cf_j_sk_01_05": {
@@ -15924,13 +17047,13 @@
       "head": [
        -0.1227,
        -0.0846,
-       0.5352
+       0.5356
       ],
       "parent": "DEF-cf_j_sk_01_04",
       "tail": [
-       -0.1237,
+       -0.1236,
        -0.0854,
-       0.429
+       0.4296
       ]
      },
      "DEF-cf_j_sk_02_00": {
@@ -15984,7 +17107,7 @@
       ],
       "parent": "DEF-cf_j_sk_02_02",
       "tail": [
-       -0.1887,
+       -0.1886,
        0.029,
        0.6501
       ]
@@ -15992,7 +17115,7 @@
      "DEF-cf_j_sk_02_04": {
       "deform": true,
       "head": [
-       -0.1887,
+       -0.1886,
        0.029,
        0.6501
       ],
@@ -16000,7 +17123,7 @@
       "tail": [
        -0.1922,
        0.0296,
-       0.5423
+       0.5424
       ]
      },
      "DEF-cf_j_sk_02_05": {
@@ -16008,7 +17131,7 @@
       "head": [
        -0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "DEF-cf_j_sk_02_04",
       "tail": [
@@ -16082,7 +17205,7 @@
       ],
       "parent": "DEF-cf_j_sk_03_03",
       "tail": [
-       -0.1368,
+       -0.1367,
        0.1766,
        0.5525
       ]
@@ -16090,7 +17213,7 @@
      "DEF-cf_j_sk_03_05": {
       "deform": true,
       "head": [
-       -0.1368,
+       -0.1367,
        0.1766,
        0.5525
       ],
@@ -16154,7 +17277,7 @@
       "tail": [
        -0.0017,
        0.1993,
-       0.6678
+       0.6677
       ]
      },
      "DEF-cf_j_sk_04_04": {
@@ -16162,13 +17285,13 @@
       "head": [
        -0.0017,
        0.1993,
-       0.6678
+       0.6677
       ],
       "parent": "DEF-cf_j_sk_04_03",
       "tail": [
        -0.0018,
        0.204,
-       0.5605
+       0.5604
       ]
      },
      "DEF-cf_j_sk_04_05": {
@@ -16176,13 +17299,13 @@
       "head": [
        -0.0018,
        0.204,
-       0.5605
+       0.5604
       ],
       "parent": "DEF-cf_j_sk_04_04",
       "tail": [
        -0.0019,
        0.2063,
-       0.4528
+       0.4526
       ]
      },
      "DEF-cf_j_sk_05_00": {
@@ -16320,7 +17443,7 @@
       ],
       "parent": "DEF-cf_j_sk_06_02",
       "tail": [
-       0.1887,
+       0.1886,
        0.029,
        0.6501
       ]
@@ -16328,7 +17451,7 @@
      "DEF-cf_j_sk_06_04": {
       "deform": true,
       "head": [
-       0.1887,
+       0.1886,
        0.029,
        0.6501
       ],
@@ -16336,7 +17459,7 @@
       "tail": [
        0.1922,
        0.0296,
-       0.5423
+       0.5424
       ]
      },
      "DEF-cf_j_sk_06_05": {
@@ -16344,7 +17467,7 @@
       "head": [
        0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "DEF-cf_j_sk_06_04",
       "tail": [
@@ -16376,23 +17499,23 @@
       ],
       "parent": "DEF-cf_j_sk_07_00",
       "tail": [
-       0.1095,
+       0.1094,
        -0.0738,
-       0.8523
+       0.8524
       ]
      },
      "DEF-cf_j_sk_07_02": {
       "deform": true,
       "head": [
-       0.1095,
+       0.1094,
        -0.0738,
-       0.8523
+       0.8524
       ],
       "parent": "DEF-cf_j_sk_07_01",
       "tail": [
        0.117,
        -0.0799,
-       0.7471
+       0.7472
       ]
      },
      "DEF-cf_j_sk_07_03": {
@@ -16400,41 +17523,41 @@
       "head": [
        0.117,
        -0.0799,
-       0.7471
+       0.7472
       ],
       "parent": "DEF-cf_j_sk_07_02",
       "tail": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6413
+       0.6415
       ]
      },
      "DEF-cf_j_sk_07_04": {
       "deform": true,
       "head": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6413
+       0.6415
       ],
       "parent": "DEF-cf_j_sk_07_03",
       "tail": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5353
+       0.5357
       ]
      },
      "DEF-cf_j_sk_07_05": {
       "deform": true,
       "head": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5353
+       0.5357
       ],
       "parent": "DEF-cf_j_sk_07_04",
       "tail": [
        0.1236,
-       -0.0854,
-       0.4291
+       -0.0853,
+       0.4297
       ]
      },
      "DEF-cf_j_tang_02": {
@@ -16493,158 +17616,214 @@
        1.3591
       ]
      },
-     "Eye Widget Controller": {
+     "Eye target": {
       "deform": false,
       "head": [
-       -0.2,
-       -0.0712,
-       1.4094
+       0.0,
+       -0.4115,
+       1.4102
       ],
-      "parent": "head",
+      "parent": "MCH-Eye target parent",
       "tail": [
-       -0.2,
-       0.0288,
-       1.4094
+       0.0,
+       -0.4115,
+       1.4302
       ]
      },
-     "Eyeballs": {
-      "deform": true,
+     "Eye target L": {
+      "deform": false,
+      "head": [
+       0.043,
+       -0.4115,
+       1.4102
+      ],
+      "parent": "Eye target",
+      "tail": [
+       0.043,
+       -0.4115,
+       1.4252
+      ]
+     },
+     "Eye target R": {
+      "deform": false,
+      "head": [
+       -0.043,
+       -0.4115,
+       1.4102
+      ],
+      "parent": "Eye target",
+      "tail": [
+       -0.043,
+       -0.4115,
+       1.4252
+      ]
+     },
+     "Face Properties": {
+      "deform": false,
       "head": [
        0.0,
-       -0.0381,
-       1.4094
+       -0.1051,
+       1.5886
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.0725,
-       1.4094
+       -0.1051,
+       1.6086
       ]
      },
-     "Eyeballs track": {
+     "Face board": {
+      "deform": false,
+      "head": [
+       0.1247,
+       -0.0715,
+       1.2837
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.1247,
+       -0.0715,
+       1.3037
+      ]
+     },
+     "Face brow L": {
+      "deform": false,
+      "head": [
+       0.0352,
+       -0.0851,
+       1.4538
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0352,
+       -0.0851,
+       1.4598
+      ]
+     },
+     "Face brow R": {
+      "deform": false,
+      "head": [
+       -0.0358,
+       -0.085,
+       1.4538
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.0358,
+       -0.085,
+       1.4598
+      ]
+     },
+     "Face brow mid": {
       "deform": false,
       "head": [
        0.0,
-       -0.0381,
-       1.4094
+       -0.0869,
+       1.4538
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.0725,
-       1.4094
+       -0.0869,
+       1.4598
       ]
      },
-     "Eyes handle": {
-      "deform": true,
+     "Face corner L": {
+      "deform": false,
+      "head": [
+       0.0219,
+       -0.0672,
+       1.3594
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.0219,
+       -0.0672,
+       1.3654
+      ]
+     },
+     "Face corner R": {
+      "deform": false,
+      "head": [
+       -0.0219,
+       -0.0672,
+       1.3594
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.0219,
+       -0.0672,
+       1.3654
+      ]
+     },
+     "Face emote": {
+      "deform": false,
       "head": [
        0.0,
-       -0.1712,
-       1.4094
+       -0.0869,
+       1.4738
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.2056,
-       1.4094
+       -0.0869,
+       1.4798
       ]
      },
-     "Eyes handle marker": {
+     "Face jaw": {
       "deform": false,
       "head": [
        0.0,
-       -0.1712,
-       1.4094
+       -0.0587,
+       1.3403
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.2056,
-       1.4094
+       -0.0587,
+       1.3463
       ]
      },
-     "Eyes target": {
+     "Face lid L": {
+      "deform": false,
+      "head": [
+       0.047,
+       -0.0651,
+       1.4287
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.047,
+       -0.0651,
+       1.4347
+      ]
+     },
+     "Face lid R": {
+      "deform": false,
+      "head": [
+       -0.047,
+       -0.0651,
+       1.4287
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.047,
+       -0.0651,
+       1.4347
+      ]
+     },
+     "Face lids": {
       "deform": false,
       "head": [
        0.0,
-       -0.0688,
-       1.3921
+       -0.0732,
+       1.4102
       ],
       "parent": "ORG-Head",
       "tail": [
        0.0,
-       -0.1032,
-       1.3921
-      ]
-     },
-     "Eyes track target": {
-      "deform": true,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4094
-      ],
-      "parent": "Eyes track target parent",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Eyes track target parent": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4094
-      ],
-      "parent": null,
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Eyesx": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3921
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3921
-      ]
-     },
-     "Face Widget Eye Guide": {
-      "deform": false,
-      "head": [
-       -0.2,
-       -0.0712,
-       1.4094
-      ],
-      "parent": "head",
-      "tail": [
-       -0.2,
-       0.0288,
-       1.4094
-      ]
-     },
-     "Face Widget Mouth Guide": {
-      "deform": false,
-      "head": [
-       0.2,
-       -0.0712,
-       1.4094
-      ],
-      "parent": "head",
-      "tail": [
-       0.2,
-       0.0288,
-       1.4094
+       -0.0732,
+       1.4162
       ]
      },
      "Head track": {
@@ -19367,14 +20546,14 @@
       "deform": false,
       "head": [
        0.0645,
-       -0.1935,
-       1.189
+       -0.1941,
+       1.1887
       ],
       "parent": "Breasts handle",
       "tail": [
-       0.0284,
-       -0.1299,
-       1.1776
+       0.0283,
+       -0.1305,
+       1.1774
       ]
      },
      "Left Buttock handle": {
@@ -19403,34 +20582,6 @@
        0.0274,
        0.0314,
        1.4362
-      ]
-     },
-     "Left Head marker x": {
-      "deform": false,
-      "head": [
-       0.0399,
-       0.0149,
-       1.3455
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.0195,
-       1.3455
-      ]
-     },
-     "Left Head marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       0.0149,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.0195,
-       1.4094
       ]
      },
      "Left ankle_fk": {
@@ -19655,118 +20806,6 @@
        0.492,
        0.0298,
        1.2547
-      ]
-     },
-     "Left eye handle": {
-      "deform": true,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4094
-      ],
-      "parent": "Eyes handle",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Left eye handle marker": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Left eye handle marker x": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.1712,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Left eye handle marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Left eye target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3921
-      ],
-      "parent": "Eyes target",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3921
-      ]
-     },
-     "Left eyeball": {
-      "deform": true,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4094
-      ]
-     },
-     "Left eyeball track": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4094
-      ]
-     },
-     "Left eyeball track correction": {
-      "deform": false,
-      "head": [
-       0.0399,
-       -0.0381,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0399,
-       -0.0725,
-       1.4094
       ]
      },
      "Left knee_fk": {
@@ -20257,6 +21296,48 @@
        0.0,
        0.0457,
        1.0996
+      ]
+     },
+     "MCH-Eye aim L": {
+      "deform": false,
+      "head": [
+       0.043,
+       -0.0546,
+       1.4102
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       0.043,
+       -0.0746,
+       1.4102
+      ]
+     },
+     "MCH-Eye aim R": {
+      "deform": false,
+      "head": [
+       -0.043,
+       -0.0546,
+       1.4102
+      ],
+      "parent": "ORG-Head",
+      "tail": [
+       -0.043,
+       -0.0746,
+       1.4102
+      ]
+     },
+     "MCH-Eye target parent": {
+      "deform": false,
+      "head": [
+       0.0,
+       -0.4115,
+       1.4102
+      ],
+      "parent": "root",
+      "tail": [
+       0.0,
+       -0.4115,
+       1.4302
       ]
      },
      "MCH-Hips": {
@@ -22642,13 +23723,13 @@
      "MCH-cf_J_hairFL_02_00_ik.parent": {
       "deform": false,
       "head": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ],
       "parent": null,
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0289,
        1.3655
       ]
@@ -22662,7 +23743,7 @@
       ],
       "parent": "cf_J_hairFL_02_01",
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ]
@@ -22676,7 +23757,7 @@
       ],
       "parent": "cf_J_hairFL_02_00",
       "tail": [
-       -0.0748,
+       -0.0747,
        -0.0327,
        1.3815
       ]
@@ -22713,7 +23794,7 @@
       "deform": false,
       "head": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ],
       "parent": null,
@@ -22733,7 +23814,7 @@
       "parent": "cf_J_hairFR_02_01",
       "tail": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ]
      },
@@ -22788,8 +23869,8 @@
       ],
       "parent": "cf_J_hairF_01",
       "tail": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ]
      },
@@ -22802,8 +23883,8 @@
       ],
       "parent": "cf_J_hairF_00",
       "tail": [
-       0.0258,
-       -0.0948,
+       0.0259,
+       -0.0947,
        1.4394
       ]
      },
@@ -22838,14 +23919,14 @@
      "MCH-cf_J_hairF_s_ik.parent": {
       "deform": false,
       "head": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ],
       "parent": null,
       "tail": [
-       0.0334,
-       -0.0784,
+       0.0335,
+       -0.0783,
        1.4219
       ]
      },
@@ -23140,7 +24221,7 @@
       "tail": [
        0.0,
        -0.1239,
-       0.5011
+       0.501
       ]
      },
      "MCH-cf_j_sk_01_00": {
@@ -23174,15 +24255,15 @@
      "MCH-cf_j_sk_01_00_ik.parent": {
       "deform": false,
       "head": [
-       -0.1237,
+       -0.1236,
        -0.0854,
-       0.429
+       0.4296
       ],
       "parent": null,
       "tail": [
-       -0.1237,
+       -0.1236,
        -0.0606,
-       0.429
+       0.4296
       ]
      },
      "MCH-cf_j_sk_01_01": {
@@ -23224,7 +24305,7 @@
       "tail": [
        -0.117,
        -0.08,
-       0.747
+       0.7472
       ]
      },
      "MCH-cf_j_sk_01_02_drv": {
@@ -23246,13 +24327,13 @@
       "head": [
        -0.117,
        -0.08,
-       0.747
+       0.7472
       ],
       "parent": "cf_j_sk_01_03",
       "tail": [
        -0.1208,
-       -0.0831,
-       0.6412
+       -0.083,
+       0.6415
       ]
      },
      "MCH-cf_j_sk_01_03_drv": {
@@ -23260,41 +24341,41 @@
       "head": [
        -0.117,
        -0.08,
-       0.747
+       0.7472
       ],
       "parent": "cf_j_sk_01_02",
       "tail": [
        -0.1181,
        -0.0809,
-       0.7153
+       0.7155
       ]
      },
      "MCH-cf_j_sk_01_04": {
       "deform": false,
       "head": [
        -0.1208,
-       -0.0831,
-       0.6412
+       -0.083,
+       0.6415
       ],
       "parent": "cf_j_sk_01_04",
       "tail": [
        -0.1227,
        -0.0846,
-       0.5352
+       0.5356
       ]
      },
      "MCH-cf_j_sk_01_04_drv": {
       "deform": false,
       "head": [
        -0.1208,
-       -0.0831,
-       0.6412
+       -0.083,
+       0.6415
       ],
       "parent": "cf_j_sk_01_03",
       "tail": [
-       -0.1214,
+       -0.1213,
        -0.0835,
-       0.6094
+       0.6097
       ]
      },
      "MCH-cf_j_sk_01_05": {
@@ -23302,13 +24383,13 @@
       "head": [
        -0.1227,
        -0.0846,
-       0.5352
+       0.5356
       ],
       "parent": "cf_j_sk_01_05",
       "tail": [
-       -0.1237,
+       -0.1236,
        -0.0854,
-       0.429
+       0.4296
       ]
      },
      "MCH-cf_j_sk_01_05_drv": {
@@ -23316,13 +24397,13 @@
       "head": [
        -0.1227,
        -0.0846,
-       0.5352
+       0.5356
       ],
       "parent": "cf_j_sk_01_04",
       "tail": [
        -0.123,
        -0.0848,
-       0.5033
+       0.5038
       ]
      },
      "MCH-cf_j_sk_02_00": {
@@ -23390,7 +24471,7 @@
       ],
       "parent": "cf_j_sk_02_00",
       "tail": [
-       -0.1516,
+       -0.1515,
        0.0234,
        0.9168
       ]
@@ -23432,7 +24513,7 @@
       ],
       "parent": "cf_j_sk_02_03",
       "tail": [
-       -0.1887,
+       -0.1886,
        0.029,
        0.6501
       ]
@@ -23448,13 +24529,13 @@
       "tail": [
        -0.1837,
        0.0283,
-       0.7251
+       0.7252
       ]
      },
      "MCH-cf_j_sk_02_04": {
       "deform": false,
       "head": [
-       -0.1887,
+       -0.1886,
        0.029,
        0.6501
       ],
@@ -23462,13 +24543,13 @@
       "tail": [
        -0.1922,
        0.0296,
-       0.5423
+       0.5424
       ]
      },
      "MCH-cf_j_sk_02_04_drv": {
       "deform": false,
       "head": [
-       -0.1887,
+       -0.1886,
        0.029,
        0.6501
       ],
@@ -23476,7 +24557,7 @@
       "tail": [
        -0.1897,
        0.0292,
-       0.6177
+       0.6178
       ]
      },
      "MCH-cf_j_sk_02_05": {
@@ -23484,7 +24565,7 @@
       "head": [
        -0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "cf_j_sk_02_05",
       "tail": [
@@ -23498,7 +24579,7 @@
       "head": [
        -0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "cf_j_sk_02_04",
       "tail": [
@@ -23600,7 +24681,7 @@
       ],
       "parent": "cf_j_sk_03_01",
       "tail": [
-       -0.1223,
+       -0.1222,
        0.1529,
        0.8464
       ]
@@ -23628,7 +24709,7 @@
       ],
       "parent": "cf_j_sk_03_02",
       "tail": [
-       -0.1306,
+       -0.1305,
        0.1665,
        0.7388
       ]
@@ -23642,7 +24723,7 @@
       ],
       "parent": "cf_j_sk_03_04",
       "tail": [
-       -0.1368,
+       -0.1367,
        0.1766,
        0.5525
       ]
@@ -23664,7 +24745,7 @@
      "MCH-cf_j_sk_03_05": {
       "deform": false,
       "head": [
-       -0.1368,
+       -0.1367,
        0.1766,
        0.5525
       ],
@@ -23678,7 +24759,7 @@
      "MCH-cf_j_sk_03_05_drv": {
       "deform": false,
       "head": [
-       -0.1368,
+       -0.1367,
        0.1766,
        0.5525
       ],
@@ -23722,13 +24803,13 @@
       "head": [
        -0.0019,
        0.2063,
-       0.4528
+       0.4526
       ],
       "parent": null,
       "tail": [
        -0.0019,
        0.2315,
-       0.4528
+       0.4526
       ]
      },
      "MCH-cf_j_sk_04_01": {
@@ -23783,7 +24864,7 @@
       "parent": "cf_j_sk_04_01",
       "tail": [
        -0.0014,
-       0.1778,
+       0.1777,
        0.8482
       ]
      },
@@ -23798,7 +24879,7 @@
       "tail": [
        -0.0017,
        0.1993,
-       0.6678
+       0.6677
       ]
      },
      "MCH-cf_j_sk_04_03_drv": {
@@ -23812,7 +24893,7 @@
       "tail": [
        -0.0016,
        0.193,
-       0.7426
+       0.7425
       ]
      },
      "MCH-cf_j_sk_04_04": {
@@ -23820,13 +24901,13 @@
       "head": [
        -0.0017,
        0.1993,
-       0.6678
+       0.6677
       ],
       "parent": "cf_j_sk_04_04",
       "tail": [
        -0.0018,
        0.204,
-       0.5605
+       0.5604
       ]
      },
      "MCH-cf_j_sk_04_04_drv": {
@@ -23834,13 +24915,13 @@
       "head": [
        -0.0017,
        0.1993,
-       0.6678
+       0.6677
       ],
       "parent": "cf_j_sk_04_03",
       "tail": [
        -0.0018,
        0.2007,
-       0.6356
+       0.6355
       ]
      },
      "MCH-cf_j_sk_04_05": {
@@ -23848,13 +24929,13 @@
       "head": [
        -0.0018,
        0.204,
-       0.5605
+       0.5604
       ],
       "parent": "cf_j_sk_04_05",
       "tail": [
        -0.0019,
        0.2063,
-       0.4528
+       0.4526
       ]
      },
      "MCH-cf_j_sk_04_05_drv": {
@@ -23862,13 +24943,13 @@
       "head": [
        -0.0018,
        0.204,
-       0.5605
+       0.5604
       ],
       "parent": "cf_j_sk_04_04",
       "tail": [
        -0.0018,
        0.2047,
-       0.5282
+       0.528
       ]
      },
      "MCH-cf_j_sk_05_00": {
@@ -23964,7 +25045,7 @@
       ],
       "parent": "cf_j_sk_05_01",
       "tail": [
-       0.1223,
+       0.1222,
        0.1529,
        0.8464
       ]
@@ -23992,7 +25073,7 @@
       ],
       "parent": "cf_j_sk_05_02",
       "tail": [
-       0.1306,
+       0.1305,
        0.1665,
        0.7388
       ]
@@ -24160,7 +25241,7 @@
       ],
       "parent": "cf_j_sk_06_03",
       "tail": [
-       0.1887,
+       0.1886,
        0.029,
        0.6501
       ]
@@ -24176,13 +25257,13 @@
       "tail": [
        0.1837,
        0.0283,
-       0.7251
+       0.7252
       ]
      },
      "MCH-cf_j_sk_06_04": {
       "deform": false,
       "head": [
-       0.1887,
+       0.1886,
        0.029,
        0.6501
       ],
@@ -24190,13 +25271,13 @@
       "tail": [
        0.1922,
        0.0296,
-       0.5423
+       0.5424
       ]
      },
      "MCH-cf_j_sk_06_04_drv": {
       "deform": false,
       "head": [
-       0.1887,
+       0.1886,
        0.029,
        0.6501
       ],
@@ -24204,7 +25285,7 @@
       "tail": [
        0.1897,
        0.0292,
-       0.6177
+       0.6178
       ]
      },
      "MCH-cf_j_sk_06_05": {
@@ -24212,7 +25293,7 @@
       "head": [
        0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "cf_j_sk_06_05",
       "tail": [
@@ -24226,7 +25307,7 @@
       "head": [
        0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "cf_j_sk_06_04",
       "tail": [
@@ -24267,14 +25348,14 @@
       "deform": false,
       "head": [
        0.1236,
-       -0.0854,
-       0.4291
+       -0.0853,
+       0.4297
       ],
       "parent": null,
       "tail": [
        0.1236,
        -0.0606,
-       0.4291
+       0.4297
       ]
      },
      "MCH-cf_j_sk_07_01": {
@@ -24286,9 +25367,9 @@
       ],
       "parent": "cf_j_sk_07_01",
       "tail": [
-       0.1095,
+       0.1094,
        -0.0738,
-       0.8523
+       0.8524
       ]
      },
      "MCH-cf_j_sk_07_01_drv": {
@@ -24308,23 +25389,23 @@
      "MCH-cf_j_sk_07_02": {
       "deform": false,
       "head": [
-       0.1095,
+       0.1094,
        -0.0738,
-       0.8523
+       0.8524
       ],
       "parent": "cf_j_sk_07_02",
       "tail": [
        0.117,
        -0.0799,
-       0.7471
+       0.7472
       ]
      },
      "MCH-cf_j_sk_07_02_drv": {
       "deform": false,
       "head": [
-       0.1095,
+       0.1094,
        -0.0738,
-       0.8523
+       0.8524
       ],
       "parent": "cf_j_sk_07_01",
       "tail": [
@@ -24338,13 +25419,13 @@
       "head": [
        0.117,
        -0.0799,
-       0.7471
+       0.7472
       ],
       "parent": "cf_j_sk_07_03",
       "tail": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6413
+       0.6415
       ]
      },
      "MCH-cf_j_sk_07_03_drv": {
@@ -24352,69 +25433,69 @@
       "head": [
        0.117,
        -0.0799,
-       0.7471
+       0.7472
       ],
       "parent": "cf_j_sk_07_02",
       "tail": [
        0.1181,
        -0.0809,
-       0.7154
+       0.7155
       ]
      },
      "MCH-cf_j_sk_07_04": {
       "deform": false,
       "head": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6413
+       0.6415
       ],
       "parent": "cf_j_sk_07_04",
       "tail": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5353
+       0.5357
       ]
      },
      "MCH-cf_j_sk_07_04_drv": {
       "deform": false,
       "head": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6413
+       0.6415
       ],
       "parent": "cf_j_sk_07_03",
       "tail": [
        0.1213,
        -0.0835,
-       0.6095
+       0.6098
       ]
      },
      "MCH-cf_j_sk_07_05": {
       "deform": false,
       "head": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5353
+       0.5357
       ],
       "parent": "cf_j_sk_07_05",
       "tail": [
        0.1236,
-       -0.0854,
-       0.4291
+       -0.0853,
+       0.4297
       ]
      },
      "MCH-cf_j_sk_07_05_drv": {
       "deform": false,
       "head": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5353
+       0.5357
       ],
       "parent": "cf_j_sk_07_04",
       "tail": [
-       0.123,
+       0.1229,
        -0.0848,
-       0.5034
+       0.5039
       ]
      },
      "MCH-cf_j_tang_02": {
@@ -24779,20 +25860,6 @@
        -0.5772,
        0.026,
        1.2523
-      ]
-     },
-     "Mouth Widget Controller": {
-      "deform": false,
-      "head": [
-       0.2,
-       -0.0712,
-       1.4094
-      ],
-      "parent": "head",
-      "tail": [
-       0.2,
-       0.0288,
-       1.4094
       ]
      },
      "N_hairback08": {
@@ -25686,7 +26753,7 @@
       ],
       "parent": "ORG-cf_J_hairFL_02_00",
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ]
@@ -25694,13 +26761,13 @@
      "ORG-cf_J_hairFL_02_02": {
       "deform": false,
       "head": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ],
       "parent": "ORG-cf_J_hairFL_02_01",
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.4155
       ]
@@ -25729,7 +26796,7 @@
       "parent": "ORG-cf_J_hairFR_02_00",
       "tail": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ]
      },
@@ -25737,13 +26804,13 @@
       "deform": false,
       "head": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ],
       "parent": "ORG-cf_J_hairFR_02_01",
       "tail": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.4209
       ]
      },
@@ -25770,22 +26837,22 @@
       ],
       "parent": "ORG-cf_J_hairF_00",
       "tail": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ]
      },
      "ORG-cf_J_hairF_02": {
       "deform": false,
       "head": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ],
       "parent": "ORG-cf_J_hairF_01",
       "tail": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4719
       ]
      },
@@ -26080,7 +27147,7 @@
       "tail": [
        -0.117,
        -0.08,
-       0.747
+       0.7472
       ]
      },
      "ORG-cf_j_sk_01_03": {
@@ -26088,27 +27155,27 @@
       "head": [
        -0.117,
        -0.08,
-       0.747
+       0.7472
       ],
       "parent": "ORG-cf_j_sk_01_02",
       "tail": [
        -0.1208,
-       -0.0831,
-       0.6412
+       -0.083,
+       0.6415
       ]
      },
      "ORG-cf_j_sk_01_04": {
       "deform": false,
       "head": [
        -0.1208,
-       -0.0831,
-       0.6412
+       -0.083,
+       0.6415
       ],
       "parent": "ORG-cf_j_sk_01_03",
       "tail": [
        -0.1227,
        -0.0846,
-       0.5352
+       0.5356
       ]
      },
      "ORG-cf_j_sk_01_05": {
@@ -26116,13 +27183,13 @@
       "head": [
        -0.1227,
        -0.0846,
-       0.5352
+       0.5356
       ],
       "parent": "ORG-cf_j_sk_01_04",
       "tail": [
-       -0.1237,
+       -0.1236,
        -0.0854,
-       0.429
+       0.4296
       ]
      },
      "ORG-cf_j_sk_02_00": {
@@ -26176,7 +27243,7 @@
       ],
       "parent": "ORG-cf_j_sk_02_02",
       "tail": [
-       -0.1887,
+       -0.1886,
        0.029,
        0.6501
       ]
@@ -26184,7 +27251,7 @@
      "ORG-cf_j_sk_02_04": {
       "deform": false,
       "head": [
-       -0.1887,
+       -0.1886,
        0.029,
        0.6501
       ],
@@ -26192,7 +27259,7 @@
       "tail": [
        -0.1922,
        0.0296,
-       0.5423
+       0.5424
       ]
      },
      "ORG-cf_j_sk_02_05": {
@@ -26200,7 +27267,7 @@
       "head": [
        -0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "ORG-cf_j_sk_02_04",
       "tail": [
@@ -26274,7 +27341,7 @@
       ],
       "parent": "ORG-cf_j_sk_03_03",
       "tail": [
-       -0.1368,
+       -0.1367,
        0.1766,
        0.5525
       ]
@@ -26282,7 +27349,7 @@
      "ORG-cf_j_sk_03_05": {
       "deform": false,
       "head": [
-       -0.1368,
+       -0.1367,
        0.1766,
        0.5525
       ],
@@ -26346,7 +27413,7 @@
       "tail": [
        -0.0017,
        0.1993,
-       0.6678
+       0.6677
       ]
      },
      "ORG-cf_j_sk_04_04": {
@@ -26354,13 +27421,13 @@
       "head": [
        -0.0017,
        0.1993,
-       0.6678
+       0.6677
       ],
       "parent": "ORG-cf_j_sk_04_03",
       "tail": [
        -0.0018,
        0.204,
-       0.5605
+       0.5604
       ]
      },
      "ORG-cf_j_sk_04_05": {
@@ -26368,13 +27435,13 @@
       "head": [
        -0.0018,
        0.204,
-       0.5605
+       0.5604
       ],
       "parent": "ORG-cf_j_sk_04_04",
       "tail": [
        -0.0019,
        0.2063,
-       0.4528
+       0.4526
       ]
      },
      "ORG-cf_j_sk_05_00": {
@@ -26512,7 +27579,7 @@
       ],
       "parent": "ORG-cf_j_sk_06_02",
       "tail": [
-       0.1887,
+       0.1886,
        0.029,
        0.6501
       ]
@@ -26520,7 +27587,7 @@
      "ORG-cf_j_sk_06_04": {
       "deform": false,
       "head": [
-       0.1887,
+       0.1886,
        0.029,
        0.6501
       ],
@@ -26528,7 +27595,7 @@
       "tail": [
        0.1922,
        0.0296,
-       0.5423
+       0.5424
       ]
      },
      "ORG-cf_j_sk_06_05": {
@@ -26536,7 +27603,7 @@
       "head": [
        0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "ORG-cf_j_sk_06_04",
       "tail": [
@@ -26568,23 +27635,23 @@
       ],
       "parent": "ORG-cf_j_sk_07_00",
       "tail": [
-       0.1095,
+       0.1094,
        -0.0738,
-       0.8523
+       0.8524
       ]
      },
      "ORG-cf_j_sk_07_02": {
       "deform": false,
       "head": [
-       0.1095,
+       0.1094,
        -0.0738,
-       0.8523
+       0.8524
       ],
       "parent": "ORG-cf_j_sk_07_01",
       "tail": [
        0.117,
        -0.0799,
-       0.7471
+       0.7472
       ]
      },
      "ORG-cf_j_sk_07_03": {
@@ -26592,41 +27659,41 @@
       "head": [
        0.117,
        -0.0799,
-       0.7471
+       0.7472
       ],
       "parent": "ORG-cf_j_sk_07_02",
       "tail": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6413
+       0.6415
       ]
      },
      "ORG-cf_j_sk_07_04": {
       "deform": false,
       "head": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6413
+       0.6415
       ],
       "parent": "ORG-cf_j_sk_07_03",
       "tail": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5353
+       0.5357
       ]
      },
      "ORG-cf_j_sk_07_05": {
       "deform": false,
       "head": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5353
+       0.5357
       ],
       "parent": "ORG-cf_j_sk_07_04",
       "tail": [
        0.1236,
-       -0.0854,
-       0.4291
+       -0.0853,
+       0.4297
       ]
      },
      "ORG-cf_j_tang_02": {
@@ -26703,14 +27770,14 @@
       "deform": false,
       "head": [
        -0.0645,
-       -0.1935,
-       1.189
+       -0.1941,
+       1.1887
       ],
       "parent": "Breasts handle",
       "tail": [
-       -0.0284,
-       -0.1299,
-       1.1776
+       -0.0283,
+       -0.1305,
+       1.1774
       ]
      },
      "Right Buttock handle": {
@@ -26739,34 +27806,6 @@
        -0.0248,
        0.0314,
        1.4342
-      ]
-     },
-     "Right Head marker x": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       0.0149,
-       1.3455
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.0195,
-       1.3455
-      ]
-     },
-     "Right Head marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       0.0149,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.0195,
-       1.4094
       ]
      },
      "Right ankle_fk": {
@@ -26991,118 +28030,6 @@
        -0.492,
        0.0295,
        1.2547
-      ]
-     },
-     "Right eye handle": {
-      "deform": true,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4094
-      ],
-      "parent": "Eyes handle",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Right eye handle marker": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Right eye handle marker x": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.1712,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Right eye handle marker z": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.1712,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       0.0,
-       -0.2056,
-       1.4094
-      ]
-     },
-     "Right eye target": {
-      "deform": false,
-      "head": [
-       0.0,
-       -0.0688,
-       1.3921
-      ],
-      "parent": "Eyes target",
-      "tail": [
-       0.0,
-       -0.1032,
-       1.3921
-      ]
-     },
-     "Right eyeball": {
-      "deform": true,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4094
-      ]
-     },
-     "Right eyeball track": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4094
-      ]
-     },
-     "Right eyeball track correction": {
-      "deform": false,
-      "head": [
-       -0.0399,
-       -0.0381,
-       1.4094
-      ],
-      "parent": "ORG-Head",
-      "tail": [
-       -0.0399,
-       -0.0725,
-       1.4094
       ]
      },
      "Right knee_fk": {
@@ -29936,7 +30863,7 @@
      "cf_J_hairFL_02_00.001": {
       "deform": false,
       "head": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ],
@@ -29950,13 +30877,13 @@
      "cf_J_hairFL_02_00_ik": {
       "deform": false,
       "head": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ],
       "parent": "MCH-cf_J_hairFL_02_00_ik.parent",
       "tail": [
-       -0.0632,
+       -0.0631,
        -0.0365,
        1.3495
       ]
@@ -29984,7 +30911,7 @@
       ],
       "parent": "MCH-cf_J_hairFL_02_01_drv",
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ]
@@ -29992,13 +30919,13 @@
      "cf_J_hairFL_02_02": {
       "deform": false,
       "head": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.3655
       ],
       "parent": "ORG-cf_J_hairFL_02_01",
       "tail": [
-       -0.069,
+       -0.0689,
        -0.0346,
        1.4155
       ]
@@ -30021,7 +30948,7 @@
       "deform": false,
       "head": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ],
       "parent": "cf_J_hairFR_02_01",
@@ -30035,14 +30962,14 @@
       "deform": false,
       "head": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ],
       "parent": "MCH-cf_J_hairFR_02_00_ik.parent",
       "tail": [
-       0.0665,
+       0.0664,
        -0.0382,
-       1.3541
+       1.3542
       ]
      },
      "cf_J_hairFR_02_00_master": {
@@ -30069,7 +30996,7 @@
       "parent": "MCH-cf_J_hairFR_02_01_drv",
       "tail": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ]
      },
@@ -30077,13 +31004,13 @@
       "deform": false,
       "head": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.3709
       ],
       "parent": "ORG-cf_J_hairFR_02_01",
       "tail": [
        0.0724,
-       -0.0369,
+       -0.037,
        1.4209
       ]
      },
@@ -30110,22 +31037,22 @@
       ],
       "parent": "MCH-cf_J_hairF_01_drv",
       "tail": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ]
      },
      "cf_J_hairF_02": {
       "deform": false,
       "head": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ],
       "parent": "ORG-cf_J_hairF_01",
       "tail": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4719
       ]
      },
@@ -30146,8 +31073,8 @@
      "cf_J_hairF_s.001": {
       "deform": false,
       "head": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ],
       "parent": "cf_J_hairF_01",
@@ -30160,14 +31087,14 @@
      "cf_J_hairF_s_ik": {
       "deform": false,
       "head": [
-       0.0334,
-       -0.0855,
+       0.0335,
+       -0.0854,
        1.4219
       ],
       "parent": "MCH-cf_J_hairF_s_ik.parent",
       "tail": [
-       0.0409,
-       -0.0762,
+       0.041,
+       -0.0761,
        1.4044
       ]
      },
@@ -30328,29 +31255,29 @@
      "cf_d_bnip01_L": {
       "deform": true,
       "head": [
-       0.0752,
-       -0.0844,
-       1.1785
+       0.0746,
+       -0.0847,
+       1.178
       ],
       "parent": "cf_j_bust03_L",
       "tail": [
-       0.0387,
-       -0.0202,
-       1.1746
+       0.0395,
+       -0.0197,
+       1.1752
       ]
      },
      "cf_d_bnip01_R": {
       "deform": true,
       "head": [
-       -0.0752,
-       -0.0844,
-       1.1785
+       -0.0746,
+       -0.0847,
+       1.178
       ],
       "parent": "cf_j_bust03_R",
       "tail": [
-       -0.0387,
-       -0.0202,
-       1.1746
+       -0.0395,
+       -0.0197,
+       1.1752
       ]
      },
      "cf_d_bust00": {
@@ -30426,29 +31353,29 @@
      "cf_d_bust03_L": {
       "deform": true,
       "head": [
-       0.0696,
-       -0.0745,
-       1.1779
+       0.0692,
+       -0.0747,
+       1.1776
       ],
       "parent": "cf_j_bust02_L",
       "tail": [
-       0.0331,
-       -0.0102,
-       1.174
+       0.034,
+       -0.0097,
+       1.1747
       ]
      },
      "cf_d_bust03_R": {
       "deform": true,
       "head": [
-       -0.0696,
-       -0.0745,
-       1.1779
+       -0.0692,
+       -0.0747,
+       1.1776
       ],
       "parent": "cf_j_bust02_R",
       "tail": [
-       -0.0331,
-       -0.0102,
-       1.174
+       -0.034,
+       -0.0097,
+       1.1747
       ]
      },
      "cf_d_forearm02_L": {
@@ -31070,57 +31997,57 @@
      "cf_j_bnip02_L": {
       "deform": true,
       "head": [
-       0.0796,
-       -0.0922,
-       1.179
+       0.0789,
+       -0.0926,
+       1.1783
       ],
       "parent": "cf_s_bnip02_L",
       "tail": [
-       0.0431,
-       -0.0279,
-       1.175
+       0.0437,
+       -0.0275,
+       1.1755
       ]
      },
      "cf_j_bnip02_R": {
       "deform": true,
       "head": [
-       -0.0796,
-       -0.0922,
-       1.179
+       -0.0789,
+       -0.0926,
+       1.1783
       ],
       "parent": "cf_s_bnip02_R",
       "tail": [
-       -0.0431,
-       -0.0279,
-       1.175
+       -0.0437,
+       -0.0275,
+       1.1755
       ]
      },
      "cf_j_bnip02root_L": {
       "deform": true,
       "head": [
-       0.0765,
-       -0.0867,
-       1.1787
+       0.0759,
+       -0.0871,
+       1.1781
       ],
       "parent": "cf_d_bnip01_L",
       "tail": [
-       0.0401,
-       -0.0225,
-       1.1747
+       0.0407,
+       -0.022,
+       1.1753
       ]
      },
      "cf_j_bnip02root_R": {
       "deform": true,
       "head": [
-       -0.0765,
-       -0.0867,
-       1.1787
+       -0.0759,
+       -0.0871,
+       1.1781
       ],
       "parent": "cf_d_bnip01_R",
       "tail": [
-       -0.0401,
-       -0.0225,
-       1.1747
+       -0.0407,
+       -0.022,
+       1.1753
       ]
      },
      "cf_j_bust01_L": {
@@ -31155,56 +32082,56 @@
       "deform": true,
       "head": [
        0.0604,
-       -0.0583,
+       -0.0584,
        1.177
       ],
       "parent": "cf_d_bust02_L",
       "tail": [
-       0.0239,
-       0.0059,
-       1.1731
+       0.0252,
+       0.0067,
+       1.1741
       ]
      },
      "cf_j_bust02_R": {
       "deform": true,
       "head": [
        -0.0604,
-       -0.0583,
+       -0.0584,
        1.177
       ],
       "parent": "cf_d_bust02_R",
       "tail": [
-       -0.0239,
-       0.0059,
-       1.1731
+       -0.0252,
+       0.0067,
+       1.1741
       ]
      },
      "cf_j_bust03_L": {
       "deform": true,
       "head": [
-       0.0695,
-       -0.0743,
-       1.178
+       0.0691,
+       -0.0745,
+       1.1776
       ],
       "parent": "cf_d_bust03_L",
       "tail": [
-       0.033,
-       -0.0101,
-       1.174
+       0.0339,
+       -0.0095,
+       1.1748
       ]
      },
      "cf_j_bust03_R": {
       "deform": true,
       "head": [
-       -0.0695,
-       -0.0743,
-       1.178
+       -0.0691,
+       -0.0745,
+       1.1776
       ],
       "parent": "cf_d_bust03_R",
       "tail": [
-       -0.033,
-       -0.0101,
-       1.174
+       -0.0339,
+       -0.0095,
+       1.1748
       ]
      },
      "cf_j_kokan": {
@@ -31392,29 +32319,29 @@
      "cf_j_sk_01_00.001": {
       "deform": false,
       "head": [
-       -0.1237,
+       -0.1236,
        -0.0854,
-       0.429
+       0.4296
       ],
       "parent": "cf_j_sk_01_05",
       "tail": [
        -0.1232,
        -0.085,
-       0.4821
+       0.4826
       ]
      },
      "cf_j_sk_01_00_ik": {
       "deform": false,
       "head": [
-       -0.1237,
+       -0.1236,
        -0.0854,
-       0.429
+       0.4296
       ],
       "parent": "MCH-cf_j_sk_01_00_ik.parent",
       "tail": [
-       -0.1244,
+       -0.1243,
        -0.0859,
-       0.3547
+       0.3554
       ]
      },
      "cf_j_sk_01_00_master": {
@@ -31426,9 +32353,9 @@
       ],
       "parent": "ORG-cf_d_sk_01_00",
       "tail": [
-       -0.3247,
-       -0.2488,
-       0.2757
+       -0.3245,
+       -0.2486,
+       0.2764
       ]
      },
      "cf_j_sk_01_01": {
@@ -31456,7 +32383,7 @@
       "tail": [
        -0.117,
        -0.08,
-       0.747
+       0.7472
       ]
      },
      "cf_j_sk_01_03": {
@@ -31464,27 +32391,27 @@
       "head": [
        -0.117,
        -0.08,
-       0.747
+       0.7472
       ],
       "parent": "MCH-cf_j_sk_01_03_drv",
       "tail": [
        -0.1208,
-       -0.0831,
-       0.6412
+       -0.083,
+       0.6415
       ]
      },
      "cf_j_sk_01_04": {
       "deform": false,
       "head": [
        -0.1208,
-       -0.0831,
-       0.6412
+       -0.083,
+       0.6415
       ],
       "parent": "MCH-cf_j_sk_01_04_drv",
       "tail": [
        -0.1227,
        -0.0846,
-       0.5352
+       0.5356
       ]
      },
      "cf_j_sk_01_05": {
@@ -31492,13 +32419,13 @@
       "head": [
        -0.1227,
        -0.0846,
-       0.5352
+       0.5356
       ],
       "parent": "MCH-cf_j_sk_01_05_drv",
       "tail": [
-       -0.1237,
+       -0.1236,
        -0.0854,
-       0.429
+       0.4296
       ]
      },
      "cf_j_sk_02_00": {
@@ -31526,7 +32453,7 @@
       "tail": [
        -0.1932,
        0.0297,
-       0.4882
+       0.4883
       ]
      },
      "cf_j_sk_02_00_ik": {
@@ -31554,7 +32481,7 @@
       "tail": [
        -0.5397,
        0.0823,
-       0.3405
+       0.3406
       ]
      },
      "cf_j_sk_02_01": {
@@ -31594,7 +32521,7 @@
       ],
       "parent": "MCH-cf_j_sk_02_03_drv",
       "tail": [
-       -0.1887,
+       -0.1886,
        0.029,
        0.6501
       ]
@@ -31602,7 +32529,7 @@
      "cf_j_sk_02_04": {
       "deform": false,
       "head": [
-       -0.1887,
+       -0.1886,
        0.029,
        0.6501
       ],
@@ -31610,7 +32537,7 @@
       "tail": [
        -0.1922,
        0.0296,
-       0.5423
+       0.5424
       ]
      },
      "cf_j_sk_02_05": {
@@ -31618,7 +32545,7 @@
       "head": [
        -0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "MCH-cf_j_sk_02_05_drv",
       "tail": [
@@ -31650,7 +32577,7 @@
       ],
       "parent": "cf_j_sk_03_05",
       "tail": [
-       -0.1375,
+       -0.1374,
        0.1778,
        0.4969
       ]
@@ -31734,7 +32661,7 @@
       ],
       "parent": "MCH-cf_j_sk_03_04_drv",
       "tail": [
-       -0.1368,
+       -0.1367,
        0.1766,
        0.5525
       ]
@@ -31742,7 +32669,7 @@
      "cf_j_sk_03_05": {
       "deform": false,
       "head": [
-       -0.1368,
+       -0.1367,
        0.1766,
        0.5525
       ],
@@ -31772,13 +32699,13 @@
       "head": [
        -0.0019,
        0.2063,
-       0.4528
+       0.4526
       ],
       "parent": "cf_j_sk_04_05",
       "tail": [
        -0.0018,
        0.2052,
-       0.5067
+       0.5065
       ]
      },
      "cf_j_sk_04_00_ik": {
@@ -31786,13 +32713,13 @@
       "head": [
        -0.0019,
        0.2063,
-       0.4528
+       0.4526
       ],
       "parent": "MCH-cf_j_sk_04_00_ik.parent",
       "tail": [
        -0.0019,
        0.208,
-       0.3774
+       0.3772
       ]
      },
      "cf_j_sk_04_00_master": {
@@ -31805,8 +32732,8 @@
       "parent": "ORG-cf_d_sk_04_00",
       "tail": [
        -0.0086,
-       0.6296,
-       0.4372
+       0.6298,
+       0.437
       ]
      },
      "cf_j_sk_04_01": {
@@ -31848,7 +32775,7 @@
       "tail": [
        -0.0017,
        0.1993,
-       0.6678
+       0.6677
       ]
      },
      "cf_j_sk_04_04": {
@@ -31856,13 +32783,13 @@
       "head": [
        -0.0017,
        0.1993,
-       0.6678
+       0.6677
       ],
       "parent": "MCH-cf_j_sk_04_04_drv",
       "tail": [
        -0.0018,
        0.204,
-       0.5605
+       0.5604
       ]
      },
      "cf_j_sk_04_05": {
@@ -31870,13 +32797,13 @@
       "head": [
        -0.0018,
        0.204,
-       0.5605
+       0.5604
       ],
       "parent": "MCH-cf_j_sk_04_05_drv",
       "tail": [
        -0.0019,
        0.2063,
-       0.4528
+       0.4526
       ]
      },
      "cf_j_sk_05_00": {
@@ -32030,7 +32957,7 @@
       "tail": [
        0.1932,
        0.0297,
-       0.4882
+       0.4883
       ]
      },
      "cf_j_sk_06_00_ik": {
@@ -32044,7 +32971,7 @@
       "tail": [
        0.1954,
        0.03,
-       0.3584
+       0.3585
       ]
      },
      "cf_j_sk_06_00_master": {
@@ -32058,7 +32985,7 @@
       "tail": [
        0.5397,
        0.0823,
-       0.3405
+       0.3406
       ]
      },
      "cf_j_sk_06_01": {
@@ -32098,7 +33025,7 @@
       ],
       "parent": "MCH-cf_j_sk_06_03_drv",
       "tail": [
-       0.1887,
+       0.1886,
        0.029,
        0.6501
       ]
@@ -32106,7 +33033,7 @@
      "cf_j_sk_06_04": {
       "deform": false,
       "head": [
-       0.1887,
+       0.1886,
        0.029,
        0.6501
       ],
@@ -32114,7 +33041,7 @@
       "tail": [
        0.1922,
        0.0296,
-       0.5423
+       0.5424
       ]
      },
      "cf_j_sk_06_05": {
@@ -32122,7 +33049,7 @@
       "head": [
        0.1922,
        0.0296,
-       0.5423
+       0.5424
       ],
       "parent": "MCH-cf_j_sk_06_05_drv",
       "tail": [
@@ -32149,28 +33076,28 @@
       "deform": false,
       "head": [
        0.1236,
-       -0.0854,
-       0.4291
+       -0.0853,
+       0.4297
       ],
       "parent": "cf_j_sk_07_05",
       "tail": [
-       0.1232,
+       0.1231,
        -0.085,
-       0.4822
+       0.4827
       ]
      },
      "cf_j_sk_07_00_ik": {
       "deform": false,
       "head": [
        0.1236,
-       -0.0854,
-       0.4291
+       -0.0853,
+       0.4297
       ],
       "parent": "MCH-cf_j_sk_07_00_ik.parent",
       "tail": [
        0.1243,
        -0.0859,
-       0.3548
+       0.3555
       ]
      },
      "cf_j_sk_07_00_master": {
@@ -32182,9 +33109,9 @@
       ],
       "parent": "ORG-cf_d_sk_07_00",
       "tail": [
-       0.3246,
-       -0.2488,
-       0.2758
+       0.3244,
+       -0.2486,
+       0.2764
       ]
      },
      "cf_j_sk_07_01": {
@@ -32196,23 +33123,23 @@
       ],
       "parent": "MCH-cf_j_sk_07_01_drv",
       "tail": [
-       0.1095,
+       0.1094,
        -0.0738,
-       0.8523
+       0.8524
       ]
      },
      "cf_j_sk_07_02": {
       "deform": false,
       "head": [
-       0.1095,
+       0.1094,
        -0.0738,
-       0.8523
+       0.8524
       ],
       "parent": "MCH-cf_j_sk_07_02_drv",
       "tail": [
        0.117,
        -0.0799,
-       0.7471
+       0.7472
       ]
      },
      "cf_j_sk_07_03": {
@@ -32220,41 +33147,41 @@
       "head": [
        0.117,
        -0.0799,
-       0.7471
+       0.7472
       ],
       "parent": "MCH-cf_j_sk_07_03_drv",
       "tail": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6413
+       0.6415
       ]
      },
      "cf_j_sk_07_04": {
       "deform": false,
       "head": [
-       0.1208,
+       0.1207,
        -0.083,
-       0.6413
+       0.6415
       ],
       "parent": "MCH-cf_j_sk_07_04_drv",
       "tail": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5353
+       0.5357
       ]
      },
      "cf_j_sk_07_05": {
       "deform": false,
       "head": [
-       0.1227,
+       0.1226,
        -0.0846,
-       0.5353
+       0.5357
       ],
       "parent": "MCH-cf_j_sk_07_05_drv",
       "tail": [
        0.1236,
-       -0.0854,
-       0.4291
+       -0.0853,
+       0.4297
       ]
      },
      "cf_j_tang_01": {
@@ -32792,141 +33719,141 @@
      "cf_s_bnip015_L": {
       "deform": true,
       "head": [
-       0.0741,
-       -0.0825,
-       1.1784
+       0.0736,
+       -0.0828,
+       1.178
       ],
       "parent": "cf_d_bnip01_L",
       "tail": [
-       0.0376,
-       -0.0182,
-       1.1745
+       0.0384,
+       -0.0177,
+       1.1751
       ]
      },
      "cf_s_bnip015_R": {
       "deform": true,
       "head": [
-       -0.0741,
-       -0.0825,
-       1.1784
+       -0.0736,
+       -0.0828,
+       1.178
       ],
       "parent": "cf_d_bnip01_R",
       "tail": [
-       -0.0376,
-       -0.0182,
-       1.1745
+       -0.0384,
+       -0.0177,
+       1.1751
       ]
      },
      "cf_s_bnip01_L": {
       "deform": true,
       "head": [
-       0.0726,
-       -0.0798,
-       1.1783
+       0.0721,
+       -0.0801,
+       1.1779
       ],
       "parent": "cf_d_bnip01_L",
       "tail": [
-       0.0361,
-       -0.0155,
-       1.1743
+       0.0369,
+       -0.015,
+       1.175
       ]
      },
      "cf_s_bnip01_R": {
       "deform": true,
       "head": [
-       -0.0726,
-       -0.0798,
-       1.1783
+       -0.0721,
+       -0.0801,
+       1.1779
       ],
       "parent": "cf_d_bnip01_R",
       "tail": [
-       -0.0361,
-       -0.0155,
-       1.1743
+       -0.0369,
+       -0.015,
+       1.175
       ]
      },
      "cf_s_bnip025_L": {
       "deform": true,
       "head": [
-       0.0774,
-       -0.0883,
-       1.1787
+       0.0767,
+       -0.0886,
+       1.1782
       ],
       "parent": "cf_j_bnip02root_L",
       "tail": [
-       0.0409,
-       -0.024,
-       1.1748
+       0.0416,
+       -0.0236,
+       1.1754
       ]
      },
      "cf_s_bnip025_R": {
       "deform": true,
       "head": [
-       -0.0774,
-       -0.0882,
-       1.1787
+       -0.0767,
+       -0.0886,
+       1.1782
       ],
       "parent": "cf_j_bnip02root_R",
       "tail": [
-       -0.0409,
-       -0.024,
-       1.1748
+       -0.0415,
+       -0.0236,
+       1.1754
       ]
      },
      "cf_s_bnip02_L": {
       "deform": true,
       "head": [
-       0.0796,
-       -0.0922,
-       1.179
+       0.0789,
+       -0.0926,
+       1.1783
       ],
       "parent": "cf_j_bnip02root_L",
       "tail": [
-       0.0431,
-       -0.0279,
-       1.175
+       0.0437,
+       -0.0275,
+       1.1755
       ]
      },
      "cf_s_bnip02_R": {
       "deform": true,
       "head": [
-       -0.0796,
-       -0.0922,
-       1.179
+       -0.0789,
+       -0.0926,
+       1.1783
       ],
       "parent": "cf_j_bnip02root_R",
       "tail": [
-       -0.0431,
-       -0.0279,
-       1.175
+       -0.0437,
+       -0.0275,
+       1.1755
       ]
      },
      "cf_s_bnipacc_L": {
       "deform": true,
       "head": [
-       0.0789,
-       -0.0909,
-       1.1789
+       0.0782,
+       -0.0913,
+       1.1783
       ],
       "parent": "cf_j_bnip02_L",
       "tail": [
-       0.0424,
-       -0.0267,
-       1.175
+       0.043,
+       -0.0263,
+       1.1755
       ]
      },
      "cf_s_bnipacc_R": {
       "deform": true,
       "head": [
-       -0.0789,
-       -0.0909,
-       1.1789
+       -0.0782,
+       -0.0913,
+       1.1783
       ],
       "parent": "cf_j_bnip02_R",
       "tail": [
-       -0.0424,
-       -0.0267,
-       1.175
+       -0.043,
+       -0.0263,
+       1.1755
       ]
      },
      "cf_s_bust00_L": {
@@ -32994,9 +33921,9 @@
       ],
       "parent": "cf_j_bust02_L",
       "tail": [
-       0.0234,
-       0.0087,
-       1.1729
+       0.0247,
+       0.0095,
+       1.174
       ]
      },
      "cf_s_bust02_R": {
@@ -33008,37 +33935,37 @@
       ],
       "parent": "cf_j_bust02_R",
       "tail": [
-       -0.0234,
-       0.0087,
-       1.1729
+       -0.0247,
+       0.0095,
+       1.174
       ]
      },
      "cf_s_bust03_L": {
       "deform": true,
       "head": [
-       0.0695,
-       -0.0743,
-       1.178
+       0.0691,
+       -0.0745,
+       1.1776
       ],
       "parent": "cf_j_bust03_L",
       "tail": [
-       0.033,
-       -0.01,
-       1.174
+       0.0339,
+       -0.0094,
+       1.1748
       ]
      },
      "cf_s_bust03_R": {
       "deform": true,
       "head": [
-       -0.0695,
-       -0.0743,
-       1.178
+       -0.0691,
+       -0.0745,
+       1.1776
       ],
       "parent": "cf_j_bust03_R",
       "tail": [
-       -0.033,
-       -0.01,
-       1.174
+       -0.0339,
+       -0.0094,
+       1.1748
       ]
      },
      "cf_s_elbo_L": {
@@ -33784,8 +34711,8 @@
       ]
      }
     },
-    "drivers": 441,
-    "pose_constraints": 881
+    "drivers": 364,
+    "pose_constraints": 901
    },
    "constraints": 0,
    "hidden": {
@@ -33907,64 +34834,6 @@
     "uv_maps": [],
     "vertex_groups": 0,
     "vertices": 32
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WGT-RIG-Armature {character}_Eyeballs": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.0381,
-    1.4096
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 12,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 8
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WGT-RIG-Armature {character}_Eyes track target": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.1712,
-    1.4096
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 27,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 30
    },
    "modifiers": [],
    "parent": null,
@@ -34995,35 +35864,6 @@
     "uv_maps": [],
     "vertex_groups": 0,
     "vertices": 48
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WGT-RIG-Armature {character}_Left eyeball": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0399,
-    -0.0381,
-    1.4096
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 12,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 8
    },
    "modifiers": [],
    "parent": null,
@@ -36987,35 +37827,6 @@
     "uv_maps": [],
     "vertex_groups": 0,
     "vertices": 48
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WGT-RIG-Armature {character}_Right eyeball": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    -0.0399,
-    -0.0381,
-    1.4096
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 12,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 8
    },
    "modifiers": [],
    "parent": null,
@@ -41212,7 +42023,7 @@
    },
    "id": null,
    "location": [
-    -0.069,
+    -0.0689,
     -0.0346,
     1.3657
    ],
@@ -41241,7 +42052,7 @@
    },
    "id": null,
    "location": [
-    -0.069,
+    -0.0689,
     -0.0346,
     1.3657
    ],
@@ -41328,7 +42139,7 @@
    },
    "id": null,
    "location": [
-    -0.069,
+    -0.0689,
     -0.0346,
     1.3657
    ],
@@ -41387,8 +42198,8 @@
    "id": null,
    "location": [
     0.0724,
-    -0.0369,
-    1.371
+    -0.037,
+    1.3711
    ],
    "mesh": {
     "color_attributes": [],
@@ -41416,8 +42227,8 @@
    "id": null,
    "location": [
     0.0724,
-    -0.0369,
-    1.371
+    -0.037,
+    1.3711
    ],
    "mesh": {
     "color_attributes": [],
@@ -41503,8 +42314,8 @@
    "id": null,
    "location": [
     0.0724,
-    -0.0369,
-    1.371
+    -0.037,
+    1.3711
    ],
    "mesh": {
     "color_attributes": [],
@@ -41589,8 +42400,8 @@
    },
    "id": null,
    "location": [
-    0.0334,
-    -0.0855,
+    0.0335,
+    -0.0854,
     1.4221
    ],
    "mesh": {
@@ -41647,8 +42458,8 @@
    },
    "id": null,
    "location": [
-    0.0334,
-    -0.0855,
+    0.0335,
+    -0.0854,
     1.4221
    ],
    "mesh": {
@@ -41676,8 +42487,8 @@
    },
    "id": null,
    "location": [
-    0.0334,
-    -0.0855,
+    0.0335,
+    -0.0854,
     1.4221
    ],
    "mesh": {
@@ -42469,9 +43280,9 @@
    },
    "id": null,
    "location": [
-    -0.1237,
+    -0.1236,
     -0.0854,
-    0.4292
+    0.4298
    ],
    "mesh": {
     "color_attributes": [],
@@ -42498,9 +43309,9 @@
    },
    "id": null,
    "location": [
-    -0.1237,
+    -0.1236,
     -0.0854,
-    0.4292
+    0.4298
    ],
    "mesh": {
     "color_attributes": [],
@@ -42587,7 +43398,7 @@
    "location": [
     -0.1095,
     -0.0738,
-    0.8524
+    0.8525
    ],
    "mesh": {
     "color_attributes": [],
@@ -42616,7 +43427,7 @@
    "location": [
     -0.117,
     -0.08,
-    0.7472
+    0.7473
    ],
    "mesh": {
     "color_attributes": [],
@@ -42644,8 +43455,8 @@
    "id": null,
    "location": [
     -0.1208,
-    -0.0831,
-    0.6414
+    -0.083,
+    0.6416
    ],
    "mesh": {
     "color_attributes": [],
@@ -42674,7 +43485,7 @@
    "location": [
     -0.1227,
     -0.0846,
-    0.5354
+    0.5358
    ],
    "mesh": {
     "color_attributes": [],
@@ -42732,7 +43543,7 @@
    "location": [
     -0.1941,
     0.0298,
-    0.4343
+    0.4344
    ],
    "mesh": {
     "color_attributes": [],
@@ -42761,7 +43572,7 @@
    "location": [
     -0.1941,
     0.0298,
-    0.4343
+    0.4344
    ],
    "mesh": {
     "color_attributes": [],
@@ -42904,9 +43715,9 @@
    },
    "id": null,
    "location": [
-    -0.1887,
+    -0.1886,
     0.029,
-    0.6502
+    0.6503
    ],
    "mesh": {
     "color_attributes": [],
@@ -43194,9 +44005,9 @@
    },
    "id": null,
    "location": [
-    -0.1368,
+    -0.1367,
     0.1766,
-    0.5526
+    0.5527
    ],
    "mesh": {
     "color_attributes": [],
@@ -43254,7 +44065,7 @@
    "location": [
     -0.0019,
     0.2063,
-    0.453
+    0.4528
    ],
    "mesh": {
     "color_attributes": [],
@@ -43283,7 +44094,7 @@
    "location": [
     -0.0019,
     0.2063,
-    0.453
+    0.4528
    ],
    "mesh": {
     "color_attributes": [],
@@ -43399,7 +44210,7 @@
    "location": [
     -0.0016,
     0.1902,
-    0.7748
+    0.7747
    ],
    "mesh": {
     "color_attributes": [],
@@ -43428,7 +44239,7 @@
    "location": [
     -0.0017,
     0.1993,
-    0.668
+    0.6679
    ],
    "mesh": {
     "color_attributes": [],
@@ -43457,7 +44268,7 @@
    "location": [
     -0.0018,
     0.204,
-    0.5607
+    0.5605
    ],
    "mesh": {
     "color_attributes": [],
@@ -43776,7 +44587,7 @@
    "location": [
     0.1941,
     0.0298,
-    0.4343
+    0.4344
    ],
    "mesh": {
     "color_attributes": [],
@@ -43805,7 +44616,7 @@
    "location": [
     0.1941,
     0.0298,
-    0.4343
+    0.4344
    ],
    "mesh": {
     "color_attributes": [],
@@ -43948,9 +44759,9 @@
    },
    "id": null,
    "location": [
-    0.1887,
+    0.1886,
     0.029,
-    0.6502
+    0.6503
    ],
    "mesh": {
     "color_attributes": [],
@@ -44036,8 +44847,8 @@
    "id": null,
    "location": [
     0.1236,
-    -0.0854,
-    0.4293
+    -0.0853,
+    0.4298
    ],
    "mesh": {
     "color_attributes": [],
@@ -44065,8 +44876,8 @@
    "id": null,
    "location": [
     0.1236,
-    -0.0854,
-    0.4293
+    -0.0853,
+    0.4298
    ],
    "mesh": {
     "color_attributes": [],
@@ -44151,7 +44962,7 @@
    },
    "id": null,
    "location": [
-    0.1095,
+    0.1094,
     -0.0738,
     0.8525
    ],
@@ -44182,7 +44993,7 @@
    "location": [
     0.117,
     -0.0799,
-    0.7473
+    0.7474
    ],
    "mesh": {
     "color_attributes": [],
@@ -44209,9 +45020,9 @@
    },
    "id": null,
    "location": [
-    0.1208,
+    0.1207,
     -0.083,
-    0.6415
+    0.6417
    ],
    "mesh": {
     "color_attributes": [],
@@ -44238,9 +45049,9 @@
    },
    "id": null,
    "location": [
-    0.1227,
+    0.1226,
     -0.0846,
-    0.5355
+    0.5358
    ],
    "mesh": {
     "color_attributes": [],
@@ -44702,9 +45513,9 @@
    },
    "id": null,
    "location": [
-    0.0726,
-    -0.0798,
-    1.1784
+    0.0721,
+    -0.0801,
+    1.178
    ],
    "mesh": {
     "color_attributes": [],
@@ -44731,9 +45542,9 @@
    },
    "id": null,
    "location": [
-    -0.0726,
-    -0.0798,
-    1.1784
+    -0.0721,
+    -0.0801,
+    1.178
    ],
    "mesh": {
     "color_attributes": [],
@@ -44760,9 +45571,9 @@
    },
    "id": null,
    "location": [
-    0.0774,
-    -0.0883,
-    1.1789
+    0.0767,
+    -0.0886,
+    1.1783
    ],
    "mesh": {
     "color_attributes": [],
@@ -44789,9 +45600,9 @@
    },
    "id": null,
    "location": [
-    -0.0774,
-    -0.0882,
-    1.1789
+    -0.0767,
+    -0.0886,
+    1.1783
    ],
    "mesh": {
     "color_attributes": [],
@@ -44934,9 +45745,9 @@
    },
    "id": null,
    "location": [
-    0.0695,
-    -0.0743,
-    1.1781
+    0.0691,
+    -0.0745,
+    1.1778
    ],
    "mesh": {
     "color_attributes": [],
@@ -44963,9 +45774,9 @@
    },
    "id": null,
    "location": [
-    -0.0695,
-    -0.0743,
-    1.1781
+    -0.0691,
+    -0.0745,
+    1.1778
    ],
    "mesh": {
     "color_attributes": [],
@@ -45389,6 +46200,1398 @@
    "roles": [],
    "type": "MESH"
   },
+  "WGT-Rig {character}_Board Eye Angry": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Bored": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Happy, Closed": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Sad": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Smiling": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Smug": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eye Thinking": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Angry": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Anxious": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Doubt L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Smug": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Eyebrow Worried": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Gag eyes": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Angry": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Angry 2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Cartoony Smile": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Catlike": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Excited (Broad)": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Kiss": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Playful": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Serious 2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Smiling": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Tongue Out": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Mouth Triangle": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Tears big": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Tears med": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board Tears small": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board gag type": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 4,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 4
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board look": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board mood": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board mood2": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board open": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Board shape": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Eye target": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 28,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 28
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Eye target L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Eye target R": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 48,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 48
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face Properties": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 10,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 10
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face board": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 128,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 232
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face brow L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 20,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 22
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face brow R": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 20,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 22
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face brow mid": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 20,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 22
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face corner L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 22,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 25
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face corner R": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 22,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 25
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face emote": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 8,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 10
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face jaw": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 18,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 19
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face lid L": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 18,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 19
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face lid R": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 18,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 19
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
+  "WGT-Rig {character}_Face lids": {
+   "constraints": 0,
+   "hidden": {
+    "hide_get": false,
+    "render": false,
+    "viewport": false
+   },
+   "id": null,
+   "location": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "mesh": {
+    "color_attributes": [],
+    "edges": 18,
+    "faces": 0,
+    "material_slots": [],
+    "shape_key_drivers": 0,
+    "shape_keys": [],
+    "uv_maps": [],
+    "vertex_groups": 0,
+    "vertices": 19
+   },
+   "modifiers": [],
+   "parent": null,
+   "roles": [],
+   "type": "MESH"
+  },
   "WidgetBP": {
    "constraints": 0,
    "hidden": {
@@ -45755,93 +47958,6 @@
     ],
     "vertex_groups": 0,
     "vertices": 64
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WidgetEyeLeftRigify": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.0688,
-    1.3922
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 24,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 24
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WidgetEyeRightRigify": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.0688,
-    1.3922
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 24,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 24
-   },
-   "modifiers": [],
-   "parent": null,
-   "roles": [],
-   "type": "MESH"
-  },
-  "WidgetEyesRigify": {
-   "constraints": 0,
-   "hidden": {
-    "hide_get": false,
-    "render": false,
-    "viewport": false
-   },
-   "id": null,
-   "location": [
-    0.0,
-    -0.0688,
-    1.3922
-   ],
-   "mesh": {
-    "color_attributes": [],
-    "edges": 76,
-    "faces": 0,
-    "material_slots": [],
-    "shape_key_drivers": 0,
-    "shape_keys": [],
-    "uv_maps": [],
-    "vertex_groups": 0,
-    "vertices": 76
    },
    "modifiers": [],
    "parent": null,
@@ -46436,6 +48552,7 @@
    "order_material_slots": "ran",
    "order_shape_keys": "ran",
    "orient_fingers_and_legs": "ran",
+   "record_face_keys": "ran",
    "rename_uv_maps": "ran",
    "set_bone_tails_and_roll": "ran",
    "set_view_transform": "ran",
