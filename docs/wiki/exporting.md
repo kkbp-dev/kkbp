@@ -19,11 +19,11 @@ All five are off to begin with.
 
 | Option | What it does | When to use it |
 |---|---|---|
-| Export All Outfits | Exports every outfit on the card. Off, only the outfit being worn is exported | Most of the time |
-| Export Variations | Also exports the half-off versions of the clothes, such as an unbuttoned shirt. The export is larger | When you want those states in Blender |
-| Freeze Current Pose | Keeps the pose the character is in. Off, the character is exported in a T-pose | Only for a fixed pose. Leave it off to pose or animate in Blender |
-| Freeze Shape Keys | Bakes the current facial expression into the mesh | Only for one fixed expression |
-| Disable Physics | Exports the hair and skirt in their neutral shape. Off, the exporter waits two seconds for them to settle under gravity | When settled hair or skirts get in the way |
+| Export All Outfits | Exports every outfit on the card. Off, only the outfit being worn is exported | Whenever you want 🙂|
+| Export Variations | Also exports the half-off versions of the clothes, such as an unbuttoned shirt. The export is larger | Whenever you want 🙂 |
+| Freeze Current Pose | Keeps the pose the character is in. Off, the character is exported in a T-pose | 3D printing, still renders, etc |
+| Freeze Shape Keys | Bakes the current facial expression into the mesh | 3D printing, still renders, etc |
+| Disable Physics | Exports the hair and skirt in their neutral shape. Off, the exporter waits two seconds for them to settle under gravity | Good when you want to apply blender physics or game engine physics to these bones. Also good if you plan on re-weighting or re-rigging the character|
 
 ## Exporting a folder of cards
 
@@ -47,10 +47,4 @@ Exports go to `KKBP Exports` in the game's main folder. Each is a folder named w
 
 To export somewhere else, set "Output folder" in the plugin's BepInEx settings.
 
-Keep the export folder after importing: [Edit Material](edit-material.md) and [Export Prep](export-prep.md) read it again.
-
-## Per game
-
-| | Koikatsu | Koikatsu Sunshine | Summer Vacation Scramble |
-|---|---|---|---|
-| Opening the window | Sidebar toggle | Sidebar toggle | Ctrl+Tab |
+Keep the export folder after importing: [Edit Material](edit-material.md) and [Export Prep](export-prep.md) read it again. If you move the export folder and the plugin needs it for an operation, it'll ask you to link it again.
