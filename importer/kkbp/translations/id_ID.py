@@ -157,10 +157,43 @@ TRANSLATIONS = {
     "Link Hair": "Tautkan Rambut",
     "Puts every hair material into edit with the active hair material's settings":
         "Memasukkan semua material rambut ke mode edit dengan pengaturan material rambut aktif",
+    # The Face panel (the Rigify Hook's face rig)
+    "Face Preset": "Preset Wajah",
+    "Poses the face as this emotion. Shift-click adds it on top of the face as it is": "Membuat wajah memasang emosi ini. Shift-klik menambahkannya di atas wajah saat ini",
+    "Add": "Tambah",
+    "Adds the preset on top of the face as it is": "Menambahkan preset di atas wajah saat ini",
+    "Reset Face": "Atur Ulang Wajah",
+    "Puts every face control back and every face slider to 0": "Mengembalikan semua kontrol wajah dan mengatur semua slider wajah ke 0",
+    "Key Face": "Kunci Wajah",
+    "Keys every face control and face slider at the current frame": "Memberi keyframe pada semua kontrol dan slider wajah di frame saat ini",
+    "Emotions": "Emosi",
+    "Eyes": "Mata",
+    "More Expressions": "Ekspresi Lain",
+    "Strength": "Kekuatan",
+    "Shift-click adds on top": "Shift-klik menambahkan di atasnya",
+    "Target follows head": "Target mengikuti kepala",
+    "Lids follow gaze": "Kelopak mata mengikuti pandangan",
+    "Iris size": "Ukuran iris",
+    "Neutral": "Netral",
+    "Happy": "Senang",
+    "Laugh": "Tertawa",
+    "Gentle smile": "Senyum lembut",
+    "Sad": "Sedih",
+    "Crying": "Menangis",
+    "Angry": "Marah",
+    "Surprised": "Terkejut",
+    "Embarrassed": "Malu",
+    "Smug": "Sombong",
+    "Sleepy": "Mengantuk",
+    "Pained": "Kesakitan",
+    "Brows": "Alis",
+    "Mouth": "Mulut",
+    "Tears": "Air mata",
 }
 
 # In the "KKBP" translation context, where Blender's own word means something else.
 IN_CONTEXT = {
+    "Face": "Wajah",
     "Hooks": "Hook",
     "Hook": "Hook",
 }

@@ -159,10 +159,43 @@ TRANSLATIONS = {
     "Link Hair": "Haare verknüpfen",
     "Puts every hair material into edit with the active hair material's settings":
         "Versetzt jedes Haarmaterial mit den Einstellungen des aktiven Haarmaterials in die Bearbeitung",
+    # The Face panel (the Rigify Hook's face rig)
+    "Face Preset": "Gesichts-Preset",
+    "Poses the face as this emotion. Shift-click adds it on top of the face as it is": "Stellt das Gesicht auf diese Emotion. Mit Umschalt-Klick wird sie zum jetzigen Gesicht hinzugefügt",
+    "Add": "Hinzufügen",
+    "Adds the preset on top of the face as it is": "Fügt das Preset zum jetzigen Gesicht hinzu",
+    "Reset Face": "Gesicht zurücksetzen",
+    "Puts every face control back and every face slider to 0": "Setzt alle Gesichtsregler zurück und alle Gesichtsschieber auf 0",
+    "Key Face": "Gesicht keyen",
+    "Keys every face control and face slider at the current frame": "Setzt Keys für alle Gesichtsregler und -schieber im aktuellen Frame",
+    "Emotions": "Emotionen",
+    "Eyes": "Augen",
+    "More Expressions": "Weitere Ausdrücke",
+    "Strength": "Stärke",
+    "Shift-click adds on top": "Umschalt-Klick fügt hinzu",
+    "Target follows head": "Ziel folgt dem Kopf",
+    "Lids follow gaze": "Lider folgen dem Blick",
+    "Iris size": "Irisgröße",
+    "Neutral": "Neutral",
+    "Happy": "Fröhlich",
+    "Laugh": "Lachen",
+    "Gentle smile": "Sanftes Lächeln",
+    "Sad": "Traurig",
+    "Crying": "Weinend",
+    "Angry": "Wütend",
+    "Surprised": "Überrascht",
+    "Embarrassed": "Verlegen",
+    "Smug": "Selbstgefällig",
+    "Sleepy": "Schläfrig",
+    "Pained": "Gequält",
+    "Brows": "Augenbrauen",
+    "Mouth": "Mund",
+    "Tears": "Tränen",
 }
 
 # In the "KKBP" translation context, where Blender's own word means something else.
 IN_CONTEXT = {
+    "Face": "Gesicht",
     "Hooks": "Hooks",
     "Hook": "Hook",
 }

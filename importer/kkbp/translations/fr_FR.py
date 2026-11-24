@@ -159,10 +159,43 @@ TRANSLATIONS = {
     "Link Hair": "Lier les cheveux",
     "Puts every hair material into edit with the active hair material's settings":
         "Met tous les matériaux de cheveux en modification avec les réglages du matériau de cheveux actif",
+    # The Face panel (the Rigify Hook's face rig)
+    "Face Preset": "Préréglage du visage",
+    "Poses the face as this emotion. Shift-click adds it on top of the face as it is": "Donne au visage cette émotion. Maj+clic l'ajoute au visage tel qu'il est",
+    "Add": "Ajouter",
+    "Adds the preset on top of the face as it is": "Ajoute le préréglage au visage tel qu'il est",
+    "Reset Face": "Réinitialiser le visage",
+    "Puts every face control back and every face slider to 0": "Remet tous les contrôles du visage en place et tous ses curseurs à 0",
+    "Key Face": "Insérer une clé du visage",
+    "Keys every face control and face slider at the current frame": "Insère une clé pour tous les contrôles et curseurs du visage à l'image actuelle",
+    "Emotions": "Émotions",
+    "Eyes": "Yeux",
+    "More Expressions": "Autres expressions",
+    "Strength": "Intensité",
+    "Shift-click adds on top": "Maj+clic ajoute par-dessus",
+    "Target follows head": "La cible suit la tête",
+    "Lids follow gaze": "Les paupières suivent le regard",
+    "Iris size": "Taille de l'iris",
+    "Neutral": "Neutre",
+    "Happy": "Joyeux",
+    "Laugh": "Rire",
+    "Gentle smile": "Doux sourire",
+    "Sad": "Triste",
+    "Crying": "En pleurs",
+    "Angry": "En colère",
+    "Surprised": "Surpris",
+    "Embarrassed": "Gêné",
+    "Smug": "Suffisant",
+    "Sleepy": "Endormi",
+    "Pained": "Peiné",
+    "Brows": "Sourcils",
+    "Mouth": "Bouche",
+    "Tears": "Larmes",
 }
 
 # In the "KKBP" translation context, where Blender's own word means something else.
 IN_CONTEXT = {
+    "Face": "Visage",
     "Hooks": "Hooks",
     "Hook": "Hook",
 }

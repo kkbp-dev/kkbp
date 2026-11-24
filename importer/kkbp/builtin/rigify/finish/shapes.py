@@ -9,7 +9,7 @@ from .. import names
 
 # (bone, scale); a bone the rig doesn't have is skipped.
 SCALES = (
-    (names.EYES_TRACK_TARGET_BONE, 1.5), (names.HEAD_TWEAK_BONE, 1.1),
+    (names.HEAD_TWEAK_BONE, 1.1),
     (names.LEFT_BREAST_DEFORM_BONE1, 0.4), (names.RIGHT_BREAST_DEFORM_BONE1, 0.4),
     (names.LEFT_BREAST_BONE2, 3), (names.RIGHT_BREAST_BONE2, 3),
     (names.LEFT_BREAST_DEFORM_BONE2, 0.3), (names.RIGHT_BREAST_DEFORM_BONE2, 0.3),
@@ -33,8 +33,7 @@ SCALES = (
     (names.LEFT_LITTLE_FINGER_PALM_FK_BONE, 1.1), (names.RIGHT_LITTLE_FINGER_PALM_FK_BONE, 1.1),
     (names.LEFT_LITTLE_FINGER_BONE2, 1.1), (names.RIGHT_LITTLE_FINGER_BONE2, 1.1),
     (names.LEFT_LITTLE_FINGER_BONE3, 1.1), (names.RIGHT_LITTLE_FINGER_BONE3, 1.1),
-    (names.ROOT_BONE, 0.25), (names.EYES_HANDLE_BONE, 0.72),
-    (names.LEFT_EYE_HANDLE_BONE, 0.72), (names.RIGHT_EYE_HANDLE_BONE, 0.72),
+    (names.ROOT_BONE, 0.25),
 )
 BETTER_PENETRATION_SCALE = 0.5
 # The breast and nipple controls, which face forward.

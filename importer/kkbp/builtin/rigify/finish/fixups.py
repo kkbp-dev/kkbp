@@ -16,7 +16,7 @@ VISIBLE = ("Torso", "Arm.L IK", "Arm.R IK", "Leg.L IK", "Leg.R IK", "Root")
 # The bones Rigify makes from an ORG- bone, which take its bundle Id and Outfit.
 MADE_FROM = ("{}", "DEF-{}", "{}_ik", "{}_ik.parent", "{}_master", "MCH-{}", "MCH-{}_drv")
 IK_PARENTS = ("Left arm_parent", "Left leg_parent", "Right arm_parent", "Right leg_parent")
-# The tongue's tip chain, which the rig shows with the eyes; its side bones go with the face MCH.
+# The tongue's tip chain, which the rig shows in Tongue; its side bones go with the face MCH.
 TONGUE_SHOWN = ("cf_j_tang_02_master", "cf_j_tang_02", "cf_j_tang_01")
 TONGUE_SIDES = ("cf_j_tang_R_03", "cf_j_tang_R_04", "cf_j_tang_R_05", "cf_j_tang_L_03", "cf_j_tang_L_04",
                 "cf_j_tang_L_05")
@@ -52,7 +52,7 @@ def head_constraints(build):
 def retarget(build):
     """What still points at the metarig or a placeholder points at the rig, and the joint
     corrections' location drivers read the limbs' DEF- bones instead of their ORG- ones."""
-    rig, metarig = build.rig, build.metarig
+    rig = build.rig
     for pose_bone in rig.pose.bones:
         for constraint in pose_bone.constraints:
             if constraint.type == "ARMATURE":
@@ -60,12 +60,6 @@ def retarget(build):
                     if target.subtarget:
                         target.target = rig
                         target.subtarget = target.subtarget.removesuffix(names.PLACEHOLDER_BONE_SUFFIX)
-    for fcurve in build.body.data.shape_keys.animation_data.drivers:
-        if fcurve.data_path.startswith("key_blocks") and fcurve.data_path.split('"')[1] == names.EYELIDS_SHAPE_KEY_COPY:
-            for variable in fcurve.driver.variables:
-                for target in variable.targets:
-                    if target.id == metarig:
-                        target.id = rig
     for fcurve in rig.animation_data.drivers:
         path = fcurve.data_path
         if (path.startswith("pose.bones") and path.split('"')[1] in names.BONES_WITH_DRIVERS
@@ -78,8 +72,8 @@ def retarget(build):
 
 
 def edit_bones(build):
-    """The Junk bones go; the deform, NSFW, face, eye and Charamaker bones deform and are unlocked;
-    the tongue's bones go back to their collections; the tracking targets are free of the head. In
+    """The Junk bones go; the deform, NSFW, face, tongue and Charamaker bones deform and are unlocked;
+    the tongue's bones go back to their collections; the head track target is free of the head. In
     Edit Mode."""
     rig = build.rig
     edit = rig.data.edit_bones
@@ -94,24 +88,23 @@ def edit_bones(build):
             bone.use_deform = True
     for bone in edit:
         if bone.collections.get(names.RIGGED_TONGUE_LAYER) or bone.name in TONGUE_SHOWN:
-            collections[names.EYES_LAYER].assign(bone)
+            collections[names.TONGUE_LAYER].assign(bone)
     for bone in edit:
-        if bone.collections.get(names.FACE_LAYER) or bone.collections.get(names.EYES_LAYER):
+        if bone.collections.get(names.FACE_TWEAK_LAYER) or bone.collections.get(names.TONGUE_LAYER):
             bone.use_deform = True
             bone_collections.lock(rig, bone.name, False)
     for bone in edit:
         if bone.name in TONGUE_SIDES:
-            collections[names.EYES_LAYER].unassign(bone)
-            collections[names.FACE_LAYER + names.MCH_LAYER_SUFFIX].assign(bone)
+            collections[names.TONGUE_LAYER].unassign(bone)
+            collections[names.FACE_MCH_LAYER].assign(bone)
     for bone in edit:
-        if any(bone.collections.get(c) for c in (names.FACE_LAYER + names.MCH_LAYER_SUFFIX, names.NSFW_LAYER,
+        if any(bone.collections.get(c) for c in (names.FACE_MCH_LAYER, names.NSFW_LAYER,
                                                  names.DEFORM_LAYER, names.CHARAMAKER_LAYER)):
             bone_collections.lock(rig, bone.name, False)
             bone.use_deform = True
     if edit.get(names.RIGHT_BUTTOCK_DEFORM_BONE):
         edit[names.RIGHT_BUTTOCK_DEFORM_BONE].use_deform = True
         edit[names.LEFT_BUTTOCK_DEFORM_BONE].use_deform = True
-    edit[names.EYES_TRACK_TARGET_PARENT_BONE].parent = None
     edit[names.HEAD_TRACK_TARGET_PARENT_BONE].parent = None
 
 
