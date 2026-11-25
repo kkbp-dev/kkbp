@@ -1,6 +1,6 @@
 # Low poly copies are decimated once, from the finished Parts
 
-The Low poly Hook (issue 129) gives each Outfit's clothes and hair a copy with fewer faces, so that animation plays back faster on slow computers. The user picks how many faces the copies keep from one Import Option, `low_poly`: Off (the default), Light (50%), Medium (25%) or Strong (10%). The copies go in a hidden `Low poly NN` Collection for each Outfit, and have no outline.
+The Low poly Hook gives each Outfit's clothes and hair a copy with fewer faces, so that animation plays back faster on slow computers. The user picks how many faces the copies keep from one Import Option, `low_poly`: Off (the default), Light (50%), Medium (25%) or Strong (10%). The copies go in a hidden `Low poly NN` Collection for each Outfit, and have no outline.
 
 Each copy is made from the finished Part. The Hook runs after every Hook that changes the clothes and hair: Separate meshes, Outlines, SFW and Rigify. Only Delete default scene runs after it. The copy's faces are cut by a Collapse Decimate modifier evaluated alone, with the Part's other modifiers off, so it works on the rest pose. That result becomes the copy's mesh, and the modifier is removed. The copy keeps its vertex weights and the Part's other modifiers. It loses the Outline modifier and the outline materials' slots. It shares the Part's materials. It is a Part with Part Role `low_poly` and its Outfit number.
 

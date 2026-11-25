@@ -1,5 +1,5 @@
 """`KK toon_nose`: the edit template for KK's nose line, which toon_nose_lod0 draws unlit, so light
-and dark are the same (issue 30). Written by hand."""
+and dark are the same. Written by hand."""
 
 import edit_templates
 

@@ -1,6 +1,6 @@
 # SVS face cards use the eyelash and an eye white mask of their own
 
-The face cards show the Character's eye textures whole on flat card meshes. Each card's UVs cover the texture as KK lays it out, and the Eyewhite card cuts the eye white out of its texture with `Eye_White_Alpha`, the outline of KK's eye white UV island. On SVS the cards drew two opaque black boxes over the eyes (issue 23):
+The face cards show the Character's eye textures whole on flat card meshes. Each card's UVs cover the texture as KK lays it out, and the Eyewhite card cuts the eye white out of its texture with `Eye_White_Alpha`, the outline of KK's eye white UV island. On SVS the cards drew two opaque black boxes over the eyes:
 
 - SVS has no `eyeline_upper`, `eyeline_shadow` or `eyeline_lower` materials. Its eye lines are an `eyelash` and an `eyelid`. The Eyeline card's three image nodes stayed empty, and an empty image node draws opaque black.
 - SVS's eye white texture is laid out by SVS's eye mesh, so KK's mask cut the wrong shape out of it.

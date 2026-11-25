@@ -1,5 +1,5 @@
 """Low poly: a copy of each Outfit's clothes and hair with fewer faces, for smoother playback on slow
-computers (issue #129, ADR 0059).
+computers (ADR 0059).
 
 Each copy is made from the finished Part, after every other Hook that changes meshes, so it has the
 rig, the SFW cuts and the separated pieces the original has, and no other Hook sees it. Its faces are

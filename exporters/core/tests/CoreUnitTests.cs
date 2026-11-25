@@ -308,7 +308,7 @@ namespace KKBP.Exporter.Core.Tests
         [Fact]
         public void SVS_names_the_games_vowel_mouths_instead_of_baking_copies()
         {
-            // Issue 45: recipes for these made a second, identical key beside the game's own pattern.
+            // Recipes for these made a second, identical key beside the game's own pattern.
             var table = ExpressionTable.Parse(File.ReadAllText(Repo.Path("contract/expressions/svs.json")));
             var named = new[] { "Mouth A", "Mouth I", "Mouth U", "Mouth E", "Mouth O" };
             for (int i = 0; i < named.Length; i++)

@@ -1,5 +1,5 @@
-"""Numpy models of the games' create and lit shaders, as the exporter bakes them (issue 30,
-docs/design/library-from-code.md "What the measurements found").
+"""Numpy models of the games' create and lit shaders, as the exporter bakes them
+(docs/design/library-from-code.md "What the measurements found").
 
 These are the specification the edit templates' node groups follow: `host/test_shader_models.py`
 checks each model against the Golden Samples' own textures, and the in-Blender tests check each node

@@ -1,6 +1,6 @@
 # The SVS tongue keeps the game's mouth shapes, even where it doesn't follow the mouth
 
-In an imported SVS Character, most mouth expressions move the lips and teeth but leave the tongue where it is. In KK and KKS every mouth pattern moves the tongue by its own amount. Issue 2 reported this as a capture bug. It isn't: the game does the same.
+In an imported SVS Character, most mouth expressions move the lips and teeth but leave the tongue where it is. In KK and KKS every mouth pattern moves the tongue by its own amount. This was reported as a capture bug. It isn't: the game does the same.
 
 A probe in SVS's maker (2026-11-08, Sample Card) found:
 
@@ -20,4 +20,4 @@ The exporter keeps what the game shows. The table's recipes (Mouth A, I, U, E, O
 
 - In Blender, most SVS mouth keys leave the tongue still. That is correct, not a bug.
 - With the recipes that drop the lower teeth, a gap can show between the tongue and the lower teeth.
-- Since issue 45, Mouth A, I, U, E, O and Cartoony Smile are the game's own mouth patterns 19 to 23 and 26, not recipes: their lips were identical to the recipes', and their teeth and tongue are now the game's too. Only Mouth Hate is still a recipe.
+- Mouth A, I, U, E, O and Cartoony Smile have since become the game's own mouth patterns 19 to 23 and 26, not recipes: their lips were identical to the recipes', and their teeth and tongue are now the game's too. Only Mouth Hate is still a recipe.

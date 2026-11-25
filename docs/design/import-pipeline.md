@@ -107,7 +107,7 @@ def find_kkbp():
 
 ## UI languages
 
-- The UI is in English, French, German, Indonesian, Japanese, Portuguese, Russian, Simplified Chinese, Spanish and Thai, and follows Blender's own language setting (Preferences > Interface > Language). There is no language choice in KKBP (issue 37).
+- The UI is in English, French, German, Indonesian, Japanese, Portuguese, Russian, Simplified Chinese, Spanish and Thai, and follows Blender's own language setting (Preferences > Interface > Language). There is no language choice in KKBP.
 - The strings in the code stay English. `kkbp/translations/` holds one table per language, named by Blender's locale (`ja_JP.py`; the Portuguese one serves `pt_BR` and `pt_PT`), English string to translation, registered with Blender's translation API (`bpy.app.translations`). A string with no entry shows in English.
 - Translated: panel titles, buttons, labels, dialogs, Preferences, Import Option labels and choices, the built-in Hooks' names in the panel, and tooltips. Not translated: log lines, operator reports, errors and the import summary, so a bug report reads the same in every language; and names from the game, such as Expression Names (ADR 0004).
 - A user Hook's name and options show as its script wrote them.
@@ -124,6 +124,6 @@ def find_kkbp():
 
 - `kkbp.import_bundle(path, options) -> ImportResult`, which lists the Steps run, timings, warnings and Hook outcomes.
 - The panel operator, `auto_import`, `bulklaunch` and the test harness all call it.
-- While an import runs, Blender's progress counter replaces the mouse cursor with a number from 0 to 100 that goes up as each Step and Hook finishes (skipped ones count too). The import is one blocking operator call, so the window doesn't redraw and a progress bar couldn't update (issue 66).
+- While an import runs, Blender's progress counter replaces the mouse cursor with a number from 0 to 100 that goes up as each Step and Hook finishes (skipped ones count too). The import is one blocking operator call, so the window doesn't redraw and a progress bar couldn't update.
 - After an import, the panel shows one short summary: done or failed (naming the failed Step), how many warnings, and any Hooks that failed or were skipped, with their reasons. Per-Step timings and the full log go to the KKBP log: `log.txt` in the bundle's Cache (`kkbp_cache/log/log.txt`), replaced by each import of that bundle. Nothing is written into the `.blend`. If the bundle folder can't be written, the log goes to the console only, with a warning.
 - Hooks run in automated imports the same way as from the button. Callers and tests can pass `hooks=[]` or a chosen list to override that, so the harness can test the Core Import alone and then each Hook on its own.

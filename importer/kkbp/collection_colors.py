@@ -1,5 +1,5 @@
-"""The colour each kind of Collection the importer makes shows in the Outliner, by what it holds
-(issue #130). Every place that makes a Collection tags it here, so the colours are in one table.
+"""The colour each kind of Collection the importer makes shows in the Outliner, by what it holds.
+Every place that makes a Collection tags it here, so the colours are in one table.
 
 Blender's colour tags are theme colours; in the default theme COLOR_01 is red, 02 orange, 03 yellow,
 04 green, 05 blue, 06 violet, 07 pink and 08 brown. The Collections inside Junk (the widgets and the

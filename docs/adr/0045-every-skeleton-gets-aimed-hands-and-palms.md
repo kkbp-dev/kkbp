@@ -1,6 +1,6 @@
 # The Rigify Hook aims the hands and makes palms on every skeleton
 
-ADR 0022 put every KK-only part of the Rigify set-up behind one test, whether the skeleton has the joint-correction bones, to reproduce the legacy rigs. SVS lacks some of those bones, so its rig got none of the hand set-up. Issues 24 and 26 reported the result: the hand controls sat turned on the wrist and the fingers didn't work.
+ADR 0022 put every KK-only part of the Rigify set-up behind one test, whether the skeleton has the joint-correction bones, to reproduce the legacy rigs. SVS lacks some of those bones, so its rig got none of the hand set-up. As a result, the hand controls sat turned on the wrist and the fingers didn't work.
 
 Measured on the SVS Golden Sample (2026-11-14), three things were wrong, none of them a matter of joint corrections:
 

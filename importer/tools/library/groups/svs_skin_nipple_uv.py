@@ -1,4 +1,4 @@
-"""`.SVS skin nipple uv`: where SVS's body shader reads `_Nip` (models.skin_nipple_uv, issue 62): the
+"""`.SVS skin nipple uv`: where SVS's body shader reads `_Nip` (models.skin_nipple_uv): the
 second UV map scaled about its centre by 2 - 2k and moved by Nip size * 0.27 + 0.04 (k = Nip size *
 0.27 + 0.54), fading back to the UV map by clamp((|uv - 0.5| + 0.15) * 6.06 - 1). Written by hand."""
 

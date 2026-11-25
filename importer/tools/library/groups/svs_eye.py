@@ -1,5 +1,5 @@
 """`.SVS eye`: SVS's eye shader (LIF/lif_main_eye) as the exporter bakes it, front-lit (Light) and
-back-lit (Dark): `.SVS eye layers` lit by two `.SVS eye light`s (models.lif_main_eye, issue 62).
+back-lit (Dark): `.SVS eye layers` lit by two `.SVS eye light`s (models.lif_main_eye).
 With Eye white only, the eye white alone, opaque; otherwise the pupil layer over transparency, its
 alpha the light pass's coverage (ADR 0034). Written by hand."""
 

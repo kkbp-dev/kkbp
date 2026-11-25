@@ -21,7 +21,7 @@ ATLAS = (("atlas", "Atlas", "One atlas each for the light, dark and normal textu
          ("all_textures", "Atlas of every texture", "As Atlas, with the detail, alpha and colour masks too"),
          ("none", "No atlas", "The textures stay as they are"))
 # The largest atlas the user can pick, in pixels a side: many targets cap textures at 4096 or 8192, and a
-# 16384 px RGBA atlas takes 1 GB to paint (issue 12).
+# 16384 px RGBA atlas takes 1 GB to paint.
 ATLAS_SIZES = (2048, 4096, 8192, 16384)
 DEFAULT_ATLAS_SIZE = 8192
 

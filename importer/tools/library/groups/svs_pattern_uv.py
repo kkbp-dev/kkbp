@@ -1,5 +1,5 @@
 """`.SVS pattern uv`: where SVS's item shader (LIF/lif_main_acs) reads a pattern mask
-(models.acs_pattern_uv, issue 62).
+(models.acs_pattern_uv).
 
     s      = clamp(Scale * Aspect * (Remap max - Remap min) + Remap min, 0, 999), per axis
     p      = turn(uv * s + 2 * Offset - 1 - 0.5 * s, (Rotator - 0.5) turns) + 0.5

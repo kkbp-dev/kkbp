@@ -7,8 +7,8 @@ using UnityEngine;
 namespace KKBP.Exporter
 {
     /// <summary>
-    /// Records how the Body Pass meshes are skinned, for finding where the Body stops being symmetrical
-    /// (issue 106): for each captured mesh, the game's own vertices, its bind poses, the skin matrices the
+    /// Records how the Body Pass meshes are skinned, for finding where the Body stops being symmetrical:
+    /// for each captured mesh, the game's own vertices, its bind poses, the skin matrices the
     /// capture used (pose times bind pose), the bone names and weights, and the positions written. The
     /// export runs as usual; the request's "probe_symmetry" names the file.
     /// </summary>

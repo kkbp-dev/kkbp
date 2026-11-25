@@ -1,6 +1,6 @@
 """`SVS lif_main_skin_head`: the edit template for SVS's face, which the game draws with
-LIF/lif_main_skin_head from the texture its create shader (LIF/lif_create_main_skin_head) composites
-(issue 62). With a create material (`use_create`), the template composites it in nodes (`.SVS create
+LIF/lif_main_skin_head from the texture its create shader (LIF/lif_create_main_skin_head) composites.
+With a create material (`use_create`), the template composites it in nodes (`.SVS create
 skin head`), whose Eyeshadow param Save turns to 0 for the face's bakes without eyeshadow (ADR 0046);
 without one, it takes the composited texture as it is. The cheek, lips and nose sit on the mesh's
 second to fourth UV maps, scaled by the vertex colour's alpha, which keeps them off the bake's plane

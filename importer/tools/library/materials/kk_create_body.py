@@ -1,5 +1,5 @@
 """`KK create_body`: the edit template for KK's body, which the game composites with create_body and
-draws with main_skin (issue 30). Written by hand."""
+draws with main_skin. Written by hand."""
 
 import edit_templates
 

@@ -1,9 +1,9 @@
 """Separate Eyes: moves the eyes and the eyebrows out of Body into their own objects, whose
 expression keys Body's drive, so they can be drawn through the hair with the compositor (legacy
-linkshapekeys, D35; a Hook since issue 16). On the data API: each new object is a copy of Body
+linkshapekeys, D35; now a Hook). On the data API: each new object is a copy of Body
 keeping only its faces. The new Parts go in an `Eyes and Eyebrows` Collection. The Hook also turns on
-the scene's Cryptomatte Object and Material passes, which the compositor needs to pick them out
-(issue 102)."""
+the scene's Cryptomatte Object and Material passes, which the compositor needs to pick them out.
+"""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ SWITCH = Option("separate_eyes", bool, False, "Separate eyes",
                             "following Body's, so they can show through the hair with the compositor")
 
 # Part Role -> the Material Roles whose faces it takes. SVS draws its eye lines with an eyelash and an
-# eyelid material where KK and KKS have eyelines (issue 27).
+# eyelid material where KK and KKS have eyelines.
 PARTS = {
     "eyes": (("eye_l", "eye_r", "eye_white", "eyeline_upper", "eyeline_lower", "eyeline_shadow", "eyelash", "eyelid"),
              "Eyes {name}"),

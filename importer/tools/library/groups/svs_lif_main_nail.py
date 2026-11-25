@@ -1,5 +1,4 @@
-"""`.SVS lif_main_nail`: SVS's nail shader as the exporter bakes it, at one N.L (models.lif_main_nail,
-issue 62).
+"""`.SVS lif_main_nail`: SVS's nail shader as the exporter bakes it, at one N.L (models.lif_main_nail).
 
     g     = clamp(Gloss power, 0, 10)
     c     = clamp(mix(Color, 1 - (1 - Matcap) * (1 - Color), g), 0, 0.95)

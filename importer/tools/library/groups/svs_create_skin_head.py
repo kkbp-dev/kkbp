@@ -1,5 +1,5 @@
 """`.SVS create skin head`: SVS's face create shader (LIF/lif_create_main_skin_head) in nodes
-(models.create_main_skin_head, issue 62).
+(models.create_main_skin_head).
 
     base  = mix(Main color, Mouth color, Skin mask.r) * (Facetype present ? Facetype : white)
     col   = each paint k over base, as `.SVS create skin body`'s (no mask), then mix(col, Mole color, Mole.r * its alpha)

@@ -1,5 +1,5 @@
 """A small disassembler for DXBC shader model 4 and 5 bytecode, as Unity compiles D3D11 shaders:
-enough for the games' create and lit shaders (issue 30). `dis(dxbc)` returns the program as text,
+enough for the games' create and lit shaders. `dis(dxbc)` returns the program as text,
 one instruction per line (`mad r0.xy, v1.xyxx, cb0[11].xyxx, cb0[11].zwzz`); `dump.py` names its
 constants and textures.
 

@@ -1,5 +1,5 @@
 """`.SVS eye light`: one pass of SVS's eye shader lit, and the layer the exporter bakes from it
-(models.lif_main_eye and pupil_layer, issue 62, ADR 0034), from `.SVS eye layers`.
+(models.lif_main_eye and pupil_layer, ADR 0034), from `.SVS eye layers`.
 
     lit(x, cap) = min(x * `.SVS face part light`(x, cap), 1)
     eye     = lit(White * A + B, Cap);  white = lit(White, 1)

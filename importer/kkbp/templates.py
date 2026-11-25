@@ -60,7 +60,7 @@ def apply(ch, blender_material, bundle_material, *, pack: bool = True, warn=None
     for texture, slot in textures:
         if texture.pattern is None and slot in template.textures:
             set_texture(ch, mat, slot, texture, owner=bundle_material.id, pack=pack)
-            if emblem:  # drawn once: it doesn't repeat over the clothes (issue 72)
+            if emblem:  # drawn once: it doesn't repeat over the clothes
                 texture_node(mat, slot).extension = "CLIP"
     if template.patterns:
         _set_patterns(ch, mat, template, [t for t, slot in textures if t.pattern and slot == template.patterns.slot],
@@ -199,7 +199,7 @@ def read_from_objects(material, name: str, keep: bool = False) -> str:
     """Makes the material read parameter `name` from a custom property of the object it is drawn on,
     through an Attribute node, and returns the property's name. Something that changes during an
     animation is driven there, not on the material: a driver on a material re-evaluates the material
-    every frame its inputs are animated, which costs most of the frame rate (issue 70), where an object
+    every frame its inputs are animated, which costs most of the frame rate, where an object
     property is read as it is drawn. An object without the property reads 0.
 
     With `keep` the material shows the larger of the property and its own value, which `param` goes on

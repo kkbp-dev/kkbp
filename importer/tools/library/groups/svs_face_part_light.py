@@ -1,5 +1,5 @@
 """`.SVS face part light`: the light SVS's eyebrow and eyelash shaders multiply their colour by, as the
-exporter bakes them (models.svs_face_part_light, issue 62): unshadowed, no additional lights.
+exporter bakes them (models.svs_face_part_light): unshadowed, no additional lights.
 
     l5     = Light color * 0.75 + 0.25
     lit    = clamp(Ambient' * 0.5 + mix(l5, luma(l5), (1 - mean(Light color)) * 0.1))

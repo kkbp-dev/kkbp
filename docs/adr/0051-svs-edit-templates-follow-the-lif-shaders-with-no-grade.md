@@ -1,6 +1,6 @@
 # SVS's edit templates follow its LIF shaders under the maker's bake light, with no grade
 
-Issue 62 asks for SVS edit templates made as KK's and KKS's are ([ADR 0041](0041-edit-templates-follow-the-games-shaders.md)): each game shader read from the installed game, written as a numpy model that gives back the Golden Sample's bakes, then as nodes. SVS is Unity 2021 with URP, and three things differ from KK.
+SVS needed edit templates made as KK's and KKS's are ([ADR 0041](0041-edit-templates-follow-the-games-shaders.md)): each game shader read from the installed game, written as a numpy model that gives back the Golden Sample's bakes, then as nodes. SVS is Unity 2021 with URP, and three things differ from KK.
 
 - **The shaders had to be read anew.** Unity 2021 keeps a program's constants in the pass and in a parameter blob per variant, not after its bytecode, so `importer/tools/game_shaders/dump.py` reads that layout too (KK's and KKS's dumps are byte-identical). Each shader has up to 192 keyword variants; the exporter's `probe_bake` request records which keywords every light and dark bake had.
 - **The bake isn't graded.** SVS's exporter bakes through a camera of its own, so the maker camera's post-processing never runs: a bake is the shader's output, sRGB-encoded. The templates have no `.KK grade` (`edit_templates.begin(grade=False)`), and are still `graded` in their Template Description, which keeps the edit tool from saturating them.

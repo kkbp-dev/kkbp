@@ -1,4 +1,4 @@
-"""How close an unedited edit material comes to the game (ADR 0026, issue 30).
+"""How close an unedited edit material comes to the game (ADR 0026).
 
 For every editable material of the kk, kks and svs Golden Samples (copies), edit it with the profile's
 default saturation, bake light and dark as Save does without saving, and compare each bake with the

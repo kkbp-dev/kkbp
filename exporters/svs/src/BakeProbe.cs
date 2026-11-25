@@ -9,7 +9,7 @@ namespace KKBP.Exporter
 {
     /// <summary>
     /// Records the scene values SVS's shaders read during each light and dark bake, which the bundle
-    /// doesn't carry, for modelling the shaders as edit templates (issue 62): the maker light, the
+    /// doesn't carry, for modelling the shaders as edit templates: the maker light, the
     /// pipeline's globals and keywords, the ambient light and probe, the camera, and the material's
     /// keywords and the defaults of the textures the bake clears. The export runs as usual; the
     /// request's "probe_bake" names the file. Each read that fails records its error instead.

@@ -1,4 +1,4 @@
-"""The UI in other languages than English (issue #37), through Blender's own translation API: the
+"""The UI in other languages than English, through Blender's own translation API: the
 UI follows Blender's language setting, and the strings in the code stay English.
 
 Each language is a module named by Blender's locale, holding `TRANSLATIONS`: English string ->

@@ -1,6 +1,6 @@
 # Light and dark bakes render through a full viewport, without supersampling
 
-Issue 17 reported that the light and dark bakes looked softer in Blender than the game draws them, and proposed baking at double resolution and downscaling. Measured on a KK card with patterned clothes (2026-11-09), the bakes of the jacket, skirt and bra were visibly smeared: the jacket pattern's one-pixel swirls came out blocky, though the pattern kept its tiling (period 51 px in both).
+The light and dark bakes were reported to look softer in Blender than the game draws them, with the proposal to bake at double resolution and downscale. Measured on a KK card with patterned clothes (2026-11-09), the bakes of the jacket, skirt and bra were visibly smeared: the jacket pattern's one-pixel swirls came out blocky, though the pattern kept its tiling (period 51 px in both).
 
 The bake renders the material onto a quad that covers UV space, through the maker camera into a render texture of the bake's size. Each pixel then lands on a texel centre and gets that texel back. A diagnostic export found the cause:
 

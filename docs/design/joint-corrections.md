@@ -1,6 +1,6 @@
 # Joint corrections: what the games do
 
-The games' joint corrections, read for issue 10. [ADR 0038](../adr/0038-joint-corrections-copy-the-games-rules.md) says how the importer copies them; the rules themselves are `CORRECTIONS` in `profiles/kk.py` and `profiles/svs.py`, which are the reference where this note and they differ.
+The games' joint corrections, read from their code. [ADR 0038](../adr/0038-joint-corrections-copy-the-games-rules.md) says how the importer copies them; the rules themselves are `CORRECTIONS` in `profiles/kk.py` and `profiles/svs.py`, which are the reference where this note and they differ.
 
 Each game moves a set of "correction" bones every frame, after animation, from the pose of the limb bones. The importer's present drivers (`builtin/rigify/prepare.py`, `_joint_corrections`) are hand-tuned guesses at this. This note records the games' real rules.
 

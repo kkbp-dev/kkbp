@@ -1,6 +1,6 @@
 # The face rig drives the expression keys through Face Key Roles
 
-The Rigify rig's face was a grid of four controllers (issue #64). One went round a circle of copied vowel keys, one went up and down through four copied eye keys, and two drove empty Custom keys. Beside it was a large eye-handle mechanism of markers, track bones and correction drivers, which slid the eye textures through the UV warps. The grid had no labels and no presets, and most of the Game's expressions weren't reachable from it.
+The Rigify rig's face was a grid of four controllers. One went round a circle of copied vowel keys, one went up and down through four copied eye keys, and two drove empty Custom keys. Beside it was a large eye-handle mechanism of markers, track bones and correction drivers, which slid the eye textures through the UV warps. The grid had no labels and no presets, and most of the Game's expressions weren't reachable from it.
 
 The face rig replaces both. It was designed from four prototypes tried on the Golden Samples (a labelled board, controls on the face, a pattern picker, then the two combined) and from renders of every expression key of each Game.
 

@@ -1,6 +1,6 @@
 # The Body is skinned with mirrored skin matrices
 
-Blender's X Mirror in Edit Mode needs every vertex of Body to have a partner at exactly (-x, y, z) (issue 106). [ADR 0047](0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md) snapped the Body Pass positions that were within 0.1 mm of their mirror image, which left 600 KK, 1004 KKS and 112 SVS vertices out, around the shoulders, hips, waist and mouth.
+Blender's X Mirror in Edit Mode needs every vertex of Body to have a partner at exactly (-x, y, z). [ADR 0047](0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md) snapped the Body Pass positions that were within 0.1 mm of their mirror image, which left 600 KK, 1004 KKS and 112 SVS vertices out, around the shoulders, hips, waist and mouth.
 
 The exporter's symmetry probe (`"probe_symmetry"`, `SymmetryProbe` in each adapter) wrote out how the Sample Cards' Body Pass meshes are skinned. It showed that:
 
@@ -20,7 +20,7 @@ Body Pass positions with an exact mirror image: KK 13891 of 13897, KKS 14524 of 
 ## Considered Options
 
 - **Snap more of the Body Pass by distance or by mesh topology**: no game data needed, but it moves vertices away from what the skinning says without knowing why they are off, and by distance alone about 5 to 65 percent of the remaining vertices had no single clear partner.
-- **Mirror the rest pose's bones**: what issue 106 first suggested. The probe showed the bones' asymmetry is matched by their bind poses, and the simulation made the mesh less symmetrical.
+- **Mirror the rest pose's bones**: the first suggestion. The probe showed the bones' asymmetry is matched by their bind poses, and the simulation made the mesh less symmetrical.
 - **Put the game into a symmetrical pose before capture**: each Game would need its own way to drive its joint corrections from mirrored joints, and the eye and correction bones would still be the game's own.
 - **Mirror the skin matrices (chosen)**: one Unity-free helper both adapters use, covered by the Core tests, and it doesn't touch a mesh the game made asymmetrical (its vertices just follow a mirrored pose).
 

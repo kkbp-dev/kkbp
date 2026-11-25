@@ -151,7 +151,7 @@ def build(lib):
         'label': 'hidden.mix',
     })
 
-    # Nothing for a shadow ray either: the tears cast no shadow on the face (issue 86). The
+    # Nothing for a shadow ray either: the tears cast no shadow on the face. The
     # material needs its transparent shadows on for this to count.
     t.node('ShaderNodeLightPath', 'Light Path', props={
         'location': (1132.5598, -300.0),

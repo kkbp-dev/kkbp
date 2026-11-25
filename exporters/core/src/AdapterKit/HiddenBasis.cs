@@ -30,7 +30,7 @@ namespace KKBP.Exporter.Core.AdapterKit
 
         /// <summary>
         /// How much of its width a hidden mesh keeps. The head narrows towards its back, so at its
-        /// full width a mesh that is as wide as the eyes comes out through the sides there (issue 84).
+        /// full width a mesh that is as wide as the eyes comes out through the sides there.
         /// </summary>
         public const float Width = 0.5f;
 

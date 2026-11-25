@@ -1,5 +1,5 @@
 """`.SVS create cloth`: SVS's clothes create shader (LIF/lif_create_main_cloth) in nodes
-(models.create_main_cloth, issue 62).
+(models.create_main_cloth).
 
     layer k = mix(mix(Main color k, Sub color k * Pattern k, a * Sub alpha), Pattern k, a * vivid * Sub alpha),
               a = on * Pattern k alpha, vivid = clamp(saturation(Pattern k) * 10 - 0.05), on = Mask alpha >= 0.5

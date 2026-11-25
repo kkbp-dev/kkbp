@@ -111,7 +111,7 @@ def run_pipeline(bundle: Bundle, steps: list[Step], hooks: list[tuple[Hook, bool
 
 class Progress:
     """Blender's progress counter: a number from 0 to 100 in place of the mouse cursor, which keeps
-    updating while the window is frozen by the import (issue 66). It does nothing headless."""
+    updating while the window is frozen by the import. It does nothing headless."""
 
     def __init__(self, total: int):
         self.manager, self.done = bpy.context.window_manager, 0

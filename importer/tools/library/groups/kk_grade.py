@@ -1,5 +1,5 @@
 """`.KK grade`: the maker camera's AmplifyColor colour grade, `Lut_TimeDay.png`, on an sRGB-encoded
-colour (issue 30). Both games' light and dark bakes went through it, so every edit template grades
+colour. Both games' light and dark bakes went through it, so every edit template grades
 its light and dark colours last (models.grade). The table is read as `lut_nodes.lookup` says.
 Written by hand."""
 

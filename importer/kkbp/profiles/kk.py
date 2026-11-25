@@ -198,7 +198,7 @@ _EYE_COLORS = [
 # tried in order; `current:` is the slot's image in the material being edited, which keeps an
 # Outfit's body alpha mask.
 # The legacy edit templates by Material Role (D38), for the Roles whose shaders aren't modelled yet
-# (issue 30).
+# (issue #1).
 LEGACY_EDIT_TEMPLATES = {
     "body": "KK Body", "face": "KK Face", "hair": "KK Hair",
     "eye_l": "KK EyeL (hitomi)", "eye_r": "KK EyeR (hitomi)", "eye_white": "KK Eyewhites (sirome)",

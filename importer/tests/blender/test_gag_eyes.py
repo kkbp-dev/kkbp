@@ -1,5 +1,5 @@
 """Gag eyes: one shape key, and a dropdown on the gag eyes' first material that picks the gag
-expression (issue 35, ADR 0042)."""
+expression (ADR 0042)."""
 
 import bpy
 import pytest
@@ -247,7 +247,7 @@ def test_the_gag_patterns_read_the_frame_from_their_object(build):
 @pytest.mark.parametrize("keyed", [None, "Gag eyes", "Eye Star Pupils"])
 def test_a_frame_change_updates_no_material(sample, keyed, golden_import):
     """Playing an animation doesn't re-evaluate the materials, with nothing keyed or with the gag eyes
-    or an expression that picks an eye overlay keyed (issue 70): what the expressions change on a
+    or an expression that picks an eye overlay keyed: what the expressions change on a
     material is driven on the objects, which the material reads as it is drawn. A driver on the
     material would re-evaluate it on every frame, even while the key stays still."""
     _, ch = golden_import(sample)
@@ -278,7 +278,7 @@ def test_a_frame_change_updates_no_material(sample, keyed, golden_import):
 
 @pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
 def test_the_gag_eyes_take_the_eyeshadow_away(sample, golden_import):
-    """Issue 38: the face's eyeshadow fades out as Gag eyes rises, whatever its own slider says, and
+    """The face's eyeshadow fades out as Gag eyes rises, whatever its own slider says, and
     can still be hidden by hand while Gag eyes is down."""
     _, ch = golden_import(sample)
     face = next(m for m in ch.materials(roles="face"))

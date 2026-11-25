@@ -84,7 +84,7 @@ def test_the_eyeline_shadow_goes_with_the_eyes(build, monkeypatch):
 
 
 def test_svs_eyelashes_and_eyelids_go_with_the_eyes(golden_import):
-    """Issue 27: SVS draws its eye lines with an eyelash and an eyelid material, which go to the eyes
+    """SVS draws its eye lines with an eyelash and an eyelid material, which go to the eyes
     Part as KK's eyelines do."""
     result, ch = golden_import("svs", hooks=["Separate Eyes"], options={"separate_eyes": True})
     assert result.hooks[0].status == "ran", result.hooks

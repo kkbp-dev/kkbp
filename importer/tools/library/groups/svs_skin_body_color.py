@@ -1,4 +1,4 @@
-"""`.SVS skin body color`: SVS's body colour (models.skin_body_color, issue 62).
+"""`.SVS skin body color`: SVS's body colour (models.skin_body_color).
 
     Base   = mix(Main color, Create, Create alpha)
     nipped = clamp(mix(mix(Base, Nip color 1, Nip.r), that * Nip color 1 * Nip color 2, Nip.g))

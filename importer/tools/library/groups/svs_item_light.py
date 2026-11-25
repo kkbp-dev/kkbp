@@ -1,5 +1,5 @@
 """`.SVS item light`: the light SVS's item and skin shaders (accessories, teeth, tongue, clothes, nails,
-body, face) give a colour, at one N.L (models.svs_item_t, svs_item_mix, issue 62).
+body, face) give a colour, at one N.L (models.svs_item_t, svs_item_mix).
 
     ramp   = clamp(max(Ramp 1.g * SS.x, Ramp 2.b * Shadow power * SS.y) + Detail.g * SS.w)
     t      = clamp(P * (max(ramp, clamp(1 - mean(L))) * lum - 0.75 * (lum - 1))) + clamp(Detail.g * Shadow extend)

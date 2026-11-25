@@ -1,4 +1,4 @@
-"""What the expressions change on a material is driven on the objects that use it (issue 70). A Hook
+"""What the expressions change on a material is driven on the objects that use it. A Hook
 that makes an object or moves a material to one must take the properties and their drivers along."""
 
 import bpy

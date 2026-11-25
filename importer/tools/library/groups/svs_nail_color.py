@@ -1,4 +1,4 @@
-"""`.SVS nail color`: SVS's nail colour (models.nail_color, issue 62).
+"""`.SVS nail color`: SVS's nail colour (models.nail_color).
 
     col   = mix(mix(mix(white, Nail color 1, Mask.r), Nail color 2, Mask.g), Nail color 3, Mask.b)
     col   = col + Main * Nail color 1 alpha

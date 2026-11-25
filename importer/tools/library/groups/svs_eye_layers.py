@@ -1,5 +1,5 @@
 """`.SVS eye layers`: SVS's eye shader (LIF/lif_main_eye) up to its light, as an affine function of
-the eye white under it (models.lif_main_eye, issue 62): the eye over an eye white `under` is
+the eye white under it (models.lif_main_eye): the eye over an eye white `under` is
 `under * A + B`, so the light group can light it over the real eye white and over black and white,
 as the exporter's pupil layer needs.
 

@@ -1,5 +1,5 @@
-"""`SVS lif_main_nail`: the edit template for SVS's nails, which the game draws with LIF/lif_main_nail
-(issue 62): `.SVS nail color` from the colour mask, main texture and paints, lit by `.SVS lif_main_nail`
+"""`SVS lif_main_nail`: the edit template for SVS's nails, which the game draws with LIF/lif_main_nail:
+`.SVS nail color` from the colour mask, main texture and paints, lit by `.SVS lif_main_nail`
 once, at the N.L the bake's toon value picks. The matcap is read at the bake quad's view normal, its
 centre. No grade: SVS's bake has none. Written by hand."""
 

@@ -187,7 +187,7 @@ class _Counter:
 
 
 def test_progress_counts_every_step_and_hook(build, monkeypatch):
-    """Issue 66: the counter reaches its total whatever ran, so skipped Steps and Hooks count too."""
+    """The counter reaches its total whatever ran, so skipped Steps and Hooks count too."""
     monkeypatch.setattr(run, "Progress", _Counter)
     hook = hooks.register_hook(lambda ctx: None, name="on", source="tests")
     off = hooks.register_hook(lambda ctx: None, name="off", source="tests")

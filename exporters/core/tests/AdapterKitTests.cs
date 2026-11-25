@@ -470,7 +470,7 @@ namespace KKBP.Exporter.Core.Tests
         [Fact]
         public void A_bake_has_its_main_textures_size_and_shape()
         {
-            // Issue 53: a 1024x512 texture was baked as a 1024 square.
+            // A 1024x512 texture was baked as a 1024 square.
             int width, height;
             KKBP.Exporter.Core.AdapterKit.LightBake.Size(1024, 512, false, out width, out height);
             Assert.Equal(new[] { 1024, 512 }, new[] { width, height });

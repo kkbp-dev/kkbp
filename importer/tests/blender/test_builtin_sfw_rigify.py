@@ -1,4 +1,4 @@
-"""SFW and Rigify together on the golden samples (issue 55): the rig is built without the bones SFW
+"""SFW and Rigify together on the golden samples: the rig is built without the bones SFW
 removes (D21)."""
 
 import pytest

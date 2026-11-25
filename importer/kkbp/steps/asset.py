@@ -1,4 +1,4 @@
-"""The Character's Collection as an asset (issue #131): it shows in the Asset Browser, tagged with its
+"""The Character's Collection as an asset: it shows in the Asset Browser, tagged with its
 Game, with the Card's picture as its preview.
 
 The Card is a PNG with the game's data after the picture. Pillow reads only the picture, and the

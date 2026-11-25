@@ -1,6 +1,6 @@
 """`SVS lif_main_skin_body`: the edit template for SVS's body, which the game draws with
-LIF/lif_main_skin_body from the texture its create shader (LIF/lif_create_main_skin_body) composites
-(issue 62). With a create material (`use_create`), the template composites it in nodes (`.SVS create
+LIF/lif_main_skin_body from the texture its create shader (LIF/lif_create_main_skin_body) composites.
+With a create material (`use_create`), the template composites it in nodes (`.SVS create
 skin body`); without one, it takes the composited texture as it is. The nipples and under-hair are
 placed on the mesh's second UV map by its vertex colour, whose alpha keeps them off the bake's plane
 (the game's quad has them cleared). It lights once, at the N.L the bake's toon value picks. No grade:

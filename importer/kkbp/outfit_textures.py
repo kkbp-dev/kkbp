@@ -1,4 +1,4 @@
-"""The body follows the shown Outfit (issue 119, ADR 0055).
+"""The body follows the shown Outfit (ADR 0055).
 
 Each Outfit sets textures on body materials, such as the alpha mask that hides the skin under its
 clothes (an Outfit Pass's `body_textures`). The import puts the first Outfit's into the materials

@@ -143,14 +143,14 @@ def test_the_walk_drives_the_rig_like_the_game_bones(walked):
 
 
 def test_the_meshes_are_back_after_the_retarget(walked):
-    """Issue 67: the meshes are kept out of the evaluation only while the retarget runs."""
+    """The meshes are kept out of the evaluation only while the retarget runs."""
     rigged, _, _ = walked
     meshes = [o for o in rigged.parts() if o.type == "MESH"]
     assert meshes and not any(o.hide_viewport for o in meshes)
 
 
 def test_a_frame_the_quick_way_misses_is_posed_level_by_level(golden_import, tmp_path, monkeypatch):
-    """Issue 67: when the controls don't reach their goals with one or two updates, the frame is posed
+    """When the controls don't reach their goals with one or two updates, the frame is posed
     with an update for each bone depth, and the result is the same."""
     result, rigged = golden_import("kk", hooks=["Rigify"])
     path = _write_walk(rigged, tmp_path)

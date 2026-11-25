@@ -59,7 +59,7 @@ SETS: Mapping[str, TemplateSet] = MappingProxyType({s.name: s for s in (
         defaults={"force_visibility": 2},
         rows=(
             # The tears and gag eyes cast no shadow: their shaders draw nothing for a shadow ray, which
-            # counts only with transparent shadows on (issue 86).
+            # counts only with transparent shadows on.
             Row("KK Tears", role="tears", **_BLENDED),
             Row("Gag", role="gag_eyes", **_BLENDED),
             Row("KK Eye", role="eye_l", **_BLENDED),
@@ -73,7 +73,7 @@ SETS: Mapping[str, TemplateSet] = MappingProxyType({s.name: s for s in (
         ),
     ),
     # SVS draws everything dithered but the tears, the pupils and the eyelashes (dithering leaves noise in
-    # their soft edges, issue 40), and the face like everything else.
+    # their soft edges), and the face like everything else.
     TemplateSet(
         "SVS",
         extends="KK",

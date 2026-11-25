@@ -1,5 +1,5 @@
 """`.SVS skin highlight uv`: where SVS's body shader reads its highlight and the ramp that dims it
-(models.highlight_uv, issue 62): the UV moved by 0.4 (Height - 1) times the light's x and y (Light xy
+(models.highlight_uv): the UV moved by 0.4 (Height - 1) times the light's x and y (Light xy
 or Dark xy, picked by the toon value), and the ramp at clamp(N.L - 0.4 * Detail's green). Written by
 hand."""
 

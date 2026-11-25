@@ -1,5 +1,5 @@
 """`SVS lif_main_hair`: the edit template for SVS's hair, which the game draws with LIF/lif_main_hair
-from its colour mask and colours (issue 62). It lights once, at the N.L the bake's toon value picks
+from its colour mask and colours. It lights once, at the N.L the bake's toon value picks
 (`.SVS toon ndl`), reading the ramp at two places (the `ramp` and `ramp2` slots hold the same
 texture). No grade: SVS's bake has none. Written by hand."""
 

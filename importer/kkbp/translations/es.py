@@ -1,6 +1,6 @@
 """Spanish. English string -> translation; see the package's docstring for what belongs here.
 
-Every entry is unreviewed: none has been checked by a native speaker yet (issue #37).
+Every entry is unreviewed: none has been checked by a native speaker yet (issue #2).
 """
 
 TRANSLATIONS = {
