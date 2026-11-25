@@ -1,7 +1,7 @@
 schema_version = "1.0.0"
 
 id = "kkbp"
-version = "10.0.0"
+version = "2026.11.25"
 name = "KKBP (Koikatsu Bundle Porter)"
 tagline = "Imports Koikatsu, Koikatsu Sunshine and SVS Characters"
 maintainer = "kkbp-dev"

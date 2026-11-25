@@ -46419,7 +46419,7 @@
    "Separate Eyes": "off",
    "Separate meshes": "off"
   },
-  "importer": "10.0.0",
+  "importer": "2026.11.25",
   "log_warnings": [
    "hook Rigify: Blender's Rigify add-on was off; it is on for this session (Preferences aren't saved)"
   ],

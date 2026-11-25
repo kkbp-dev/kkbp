@@ -8,8 +8,9 @@
 #   Koikatsu Sunshine/BepInEx/plugins/KKBP/KKBP.Exporter.KKS.dll
 #   Summer Vacation Scramble/BepInEx/plugins/KKBP/KKBP.Exporter.SVS.dll
 #
-# The version is the Exporter Version in exporters/Exporter.props. Building needs all three game
-# installs (ADR 0007), so a missing one fails the script.
+# The version is the KKBP Version in the repository's VERSION file (ADR 0060), which
+# exporters/Exporter.props reads as the Exporter Version. Building needs all three game installs
+# (ADR 0007), so a missing one fails the script.
 #
 # Usage: scripts/package-exporters.sh
 set -euo pipefail
@@ -19,7 +20,7 @@ dist="$repo/exporters/dist"
 export PATH="$PATH:$HOME/.dotnet"
 export DOTNET_NOLOGO=1 DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-[[ $# -eq 0 ]] || { sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
+[[ $# -eq 0 ]] || { sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
 command -v zip >/dev/null || { echo "package-exporters: zip not found. Install it." >&2; exit 1; }
 command -v dotnet >/dev/null || { echo "package-exporters: dotnet not found. Install the .NET SDK." >&2; exit 1; }
 
