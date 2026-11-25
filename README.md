@@ -33,14 +33,14 @@ The Blender panel is in English, 简体中文, Français, Deutsch, Bahasa Indone
 
 ## Supported games
 
-| Game | What the game needs* | The exporter window opens with |
+| Game | What the game needs† | The exporter window opens with |
 |---|---|---|
 | Koikatsu | [KK HF Patch](https://github.com/ManlyMarco/KK-HF_Patch) | the "Show KKBP Exporter" toggle in the maker's sidebar |
 | Koikatsu Sunshine | [KKS HF Patch](https://github.com/ManlyMarco/KKS-HF_Patch) | the "Show KKBP Exporter" toggle in the maker's sidebar |
 | Summer Vacation Scramble | [SVS HF Patch](https://github.com/ManlyMarco/SVS-HF_Patch) | Ctrl+Tab in the maker |
 
-*If you have a pre-modded game, you can use the updater in your game launcher (InitSetting.exe) to download the necessary mods.  
-Works on Blender 5.2 or newer. The differences between the games are listed in [Game support](docs/wiki/game-support.md).
+Works on Blender 5.2 or newer. The differences between the games are listed in [Game support](docs/wiki/game-support.md).  
+†If you have a pre-modded game, you can use the updater in your game launcher (InitSetting.exe) to download the necessary mods.  
 
 ## Install
 
