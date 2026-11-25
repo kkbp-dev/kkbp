@@ -17,7 +17,7 @@ It has two parts. An **exporter** runs inside the game and saves the character d
 <table>
 <tr>
 <td width="25%" valign="top"><a href="docs/wiki/shaders.md"><img src="docs/wiki/images/readme/shaders.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/shaders.md">Looks like the game</a></b><br>Shaders for Eevee and Cycles, a plain Principled setup, and the game's outlines.</td>
-<td width="25%" valign="top"><a href="docs/wiki/rig.md"><img src="docs/wiki/images/readme/rig.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/rig.md">A fully featured Rigify rig</a></b><br>A Rigify control rig, with elbows, knees and shoulders corrected by the game's own rules.</td>
+<td width="25%" valign="top"><a href="docs/wiki/rig.md"><img src="docs/wiki/images/readme/rig.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/rig.md">Rigged with Rigify</a></b><br>A Rigify control rig, with elbows, knees and shoulders corrected by the game's own rules.</td>
 <td width="25%" valign="top"><a href="docs/wiki/expressions.md"><img src="docs/wiki/images/readme/expressions.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/expressions.md">Every expression</a></b><br>All the game's eye and mouth expressions with English names, face controls with emotion presets, gag eyes and tears.</td>
 <td width="25%" valign="top"><a href="docs/wiki/outfits.md"><img src="docs/wiki/images/readme/outfits.jpg" width="210" alt=""></a><br><b><a href="docs/wiki/outfits.md">Every outfit</a></b><br>All of a card's outfits in one import, with their half-off variations if you want them.</td>
 </tr>
@@ -29,18 +29,19 @@ It has two parts. An **exporter** runs inside the game and saves the character d
 </tr>
 </table>
 
+Works on Blender 5.2 or newer. The differences between the games are listed in [Game support](docs/wiki/game-support.md).  
+
 The Blender panel is in English, 简体中文, Français, Deutsch, Bahasa Indonesia, 日本語, Português, Русский, Español, ไทย.
 
 ## Supported games
 
-| Game | What the game needs† | The exporter window opens with |
+| Game | What the game needs<sup>†</sup> | The exporter window opens with |
 |---|---|---|
 | Koikatsu | [KK HF Patch](https://github.com/ManlyMarco/KK-HF_Patch) | the "Show KKBP Exporter" toggle in the maker's sidebar |
 | Koikatsu Sunshine | [KKS HF Patch](https://github.com/ManlyMarco/KKS-HF_Patch) | the "Show KKBP Exporter" toggle in the maker's sidebar |
 | Summer Vacation Scramble | [SVS HF Patch](https://github.com/ManlyMarco/SVS-HF_Patch) | Ctrl+Tab in the maker |
 
-Works on Blender 5.2 or newer. The differences between the games are listed in [Game support](docs/wiki/game-support.md).  
-†If you have a pre-modded game, you can use the updater in your game launcher (InitSetting.exe) to download the necessary mods.  
+**<sup>†</sup>** If you have a pre-modded game, you can use the updater in your game launcher (InitSetting.exe) to download the necessary mods.  
 
 ## Install
 
