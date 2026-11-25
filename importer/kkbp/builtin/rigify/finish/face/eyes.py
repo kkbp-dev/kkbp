@@ -15,7 +15,7 @@ import numpy as np
 from mathutils import Vector
 
 from .....editing import editing
-from ... import drivers, names, prepare
+from ... import constraints, drivers, names, prepare
 from . import shapes
 from .terms import Term, channel, driver, prop
 
@@ -71,7 +71,8 @@ def build(build, eyes) -> list:
     y = min(eyes["L"].front, eyes["R"].front) - DISTANCE
     with editing(rig, "EDIT"):
         edit = rig.data.edit_bones
-        shapes.new_bone(edit, names.EYE_TARGET_PARENT_BONE, (0, y, z), parent=names.ROOT_BONE, length=0.02)
+        # no bone parent: its Armature constraint is the parent, so root moves it once (issue #135)
+        shapes.new_bone(edit, names.EYE_TARGET_PARENT_BONE, (0, y, z), length=0.02)
         shapes.new_bone(edit, names.EYE_TARGET_BONE, (0, y, z), parent=names.EYE_TARGET_PARENT_BONE, length=0.02)
         for side, _, target, aim in SIDES:
             c = eyes[side].centre
@@ -88,11 +89,12 @@ def build(build, eyes) -> list:
                                    description="1: the eye target moves with the head. 0: it stays where it is")
     lids = drivers.bone_property(rig, names.EYE_TARGET_BONE, LID_FOLLOW, default=0.4, min=0.0, max=1.0,
                                  description="How much the eyelids close as the eyes look down")
-    parent = rig.pose.bones[names.EYE_TARGET_PARENT_BONE]
-    child_of = parent.constraints.new("CHILD_OF")
-    child_of.target, child_of.subtarget = rig, HEAD
-    child_of.inverse_matrix = (rig.matrix_world @ rig.data.bones[HEAD].matrix_local).inverted()
-    driver(child_of, "influence", "f", [("f", prop(rig, follow))])
+    # The parent follows root, or the head as `follow_head` goes to 1: a blend of the two, not the
+    # head on top of root, which moved the target twice as far as root (issue #135).
+    parent = constraints.armature(rig, names.EYE_TARGET_PARENT_BONE, [names.ROOT_BONE, HEAD],
+                                  name=names.ARMATURE_CONSTRAINT_BASE + names.PARENT_CONSTRAINT_SUFFIX)
+    driver(parent.targets[0], "weight", "1-f", [("f", prop(rig, follow))])
+    driver(parent.targets[1], "weight", "f", [("f", prop(rig, follow))])
 
     main = rig.pose.bones[names.EYE_TARGET_BONE]
     shapes.lock(main, location=(False, False, False), scale=False)

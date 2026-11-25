@@ -13,6 +13,7 @@ from conftest import submodule
 names = submodule("builtin.rigify.names")
 controls = submodule("builtin.rigify.finish.face.controls")
 board = submodule("builtin.rigify.finish.face.board")
+eyes = submodule("builtin.rigify.finish.face.eyes")
 face_tool = submodule("tools.face")
 prepare = submodule("builtin.rigify.prepare")
 
@@ -205,6 +206,24 @@ def test_the_eyes_follow_the_target(ch):
     left, right = warps
     assert abs(left.offset[0]) + abs(left.offset[1]) > 0.005 and abs(right.offset[0]) + abs(right.offset[1]) < 0.002
     _rest(ch)
+
+
+@pytest.mark.parametrize("follow", (1.0, 0.0))
+def test_moving_root_moves_the_eye_target_as_far(ch, follow):
+    """Issue #135: with the target following the head, root moved it twice as far as the head."""
+    target, root = ch.rig.pose.bones[names.EYE_TARGET_BONE], ch.rig.pose.bones[names.ROOT_BONE]
+    head = ch.rig.pose.bones[names.ORIGINAL_BONE_PREFIX + names.HEAD_BONE]
+    target[eyes.FOLLOW_HEAD] = follow
+    _rest(ch)
+    before = target.head.copy(), head.head.copy()
+    root.location = (0.5, 0.3, 0.0)
+    _update(ch)
+    moved = target.head - before[0], head.head - before[1]
+    root.location = (0, 0, 0)
+    target[eyes.FOLLOW_HEAD] = 1.0
+    _rest(ch)
+    assert moved[1].length > 0.4
+    assert (moved[0] - moved[1]).length < 1e-4
 
 
 def test_the_look_joystick_moves_the_eyes(ch):
