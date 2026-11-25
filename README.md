@@ -29,17 +29,18 @@ It has two parts. An **exporter** runs inside the game and saves the character d
 </tr>
 </table>
 
-The Blender panel is in English, 简体中文, Français, Deutsch, Bahasa Indonesia, 日本語, Português, Русский, Español and ไทย.
+The Blender panel is in English, 简体中文, Français, Deutsch, Bahasa Indonesia, 日本語, Português, Русский, Español, ไทย.
 
 ## Supported games
 
-| Game | What the game needs | The exporter window opens with |
+| Game | What the game needs* | The exporter window opens with |
 |---|---|---|
-| Koikatsu | BepInEx (HF Patch installs it) | the "Show KKBP Exporter" toggle in the maker's sidebar |
-| Koikatsu Sunshine | BepInEx (HF Patch installs it) | the "Show KKBP Exporter" toggle in the maker's sidebar |
-| Summer Vacation Scramble | BepInEx (HF Patch installs it) | Ctrl+Tab in the maker |
+| Koikatsu | [KK HF Patch](https://github.com/ManlyMarco/KK-HF_Patch) | the "Show KKBP Exporter" toggle in the maker's sidebar |
+| Koikatsu Sunshine | [KKS HF Patch](https://github.com/ManlyMarco/KKS-HF_Patch) | the "Show KKBP Exporter" toggle in the maker's sidebar |
+| Summer Vacation Scramble | [SVS HF Patch](https://github.com/ManlyMarco/SVS-HF_Patch) | Ctrl+Tab in the maker |
 
-Blender 5.2 or newer. The differences between the games are listed in [Game support](docs/wiki/game-support.md).
+*If you have a pre-modded game, you can use the updater in your game launcher (InitSetting.exe) to download the necessary mods.  
+Works on Blender 5.2 or newer. The differences between the games are listed in [Game support](docs/wiki/game-support.md).
 
 ## Install
 
