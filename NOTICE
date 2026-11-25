@@ -42,9 +42,6 @@ KKShadersRecreated and KKShadersPlus
   The edit materials' shadow colours (importer/kkbp/shading/) follow their recreation of the
   game's ShadeAdjustItem and MapValuesMain, which the legacy importer had translated.
 
-The joint-correction drivers in the Rigify Hook (importer/kkbp/builtin/rigify/prepare.py) come
-mostly from a .blend file by johnbbob_la_petite on the Koikatsu Discord, as in the legacy importer.
-
 The MIT License, as it applies to each MIT-licensed project above:
 
   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
