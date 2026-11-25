@@ -40,7 +40,7 @@ kkbp_cache/<kind>/
 - Export time (RFC 3339, UTC), Character name, Card file (`card.png`, or null).
 - Export options used: `all_outfits`, `all_variations`, `physics`, `enabled_shape_keys`, `current_pose`, plus Game-only options under `extensions`. The batch-export switch is UI state and isn't recorded.
 - Passes: for each, kind (`body` or `outfit`), Outfit index (null for the body), `.glb` path, data-file path.
-- The first Schema Version is `1.0`, released with importer 10.0.0 and exporters 6.0.0. From then on, a change that only adds (an optional field, a set value) raises the minor version (`1.1`), and any other change raises the major version (`2.0`), which also forces a hook interface major version.
+- The first Schema Version is `1.0`, released with KKBP 2026.11.25. From then on, a change that only adds (an optional field, a set value) raises the minor version (`1.1`), and any other change raises the major version (`2.0`), which also forces a hook interface major version.
 - No file hashes.
 - The exporter writes the Manifest last. A bundle without one is an unfinished export, and the importer reports it as such.
 

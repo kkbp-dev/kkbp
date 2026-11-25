@@ -44,8 +44,12 @@ _Avoid_: config, header
 The `major.minor` version of the Export Bundle contract; the only version that decides whether an importer accepts a bundle.
 _Avoid_: format version
 
+**KKBP Version**:
+The release date, `YYYY.MM.DD`, shared by the importer and the exporters of one release. Blender's manifest and BepInEx hold it without leading zeros.
+_Avoid_: importer version, build number
+
 **Exporter Version**:
-The release of the exporter that wrote a bundle; informational only.
+The KKBP Version of the exporter that wrote a bundle; informational only.
 _Avoid_: plugin version
 
 **Pass**:
