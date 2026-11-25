@@ -71,7 +71,7 @@ def build(build, eyes) -> list:
     y = min(eyes["L"].front, eyes["R"].front) - DISTANCE
     with editing(rig, "EDIT"):
         edit = rig.data.edit_bones
-        # no bone parent: its Armature constraint is the parent, so root moves it once (issue #135)
+        # no bone parent: its Armature constraint is the parent, so root moves it once
         shapes.new_bone(edit, names.EYE_TARGET_PARENT_BONE, (0, y, z), length=0.02)
         shapes.new_bone(edit, names.EYE_TARGET_BONE, (0, y, z), parent=names.EYE_TARGET_PARENT_BONE, length=0.02)
         for side, _, target, aim in SIDES:
@@ -90,7 +90,7 @@ def build(build, eyes) -> list:
     lids = drivers.bone_property(rig, names.EYE_TARGET_BONE, LID_FOLLOW, default=0.4, min=0.0, max=1.0,
                                  description="How much the eyelids close as the eyes look down")
     # The parent follows root, or the head as `follow_head` goes to 1: a blend of the two, not the
-    # head on top of root, which moved the target twice as far as root (issue #135).
+    # head on top of root, which moved the target twice as far as root.
     parent = constraints.armature(rig, names.EYE_TARGET_PARENT_BONE, [names.ROOT_BONE, HEAD],
                                   name=names.ARMATURE_CONSTRAINT_BASE + names.PARENT_CONSTRAINT_SUFFIX)
     driver(parent.targets[0], "weight", "1-f", [("f", prop(rig, follow))])

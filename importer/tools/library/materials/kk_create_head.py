@@ -1,5 +1,5 @@
 """`KK create_head`: the edit template for KK's face, which the game composites with create_head and
-draws with main_skin (issue 30). Written by hand."""
+draws with main_skin. Written by hand."""
 
 import edit_templates
 

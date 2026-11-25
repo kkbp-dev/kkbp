@@ -1,4 +1,4 @@
-"""`.SVS face ramp uv`: where SVS's face shader reads its ramp (models.face_ramp_uv, issue 62), and the
+"""`.SVS face ramp uv`: where SVS's face shader reads its ramp (models.face_ramp_uv), and the
 detail it weights the shadow by: d = max(Detail 1.g, Nose.g); Ramp 1 at clamp(clamp(N.L + Detail 2.b / 2)
 * (1 - d * Pull)), Ramp 2 at min(4 clamp(N.L * 0.4 + 0.3), 1); Detail is (0, d, 0). Written by hand."""
 

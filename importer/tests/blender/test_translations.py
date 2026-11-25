@@ -1,4 +1,4 @@
-"""The UI in other languages than English (issue #37): Blender's language setting translates it."""
+"""The UI in other languages than English: Blender's language setting translates it."""
 
 import warnings
 

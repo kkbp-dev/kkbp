@@ -71,7 +71,7 @@ def _pick(set_name, role, blend, slots=("main.light", "main.dark")):
 
 def test_kk_choices():
     assert _pick("KK", "face", "opaque") == ("KK Light Dark", None, {"force_visibility": 2})
-    # Issue 38: the face with its bakes without eyeshadow gets the template that fades them; SVS never does.
+    # The face with its bakes without eyeshadow gets the template that fades them; SVS never does.
     plain = ("main.light", "main.dark", "main.light_no_eyeshadow", "main.dark_no_eyeshadow")
     assert _pick("KK", "face", "opaque", plain) == ("KK Light Dark Face", None, {"force_visibility": 2})
     assert _pick("KK", "face", "opaque", plain[:3])[0] == "KK Light Dark"
@@ -162,6 +162,6 @@ def test_edit_tables_name_known_templates_slots_and_params(game):
 
 
 def test_svs_draws_its_pupils_and_eyelashes_blended():
-    """Issue 40: dithering leaves noise in their soft edges."""
+    """Dithering leaves noise in their soft edges."""
     for role, blend_mode in (("eye_l", "alpha"), ("eye_r", "alpha"), ("eyelash", "cutout")):
         assert _pick("SVS", role, blend_mode)[:2] == ("SVS Light Dark", "BLENDED"), role

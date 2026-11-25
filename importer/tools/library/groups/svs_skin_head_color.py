@@ -1,4 +1,4 @@
-"""`.SVS skin head color`: SVS's face colour (models.skin_head_color, issue 62).
+"""`.SVS skin head color`: SVS's face colour (models.skin_head_color).
 
     Base  = mix(Main color, Create, Create alpha)
     col   = mix(Base * 0.95, Cheek color, Cheek.r * its alpha), Cheek highlight color screened over it by Cheek.b * its alpha

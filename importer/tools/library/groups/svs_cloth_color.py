@@ -1,4 +1,4 @@
-"""`.SVS cloth color`: SVS's clothes shader's colour (models.cloth_color, issue 62): the composited
+"""`.SVS cloth color`: SVS's clothes shader's colour (models.cloth_color): the composited
 texture (Create), times the colour mask's colours (Main color 1 to 3 over 4) when Switch is on, toward
 Curvature color by Detail 2's red times its alpha. Linear colours. Written by hand."""
 

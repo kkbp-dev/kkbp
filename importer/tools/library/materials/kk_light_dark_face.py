@@ -1,5 +1,5 @@
 """`KK Light Dark Face`: `KK Light Dark` with the face's bakes without eyeshadow and the group that
-fades between the two (issue 38, ADR 0046). Written by hand from kk_light_dark.py."""
+fades between the two (ADR 0046). Written by hand from kk_light_dark.py."""
 
 NAME = 'KK Light Dark Face'
 

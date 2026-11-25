@@ -1,5 +1,5 @@
 """`.SVS lif_main_cloth`: SVS's clothes shader as the exporter bakes it, at one N.L
-(models.lif_main_cloth, issue 62).
+(models.lif_main_cloth).
 
     line  = clamp(mix(Color, Line color, Line power * 0.8 + 0.2), 0, 0.95)
     lit   = clamp(Color, 0, 0.95) * `.SVS item light`(Color)

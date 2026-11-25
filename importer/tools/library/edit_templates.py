@@ -1,4 +1,4 @@
-"""The layout every edit template made from a game's shaders shares (issue 30), for the modules in
+"""The layout every edit template made from a game's shaders shares, for the modules in
 `materials/` to call. Not a module of its own datablock: build.py's registry skips it.
 
     texture slots           tex.<slot> image nodes, each re-encoded by `.KK srgb` (encode.<slot>)

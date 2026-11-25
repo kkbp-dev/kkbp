@@ -1,5 +1,5 @@
 """`KK main_item`: the edit template for KK's teeth, tongue and items, which the game draws with
-main_item straight from their textures (issue 30). An item's `_AnotherRamp` is read at the toon value
+main_item straight from their textures. An item's `_AnotherRamp` is read at the toon value
 (`.KK ramp uv`), through which the toon value reaches `.Combine colors`; the bake sets it there.
 Written by hand."""
 

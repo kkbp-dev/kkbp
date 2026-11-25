@@ -203,7 +203,7 @@ namespace KKBP.Exporter
 
         /// <summary>
         /// The face settings Prepare changes, as the maker had them. Without putting them back, the next
-        /// export starts from the exported face (issue 22): on a fixed mouth, ChangeMouthOpenMax also sets
+        /// export starts from the exported face: on a fixed mouth, ChangeMouthOpenMax also sets
         /// the mouth's FixedRate, so the maker's closed mouth stays open, and the next card.png saves it so.
         /// The eye-look target is rebuilt from the saved status (given a transform, ChangeLookEyesTarget
         /// doesn't save the rate, angle or range), then the maker's own target transform goes back.

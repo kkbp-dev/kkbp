@@ -1,5 +1,5 @@
 """`.SVS create pattern uv`: where SVS's clothes create shader (LIF/lif_create_main_cloth) reads a
-pattern mask (models.create_pattern_uv, issue 62): p = (uv + 2 * Offset - 1) * (20 - 19 * Scale) - 0.5,
+pattern mask (models.create_pattern_uv): p = (uv + 2 * Offset - 1) * (20 - 19 * Scale) - 0.5,
 turned by (Rotator - 0.5) turns, + 0.5. Written by hand."""
 
 import math

@@ -15,7 +15,7 @@ namespace KKBP.Exporter
     /// renderers and anything else near the origin are hidden; Dispose puts everything back.
     /// Each bake's own textures, material copies and meshes go with DestroyImmediate: a whole Pass bakes in
     /// one frame, and Object.Destroy waits for the frame's end, so a card with many materials ran out of
-    /// memory before any was freed (issue 5).
+    /// memory before any was freed.
     /// </summary>
     internal sealed class Bake : IDisposable
     {

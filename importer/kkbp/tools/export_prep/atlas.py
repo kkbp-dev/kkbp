@@ -5,7 +5,7 @@ the UV maths and the painting are kkbp/atlas, which has no bpy; this module read
 applies the UVs and makes the atlas materials.
 
 An atlas material is a plain Principled BSDF with the light atlas as its colour and alpha and the
-normal atlas as its normal map (ADR 0050, issue 103): Blender's FBX exporter only finds the textures
+normal atlas as its normal map (ADR 0050): Blender's FBX exporter only finds the textures
 of such a material, and embeds them. The other atlases are files in the folder only. The materials
 of one atlas with the same render method become one material, and the copy has no outlines."""
 
@@ -38,7 +38,7 @@ OUTLINE = "kkbp_outline"  # what the Outlines Hook tags its outline materials wi
 
 def build(ch, mode: str, folder: Path, log, max_side: int | None = None):
     """The atlas copy of the Character in a "<name> atlas" Collection; returns the Collection. An
-    object whose atlas would be wider than `max_side` pixels gets several atlases (issue 12).
+    object whose atlas would be wider than `max_side` pixels gets several atlases.
     Pillow is required to import, so it is there; it is imported here, not when the add-on loads,
     because the add-on must load without it to offer installing it."""
     folder.mkdir(parents=True, exist_ok=True)

@@ -151,7 +151,7 @@ def _arm(build, side):
 
 def _aim_wrist(build, side):
     """The wrist points level across the hand, two thirds of the way along its vertices. A wrist
-    with no child to aim it comes from the Core Import pointing straight up (issue 24)."""
+    with no child to aim it comes from the Core Import pointing straight up."""
     wrist = build.metarig.data.edit_bones[side.wrist]
     if wrist.tail.z != wrist.head.z:
         wrist.tail.y = wrist.head.y
@@ -264,7 +264,7 @@ def _palm_bone(build, side, finger):
 def _game_finger(build, side, finger):
     """A finger on a skeleton without the joint-correction bones (SVS, ADR 0045). Its joints stay
     where the game has them. Its last bone has no child to aim it and comes from the Core Import
-    pointing straight up (issue 26): it carries on the way the second bone points, as far as the
+    pointing straight up: it carries on the way the second bone points, as far as the
     fingertip's vertices reach. The fingers keep the rolls they came with, which bend them downwards
     as KK's fixed rolls do; a thumb is rolled to bend level, towards the palm, as KK's is."""
     edit = build.metarig.data.edit_bones

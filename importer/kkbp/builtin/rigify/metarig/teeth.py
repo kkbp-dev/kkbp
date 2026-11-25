@@ -1,4 +1,4 @@
-"""Teeth bones (issues #42 and #99): five controls along each row of teeth, on every Rigify rig.
+"""Teeth bones: five controls along each row of teeth, on every Rigify rig.
 
 The teeth are the faces with the `teeth` Material Role. Their two rows are told apart by which
 piece of the mesh a vertex is in, not by height, because the rows overlap in height. Each row gets a

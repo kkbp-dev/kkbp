@@ -1,6 +1,6 @@
 # The importer snaps mirror partners and lifts the upper eyeline
 
-The exporter writes the Body Pass as an exact mirror image across X = 0 (ADRs [0047](0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md) and [0048](0048-the-body-is-skinned-with-mirrored-skin-matrices.md)), but Blender's Select Mirror still found no partner for about 580 KK and 620 KKS Body vertices after an import (issue 106). Two things were in the way:
+The exporter writes the Body Pass as an exact mirror image across X = 0 (ADRs [0047](0047-the-exporter-makes-vertex-copies-one-and-mirrors-the-body.md) and [0048](0048-the-body-is-skinned-with-mirrored-skin-matrices.md)), but Blender's Select Mirror still found no partner for about 580 KK and 620 KKS Body vertices after an import. Two things were in the way:
 
 - **The glTF importer's rounding.** Blender's glTF importer skins every vertex into its bind pose through matrices that are the identity but for float rounding, which leaves mirror partners up to a micrometre apart. Where the face, its lower eyeline and the eye whites lie within a micrometre of each other in Body, that is enough for X Mirror to take a vertex of one for the partner of another.
 - **The upper eyeline's shadow.** KK and KKS draw the eyeline's shadow (`eyeline_shadow`) as a second copy of the upper eyeline (`eyeline_upper`), at exactly the same place. X Mirror pairs a place with one vertex, so one of the two copies never has a partner.

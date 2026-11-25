@@ -1,5 +1,5 @@
 """`.SVS lif_main_skin_head`: SVS's face shader as the exporter bakes it, at one N.L
-(models.lif_main_skin_head, issue 62).
+(models.lif_main_skin_head).
 
     albedo = clamp(Color * mix(1, Shadow color 2, Matcap.b * Shadow color 2 alpha * (1 - Detail 2.b) * (Shadow power * 0.35 + 0.35)), 0, 0.95)
     Color  = clamp(albedo * `.SVS item light`(Base, Detail, Skin), 0, 1.01)

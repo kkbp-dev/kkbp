@@ -1,5 +1,5 @@
 """`KK create_eyewhite`: the edit template for KK's eye whites: create_eyewhite composites their
-texture, toon_eyew_lod0 shades it (issue 30). Opaque, as the game's composited texture is. Written
+texture, toon_eyew_lod0 shades it. Opaque, as the game's composited texture is. Written
 by hand."""
 
 import edit_templates

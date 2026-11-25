@@ -1,4 +1,4 @@
-"""The Low poly Hook on a copy of the KK golden sample, after Outlines and Rigify (issue #129)."""
+"""The Low poly Hook on a copy of the KK golden sample, after Outlines and Rigify."""
 
 import bpy
 import pytest

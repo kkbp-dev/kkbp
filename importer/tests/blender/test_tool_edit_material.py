@@ -131,13 +131,13 @@ def test_each_template_gets_its_slots_and_colours(ch, id, template, slots, param
 
 
 def test_an_emblem_is_not_drawn_outside_its_texture(ch):
-    """Issue 72: the emblem's texture is clipped, so the emblem doesn't repeat over the clothes."""
+    """The emblem's texture is clipped, so the emblem doesn't repeat over the clothes."""
     edit = edit_material.edit(ch, ch.material("cf_m_emblem"), log=lambda *_: None)
     assert templates.texture_node(edit, "main").extension == "CLIP"
 
 
 def test_a_baked_emblem_is_not_drawn_outside_its_texture_either(ch):
-    """Issue 72: the import clips the emblem's baked textures, and only the emblem's."""
+    """The import clips the emblem's baked textures, and only the emblem's."""
     def extensions(id):
         return {templates.texture(ch.material(id), "main", variant).extension for variant in ("light", "dark")}
     assert extensions("cf_m_emblem") == {"CLIP"}
@@ -146,7 +146,7 @@ def test_a_baked_emblem_is_not_drawn_outside_its_texture_either(ch):
 
 def test_by_default_the_shaders_templates_take_shown_colours_and_nothing_saturates(ch):
     """ADR 0026, 0056: no KK Role saturates by default; the templates made from the game's shaders (the
-    hair's and the clothes' since issue 30) grade in their nodes instead, and take Shown Colours."""
+    hair's and the clothes') grade in their nodes instead, and take Shown Colours."""
     b = ch.bundle()
     lut, inverse = edit_material._lut(), edit_material._ungrade_lut()
     for id, param, source in (("cf_m_hair_b_08_00", "color", b.material("cf_m_hair_b_08_00").colors["_Color"]),
@@ -266,7 +266,7 @@ def test_edits_keep_the_bundle_colours_unless_saturated(legacy):
 
 
 def test_reset_keeps_the_saturation_the_edit_was_made_with(legacy):
-    """Issue #13: Reset used to fall back to the default and drop an On or Off choice."""
+    """Reset used to fall back to the default and drop an On or Off choice."""
     ch = legacy
     edit = edit_material.edit(ch, ch.material("ct_modded"), saturate=True, log=lambda *_: None)
     saturated = _red(edit)
@@ -287,7 +287,7 @@ def _edit_from_the_operator(ch, id, **props):
 
 
 def test_the_operator_saturates_as_asked_and_forgets_it_afterwards(legacy):
-    """Issue #13: the panel passes the scene's Saturate choice; the operator keeps no value of its own."""
+    """The panel passes the scene's Saturate choice; the operator keeps no value of its own."""
     ch = legacy
     assert bpy.context.scene.kkbp_edit_saturate == "DEFAULT"
     edit = _edit_from_the_operator(ch, "ct_modded", saturate="ON")

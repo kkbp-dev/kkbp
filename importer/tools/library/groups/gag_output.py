@@ -40,7 +40,7 @@ def build(lib):
     })
 
     # Nothing for a shadow ray: the gag eyes are flat pictures in front of the face and cast no
-    # shadow on it (issue 86). The material needs its transparent shadows on for this to count.
+    # shadow on it. The material needs its transparent shadows on for this to count.
     t.node('ShaderNodeLightPath', 'Light Path', props={
         'location': (-600.0, -450.0),
     })

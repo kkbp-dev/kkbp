@@ -1,5 +1,5 @@
 """`SVS lif_main_eye`: the edit template for SVS's eyes and their eye white copies, which the game
-draws together with LIF/lif_main_eye (issue 62). The eye white copy bakes the eye white alone; the
+draws together with LIF/lif_main_eye. The eye white copy bakes the eye white alone; the
 eye bakes the pupil layer over it (ADR 0034), set by the `eye_white_only` param. The eye's textures
 are placed by `.SVS eye uv` and clamped, as the game's samplers are. No grade: SVS's bake has none.
 Written by hand."""

@@ -1,4 +1,4 @@
-"""`.SVS acs color`: SVS's item shader's colour (models.acs_color, issue 62): each colour mask channel
+"""`.SVS acs color`: SVS's item shader's colour (models.acs_color): each colour mask channel
 picks Main color k over Main color 4, pattern k (where the mask's alpha is at least 0.5, and pattern
 1 only Inside its tile) tinting it toward Sub color k times the pattern, or toward the pattern itself
 by clamp(saturation * 10 - 0.05) * Sub color k alpha; then times the main texture. Each texture's

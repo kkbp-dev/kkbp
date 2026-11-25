@@ -121,7 +121,7 @@ def test_only_a_thinning_mask_thins_the_outline(build, monkeypatch, game, expect
 def test_the_face_outline_is_black_in_every_bake(sample, golden_import):
     """The face's outline is a copy of its material: each baked version of the main texture in it is
     black, the bakes without eyeshadow too, or the outline would turn to skin as the Gag eyes key
-    fades to them (issue 38)."""
+    fades to them."""
     _, ch = golden_import(sample, hooks=["Outlines"])
     face = ch.materials(roles="face")[0]
     assert templates.texture(face, "main", "light_no_eyeshadow") is not None

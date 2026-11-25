@@ -66,7 +66,7 @@ def test_the_golden_samples_import(sample, golden_import):
     for gag in gags:
         assert gag.name == gag[character.ID]
         if templates.picker(gag) is None:  # the others follow the dropdown
-            prop, = templates.object_properties(gag)  # its choice, read from the object it is on (issue 70)
+            prop, = templates.object_properties(gag)  # its choice, read from the object it is on
             users = [o for o in ch.parts("gag_eyes") if any(s.material == gag for s in o.material_slots)]
             assert users and all(f'["{prop}"]' in [fc.data_path for fc in o.animation_data.drivers] for o in users)
             assert gag.node_tree.animation_data is None or not gag.node_tree.animation_data.drivers
@@ -112,7 +112,7 @@ def test_expressions_drive_the_face(golden_import):
 
 @pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
 def test_the_tears_are_moved_from_bodys_shape_keys(sample, golden_import):
-    """Issue 69: Body has the tear meshes' showing keys, which move nothing on Body and drive the Tears
+    """Body has the tear meshes' showing keys, which move nothing on Body and drive the Tears
     object's keys of the same name, so the tears are keyed with the rest of the face."""
     _, ch = golden_import(sample)
     body_keys, tear_keys = ch.body.data.shape_keys.key_blocks, ch.tears.data.shape_keys.key_blocks
@@ -142,7 +142,7 @@ def test_the_tears_are_moved_from_bodys_shape_keys(sample, golden_import):
 
 @pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
 def test_the_tears_and_gag_eyes_rest_inside_the_head(sample, golden_import):
-    """Issue 84: with their showing keys down, no vertex of the tears or the gag eyes is outside the
+    """With their showing keys down, no vertex of the tears or the gag eyes is outside the
     face mesh, so nothing shows at the back of the head when the hair is hidden."""
     import bmesh
     from mathutils.bvhtree import BVHTree
@@ -171,7 +171,7 @@ def test_the_tears_and_gag_eyes_rest_inside_the_head(sample, golden_import):
 
 
 def test_svs_has_each_vowel_mouth_once(golden_import):
-    """Issue 45: the game's own vowel and Cartoony Smile mouths carry the Expression Names, with no
+    """The game's own vowel and Cartoony Smile mouths carry the Expression Names, with no
     second copy under the game's numbered name."""
     _, ch = golden_import("svs")
     names = [k.name for k in ch.body.data.shape_keys.key_blocks]
@@ -186,7 +186,7 @@ def test_svs_has_each_vowel_mouth_once(golden_import):
     ("svs", "cf_m_gageye_00", "cf_t_gageye_10"),
 ])
 def test_fiery_eyes_step_through_their_sheet(sample, material, pattern, golden_import):
-    """The fiery eyes' texture is a 1 x 6 sheet of flames the game flips through (issue #15)."""
+    """The fiery eyes' texture is a 1 x 6 sheet of flames the game flips through."""
     _, ch = golden_import(sample)
     gag = ch.material(material)
     index = templates.patterns(gag).index(pattern)

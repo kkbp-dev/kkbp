@@ -22,7 +22,7 @@ TORSO_HANDLES = (names.BREASTS_HANDLE_BONE, names.LEFT_BREAST_HANDLE_BONE, names
 # leaves a collection out of the panel.
 ROWS = (
     (names.KOIKATSU_DEFORM_BONES_LAYER, 0),
-    (names.JUNK_LAYER, 0),  # issue #25
+    (names.JUNK_LAYER, 0),
     (names.TORSO_LAYER, 1), (TORSO_FK, 1),
     (names.LEFT_ARM_LAYER + names.IK_LAYER_SUFFIX, 2), (names.LEFT_ARM_LAYER + names.FK_LAYER_SUFFIX, 2),
     (names.RIGHT_ARM_LAYER + names.IK_LAYER_SUFFIX, 3), (names.RIGHT_ARM_LAYER + names.FK_LAYER_SUFFIX, 3),

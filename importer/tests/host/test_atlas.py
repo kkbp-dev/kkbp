@@ -105,7 +105,7 @@ def _big():
 
 
 def test_an_atlas_over_the_cap_is_split_into_several():
-    """Issue 12: four 4096 px materials don't fit one 4096 px atlas, so each gets its own, and the
+    """Four 4096 px materials don't fit one 4096 px atlas, so each gets its own, and the
     small ones share another. Nothing is scaled down."""
     assert atlas.plan(_big()).size[0] > 8192
     layouts = atlas.plan_split(_big(), max_side=4096)

@@ -1,5 +1,5 @@
 """`.SVS lif_main_acs`: SVS's item shader (accessories, teeth, tongue) as the exporter bakes it, at one
-N.L (models.lif_main_acs, issue 62).
+N.L (models.lif_main_acs).
 
     c95   = Color * 0.95;  col = clamp(c95, 0, 0.95)
     line  = clamp(the mask's channels times Line color intensity k mixing c95 back over mix(c95, Line color, Line power), 0, 0.95)

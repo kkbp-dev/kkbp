@@ -1,5 +1,5 @@
-"""The Character's Collection as an asset with the Card as its preview (issue #131), and the colours
-of the Collections the import makes (issue #130)."""
+"""The Character's Collection as an asset with the Card as its preview, and the colours
+of the Collections the import makes."""
 
 import struct
 import zlib

@@ -1,5 +1,5 @@
 """`.KK graded`: a lit shader's linear colour as the game's bake stores it, graded, and decoded back
-to linear for the emission that shows it (issue 30): linear(grade(srgb(colour))). Written by hand."""
+to linear for the emission that shows it: linear(grade(srgb(colour))). Written by hand."""
 
 NAME = '.KK graded'
 KIND = 'ShaderNodeTree'

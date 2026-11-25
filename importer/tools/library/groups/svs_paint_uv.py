@@ -1,4 +1,4 @@
-"""`.SVS paint uv`: where SVS's create shaders read a paint (models.create_paint_uv, issue 62):
+"""`.SVS paint uv`: where SVS's create shaders read a paint (models.create_paint_uv):
 s = 2 - 2 * Position w; p = (uv + Position.xy) * 2s + 0.5 - s - 0.5, turned by Position.z turns, + 0.5.
 Written by hand."""
 

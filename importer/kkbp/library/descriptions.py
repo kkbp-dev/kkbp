@@ -17,7 +17,7 @@
 - `positions`: a slot whose placement is a `Scale Vector` group node in place of the image node's own
   mapping (the edit eyes' pupil and highlights, D41).
 - `graded`: an edit template made from a game's shaders, which grades its light and dark itself as
-  the game's bake did; the edit tool never saturates its textures (issue 30). One with a
+  the game's bake did; the edit tool never saturates its textures. One with a
   `shown_colors` param takes Shown Colours unless the menu is Off (ADR 0056).
 
 A node is named by its path: `textures/_CM.png` is the node `_CM.png` in the group of the material's
@@ -116,7 +116,7 @@ class Template:
     groups: tuple[str, ...] = field(default=())  # groups apply() needs beyond those the material holds
     copies: tuple[str, ...] = ()
     positions: Mapping[str, str] = _EMPTY
-    graded: bool = False  # an edit template that grades its light and dark as the game's bake (issue 30)
+    graded: bool = False  # an edit template that grades its light and dark as the game's bake
 
 
 _LIGHT_DARK_TEXTURES = {
@@ -349,7 +349,7 @@ _EDIT_TEMPLATES = (
                      "use_kage_texture": ("light", "Use kage texture color?"),
                      "use_down_texture": ("light", "Use down texture color?")}),
     Template("KK Teeth (tooth)", textures=_MISC.textures, params=_MISC.params, copies=_MISC.copies),
-    # The edit templates made from the games' shaders (issue 30, importer/tools/game_shaders/models.py):
+    # The edit templates made from the games' shaders (importer/tools/game_shaders/models.py):
     # each slot's image node by name at the top level, shared groups, and the game's colours linear.
     Template("KK toon_eyew", graded=True, textures={"main": "tex.main"},
              params={**_GAME_BAKE, **_SHOWN, **_EYEW_LIGHT, "color": ("lit", "Color"), "shadow_color": ("lit", "Shadow color")}),
@@ -408,7 +408,7 @@ _EDIT_TEMPLATES = (
                      "hokuro": ("mole", "Paint"), "hokuro_w": ("mole", "Paint w")}),
     Template("KK toon_nose", graded=True, textures={"main": "tex.main"},
              params={**_GAME_BAKE, **_SHOWN, "color": ("lit", "Color"), "color_alpha": ("lit", "Color alpha")}),
-    # SVS's (issue 62): each follows a LIF shader under the maker's bake light (models.SVS_LIGHT), with
+    # SVS's: each follows a LIF shader under the maker's bake light (models.SVS_LIGHT), with
     # no grade, as SVS's bake has none. `graded` keeps the edit tool from saturating them.
     Template("SVS lif_main_eyebrow", graded=True, textures={"eyebrow": "tex.eyebrow"},
              params={**_GAME_BAKE, **_SVS_LIGHT, "length": ("uv", "Length"), "width": ("uv", "Width"),
@@ -542,7 +542,7 @@ TEMPLATES: Mapping[str, Template] = MappingProxyType({t.name: t for t in (
         params={**_LIGHT_DARK_PARAMS, "disable_permalight_mask": ("shader", "Disable permalight mask")},
         shader="shader", variants=_KK_VARIANTS, variant_params=_KK_VARIANT_PARAMS, requires=("main.light",),
     ),
-    # The face when the bundle has its bakes without eyeshadow (issue 38, ADR 0046).
+    # The face when the bundle has its bakes without eyeshadow (ADR 0046).
     Template(
         "KK Light Dark Face",
         textures={**_LIGHT_DARK_TEXTURES, "main.light_no_eyeshadow": "tex.main.light_no_eyeshadow",

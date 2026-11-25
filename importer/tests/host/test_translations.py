@@ -1,4 +1,4 @@
-"""The UI translations' tables (issue #37), checked without Blender: each language module is plain
+"""The UI translations' tables, checked without Blender: each language module is plain
 data, so it is loaded from its file. That every string the UI shows has a translation is looked at
 in Blender, by tests/blender/test_translations.py."""
 

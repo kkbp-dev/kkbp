@@ -1,5 +1,5 @@
 """Koikatsu Sunshine (KKS). It differs from KK only in what the bundle already says, and in how some of
-its shaders bake (issue 30, importer/tools/game_shaders/models.py):
+its shaders bake (importer/tools/game_shaders/models.py):
 
 - Koikano/main_eyew bakes as KK's toon_eyew with other ambient values (`models.KKS`).
 - Koikano/hair_main_sun and hair_main_sun_front, though larger shaders, bake as KK's main_hair and

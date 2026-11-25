@@ -1,5 +1,5 @@
 """`.SVS face paint uv`: where SVS's face create shader reads a paint (Size 2) or the mole (Size 2.4)
-(models.face_paint_uv, issue 62): as `.SVS paint uv`, its v moved by 0.8 (Position.y + 0.0966849998)
+(models.face_paint_uv): as `.SVS paint uv`, its v moved by 0.8 (Position.y + 0.0966849998)
 and s = 2 - Size * Position w. Written by hand."""
 
 import math

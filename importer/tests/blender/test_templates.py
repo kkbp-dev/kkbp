@@ -54,7 +54,7 @@ def test_a_baked_material_gets_light_dark_with_its_textures(build):
 
 @pytest.mark.parametrize("game, template", [("KK", "KK Light Dark Face"), ("SVS", "SVS Light Dark Face")])
 def test_a_face_with_bakes_without_eyeshadow_gets_the_eyeshadow_slider(build, game, template):
-    """Issue 38: at 1 the face is the game's bake, at 0 the bake without eyeshadow."""
+    """At 1 the face is the game's bake, at 0 the bake without eyeshadow."""
     b = _builder(game)
     face = next(m for m in b.materials if m["id"] == "cf_m_face_00")
     face["textures"] += [b.add_texture("_MainTex", role="main", variant="light_no_eyeshadow"),

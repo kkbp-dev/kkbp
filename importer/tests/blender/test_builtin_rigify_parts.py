@@ -28,7 +28,7 @@ def test_features_found_on_the_core_import(golden_import, sample):
     assert vars(build.features) == EXPECTED[sample]
 
 
-# --- the hands without the joint-correction bones (SVS; issues 24 and 26, ADR 0045) ---------------
+# --- the hands without the joint-correction bones (SVS; ADR 0045) ---------------------------------
 
 FINGERS = ("IndexFinger", "MiddleFinger", "RingFinger", "LittleFinger")
 

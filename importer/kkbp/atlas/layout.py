@@ -42,7 +42,7 @@ def plan(pieces: list[Piece], gaps: int = 0) -> Layout:
 
 def plan_split(pieces: list[Piece], gaps: int = 0, max_side: int | None = None) -> list[Layout]:
     """Packs the pieces into as many square atlases as it takes for none to be wider than `max_side`
-    pixels (issue 12); one atlas, as `plan` makes it, if they all fit or there is no limit. Nothing is
+    pixels; one atlas, as `plan` makes it, if they all fit or there is no limit. Nothing is
     scaled down: each piece, largest first, goes in the first atlas it fits in, or starts another. A
     piece wider than `max_side` on its own gets an atlas to itself, which is then over the limit."""
     if max_side is None:

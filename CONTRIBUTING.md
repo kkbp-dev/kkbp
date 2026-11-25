@@ -18,6 +18,10 @@ The game installs (`games/`) sit beside these folders in the working copy and ar
 
 On a new computer, follow "First-time setup" in [CLAUDE.md](CLAUDE.md) before running any test: the tests need the Golden Samples, and making them needs the games and a game launcher.
 
+## Referring to issues
+
+- Code, tests and docs say what was asked and why, not an issue or pull request number, so the text stands without the issue page. An open issue may be cited by number (`issue #1`) for the work it still tracks.
+
 ## Changing the user documentation
 
 - A change to what a user sees (an option, a label, a default, a tool) changes its page in `docs/wiki/` in the same pull request.

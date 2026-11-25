@@ -1,4 +1,4 @@
-"""`.KK srgb`: a linear colour sRGB-encoded, clamped to 0..1 as an 8-bit render target is (issue 30).
+"""`.KK srgb`: a linear colour sRGB-encoded, clamped to 0..1 as an 8-bit render target is.
 
 The edit templates use it twice: to give back a bundle texture's stored values (Blender decodes the
 PNG as sRGB; the stored values are the linear ones the game's shader sampled, models.py), and before

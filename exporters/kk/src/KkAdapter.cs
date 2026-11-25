@@ -188,7 +188,7 @@ namespace KKBP.Exporter
         }
 
         /// <summary>
-        /// The face settings Prepare changes, as the maker had them (issue 22). They live in the card's
+        /// The face settings Prepare changes, as the maker had them. They live in the card's
         /// status: without putting them back, the next export starts from the exported face, and on a fixed
         /// mouth ChangeMouthOpenMax also sets the mouth's FixedRate, so a closed mouth stays open.
         /// ChangeMouthFixed comes after ChangeMouthOpenMax and sets FixedRate from both. The eye-look target

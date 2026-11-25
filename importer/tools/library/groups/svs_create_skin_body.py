@@ -1,5 +1,5 @@
 """`.SVS create skin body`: SVS's body create shader (LIF/lif_create_main_skin_body) in nodes
-(models.create_main_skin_body, issue 62).
+(models.create_main_skin_body).
 
     col   = mix(Main color, Sunburn color, Sunburn's red * Sunburn color alpha)
     Color = each paint k over col by its alpha * its colour's alpha * Paint mask's red, toward the paint

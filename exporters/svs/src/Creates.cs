@@ -9,7 +9,7 @@ namespace KKBP.Exporter
     /// SVS's create materials (LIF/lif_create_main_cloth, _skin_body, _skin_head): each composites a
     /// lit material's `_Create_main_texture` (or the face's `_Create_jm_main_skin_head`) from its base,
     /// masks, patterns and the Character's colours. Each goes, as the svs "create" section (Schema
-    /// Version 1.3, issue 62), on the first material slot of the captured renderer the game gives it.
+    /// Version 1.3), on the first material slot of the captured renderer the game gives it.
     /// </summary>
     internal sealed class Creates
     {

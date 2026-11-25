@@ -1,6 +1,6 @@
 # Bakes have their main texture's size and shape; the body and face stay 4096 square
 
-The light and dark bakes were a square at the longer side of the material's main texture, and 4096 square for the body and the face (ADR 0036 left this open). Issue 53 asked for two things: bake at the main texture's own width and height, and decide the body and face size by measuring rather than keeping the legacy exporter's 4096.
+The light and dark bakes were a square at the longer side of the material's main texture, and 4096 square for the body and the face (ADR 0036 left this open). Two things were asked for: bake at the main texture's own width and height, and decide the body and face size by measuring rather than keeping the legacy exporter's 4096.
 
 A material's bake now has its main texture's width and height (2048 square with no main texture). On the Sample Cards, KK's skirt, bra, shorts and jacket trim go from 1024 × 1024 to 1024 × 512 (512 × 256 for the trim), its socks to 512 × 1024, and KKS's bra and shorts to 1024 × 512. The quad covering UV space is rendered with the camera's aspect set to 1, so it fills a render texture of any shape and each pixel still lands on one texel.
 

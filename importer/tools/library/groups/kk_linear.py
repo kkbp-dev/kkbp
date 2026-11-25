@@ -1,4 +1,4 @@
-"""`.KK linear`: an sRGB-encoded colour decoded to linear (issue 30). The edit templates decode the
+"""`.KK linear`: an sRGB-encoded colour decoded to linear. The edit templates decode the
 graded colour with it, so their emission renders, through the Standard view transform, as the
 encoded colour the game's bake stored. Written by hand."""
 

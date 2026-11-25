@@ -1,5 +1,5 @@
 """`SVS lif_main_eyebrow`: the edit template for SVS's eyebrows, which the game draws with
-LIF/lif_main_eyebrow straight from its texture (issue 62). No grade: SVS's bake has none. Written by
+LIF/lif_main_eyebrow straight from its texture. No grade: SVS's bake has none. Written by
 hand."""
 
 import edit_templates

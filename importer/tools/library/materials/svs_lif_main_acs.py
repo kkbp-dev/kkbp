@@ -1,5 +1,5 @@
 """`SVS lif_main_acs`: the edit template for SVS's accessories, teeth and tongue, which the game draws
-with LIF/lif_main_acs from a main texture, colour mask and three patterns (issue 62). It lights once,
+with LIF/lif_main_acs from a main texture, colour mask and three patterns. It lights once,
 at the N.L the bake's toon value picks, reading the ramp at two places. No grade: SVS's bake has
 none. Written by hand."""
 

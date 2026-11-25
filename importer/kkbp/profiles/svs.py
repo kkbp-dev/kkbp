@@ -88,7 +88,7 @@ _CREATE_PAINTS = [
 
 
 # The edit material tool (D38-D41; profiles/kk.py says what each table holds). SVS's templates follow
-# its LIF shaders (issue 62, importer/tools/game_shaders/models.py); a shader none follows (the
+# its LIF shaders (importer/tools/game_shaders/models.py); a shader none follows (the
 # `_alpha` and `_low` copies, modded shaders) isn't editable. SVS's materials carry their textures by
 # Raw Property, and their colours are the game's own, linear as its shaders see them.
 EDIT = {

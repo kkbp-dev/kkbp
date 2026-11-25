@@ -210,7 +210,7 @@ def test_the_eyes_follow_the_target(ch):
 
 @pytest.mark.parametrize("follow", (1.0, 0.0))
 def test_moving_root_moves_the_eye_target_as_far(ch, follow):
-    """Issue #135: with the target following the head, root moved it twice as far as the head."""
+    """With the target following the head, root moved it twice as far as the head."""
     target, root = ch.rig.pose.bones[names.EYE_TARGET_BONE], ch.rig.pose.bones[names.ROOT_BONE]
     head = ch.rig.pose.bones[names.ORIGINAL_BONE_PREFIX + names.HEAD_BONE]
     target[eyes.FOLLOW_HEAD] = follow

@@ -1,6 +1,6 @@
 """`SVS lif_main_eyelash_up`: the edit template for SVS's eyelashes, which the game draws with
 LIF/lif_main_eyelash_up from its upper and lower eyelash textures, the lower over the upper by its
-alpha (issue 62). No grade: SVS's bake has none. Written by hand."""
+alpha. No grade: SVS's bake has none. Written by hand."""
 
 import edit_templates
 

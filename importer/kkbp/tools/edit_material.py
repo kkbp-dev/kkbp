@@ -138,8 +138,8 @@ def edit(ch, material, *, saturate: bool | None = None, log=print):
     template = templates.library.TEMPLATES[name]
     shown = False
     if template.graded:
-        # A template made from a game's shaders grades its light and dark itself, as the game's bake
-        # (issue 30): its textures are never saturated. The menu switches its Shown Colours instead,
+        # A template made from a game's shaders grades its light and dark itself, as the game's bake:
+        # its textures are never saturated. The menu switches its Shown Colours instead,
         # on unless asked off (ADR 0056); a template without them (SVS's, ungraded) ignores it.
         shown = saturate = SHOWN_PARAM in template.params and saturate is not False
         textures_saturate = False

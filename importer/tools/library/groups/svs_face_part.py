@@ -1,6 +1,6 @@
 """`.SVS face part`: SVS's eyebrow and eyelash shaders (LIF/lif_main_eyebrow, lif_main_eyelash_up) as
 the exporter bakes them, front-lit (Light) and back-lit (Dark), in linear colour
-(models.svs_face_part, issue 62).
+(models.svs_face_part).
 
     w     = By alpha ? a : 1
     col   = mix(Color 1, Color 2, r * Color 2 alpha * w)

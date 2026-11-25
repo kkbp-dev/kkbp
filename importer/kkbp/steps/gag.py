@@ -1,5 +1,5 @@
 """Gag eyes: one `Gag eyes` shape key, and a dropdown on the gag eyes' first material that picks
-which gag expression it shows (issue 35, ADR 0042).
+which gag expression it shows (ADR 0042).
 
 Every gag expression of a Game moves the face the same way except one or two (Fiery Eyes, which
 leaves the eyes open). `combine_gag_keys` replaces the gag expressions' shape keys with `Gag eyes`,

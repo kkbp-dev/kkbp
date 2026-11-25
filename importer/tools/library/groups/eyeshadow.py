@@ -1,5 +1,5 @@
 """`.Eyeshadow`: fades the face's eyeshadow, between the bakes with it and the bakes without it
-(issue 38, ADR 0046). At 1 the face is the game's own bake. `Hide with gag eyes` takes the eyeshadow
+(ADR 0046). At 1 the face is the game's own bake. `Hide with gag eyes` takes the eyeshadow
 away as it rises, whatever `Eyeshadow` is: the importer drives it from the Gag eyes shape key, and it
 can be raised by hand too. Written by hand."""
 

@@ -229,7 +229,7 @@ def record_face_keys(ctx):
 def add_tear_controls(ctx):
     """Gives Body the tear meshes' showing keys (`Tears big`, …), in the tears Part's order. Body has no
     tear geometry, so on Body they move nothing: they are the controls `link_expression_keys` drives the
-    tears Part's keys from, so the tears are keyed with the rest of the face (issue 69)."""
+    tears Part's keys from, so the tears are keyed with the rest of the face."""
     ch = ctx.character
     body = ch.body
     if body is None or body.data.shape_keys is None:
@@ -380,7 +380,7 @@ def add_driver(owner, prop, targets, expression):
 
 def drive_param(ch, mat, name, targets, expression, start=0, keep=False):
     """Drives the material's parameter `name` from `targets`, on a property of each of the Character's
-    objects that uses the material, which the material reads (`templates.read_from_objects`, issue 70).
+    objects that uses the material, which the material reads (`templates.read_from_objects`).
     Returns the drivers."""
     prop = templates.read_from_objects(mat, name, keep)
     drivers = []

@@ -1,4 +1,4 @@
-"""`.SVS eyebrow uv`: where SVS's eyebrow shader reads its texture (models.eyebrow_uv, issue 62):
+"""`.SVS eyebrow uv`: where SVS's eyebrow shader reads its texture (models.eyebrow_uv):
 stretched along u by Length and along v by Width; both 0.5 is the texture as it is.
 
     su = mix(2 - 2 * Length, 1.2 - 0.4 * Length, round(Length))

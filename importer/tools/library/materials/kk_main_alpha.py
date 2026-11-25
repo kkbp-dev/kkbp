@@ -1,5 +1,5 @@
 """`KK main_alpha`: the edit template for KK's see-through clothes and accessories, which the game
-composites with create_topN (or not: an accessory's own texture) and draws with main_alpha (issue 30).
+composites with create_topN (or not: an accessory's own texture) and draws with main_alpha.
 Written by hand."""
 
 import edit_templates

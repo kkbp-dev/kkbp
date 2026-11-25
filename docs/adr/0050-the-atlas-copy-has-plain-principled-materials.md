@@ -1,6 +1,6 @@
 # The atlas copy has plain Principled materials
 
-Export prep's atlas copy used to keep each material as a copy of its KK shader material, with the atlases in its image nodes. Blender's FBX exporter then wrote no textures at all (issue 103): it reads a material's textures through `PrincipledBSDFWrapper`, which sees only a Principled BSDF in the material's own node tree, wired to the output, with Image Texture nodes plugged straight into it (the normal map through a Normal Map node). The KK shader's textures are inside node groups.
+Export prep's atlas copy used to keep each material as a copy of its KK shader material, with the atlases in its image nodes. Blender's FBX exporter then wrote no textures at all: it reads a material's textures through `PrincipledBSDFWrapper`, which sees only a Principled BSDF in the material's own node tree, wired to the output, with Image Texture nodes plugged straight into it (the normal map through a Normal Map node). The KK shader's textures are inside node groups.
 
 So an atlas material is now a new material holding only that: a Principled BSDF with the light atlas as its Base Color and Alpha and the normal atlas as its normal map. The collection's FBX exporter has `embed_textures` on, so the FBX holds both atlases and can be moved without its folder.
 

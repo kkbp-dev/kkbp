@@ -1,6 +1,6 @@
 # The tongue is part of Body
 
-[ADR 0020](0020-one-tongue-with-mouth-keys-and-bones.md) kept one tongue, the head's, weighted to the tongue bones, and made it a Part of its own: `tongue`, parented to Body, with its mouth keys driven from Body's. The user wants the tongue in Body, as the legacy importer had the head's tongue (issue 31). The merge of the two game tongues stays as ADR 0020 describes it; only where the result goes changes.
+[ADR 0020](0020-one-tongue-with-mouth-keys-and-bones.md) kept one tongue, the head's, weighted to the tongue bones, and made it a Part of its own: `tongue`, parented to Body, with its mouth keys driven from Body's. The user wants the tongue in Body, as the legacy importer had the head's tongue. The merge of the two game tongues stays as ADR 0020 describes it; only where the result goes changes.
 
 - The importer no longer gives a mesh the `tongue` Part Role. A mesh with a `tongue` material is a `body` Part in the Body Pass, so `build_parts` joins it into Body with the rest of the head.
 - `merge_rigged_tongue` finds the two tongues by their `tongue` Material Role instead of their Part Role, before `build_parts` joins them.

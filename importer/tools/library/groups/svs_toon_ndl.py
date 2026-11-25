@@ -1,5 +1,5 @@
 """`.SVS toon ndl`: N.L on the bake quad picked by the toon value the bake sets (1 lit, 0 dark), for
-SVS templates that light once at it (issue 62). The toon value passes through to `.Combine
+SVS templates that light once at it. The toon value passes through to `.Combine
 colors`. Written by hand."""
 
 NAME = '.SVS toon ndl'

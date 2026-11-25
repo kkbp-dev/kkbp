@@ -1,4 +1,4 @@
-"""The body follows the shown Outfit (issue 119, ADR 0055): showing one Outfit's Collection puts that
+"""The body follows the shown Outfit (ADR 0055): showing one Outfit's Collection puts that
 Outfit's body textures, such as its alpha mask, into the body's materials and their copies."""
 
 import bpy

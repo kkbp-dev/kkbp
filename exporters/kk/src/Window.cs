@@ -77,7 +77,7 @@ namespace KKBP.Exporter
             {
                 plugin.Batch.Stop();
             }
-            // The batch's progress has a line of its own: Status changes with each card's export (issue #34).
+            // The batch's progress has a line of its own: Status changes with each card's export.
             if (plugin.Batch != null && plugin.Batch.Card != null)
             {
                 GUILayout.Label(plugin.Batch.Progress);

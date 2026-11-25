@@ -179,7 +179,7 @@ def _neck(body):
 
 @pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
 def test_the_golden_neck_is_one_surface(golden_import, sample):
-    """Issue 85: no face vertex is left beside a body vertex."""
+    """No face vertex is left beside a body vertex."""
     body = golden_import(sample)[1].body
     used = _neck(body)
     assert sum(1 for roles in used.values() if len(roles) == 2) >= 20

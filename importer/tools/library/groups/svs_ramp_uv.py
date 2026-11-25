@@ -1,5 +1,5 @@
 """`.SVS ramp uv`: where SVS's hair, item and clothes shaders read their ramp, along the ramp's
-diagonal, on the bake quad (models.hair_ramp_uv, item_ramp_uv, cloth_ramp_uv, issue 62):
+diagonal, on the bake quad (models.hair_ramp_uv, item_ramp_uv, cloth_ramp_uv):
 k = 1 - Pull * Detail's green, l = Lift detail's red * Lift, Ramp 1 at clamp(k * clamp(clamp(N.L) + l)),
 Ramp 2 at clamp(l / 2 + k * clamp(N.L * 0.4 + 0.3)). The hair pulls by 0.5, the items and clothes by
 `_ShadowSetting.b`; the clothes lift by `_Detail_mask_02`'s red times `_RimScale`. Written by hand."""

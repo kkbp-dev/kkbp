@@ -98,7 +98,7 @@ def ik_snap(rig):
 @contextmanager
 def _meshes_set_aside(ch):
     """Keeps the Character's meshes out of the scene's evaluation while the retarget poses the rig: every
-    update would otherwise deform all of them again, which was nearly all of its time (issue 67)."""
+    update would otherwise deform all of them again, which was nearly all of its time."""
     hidden = [o for o in ch.parts() if o.type == "MESH" and not o.hide_viewport]
     for obj in hidden:
         obj.hide_viewport = True
@@ -178,7 +178,7 @@ def _pose_at_once(rig, controls, anchors, goals, late):
     """Gives every control (parents first) its goal: the world rotation and, for the torso, location.
 
     A control's basis depends on where its parent ends up this frame, which the scene only knows after
-    an update. One update per bone depth was nearly all of the retarget's time (issue 67), so the
+    an update. One update per bone depth was nearly all of the retarget's time, so the
     parent's pose is worked out instead: the bones between a control and the nearest control above it
     are taken to keep the place they have relative to that control, whose pose this frame is already
     decided. A constraint can break that (a finger's first bone follows the hand's deform bone, not

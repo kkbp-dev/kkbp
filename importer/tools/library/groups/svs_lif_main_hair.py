@@ -1,5 +1,4 @@
-"""`.SVS lif_main_hair`: SVS's hair shader as the exporter bakes it, at one N.L (models.lif_main_hair,
-issue 62).
+"""`.SVS lif_main_hair`: SVS's hair shader as the exporter bakes it, at one N.L (models.lif_main_hair).
 
     col    = mix(Main color, Sub color 2, mask.g * its alpha);  col = mix(col, Sub color 1, mask.b * its alpha)
     col    = mix(col, Add skin color, Detail 2.b * its alpha)

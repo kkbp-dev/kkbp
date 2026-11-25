@@ -1,5 +1,5 @@
 """`.SVS lif_main_skin_body`: SVS's body shader as the exporter bakes it, at one N.L
-(models.lif_main_skin_body, issue 62).
+(models.lif_main_skin_body).
 
     s       = Shadow power * 0.35 + 0.35
     shaded  = Color * mix(1, Shadow color 2, Matcap.b * Shadow color 2 alpha * s)

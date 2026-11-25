@@ -1,5 +1,5 @@
 """`.SVS cheek uv`: where SVS's face shader reads its cheek blush (models.cheek_position with
-create_paint_uv, issue 62), on the mesh's second UV map: a paint position of (Position x * 0.24 +
+create_paint_uv), on the mesh's second UV map: a paint position of (Position x * 0.24 +
 Cheek position.x - 0.12, Position y * -0.2 + Cheek position.y + 0.1, Cheek position.z - Rotation + 0.5),
 w = Size * 0.2 + Cheek position w - 0.1. Written by hand."""
 

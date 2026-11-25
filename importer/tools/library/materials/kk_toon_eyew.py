@@ -1,5 +1,5 @@
 """`KK toon_eyew`: the edit template for KK's eyebrows and eyelines, which the game draws with
-toon_eyew_lod0 straight from their texture (issue 30). Written by hand."""
+toon_eyew_lod0 straight from their texture. Written by hand."""
 
 import edit_templates
 

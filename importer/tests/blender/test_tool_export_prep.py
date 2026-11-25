@@ -64,7 +64,7 @@ def _atlas_materials(collection):
 
 
 def test_an_atlas_material_is_a_principled_bsdf_the_fbx_exporter_reads(ch):
-    """Issue 103, ADR 0050: Blender's FBX exporter finds a material's textures through this wrapper,
+    """ADR 0050: Blender's FBX exporter finds a material's textures through this wrapper,
     which sees only a Principled BSDF in the material's own tree."""
     from bpy_extras.node_shader_utils import PrincipledBSDFWrapper
 
@@ -111,7 +111,7 @@ def test_the_materials_of_an_atlas_are_merged_by_render_method(ch):
 
 
 def test_the_fbx_holds_the_atlases(ch, tmp_path):
-    """Issue 103: the collection's exporter embeds the light and normal atlases in the FBX."""
+    """The collection's exporter embeds the light and normal atlases in the FBX."""
     collection = export_prep.prep(ch, "no_change", "none", "atlas", log=lambda m: None)
     exporter = collection.exporters[0]
     assert exporter.export_properties.embed_textures and exporter.export_properties.path_mode == "COPY"
@@ -150,7 +150,7 @@ def test_the_face_atlas_holds_one_of_its_two_bakes(ch):
 
 
 def test_an_atlas_over_the_cap_is_split_into_several(ch):
-    """Issue 12: Body's atlas would be 8192 px, so under a 4096 px limit its materials go into several
+    """Body's atlas would be 8192 px, so under a 4096 px limit its materials go into several
     atlases, none scaled down, and the UVs land inside them."""
     sizes = {m.name: tuple(m.node_tree.nodes["tex.main.light"].image.size) for m in bpy.data.materials
              if m.get("kkbp_id") and "tex.main.light" in m.node_tree.nodes and m.node_tree.nodes["tex.main.light"].image}

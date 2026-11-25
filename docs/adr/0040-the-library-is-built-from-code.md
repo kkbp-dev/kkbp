@@ -1,6 +1,6 @@
 # The library and the Hook asset files are built from code, not from the legacy file
 
-Supersedes [ADR 0018](0018-template-library-built-by-a-script.md) and the "built from the legacy file" part of [ADR 0024](0024-one-asset-file-per-hook-built-by-a-script.md). Issue 29.
+Supersedes [ADR 0018](0018-template-library-built-by-a-script.md) and the "built from the legacy file" part of [ADR 0024](0024-one-asset-file-per-hook-built-by-a-script.md).
 
 `library.blend`, `rigify.blend`, `face_cards.blend` and `outlines.blend` are built from an empty file by `importer/tools/library/build.py` (`scripts/build-library.sh`). The legacy `KK Shader V9.blend` is gone. What the files hold is source in git:
 

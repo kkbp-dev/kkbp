@@ -28,7 +28,7 @@ SWITCH = Option("use_rigify", bool, True, "Use Rigify armature",
 # The rig's control that a bone-parented object follows, by the bone it was parented to.
 FOLLOW = {"Head": "head"}
 NSFW_COLLECTION, SFW_NAME = "NSFW", "Chest"
-# An empty collection beside NSFW in the Rig Layers panel, for bones the user adds (issue #7).
+# An empty collection beside NSFW in the Rig Layers panel, for bones the user adds.
 CUSTOM_COLLECTION = "Custom"
 JUNK = "Junk {name}"  # what the Bone Widgets collection becomes: the face board labels and WIDGETS
 WIDGETS = "Widgets {name}"  # inside Junk, excluded from the view layer: the widgets and the metarig

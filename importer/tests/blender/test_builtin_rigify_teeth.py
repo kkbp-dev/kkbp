@@ -1,4 +1,4 @@
-"""The Rigify Hook's teeth bones (issues #42 and #99): five controls for each row of teeth, on
+"""The Rigify Hook's teeth bones: five controls for each row of teeth, on
 teeth that still follow the mouth bones as they did."""
 
 import bpy

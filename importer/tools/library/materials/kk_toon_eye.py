@@ -1,5 +1,5 @@
 """`KK toon_eye`: the edit template for KK's irises, which the game draws with toon_eye_lod0 from the
-composited iris (issue 30). The highlights read the second and third UV maps. Written by hand."""
+composited iris. The highlights read the second and third UV maps. Written by hand."""
 
 import edit_templates
 

@@ -1,5 +1,5 @@
 """`.SVS eye uv`: where SVS's eye shader (LIF/lif_main_eye) reads each texture, on the bake quad
-(models.eye_uvs, issue 62).
+(models.eye_uvs).
 
     p      = the UV turned by (mix(1 - Rotation, Rotation, Mirror) * 0.1 - 0.05) turns about 0.5 - c,
              c = Eye position.zw + Eye position add.zw

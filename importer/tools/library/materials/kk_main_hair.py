@@ -1,5 +1,5 @@
 """`KK main_hair`: the edit template for KK's hair, which the game draws with main_hair or
-main_hair_front (issue 30). The toon value reaches `.Combine colors` through `.KK hair gloss uv`,
+main_hair_front. The toon value reaches `.Combine colors` through `.KK hair gloss uv`,
 which moves the gloss with it; the bake sets it there. Written by hand."""
 
 import edit_templates
