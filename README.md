@@ -114,6 +114,3 @@ When an import goes wrong, the KKBP panel shows a summary with a button that ope
 - [CONTRIBUTING.md](CONTRIBUTING.md): the repository's layout and how to build and test it
 - [docs/design/](docs/design/README.md): the design, and the decisions behind it in [docs/adr/](docs/adr/)
 - [docs/hook-interface.md](docs/hook-interface.md): the API for writing a custom post-import script (a Hook)
-
-## Similar Projects
-
