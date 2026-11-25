@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Builds the importer extension into an installable zip, importer/dist/kkbp-<version>.zip, with
-# Blender's own extension builder on the harness's minimum build. The zip holds importer/kkbp/ as
-# it is in the working tree, without caches or downloaded Pillow wheels, and the repository's
-# LICENSE and NOTICE. Install it in Blender with Preferences > Get Extensions > Install from Disk.
+# Blender's own extension builder on the harness's minimum build. <version> is the KKBP Version in
+# the repository's VERSION file (ADR 0060); the manifest must hold the same date, which
+# scripts/set-version.sh writes. The zip holds importer/kkbp/ as it is in the working tree, without
+# caches or downloaded Pillow wheels, and the repository's LICENSE and NOTICE. Install it in Blender with Preferences > Get Extensions > Install from Disk.
 #
 # Usage: scripts/package-importer.sh
 set -euo pipefail
@@ -11,6 +12,13 @@ repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 blender="$(python3 -c 'import sys; sys.path.insert(0, sys.argv[1]); import run; print(run._builds(run._load_config(), ["min"])["min"]["path"])' "$repo/importer/tests/harness")"
 source="$repo/importer/kkbp"
 dist="$repo/importer/dist"
+version="$(tr -d '[:space:]' < "$repo/VERSION")"
+# The manifest holds the date without leading zeros (Blender rejects them): 2027.01.05 is 2027.1.5.
+plain="$(echo "$version" | awk -F. '{ printf "%d.%d.%d", $1, $2, $3 }')"
+grep -qx "version = \"$plain\"" "$source/blender_manifest.toml" || {
+  echo "package-importer: blender_manifest.toml isn't at VERSION's $version; run scripts/set-version.sh $version" >&2
+  exit 1
+}
 
 # The asset files are in Git LFS; a pointer file instead of a .blend means `git lfs pull` hasn't run.
 for blend in "$source"/library/*.blend; do
@@ -27,4 +35,6 @@ mkdir -p "$stage/kkbp" "$dist"
   | xargs -0 -I{} cp --parents {} "$stage/kkbp/")
 cp "$repo/LICENSE" "$repo/NOTICE" "$stage/kkbp/"
 "$blender" --factory-startup --command extension build --source-dir "$stage/kkbp" --output-dir "$dist"
+# Blender names the zip after the manifest's version; the release name keeps VERSION's form.
+[[ "$plain" == "$version" ]] || mv -f "$dist/kkbp-$plain.zip" "$dist/kkbp-$version.zip"
 ls -l "$dist"

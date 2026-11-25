@@ -4,7 +4,7 @@ The architecture of the KKBP exporters and importer. Terms are defined in [CONTE
 
 How to use KKBP is in the [wiki](../wiki/README.md); this folder is for people changing it.
 
-Released as importer 10.0.0 and exporters 6.0.0 (git tag `v10.0.0`). Supported Games: KK, KKS and SVS.
+The importer and the exporters share one KKBP Version, the release date (`YYYY.MM.DD`, in `VERSION`; [ADR 0060](../adr/0060-kkbp-has-one-date-version.md)). The first release is 2026.11.25 (git tag `v2026.11.25`). Supported Games: KK, KKS and SVS.
 
 ## Designs
 
@@ -85,6 +85,7 @@ ADRs:
 - [0057 SVS's alpha masks are merged and read KK's way by the KK variants](../adr/0057-svs-alpha-masks-are-read-the-kk-way-by-the-kk-variants.md)
 - [0058 The face rig drives the expression keys through Face Key Roles](../adr/0058-the-face-rig-drives-the-expression-keys-through-face-key-roles.md)
 - [0059 Low poly copies are decimated once, from the finished Parts](../adr/0059-low-poly-copies-are-decimated-once-from-the-finished-parts.md)
+- [0060 KKBP has one version, the release date](../adr/0060-kkbp-has-one-date-version.md)
 
 ## Decisions
 

@@ -2,7 +2,7 @@
 
 Instructions for an AI agent (or anyone) changing this repository. Read this first, then the docs it points to.
 
-KKBP has three parts: exporters (BepInEx plugins for KK, KKS and SVS) write an **Export Bundle**, the **contract** defines that bundle, and a Blender **importer** rebuilds the Character from it. Released as importer 10.0.0 and exporters 6.0.0 (tag `v10.0.0`).
+KKBP has three parts: exporters (BepInEx plugins for KK, KKS and SVS) write an **Export Bundle**, the **contract** defines that bundle, and a Blender **importer** rebuilds the Character from it. The importer and the exporters are released together under one KKBP Version, the release date `YYYY.MM.DD` in `VERSION` (ADR 0060).
 
 ## Read before changing anything
 
@@ -86,6 +86,7 @@ The user plays these games. Details are in "Working with the games" in [exporter
 | Make the Golden Samples (first time, and after an exporter change), or one of them | `scripts/export-sample.sh` / `scripts/export-sample.sh <game>` |
 | Record a game's joint corrections for the tests (after a game update or a rule change; ADR 0038) | `scripts/probe-corrections.sh <game>` |
 | Check any bundle | `scripts/check-bundle.sh <bundle>` |
+| Set the KKBP Version for a release (both parts) | `scripts/set-version.sh [YYYY.MM.DD]` |
 | Package the importer zip | `scripts/package-importer.sh` |
 | Package the exporter release zip (all three Games) | `scripts/package-exporters.sh` |
 | Rebuild the template library and Hook assets, or check the committed ones match their sources | `scripts/build-library.sh`, `scripts/check-library.sh` |
@@ -116,7 +117,7 @@ Run the importer's host tests and pytest only on `importer/.venv/bin/python` (Bl
   1. Stage the package with the pinned wheel from `importer/tests/.work/wheels/` in `kkbp/wheels/`.
   2. Replace the manifest's `#wheel_placeholder` line with `wheels = ["./wheels/<file>.whl"]`.
   3. Run `blender --command extension install-file --repo user_default --enable <zip>`, then restart Blender. The profile copy is in `~/.config/blender/5.2/extensions/user_default/kkbp`.
-- **A release:** drop `-dev` in `importer/kkbp/blender_manifest.toml` and `exporters/Exporter.props`, re-record the snapshots, package both (`scripts/package-importer.sh`, `scripts/package-exporters.sh`), deploy, and tag.
+- **A release:** set the date with `scripts/set-version.sh` (today by default; it writes `VERSION` and the manifest's unpadded copy, ADR 0060), re-record the snapshots, package both (`scripts/package-importer.sh`, `scripts/package-exporters.sh`), deploy, and tag `v<YYYY.MM.DD>`. At most one release a day.
 
 ## The machine
 

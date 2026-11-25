@@ -1,6 +1,6 @@
 # The legacy baseline is retired
 
-The new importer is no longer compared with the legacy importer. Phase 0 recorded the legacy importer's scene summaries of the three legacy sample exports (`importer/tests/snapshots/baseline/`), and `run.py compare` sorted every difference from them by cause (D13). The new importer has been released (10.0.0), its own reviewed snapshots are the regression target (D50), and the baseline needed the legacy exports, the legacy add-on and mmd_tools, which only one working copy has. So the baseline, `run.py baseline` and `compare`, `causes.py`, `compare_legacy.py`, `legacy_names.toml`, `scripts/compare-baseline.sh` and the harness's `[legacy]`, `[samples]` and `[profiles]` settings are deleted.
+The new importer is no longer compared with the legacy importer. Phase 0 recorded the legacy importer's scene summaries of the three legacy sample exports (`importer/tests/snapshots/baseline/`), and `run.py compare` sorted every difference from them by cause (D13). The new importer is the one KKBP releases, its own reviewed snapshots are the regression target (D50), and the baseline needed the legacy exports, the legacy add-on and mmd_tools, which only one working copy has. So the baseline, `run.py baseline` and `compare`, `causes.py`, `compare_legacy.py`, `legacy_names.toml`, `scripts/compare-baseline.sh` and the harness's `[legacy]`, `[samples]` and `[profiles]` settings are deleted.
 
 ## Considered Options
 

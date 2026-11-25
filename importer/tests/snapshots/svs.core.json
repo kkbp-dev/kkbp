@@ -16192,7 +16192,7 @@
  "run": {
   "blender": "5.2.2 LTS",
   "hooks": {},
-  "importer": "10.0.0",
+  "importer": "2026.11.25",
   "log_warnings": [],
   "result": "ok",
   "steps": {
