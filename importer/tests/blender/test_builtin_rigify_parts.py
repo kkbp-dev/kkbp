@@ -6,10 +6,13 @@ from types import SimpleNamespace
 
 import pytest
 
-from conftest import submodule
+from conftest import golden, kkbp, submodule
+from hook_ctx import fake_ctx
 
 build_module = submodule("builtin.rigify.build")
 features = submodule("builtin.rigify.metarig.features")
+names = submodule("builtin.rigify.names")
+rigify = submodule("builtin.rigify")
 
 # What each Golden Sample's Character has: KK's has the Better Penetration mod's bones, SVS's
 # skirt has no bones of its own, and none is male.
@@ -26,6 +29,44 @@ def test_features_found_on_the_core_import(golden_import, sample):
     build = build_module.RigBuild(SimpleNamespace(character=ch), ch.armature, kk_extras=False)
     features.detect(build)
     assert vars(build.features) == EXPECTED[sample]
+
+
+# --- a male Body (no male Golden Sample: the KK one's nipple groups cut down to a male's) ---------
+
+def _male_nipples(body, weight=0.006):
+    """Leaves one vertex in each nipple group, weighted `weight`, as on a male KK body."""
+    for group in (names.LEFT_NIPPLE_DEFORM_BONE1, names.RIGHT_NIPPLE_DEFORM_BONE1):
+        vg = body.vertex_groups[group]
+        members = [v.index for v in body.data.vertices if vg.index in [g.group for g in v.groups]]
+        vg.remove(members[1:])
+        vg.add(members[:1], weight, "REPLACE")
+
+
+def test_a_stray_nipple_weight_is_a_male(golden_import):
+    _, ch = golden_import("kk")
+    _male_nipples(ch.body)
+    build = build_module.RigBuild(SimpleNamespace(character=ch), ch.armature, kk_extras=False)
+    features.detect(build)
+    assert build.features.male
+
+
+def test_a_nipple_group_with_no_size_is_a_male(golden_import):
+    """A full weight on one vertex still gives the breast handles nothing to be sized from."""
+    _, ch = golden_import("kk")
+    _male_nipples(ch.body, weight=1.0)
+    build = build_module.RigBuild(SimpleNamespace(character=ch), ch.armature, kk_extras=False)
+    features.detect(build)
+    assert build.features.male
+
+
+def test_the_rigify_hook_builds_a_male_rig(golden_import):
+    """The male KK body that failed the Hook with a ZeroDivisionError in the breast handles."""
+    _, ch = golden_import("kk")
+    _male_nipples(ch.body)
+    rigify.rigify(fake_ctx(ch, kkbp.api.open_bundle(golden("kk"))))
+    assert ch.rig is not None
+    assert names.BREASTS_HANDLE_BONE not in ch.rig.data.bones
+    assert names.BUTTOCKS_HANDLE_BONE in ch.rig.data.bones
 
 
 # --- the hands without the joint-correction bones (SVS; ADR 0045) ---------------------------------

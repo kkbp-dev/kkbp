@@ -20,7 +20,7 @@ class Features:
     rigged_tongue: bool  # the tongue bones, with Body weighted to them (ADR 0039)
     better_penetration: bool  # the Better Penetration mod's bones
     head_mod: bool  # True when cf_J_FaceUp_ty weighs nothing: the head's height comes from cf_J_FaceBase
-    male: bool  # True when the nipple vertex group weighs nothing
+    male: bool  # True when the nipple vertex group weighs next to nothing (features.MALE_NIPPLE_WEIGHT)
 
 
 @dataclass
