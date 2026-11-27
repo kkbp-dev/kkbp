@@ -55,6 +55,15 @@ def is_group_empty(obj, group) -> bool:
     return not any(vertex_group.index in [g.group for g in v.groups] for v in obj.data.vertices)
 
 
+def weighs_little(obj, group, threshold) -> bool:
+    """Whether `obj` has no vertex group `group`, or no vertex weighted `threshold` or more in it."""
+    vertex_group = obj.vertex_groups.get(group)
+    if not vertex_group:
+        return True
+    index = vertex_group.index
+    return not any(g.group == index and g.weight >= threshold for v in obj.data.vertices for g in v.groups)
+
+
 def rename_group(meshes, old, new):
     """Renames the vertex group `old` to `new` on each of `meshes` that has it."""
     for obj in meshes:
