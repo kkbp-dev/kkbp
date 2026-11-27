@@ -45,6 +45,9 @@ EYELID_OFFSET = 0.0005
 # How much the upper eyeline moves forward off the shadow beneath it, so Blender's X Mirror can tell them
 # apart (ADR 0049).
 UPPER_EYELINE_OFFSET = 0.0001
+# How far forward (Blender -Y) each face Part's origin sits from Body's, so Eevee draws its Blended
+# materials over Body's eyes, and the tears over the gag eyes (ADR 0061).
+DRAW_ORDER_OFFSETS = {"gag_eyes": 0.0001, "tears": 0.0002}
 
 
 def load_passes(ctx):
@@ -332,6 +335,16 @@ def move_upper_eyeline_forward(ctx):
         for layer in layers:
             for v in verts:
                 layer[v].co.y -= UPPER_EYELINE_OFFSET
+
+
+def draw_face_parts_in_front(ctx):
+    """Moves the gag eyes' and tears' origins a little forward of Body's with a delta transform
+    (ADR 0061). Eevee draws Blended objects in the order of their origins' distance from the view,
+    and these Parts share Body's origin, so the eyes on Body could draw over them (Fiery Eyes, which
+    leaves the eyes open, was hidden behind them)."""
+    for role, offset in DRAW_ORDER_OFFSETS.items():
+        for obj in ctx.character.parts(role):
+            obj.delta_location.y = -offset
 
 
 def arrange_collections(ctx):

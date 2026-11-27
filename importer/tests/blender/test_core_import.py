@@ -170,6 +170,17 @@ def test_the_tears_and_gag_eyes_rest_inside_the_head(sample, golden_import):
         assert not outside, f"{part.name}: {len(outside)} of {len(part.data.vertices)} vertices are outside"
 
 
+@pytest.mark.parametrize("sample", ["kk", "kks", "svs"])
+def test_the_gag_eyes_and_tears_sort_in_front_of_body(sample, golden_import):
+    """Eevee draws Blended objects by their origins' distance, so the gag eyes' origin is in front
+    of Body's (-Y) and the tears' in front of the gag eyes' (ADR 0061)."""
+    _, ch = golden_import(sample)
+    y = {role: part.matrix_world.translation.y
+         for role, part in (("body", ch.body), ("gag_eyes", ch.gag_eyes), ("tears", ch.tears))}
+    assert y["tears"] < y["gag_eyes"] < y["body"]
+    assert y["body"] - y["tears"] < 0.001
+
+
 def test_svs_has_each_vowel_mouth_once(golden_import):
     """The game's own vowel and Cartoony Smile mouths carry the Expression Names, with no
     second copy under the game's numbered name."""

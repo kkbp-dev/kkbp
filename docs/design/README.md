@@ -86,6 +86,7 @@ ADRs:
 - [0058 The face rig drives the expression keys through Face Key Roles](../adr/0058-the-face-rig-drives-the-expression-keys-through-face-key-roles.md)
 - [0059 Low poly copies are decimated once, from the finished Parts](../adr/0059-low-poly-copies-are-decimated-once-from-the-finished-parts.md)
 - [0060 KKBP has one version, the release date](../adr/0060-kkbp-has-one-date-version.md)
+- [0061 The gag eyes and tears sit in front of Body for Eevee's sorting](../adr/0061-the-gag-eyes-and-tears-sit-in-front-of-body-for-eevees-sorting.md)
 
 ## Decisions
 

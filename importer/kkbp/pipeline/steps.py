@@ -27,6 +27,7 @@ STEPS: list[Step] = [
     Step(mesh.drive_showing_keys),
     Step(mesh.move_eyelids_forward, games=["SVS"]),
     Step(mesh.move_upper_eyeline_forward),
+    Step(mesh.draw_face_parts_in_front),
     Step(armature.trim_skeleton),
     Step(armature.set_bone_tails_and_roll),
     Step(armature.bend_limbs_for_ik),
